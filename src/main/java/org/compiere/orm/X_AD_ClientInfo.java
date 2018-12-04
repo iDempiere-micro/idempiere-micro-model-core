@@ -3,7 +3,6 @@ package org.compiere.orm;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
-
 import kotliquery.Row;
 import org.compiere.model.I_AD_ClientInfo;
 import org.idempiere.orm.I_Persistent;
@@ -32,6 +31,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public X_AD_ClientInfo(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+
   public X_AD_ClientInfo(Properties ctx, Row row) {
     super(ctx, row);
   } //	MClientInfo

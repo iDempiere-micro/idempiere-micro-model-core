@@ -14,7 +14,6 @@ import java.sql.ResultSet
 import java.sql.Timestamp
 import java.sql.Statement
 import java.sql.SQLException
-import java.util.Arrays.asList
 
 // CONSTANTS
 internal fun isGenerateUUIDSupported() = true

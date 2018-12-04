@@ -17,7 +17,6 @@ import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Util;
-import org.idempiere.icommon.model.IPO;
 import org.idempiere.orm.POInfo;
 import software.hsharp.core.orm.BaseQuery;
 

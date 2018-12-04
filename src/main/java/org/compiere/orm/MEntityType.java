@@ -5,7 +5,6 @@ import static org.compiere.util.SystemIDs.ENTITYTYPE_DICTIONARY;
 
 import java.sql.ResultSet;
 import java.util.Properties;
-
 import kotliquery.Row;
 import org.compiere.model.I_AD_EntityType;
 import org.idempiere.common.util.CCache;
@@ -74,6 +73,7 @@ public class MEntityType extends X_AD_EntityType {
   public MEntityType(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   } //	MEntityType
+
   public MEntityType(Properties ctx, Row row) {
     super(ctx, row);
   } //	MEntityType

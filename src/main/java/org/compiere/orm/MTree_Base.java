@@ -4,7 +4,6 @@ import static software.hsharp.core.util.DBKt.getSQLValueStringEx;
 
 import java.sql.ResultSet;
 import java.util.Properties;
-
 import kotliquery.Row;
 import org.compiere.model.I_AD_Tree;
 import org.idempiere.common.util.CCache;
@@ -182,6 +181,7 @@ public class MTree_Base extends X_AD_Tree {
   public MTree_Base(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   } //	MTree_Base
+
   public MTree_Base(Properties ctx, Row row) {
     super(ctx, row);
   } //	MTree_Base
