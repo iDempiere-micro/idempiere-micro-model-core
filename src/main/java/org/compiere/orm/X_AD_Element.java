@@ -2,9 +2,9 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Element;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Element
@@ -27,6 +27,10 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
     super(ctx, rs, trxName);
   }
 
+  public X_AD_Element(Properties ctx, Row row) {
+    super(ctx, row);
+  }
+
   /**
    * AccessLevel
    *
@@ -34,12 +38,6 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -250,5 +248,10 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
    */
   public String getPrintName() {
     return (String) get_Value(COLUMNNAME_PrintName);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

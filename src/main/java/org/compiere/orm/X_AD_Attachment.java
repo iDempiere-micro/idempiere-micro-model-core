@@ -5,7 +5,6 @@ import java.util.Properties;
 import org.compiere.model.I_AD_Attachment;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Attachment
@@ -39,12 +38,6 @@ public class X_AD_Attachment extends PO implements I_Persistent {
    */
   protected int getAccessLevel() {
     return I_AD_Attachment.accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, I_AD_Attachment.Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -202,5 +195,10 @@ public class X_AD_Attachment extends PO implements I_Persistent {
    */
   public KeyNamePair getKeyNamePair() {
     return new KeyNamePair(getId(), getTitle());
+  }
+
+  @Override
+  public int getTableId() {
+    return I_AD_Attachment.Table_ID;
   }
 }

@@ -2,9 +2,10 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+
+import kotliquery.Row;
 import org.compiere.model.I_AD_Tree;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Tree
@@ -26,6 +27,9 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
   public X_AD_Tree(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+  public X_AD_Tree(Properties ctx, Row row) {
+    super(ctx, row);
+  }
 
   /**
    * AccessLevel
@@ -34,12 +38,6 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -305,5 +303,10 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
    */
   public String getTreeType() {
     return (String) get_Value(COLUMNNAME_TreeType);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

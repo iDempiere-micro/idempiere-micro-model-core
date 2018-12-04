@@ -1,10 +1,11 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.getSQLValueTSEx;
+
 import java.sql.Timestamp;
 import java.util.BitSet;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import org.idempiere.common.util.DB;
 import org.idempiere.common.util.Language;
 
 public class TimeUtil {
@@ -727,7 +728,7 @@ public class TimeUtil {
     while (nbDays > 0) {
       retValue = TimeUtil.addDays(retValue, 1);
       StringBuilder sql = new StringBuilder("SELECT nextBusinessDay(?,?) FROM DUAL");
-      retValue = DB.getSQLValueTSEx(trxName, sql.toString(), retValue, clientID);
+      retValue = getSQLValueTSEx(trxName, sql.toString(), retValue, clientID);
       nbDays--;
     }
     return retValue;

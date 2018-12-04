@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_AD_Private_Access;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Private_Access
@@ -37,12 +36,6 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access, I_Pe
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -95,12 +88,6 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access, I_Pe
     return ii;
   }
 
-  public org.compiere.model.I_AD_User getAD_User() throws RuntimeException {
-    return (org.compiere.model.I_AD_User)
-        MTable.get(getCtx(), org.compiere.model.I_AD_User.Table_Name)
-            .getPO(getAD_User_ID(), get_TrxName());
-  }
-
   /**
    * Set User/Contact.
    *
@@ -141,5 +128,10 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access, I_Pe
     Integer ii = (Integer) get_Value(COLUMNNAME_Record_ID);
     if (ii == null) return 0;
     return ii;
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

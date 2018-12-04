@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.DB;
 
 /**
  * Simple wrapper over jdbc resultset
@@ -116,7 +115,7 @@ public class POResultSet<T extends PO> {
 
   /** Release database resources. */
   public void close() {
-    DB.close(this.resultSet, this.statement);
+    software.hsharp.core.util.DBKt.close(this.resultSet, this.statement);
     this.resultSet = null;
     this.statement = null;
     currentPO = null;

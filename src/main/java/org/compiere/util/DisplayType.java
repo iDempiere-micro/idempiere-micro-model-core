@@ -8,6 +8,7 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
+import org.idempiere.common.base.IServiceLocator;
 import org.idempiere.common.base.IServicesHolder;
 import org.idempiere.common.base.Service;
 import org.idempiere.common.util.CLogger;
@@ -152,12 +153,15 @@ public final class DisplayType {
         || displayType == Chart
         || displayType == Color) return true;
 
-    IServicesHolder<IDisplayTypeFactory> service =
-        Service.Companion.locator().list(IDisplayTypeFactory.class);
-    if (service != null) {
-      List<IDisplayTypeFactory> factoryList = service.getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        if (factory.isID(displayType)) return true;
+    IServiceLocator locator = Service.Companion.locator();
+
+    if (locator != null) {
+      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
+      if (service != null) {
+        List<IDisplayTypeFactory> factoryList = service.getServices();
+        for (IDisplayTypeFactory factory : factoryList) {
+          if (factory.isID(displayType)) return true;
+        }
       }
     }
     return false;
@@ -177,12 +181,15 @@ public final class DisplayType {
         || displayType == Integer
         || displayType == Quantity) return true;
 
-    IServicesHolder<IDisplayTypeFactory> service =
-        Service.Companion.locator().list(IDisplayTypeFactory.class);
-    if (service != null) {
-      List<IDisplayTypeFactory> factoryList = service.getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        if (factory.isNumeric(displayType)) return true;
+    IServiceLocator locator = Service.Companion.locator();
+
+    if (locator != null) {
+      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
+      if (service != null) {
+        List<IDisplayTypeFactory> factoryList = service.getServices();
+        for (IDisplayTypeFactory factory : factoryList) {
+          if (factory.isNumeric(displayType)) return true;
+        }
       }
     }
 
@@ -232,12 +239,15 @@ public final class DisplayType {
         || displayType == Color
         || displayType == MultipleSelectionGrid) return true;
 
-    IServicesHolder<IDisplayTypeFactory> service =
-        Service.Companion.locator().list(IDisplayTypeFactory.class);
-    if (service != null) {
-      List<IDisplayTypeFactory> factoryList = service.getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        if (factory.isText(displayType)) return true;
+    IServiceLocator locator = Service.Companion.locator();
+
+    if (locator != null) {
+      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
+      if (service != null) {
+        List<IDisplayTypeFactory> factoryList = service.getServices();
+        for (IDisplayTypeFactory factory : factoryList) {
+          if (factory.isText(displayType)) return true;
+        }
       }
     }
     return false;
@@ -252,12 +262,15 @@ public final class DisplayType {
   public static boolean isDate(int displayType) {
     if (displayType == Date || displayType == DateTime || displayType == Time) return true;
 
-    IServicesHolder<IDisplayTypeFactory> service =
-        Service.Companion.locator().list(IDisplayTypeFactory.class);
-    if (service != null) {
-      List<IDisplayTypeFactory> factoryList = service.getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        if (factory.isDate(displayType)) return true;
+    IServiceLocator locator = Service.Companion.locator();
+
+    if (locator != null) {
+      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
+      if (service != null) {
+        List<IDisplayTypeFactory> factoryList = service.getServices();
+        for (IDisplayTypeFactory factory : factoryList) {
+          if (factory.isDate(displayType)) return true;
+        }
       }
     }
 
@@ -276,12 +289,15 @@ public final class DisplayType {
         || displayType == TableDir
         || displayType == Search) return true;
 
-    IServicesHolder<IDisplayTypeFactory> service =
-        Service.Companion.locator().list(IDisplayTypeFactory.class);
-    if (service != null) {
-      List<IDisplayTypeFactory> factoryList = service.getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        if (factory.isLookup(displayType)) return true;
+    IServiceLocator locator = Service.Companion.locator();
+
+    if (locator != null) {
+      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
+      if (service != null) {
+        List<IDisplayTypeFactory> factoryList = service.getServices();
+        for (IDisplayTypeFactory factory : factoryList) {
+          if (factory.isLookup(displayType)) return true;
+        }
       }
     }
 
@@ -297,12 +313,15 @@ public final class DisplayType {
   public static boolean isLOB(int displayType) {
     if (displayType == Binary || displayType == TextLong) return true;
 
-    IServicesHolder<IDisplayTypeFactory> service =
-        Service.Companion.locator().list(IDisplayTypeFactory.class);
-    if (service != null) {
-      List<IDisplayTypeFactory> factoryList = service.getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        if (factory.isLOB(displayType)) return true;
+    IServiceLocator locator = Service.Companion.locator();
+
+    if (locator != null) {
+      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
+      if (service != null) {
+        List<IDisplayTypeFactory> factoryList = service.getServices();
+        for (IDisplayTypeFactory factory : factoryList) {
+          if (factory.isLOB(displayType)) return true;
+        }
       }
     }
 

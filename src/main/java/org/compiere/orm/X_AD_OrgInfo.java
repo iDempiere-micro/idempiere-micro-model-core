@@ -3,9 +3,7 @@ package org.compiere.orm;
 import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_AD_OrgInfo;
-import org.compiere.model.I_C_Location;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_OrgInfo
@@ -40,12 +38,6 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     return accessLevel.intValue();
   }
 
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
-  }
-
   public String toString() {
     StringBuffer sb = new StringBuffer("X_AD_OrgInfo[").append(getId()).append("]");
     return sb.toString();
@@ -69,12 +61,6 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     return (String) get_Value(COLUMNNAME_AD_OrgInfo_UU);
   }
 
-  public org.compiere.model.I_AD_OrgType getAD_OrgType() throws RuntimeException {
-    return (org.compiere.model.I_AD_OrgType)
-        MTable.get(getCtx(), org.compiere.model.I_AD_OrgType.Table_Name)
-            .getPO(getAD_OrgType_ID(), get_TrxName());
-  }
-
   /**
    * Set Organization Type.
    *
@@ -94,12 +80,6 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_OrgType_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_C_Calendar getC_Calendar() throws RuntimeException {
-    return (org.compiere.model.I_C_Calendar)
-        MTable.get(getCtx(), org.compiere.model.I_C_Calendar.Table_Name)
-            .getPO(getC_Calendar_ID(), get_TrxName());
   }
 
   /**
@@ -123,11 +103,6 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     return ii;
   }
 
-  public I_C_Location getC_Location() throws RuntimeException {
-    return (I_C_Location)
-        MTable.get(getCtx(), I_C_Location.Table_Name).getPO(getC_Location_ID(), get_TrxName());
-  }
-
   /**
    * Set Address.
    *
@@ -147,12 +122,6 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     Integer ii = (Integer) get_Value(COLUMNNAME_C_Location_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_M_Warehouse getDropShip_Warehouse() throws RuntimeException {
-    return (org.compiere.model.I_M_Warehouse)
-        MTable.get(getCtx(), org.compiere.model.I_M_Warehouse.Table_Name)
-            .getPO(getDropShip_Warehouse_ID(), get_TrxName());
   }
 
   /**
@@ -250,12 +219,6 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     Integer ii = (Integer) get_Value(COLUMNNAME_Logo_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_M_Warehouse getM_Warehouse() throws RuntimeException {
-    return (org.compiere.model.I_M_Warehouse)
-        MTable.get(getCtx(), org.compiere.model.I_M_Warehouse.Table_Name)
-            .getPO(getM_Warehouse_ID(), get_TrxName());
   }
 
   /**
@@ -356,12 +319,6 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     return (String) get_Value(COLUMNNAME_ReceiptFooterMsg);
   }
 
-  public org.compiere.model.I_AD_User getSupervisor() throws RuntimeException {
-    return (org.compiere.model.I_AD_User)
-        MTable.get(getCtx(), org.compiere.model.I_AD_User.Table_Name)
-            .getPO(getSupervisor_ID(), get_TrxName());
-  }
-
   /**
    * Set Supervisor.
    *
@@ -401,12 +358,6 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     return (String) get_Value(COLUMNNAME_TaxID);
   }
 
-  public org.compiere.model.I_C_Bank getTransferBank() throws RuntimeException {
-    return (org.compiere.model.I_C_Bank)
-        MTable.get(getCtx(), org.compiere.model.I_C_Bank.Table_Name)
-            .getPO(getTransferBank_ID(), get_TrxName());
-  }
-
   /**
    * Set Bank for transfers.
    *
@@ -429,12 +380,6 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     return ii;
   }
 
-  public org.compiere.model.I_C_CashBook getTransferCashBook() throws RuntimeException {
-    return (org.compiere.model.I_C_CashBook)
-        MTable.get(getCtx(), org.compiere.model.I_C_CashBook.Table_Name)
-            .getPO(getTransferCashBook_ID(), get_TrxName());
-  }
-
   /**
    * Set CashBook for transfers.
    *
@@ -454,5 +399,10 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
     Integer ii = (Integer) get_Value(COLUMNNAME_TransferCashBook_ID);
     if (ii == null) return 0;
     return ii;
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

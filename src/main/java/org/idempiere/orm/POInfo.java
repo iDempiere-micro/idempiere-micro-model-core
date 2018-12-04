@@ -2,20 +2,10 @@ package org.idempiere.orm;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import org.compiere.model.I_AD_Table;
 import org.compiere.util.DisplayType;
 import org.idempiere.common.util.CCache;
-import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
-import org.idempiere.common.util.Env;
 
 /**
  * Persistent Object Info. Provides structural information
@@ -26,7 +16,7 @@ import org.idempiere.common.util.Env;
  *     <li>[ 2195894 ] Improve performance in PO engine
  *     <li>http://sourceforge.net/tracker/index.php?func=detail&aid=2195894&group_id=176962&atid=879335
  */
-public class POInfo implements Serializable {
+public class POInfo extends software.hsharp.core.orm.POInfo implements Serializable {
   /** */
   private static final long serialVersionUID = 3496403499343293597L;
 
@@ -87,141 +77,10 @@ public class POInfo implements Serializable {
    * @param trxName transaction name
    */
   protected POInfo(Properties ctx, int AD_Table_ID, boolean baseLanguageOnly, String trxName) {
-    m_ctx = ctx;
-    m_AD_Table_ID = AD_Table_ID;
-    boolean baseLanguage = baseLanguageOnly ? true : Env.isBaseLanguage(m_ctx, "AD_Table");
-    loadInfo(baseLanguage, trxName);
+    super(ctx, AD_Table_ID, baseLanguageOnly);
   } //  PInfo
 
-  /** Context */
-  protected Properties m_ctx = null;
-  /** Table_ID */
-  private int m_AD_Table_ID = 0;
-  /** Table Name */
-  private String m_TableName = null;
-  /** Access Level */
-  private String m_AccessLevel = I_AD_Table.ACCESSLEVEL_Organization;
-  /** Columns */
-  protected POInfoColumn[] m_columns = null;
-  /** Table has Key Column */
-  private boolean m_hasKeyColumn = false;
-  /** Table needs keep log */
-  private boolean m_IsChangeLog = false;
-  /** column name to index map * */
-  private Map<String, Integer> m_columnNameMap;
-  /** ad_column_id to index map * */
-  private Map<Integer, Integer> m_columnIdMap;
-
   private Boolean m_IsTranslated = null;
-
-  /**
-   * Load Table/Column Info
-   *
-   * @param baseLanguage in English
-   * @param trxName
-   */
-  private void loadInfo(boolean baseLanguage, String trxName) {
-    m_columnNameMap = new HashMap<String, Integer>();
-    m_columnIdMap = new HashMap<Integer, Integer>();
-    ArrayList<POInfoColumn> list = new ArrayList<POInfoColumn>(15);
-    StringBuilder sql = new StringBuilder();
-    sql.append(
-        "SELECT t.TableName, c.ColumnName,c.AD_Reference_ID," //  1..3
-            + "c.IsMandatory,c.IsUpdateable,c.DefaultValue," //  4..6
-            + "e.Name,e.Description, c.AD_Column_ID, " //  7..9
-            + "c.IsKey,c.IsParent, " //	10..11
-            + "c.AD_Reference_Value_ID, vr.Code, " //	12..13
-            + "c.FieldLength, c.ValueMin, c.ValueMax, c.IsTranslated, " //	14..17
-            + "t.AccessLevel, c.ColumnSQL, c.IsEncrypted, " // 18..20
-            + "c.IsAllowLogging,c.IsAllowCopy,t.IsChangeLog "); // 21..23
-    sql.append(
-        "FROM AD_Table t"
-            + " INNER JOIN AD_Column c ON (t.AD_Table_ID=c.AD_Table_ID)"
-            + " LEFT OUTER JOIN AD_Val_Rule vr ON (c.AD_Val_Rule_ID=vr.AD_Val_Rule_ID)"
-            + " INNER JOIN AD_Element");
-    if (!baseLanguage) sql.append("_Trl");
-    sql.append(
-        " e "
-            + " ON (c.AD_Element_ID=e.AD_Element_ID) "
-            + "WHERE t.AD_Table_ID=?"
-            + " AND c.IsActive='Y'");
-    if (!baseLanguage)
-      sql.append(" AND e.AD_Language='").append(Env.getADLanguage(m_ctx)).append("'");
-    sql.append(" ORDER BY c.AD_Column_ID");
-    //
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql.toString(), trxName);
-      pstmt.setInt(1, m_AD_Table_ID);
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        if (m_TableName == null) m_TableName = rs.getString(1);
-        String ColumnName = rs.getString(2);
-        int AD_Reference_ID = rs.getInt(3);
-        boolean IsMandatory = "Y".equals(rs.getString(4));
-        boolean IsUpdateable = "Y".equals(rs.getString(5));
-        String DefaultLogic = rs.getString(6);
-        String Name = rs.getString(7);
-        String Description = rs.getString(8);
-        int AD_Column_ID = rs.getInt(9);
-        boolean IsKey = "Y".equals(rs.getString(10));
-        if (IsKey) m_hasKeyColumn = true;
-        boolean IsParent = "Y".equals(rs.getString(11));
-        int AD_Reference_Value_ID = rs.getInt(12);
-        String ValidationCode = rs.getString(13);
-        int FieldLength = rs.getInt(14);
-        String ValueMin = rs.getString(15);
-        String ValueMax = rs.getString(16);
-        boolean IsTranslated = "Y".equals(rs.getString(17));
-        //
-        m_AccessLevel = rs.getString(18);
-        String ColumnSQL = rs.getString(19);
-        if (ColumnSQL != null && ColumnSQL.contains("@"))
-          ColumnSQL = Env.parseContext(Env.getCtx(), -1, ColumnSQL, false, true);
-        boolean IsEncrypted = "Y".equals(rs.getString(20));
-        boolean IsAllowLogging = "Y".equals(rs.getString(21));
-        boolean IsAllowCopy = "Y".equals(rs.getString(22));
-        m_IsChangeLog = "Y".equals(rs.getString(23));
-
-        POInfoColumn col =
-            new POInfoColumn(
-                AD_Column_ID,
-                ColumnName,
-                ColumnSQL,
-                AD_Reference_ID,
-                IsMandatory,
-                IsUpdateable,
-                DefaultLogic,
-                Name,
-                Description,
-                IsKey,
-                IsParent,
-                AD_Reference_Value_ID,
-                ValidationCode,
-                FieldLength,
-                ValueMin,
-                ValueMax,
-                IsTranslated,
-                IsEncrypted,
-                IsAllowLogging,
-                IsAllowCopy);
-        list.add(col);
-
-        m_columnNameMap.put(ColumnName.toUpperCase(), list.size() - 1);
-        m_columnIdMap.put(AD_Column_ID, list.size() - 1);
-      }
-    } catch (SQLException e) {
-      CLogger.get().log(Level.SEVERE, sql.toString(), e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    //  convert to array
-    m_columns = new POInfoColumn[list.size()];
-    list.toArray(m_columns);
-  } //  loadInfo
 
   /**
    * String representation
@@ -239,19 +98,10 @@ public class POInfo implements Serializable {
    * @return String Representation
    */
   public String toString(int index) {
-    if (index < 0 || index >= m_columns.length)
+    if (index < 0 || index >= getColumns().length)
       return "POInfo[" + getTableName() + "-(InvalidColumnIndex=" + index + ")]";
-    return "POInfo[" + getTableName() + "-" + m_columns[index].toString() + "]";
+    return "POInfo[" + getTableName() + "-" + getColumns()[index].toString() + "]";
   } //  toString
-
-  /**
-   * Get Table Name
-   *
-   * @return Table Name
-   */
-  public String getTableName() {
-    return m_TableName;
-  } //  getTableName
 
   /**
    * Get AD_Table_ID
@@ -259,26 +109,8 @@ public class POInfo implements Serializable {
    * @return AD_Table_ID
    */
   public int getAD_Table_ID() {
-    return m_AD_Table_ID;
+    return getTableId();
   } //  getAD_Table_ID
-
-  /**
-   * Table has a Key Column
-   *
-   * @return true if has a key column
-   */
-  public boolean hasKeyColumn() {
-    return m_hasKeyColumn;
-  } //	hasKeyColumn
-
-  /**
-   * Get Table Access Level
-   *
-   * @return Table.ACCESS..
-   */
-  public String getAccessLevel() {
-    return m_AccessLevel;
-  } //	getAccessLevel
 
   /**
    * ************************************************************************ Get ColumnCount
@@ -286,7 +118,7 @@ public class POInfo implements Serializable {
    * @return column count
    */
   public int getColumnCount() {
-    return m_columns.length;
+    return getColumns().length;
   } //  getColumnCount
 
   /**
@@ -296,7 +128,7 @@ public class POInfo implements Serializable {
    * @return index of column with ColumnName or -1 if not found
    */
   public int getColumnIndex(String ColumnName) {
-    Integer i = m_columnNameMap.get(ColumnName.toUpperCase());
+    Integer i = getColumnNameMap().get(ColumnName.toUpperCase());
     if (i != null) return i.intValue();
 
     return -1;
@@ -309,7 +141,7 @@ public class POInfo implements Serializable {
    * @return index of column with ColumnName or -1 if not found
    */
   public int getColumnIndex(int AD_Column_ID) {
-    Integer i = m_columnIdMap.get(AD_Column_ID);
+    Integer i = getColumnIdMap().get(AD_Column_ID);
     if (i != null) return i.intValue();
 
     return -1;
@@ -320,10 +152,10 @@ public class POInfo implements Serializable {
    * @return AD_Column_ID if found, -1 if not found
    */
   public int getAD_Column_ID(String columnName) {
-    for (int i = 0; i < m_columns.length; i++) {
+    for (int i = 0; i < getColumns().length; i++) {
       if (columnName.equalsIgnoreCase(
-          m_columns[i].ColumnName)) // globalqss : modified to compare ignoring case [ 1619179 ]
-      return m_columns[i].AD_Column_ID;
+          getColumns()[i].ColumnName)) // globalqss : modified to compare ignoring case [ 1619179 ]
+      return getColumns()[i].AD_Column_ID;
     }
     return -1;
   }
@@ -335,8 +167,8 @@ public class POInfo implements Serializable {
    * @return column
    */
   public POInfoColumn getColumn(int index) {
-    if (index < 0 || index >= m_columns.length) return null;
-    return m_columns[index];
+    if (index < 0 || index >= getColumns().length) return null;
+    return getColumns()[index];
   } //  getColumn
 
   /**
@@ -346,8 +178,8 @@ public class POInfo implements Serializable {
    * @return ColumnName column name
    */
   public String getColumnName(int index) {
-    if (index < 0 || index >= m_columns.length) return null;
-    return m_columns[index].ColumnName;
+    if (index < 0 || index >= getColumns().length) return null;
+    return getColumns()[index].ColumnName;
   } //  getColumnName
 
   /**
@@ -357,10 +189,11 @@ public class POInfo implements Serializable {
    * @return ColumnSQL column sql or name
    */
   public String getColumnSQL(int index) {
-    if (index < 0 || index >= m_columns.length) return null;
-    if (m_columns[index].ColumnSQL != null && m_columns[index].ColumnSQL.length() > 0)
-      return m_columns[index].ColumnSQL + " AS " + m_columns[index].ColumnName;
-    return m_columns[index].ColumnName;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return null;
+    if (columns[index].ColumnSQL != null && columns[index].ColumnSQL.length() > 0)
+      return columns[index].ColumnSQL + " AS " + columns[index].ColumnName;
+    return columns[index].ColumnName;
   } //  getColumnSQL
 
   /**
@@ -370,8 +203,9 @@ public class POInfo implements Serializable {
    * @return true if column is virtual
    */
   public boolean isVirtualColumn(int index) {
-    if (index < 0 || index >= m_columns.length) return true;
-    return m_columns[index].ColumnSQL != null && m_columns[index].ColumnSQL.length() > 0;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return true;
+    return columns[index].ColumnSQL != null && columns[index].ColumnSQL.length() > 0;
   } //  isVirtualColumn
 
   /**
@@ -381,8 +215,9 @@ public class POInfo implements Serializable {
    * @return column label
    */
   public String getColumnLabel(int index) {
-    if (index < 0 || index >= m_columns.length) return null;
-    return m_columns[index].ColumnLabel;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return null;
+    return columns[index].ColumnLabel;
   } //  getColumnLabel
 
   /**
@@ -392,8 +227,9 @@ public class POInfo implements Serializable {
    * @return column description
    */
   public String getColumnDescription(int index) {
-    if (index < 0 || index >= m_columns.length) return null;
-    return m_columns[index].ColumnDescription;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return null;
+    return columns[index].ColumnDescription;
   } //  getColumnDescription
 
   /**
@@ -403,8 +239,9 @@ public class POInfo implements Serializable {
    * @return Class
    */
   public Class<?> getColumnClass(int index) {
-    if (index < 0 || index >= m_columns.length) return null;
-    return m_columns[index].ColumnClass;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return null;
+    return columns[index].ColumnClass;
   } //  getColumnClass
 
   /**
@@ -414,8 +251,9 @@ public class POInfo implements Serializable {
    * @return DisplayType
    */
   public int getColumnDisplayType(int index) {
-    if (index < 0 || index >= m_columns.length) return DisplayType.String;
-    return m_columns[index].DisplayType;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return DisplayType.String;
+    return columns[index].DisplayType;
   } //  getColumnDisplayType
 
   /**
@@ -425,8 +263,9 @@ public class POInfo implements Serializable {
    * @return Default Logic
    */
   public String getDefaultLogic(int index) {
-    if (index < 0 || index >= m_columns.length) return null;
-    return m_columns[index].DefaultLogic;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return null;
+    return columns[index].DefaultLogic;
   } //  getDefaultLogic
 
   /**
@@ -436,8 +275,9 @@ public class POInfo implements Serializable {
    * @return true if column mandatory
    */
   public boolean isColumnMandatory(int index) {
-    if (index < 0 || index >= m_columns.length) return false;
-    return m_columns[index].IsMandatory;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return false;
+    return columns[index].IsMandatory;
   } //  isMandatory
 
   /**
@@ -447,8 +287,9 @@ public class POInfo implements Serializable {
    * @return true if column updateable
    */
   public boolean isColumnUpdateable(int index) {
-    if (index < 0 || index >= m_columns.length) return false;
-    return m_columns[index].IsUpdateable;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return false;
+    return columns[index].IsUpdateable;
   } //  isUpdateable
 
   /**
@@ -458,8 +299,9 @@ public class POInfo implements Serializable {
    * @param updateable column updateable
    */
   public void setColumnUpdateable(int index, boolean updateable) {
-    if (index < 0 || index >= m_columns.length) return;
-    m_columns[index].IsUpdateable = updateable;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return;
+    columns[index].IsUpdateable = updateable;
   } //	setColumnUpdateable
 
   /**
@@ -468,7 +310,8 @@ public class POInfo implements Serializable {
    * @param updateable updateable
    */
   public void setUpdateable(boolean updateable) {
-    for (int i = 0; i < m_columns.length; i++) m_columns[i].IsUpdateable = updateable;
+    POInfoColumn[] columns = getColumns();
+    for (int i = 0; i < columns.length; i++) columns[i].IsUpdateable = updateable;
   } //	setUpdateable
 
   /**
@@ -478,8 +321,9 @@ public class POInfo implements Serializable {
    * @return true if it is a lookup column
    */
   public boolean isColumnLookup(int index) {
-    if (index < 0 || index >= m_columns.length) return false;
-    return DisplayType.isLookup(m_columns[index].DisplayType);
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return false;
+    return DisplayType.isLookup(columns[index].DisplayType);
   } //  isColumnLookup
 
   /**
@@ -489,8 +333,9 @@ public class POInfo implements Serializable {
    * @return true if column is the key
    */
   public boolean isKey(int index) {
-    if (index < 0 || index >= m_columns.length) return false;
-    return m_columns[index].IsKey;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return false;
+    return columns[index].IsKey;
   } //  isKey
 
   /**
@@ -500,8 +345,9 @@ public class POInfo implements Serializable {
    * @return true if column is a Parent
    */
   public boolean isColumnParent(int index) {
-    if (index < 0 || index >= m_columns.length) return false;
-    return m_columns[index].IsParent;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return false;
+    return columns[index].IsParent;
   } //  isColumnParent
 
   /**
@@ -511,8 +357,9 @@ public class POInfo implements Serializable {
    * @return true if column is translated
    */
   public boolean isColumnTranslated(int index) {
-    if (index < 0 || index >= m_columns.length) return false;
-    return m_columns[index].IsTranslated;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return false;
+    return columns[index].IsTranslated;
   } //  isColumnTranslated
 
   /**
@@ -521,10 +368,11 @@ public class POInfo implements Serializable {
    * @return true if table is translated
    */
   public synchronized boolean isTranslated() {
+    POInfoColumn[] columns = getColumns();
     if (m_IsTranslated == null) {
       m_IsTranslated = Boolean.FALSE;
-      for (int i = 0; i < m_columns.length; i++) {
-        if (m_columns[i].IsTranslated) {
+      for (int i = 0; i < columns.length; i++) {
+        if (columns[i].IsTranslated) {
           m_IsTranslated = Boolean.TRUE;
           break;
         }
@@ -540,8 +388,9 @@ public class POInfo implements Serializable {
    * @return true if column is encrypted
    */
   public boolean isEncrypted(int index) {
-    if (index < 0 || index >= m_columns.length) return false;
-    return m_columns[index].IsEncrypted;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return false;
+    return columns[index].IsEncrypted;
   } //  isEncrypted
 
   /**
@@ -551,8 +400,9 @@ public class POInfo implements Serializable {
    * @return true if column is allowed to be logged
    */
   public boolean isAllowLogging(int index) {
-    if (index < 0 || index >= m_columns.length) return false;
-    return m_columns[index].IsAllowLogging;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return false;
+    return columns[index].IsAllowLogging;
   } // isAllowLogging
 
   /**
@@ -562,8 +412,9 @@ public class POInfo implements Serializable {
    * @return true if column is allowed to be copied
    */
   public boolean isAllowCopy(int index) {
-    if (index < 0 || index >= m_columns.length) return false;
-    return m_columns[index].IsAllowCopy;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return false;
+    return columns[index].IsAllowCopy;
   } // isAllowCopy
 
   /**
@@ -573,8 +424,9 @@ public class POInfo implements Serializable {
    * @return field length
    */
   public int getFieldLength(int index) {
-    if (index < 0 || index >= m_columns.length) return 0;
-    return m_columns[index].FieldLength;
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return 0;
+    return columns[index].FieldLength;
   } //  getFieldLength
 
   /**
@@ -599,9 +451,10 @@ public class POInfo implements Serializable {
    * @return null if all valid otherwise error message
    */
   public String validate(int index, Object value) {
-    if (index < 0 || index >= m_columns.length) return "RangeError";
+    POInfoColumn[] columns = getColumns();
+    if (index < 0 || index >= columns.length) return "RangeError";
     //	Mandatory (i.e. not null
-    if (m_columns[index].IsMandatory && value == null) {
+    if (columns[index].IsMandatory && value == null) {
       return "FillMandatory";
     }
     if (value == null) return null;
@@ -609,45 +462,45 @@ public class POInfo implements Serializable {
     //	Length ignored
 
     //
-    if (m_columns[index].ValueMin != null) {
+    if (columns[index].ValueMin != null) {
       BigDecimal value_BD = null;
       try {
-        if (m_columns[index].ValueMin_BD != null) value_BD = new BigDecimal(value.toString());
+        if (columns[index].ValueMin_BD != null) value_BD = new BigDecimal(value.toString());
       } catch (Exception ex) {
       }
       //	Both are Numeric
-      if (m_columns[index].ValueMin_BD != null
+      if (columns[index].ValueMin_BD != null
           && value_BD != null) { // 	error: 1 - 0 => 1  -  OK: 1 - 1 => 0 & 1 - 10 => -1
-        int comp = m_columns[index].ValueMin_BD.compareTo(value_BD);
+        int comp = columns[index].ValueMin_BD.compareTo(value_BD);
         if (comp > 0) {
-          return "LessThanMinValue" + ";" + m_columns[index].ValueMin_BD.toPlainString();
+          return "LessThanMinValue" + ";" + columns[index].ValueMin_BD.toPlainString();
         }
       } else //	String
       {
-        int comp = m_columns[index].ValueMin.compareTo(value.toString());
+        int comp = columns[index].ValueMin.compareTo(value.toString());
         if (comp > 0) {
-          return "LessThanMinValue" + ";" + m_columns[index].ValueMin;
+          return "LessThanMinValue" + ";" + columns[index].ValueMin;
         }
       }
     }
-    if (m_columns[index].ValueMax != null) {
+    if (columns[index].ValueMax != null) {
       BigDecimal value_BD = null;
       try {
-        if (m_columns[index].ValueMax_BD != null) value_BD = new BigDecimal(value.toString());
+        if (columns[index].ValueMax_BD != null) value_BD = new BigDecimal(value.toString());
       } catch (Exception ex) {
       }
       //	Both are Numeric
-      if (m_columns[index].ValueMax_BD != null
+      if (columns[index].ValueMax_BD != null
           && value_BD != null) { // 	error 12 - 20 => -1  -  OK: 12 - 12 => 0 & 12 - 10 => 1
-        int comp = m_columns[index].ValueMax_BD.compareTo(value_BD);
+        int comp = columns[index].ValueMax_BD.compareTo(value_BD);
         if (comp < 0) {
-          return "MoreThanMaxValue" + ";" + m_columns[index].ValueMax_BD.toPlainString();
+          return "MoreThanMaxValue" + ";" + columns[index].ValueMax_BD.toPlainString();
         }
       } else //	String
       {
-        int comp = m_columns[index].ValueMax.compareTo(value.toString());
+        int comp = columns[index].ValueMax.compareTo(value.toString());
         if (comp < 0) {
-          return "MoreThanMaxValue" + ";" + m_columns[index].ValueMax;
+          return "MoreThanMaxValue" + ";" + columns[index].ValueMax;
         }
       }
     }
@@ -671,6 +524,7 @@ public class POInfo implements Serializable {
    * @return stringbuilder
    */
   public StringBuilder buildSelect(boolean fullyQualified, boolean noVirtualColumn) {
+    POInfoColumn[] columns = getColumns();
     StringBuilder sql = new StringBuilder("SELECT ");
     int size = getColumnCount();
     int count = 0;
@@ -683,14 +537,9 @@ public class POInfo implements Serializable {
       String columnSQL = getColumnSQL(i);
       if (fullyQualified && !virtual) sql.append(getTableName()).append(".");
       sql.append(columnSQL); // 	Normal and Virtual Column
-      if (fullyQualified && !virtual) sql.append(" AS ").append(m_columns[i].ColumnName);
+      if (fullyQualified && !virtual) sql.append(" AS ").append(columns[i].ColumnName);
     }
     sql.append(" FROM ").append(getTableName());
     return sql;
-  }
-
-  /** @return if table save log */
-  public boolean isChangeLog() {
-    return m_IsChangeLog;
   }
 } //  POInfo

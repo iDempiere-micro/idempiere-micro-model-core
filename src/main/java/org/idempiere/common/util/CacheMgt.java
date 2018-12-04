@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import org.idempiere.common.base.IServiceHolder;
+import org.idempiere.common.base.IServiceLocator;
 import org.idempiere.common.base.Service;
 import org.idempiere.icommon.distributed.ICacheService;
 import org.idempiere.icommon.distributed.IClusterMember;
@@ -75,11 +76,13 @@ public class CacheMgt {
     Map<K, V> map = null;
     if (distributed) {
       try {
-        IServiceHolder<ICacheService> service =
-            Service.Companion.locator().locate(ICacheService.class);
-        if (service != null) {
-          ICacheService provider = service.getService();
-          if (provider != null) map = provider.getMap(name);
+        IServiceLocator locator = Service.Companion.locator();
+        if (locator != null) {
+          IServiceHolder<ICacheService> service = locator.locate(ICacheService.class);
+          if (service != null) {
+            ICacheService provider = service.getService();
+            if (provider != null) map = provider.getMap(name);
+          }
         }
       } catch (Exception ex) {
         ex.printStackTrace();
@@ -130,33 +133,35 @@ public class CacheMgt {
    * @return number of deleted cache entries
    */
   private int clusterReset(String tableName, int recordId) {
-    IServiceHolder<IClusterService> holder =
-        Service.Companion.locator().locate(IClusterService.class);
-    if (holder != null) {
-      IClusterService service = holder.getService();
-      if (service != null) {
-        ResetCacheCallable callable = new ResetCacheCallable(tableName, recordId);
-        Map<IClusterMember, Future<Integer>> futureMap =
-            service.execute(callable, service.getMembers());
-        if (futureMap != null) {
-          int total = 0;
-          try {
-            Collection<Future<Integer>> results = futureMap.values();
-            for (Future<Integer> i : results) {
-              total += i.get();
+    IServiceLocator locator = Service.Companion.locator();
+    if (locator != null) {
+      IServiceHolder<IClusterService> holder = locator.locate(IClusterService.class);
+      if (holder != null) {
+        IClusterService service = holder.getService();
+        if (service != null) {
+          ResetCacheCallable callable = new ResetCacheCallable(tableName, recordId);
+          Map<IClusterMember, Future<Integer>> futureMap =
+              service.execute(callable, service.getMembers());
+          if (futureMap != null) {
+            int total = 0;
+            try {
+              Collection<Future<Integer>> results = futureMap.values();
+              for (Future<Integer> i : results) {
+                total += i.get();
+              }
+            } catch (InterruptedException e) {
+              e.printStackTrace();
+            } catch (ExecutionException e) {
+              e.printStackTrace();
             }
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          } catch (ExecutionException e) {
-            e.printStackTrace();
+            return total;
+          } else {
+            return resetLocalCache(tableName, recordId);
           }
-          return total;
         } else {
           return resetLocalCache(tableName, recordId);
         }
-      } else {
-        return resetLocalCache(tableName, recordId);
-      }
+      } else return resetLocalCache(tableName, recordId);
     } else return resetLocalCache(tableName, recordId);
   }
 
@@ -169,18 +174,20 @@ public class CacheMgt {
    * @return number of deleted cache entries
    */
   private void clusterNewRecord(String tableName, int recordId) {
-    IServiceHolder<IClusterService> holder =
-        Service.Companion.locator().locate(IClusterService.class);
-    if (holder != null) {
-      IClusterService service = holder.getService();
-      if (service != null) {
-        CacheNewRecordCallable callable = new CacheNewRecordCallable(tableName, recordId);
-        if (service.execute(callable, service.getMembers()) == null) {
+    IServiceLocator locator = Service.Companion.locator();
+    if (locator != null) {
+      IServiceHolder<IClusterService> holder = locator.locate(IClusterService.class);
+      if (holder != null) {
+        IClusterService service = holder.getService();
+        if (service != null) {
+          CacheNewRecordCallable callable = new CacheNewRecordCallable(tableName, recordId);
+          if (service.execute(callable, service.getMembers()) == null) {
+            localNewRecord(tableName, recordId);
+          }
+        } else {
           localNewRecord(tableName, recordId);
         }
-      } else {
-        localNewRecord(tableName, recordId);
-      }
+      } else localNewRecord(tableName, recordId);
     } else localNewRecord(tableName, recordId);
   }
 

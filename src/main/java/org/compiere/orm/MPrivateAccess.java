@@ -1,11 +1,8 @@
 package org.compiere.orm;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
-import java.util.logging.Level;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
 
 /**
  * Private Access
@@ -16,38 +13,6 @@ import org.idempiere.common.util.DB;
 public class MPrivateAccess extends X_AD_Private_Access {
   /** */
   private static final long serialVersionUID = -5649529789751432279L;
-
-  /**
-   * Load Pricate Access
-   *
-   * @param ctx context
-   * @param AD_User_ID user
-   * @param AD_Table_ID table
-   * @param Record_ID record
-   * @return access or null if not found
-   */
-  public static MPrivateAccess get(Properties ctx, int AD_User_ID, int AD_Table_ID, int Record_ID) {
-    MPrivateAccess retValue = null;
-    String sql =
-        "SELECT * FROM AD_Private_Access WHERE AD_User_ID=? AND AD_Table_ID=? AND Record_ID=?";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, null);
-      pstmt.setInt(1, AD_User_ID);
-      pstmt.setInt(2, AD_Table_ID);
-      pstmt.setInt(3, Record_ID);
-      rs = pstmt.executeQuery();
-      if (rs.next()) retValue = new MPrivateAccess(ctx, rs, null);
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, "MPrivateAccess", e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    return retValue;
-  } //	get
 
   /**
    * Get Where Clause of Locked Records for Table
@@ -64,7 +29,7 @@ public class MPrivateAccess extends X_AD_Private_Access {
     String sql = "SELECT Record_ID FROM AD_Private_Access WHERE AD_Table_ID=? AND AD_User_ID<>? AND IsActive='Y'";
     try
     {
-    	pstmt = DB.prepareStatement(sql, null);
+    	pstmt =prepareStatement(sql, null);
     	pstmt.setInt(1, AD_Table_ID);
     	pstmt.setInt(2, AD_User_ID);
     	ResultSet rs = pstmt.executeQuery();

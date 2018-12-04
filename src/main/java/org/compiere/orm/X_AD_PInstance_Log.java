@@ -7,7 +7,6 @@ import java.util.Properties;
 import org.compiere.model.I_AD_PInstance_Log;
 import org.idempiere.common.util.Env;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_PInstance_Log
@@ -40,21 +39,9 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
     return accessLevel.intValue();
   }
 
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
-  }
-
   public String toString() {
     StringBuffer sb = new StringBuffer("X_AD_PInstance_Log[").append(getId()).append("]");
     return sb.toString();
-  }
-
-  public org.compiere.model.I_AD_PInstance getAD_PInstance() throws RuntimeException {
-    return (org.compiere.model.I_AD_PInstance)
-        MTable.get(getCtx(), org.compiere.model.I_AD_PInstance.Table_Name)
-            .getPO(getAD_PInstance_ID(), get_TrxName());
   }
 
   /**
@@ -240,5 +227,10 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
     Integer ii = (Integer) get_Value(COLUMNNAME_Record_ID);
     if (ii == null) return 0;
     return ii;
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

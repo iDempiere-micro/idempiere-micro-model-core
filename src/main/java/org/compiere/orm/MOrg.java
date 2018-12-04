@@ -1,11 +1,12 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.getSQLValue;
+
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 import org.compiere.model.I_AD_Org;
 import org.idempiere.common.util.CCache;
-import org.idempiere.common.util.DB;
 
 /**
  * Organization Model
@@ -28,7 +29,7 @@ public class MOrg extends X_AD_Org {
         new Query(po.getCtx(), I_AD_Org.Table_Name, "AD_Client_ID=?", null)
             .setOrderBy(I_AD_Org.COLUMNNAME_Value)
             .setOnlyActiveRecords(true)
-            .setParameters(po.getADClientID())
+            .setParameters(po.getClientId())
             .list();
     for (MOrg org : list) {
       s_cache.put(org.getId(), org);
@@ -89,7 +90,7 @@ public class MOrg extends X_AD_Org {
    */
   public MOrg(MClient client, String value, String name) {
     this(client.getCtx(), 0, client.get_TrxName());
-    setADClientID(client.getADClientID());
+    setADClientID(client.getClientId());
     setValue(value);
     setName(name);
   } //	MOrg
@@ -103,7 +104,7 @@ public class MOrg extends X_AD_Org {
    * @return Org Info
    */
   public MOrgInfo getInfo() {
-    return MOrgInfo.get(getCtx(), getAD_Org_ID(), get_TrxName());
+    return MOrgInfo.get(getCtx(), getOrgId(), get_TrxName());
   } //	getMOrgInfo
 
   /**
@@ -152,8 +153,8 @@ public class MOrg extends X_AD_Org {
   public int getLinkedC_BPartner_ID(String trxName) {
     if (m_linkedBPartner == null) {
       int C_BPartner_ID =
-          DB.getSQLValue(
-              trxName, "SELECT C_BPartner_ID FROM C_BPartner WHERE AD_OrgBP_ID=?", getAD_Org_ID());
+          getSQLValue(
+              trxName, "SELECT C_BPartner_ID FROM C_BPartner WHERE AD_OrgBP_ID=?", getOrgId());
       if (C_BPartner_ID < 0) // 	not found = -1
       C_BPartner_ID = 0;
       m_linkedBPartner = new Integer(C_BPartner_ID);

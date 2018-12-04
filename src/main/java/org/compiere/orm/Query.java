@@ -1,5 +1,8 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.*;
+import static software.hsharp.core.util.DBKt.close;
+
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,11 +15,11 @@ import java.util.Properties;
 import java.util.logging.Level;
 import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Util;
 import org.idempiere.icommon.model.IPO;
 import org.idempiere.orm.POInfo;
+import software.hsharp.core.orm.BaseQuery;
 
 /**
  * @author Low Heng Sin
@@ -38,7 +41,7 @@ import org.idempiere.orm.POInfo;
  *         log.info
  *     <li>FR: [ 2214883 ] - to introduce .setClient_ID
  */
-public class Query {
+public class Query extends BaseQuery {
   public static final String AGGREGATE_COUNT = "COUNT";
   public static final String AGGREGATE_SUM = "SUM";
   public static final String AGGREGATE_AVG = "AVG";
@@ -47,17 +50,12 @@ public class Query {
 
   private static CLogger log = CLogger.getCLogger(Query.class);
 
-  private Properties ctx = null;
-  private MTable table = null;
   private String whereClause = null;
   private String orderBy = null;
   private String trxName = null;
-  private Object[] parameters = null;
   private boolean applyAccessFilter = false;
   private boolean applyAccessFilterRW = false;
   private boolean applyAccessFilterFullyQualified = true;
-  private boolean onlyActiveRecords = false;
-  private boolean onlyClient_ID = false;
   private int onlySelection_ID = -1;
   private boolean forUpdate = false;
   private boolean noVirtualColumn = false;
@@ -78,8 +76,7 @@ public class Query {
    *     is security error prone
    */
   public Query(MTable table, String whereClause, String trxName) {
-    this.ctx = table.getCtx();
-    this.table = table;
+    super(table.getCtx(), table);
     this.whereClause = whereClause;
     this.trxName = trxName;
   }
@@ -91,8 +88,7 @@ public class Query {
    * @param trxName
    */
   public Query(Properties ctx, MTable table, String whereClause, String trxName) {
-    this.ctx = ctx;
-    this.table = table;
+    super(ctx, table);
     this.whereClause = whereClause;
     this.trxName = trxName;
   }
@@ -105,33 +101,8 @@ public class Query {
    */
   public Query(Properties ctx, String tableName, String whereClause, String trxName) {
     this(ctx, MTable.get(ctx, tableName), whereClause, trxName);
-    if (this.table == null)
-      throw new IllegalArgumentException("Table Name Not Found - " + tableName);
-  }
-
-  /**
-   * Set query parameters
-   *
-   * @param parameters
-   */
-  public Query setParameters(Object... parameters) {
-    this.parameters = parameters;
-    return this;
-  }
-
-  /**
-   * Set query parameters
-   *
-   * @param parameters collection of parameters
-   */
-  public Query setParameters(List<Object> parameters) {
-    if (parameters == null) {
-      this.parameters = null;
-      return this;
-    }
-    this.parameters = new Object[parameters.size()];
-    parameters.toArray(this.parameters);
-    return this;
+    MTable table = super.getTable();
+    if (table == null) throw new IllegalArgumentException("Table Name Not Found - " + tableName);
   }
 
   /**
@@ -171,27 +142,6 @@ public class Query {
   }
 
   /**
-   * Select only active records (i.e. IsActive='Y')
-   *
-   * @param onlyActiveRecords
-   */
-  public Query setOnlyActiveRecords(boolean onlyActiveRecords) {
-    this.onlyActiveRecords = onlyActiveRecords;
-    return this;
-  }
-
-  /** Set Client_ID true for WhereClause routine to include AD_Client_ID */
-  public Query setClient_ID() {
-    return setClient_ID(true);
-  }
-
-  /** Set include or not include AD_Client_ID in where clause */
-  public Query setClient_ID(boolean isIncludeClient) {
-    this.onlyClient_ID = isIncludeClient;
-    return this;
-  }
-
-  /**
    * Only records that are in T_Selection with AD_PInstance_ID.
    *
    * @param AD_PInstance_ID
@@ -227,102 +177,6 @@ public class Query {
   }
 
   /**
-   * Return a list of all po that match the query criteria.
-   *
-   * @return List
-   * @throws DBException
-   */
-  @SuppressWarnings("unchecked")
-  public <T extends IPO> List<T> list() throws DBException {
-    List<T> list = new ArrayList<T>();
-    String sql = buildSQL(null, true);
-
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, trxName);
-      rs = createResultSet(pstmt);
-      while (rs.next()) {
-        T po = (T) table.getPO(rs, trxName);
-        list.add(po);
-      }
-    } catch (SQLException e) {
-      log.log(Level.SEVERE, sql, e);
-      throw new DBException(e, sql);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    return list;
-  }
-
-  /**
-   * Return first PO that match query criteria
-   *
-   * @return first PO
-   * @throws DBException
-   */
-  @SuppressWarnings("unchecked")
-  public <T extends PO> T first() throws DBException {
-    T po = null;
-    String sql = buildSQL(null, true);
-
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, trxName);
-      rs = createResultSet(pstmt);
-      if (rs.next()) {
-        po = (T) table.getPO(rs, trxName);
-      }
-    } catch (SQLException e) {
-      log.log(Level.SEVERE, sql, e);
-      throw new DBException(e, sql);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    return po;
-  }
-
-  /**
-   * Return first PO that match query criteria. If there are more records that match criteria an
-   * exception will be throwed
-   *
-   * @return first PO
-   * @throws DBException
-   * @see {@link #first()}
-   */
-  @SuppressWarnings("unchecked")
-  public <T extends PO> T firstOnly() throws DBException {
-    T po = null;
-    String sql = buildSQL(null, true);
-
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, trxName);
-      rs = createResultSet(pstmt);
-      if (rs.next()) {
-        po = (T) table.getPO(rs, trxName);
-      }
-      if (rs.next()) {
-        throw new DBException("QueryMoreThanOneRecordsFound"); // TODO : translate
-      }
-    } catch (SQLException e) {
-      log.log(Level.SEVERE, sql, e);
-      throw new DBException(e, sql);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    return po;
-  }
-
-  /**
    * Return first ID
    *
    * @return first ID or -1 if not found
@@ -343,6 +197,7 @@ public class Query {
   }
 
   private int firstId(boolean assumeOnlyOneResult) throws DBException {
+    MTable table = super.getTable();
     String[] keys = table.getKeyColumns();
     if (keys.length != 1) {
       throw new DBException("Table " + table + " has 0 or more than 1 key columns");
@@ -358,7 +213,7 @@ public class Query {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql, trxName);
       rs = createResultSet(pstmt);
       if (rs.next()) {
         id = rs.getInt(1);
@@ -369,7 +224,7 @@ public class Query {
     } catch (SQLException e) {
       throw new DBException(e, sql);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -421,6 +276,7 @@ public class Query {
         throw new DBException("No Expression defined");
       }
     }
+    MTable table = super.getTable();
 
     StringBuilder sqlSelect =
         new StringBuilder("SELECT ")
@@ -438,7 +294,7 @@ public class Query {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, this.trxName);
+      pstmt = prepareStatement(sql, this.trxName);
       rs = createResultSet(pstmt);
       if (rs.next()) {
         if (returnType.isAssignableFrom(BigDecimal.class)) {
@@ -465,7 +321,7 @@ public class Query {
     } catch (SQLException e) {
       throw new DBException(e, sql);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -502,17 +358,18 @@ public class Query {
    * @throws DBException
    */
   public boolean match() throws DBException {
+    MTable table = super.getTable();
     String sql = buildSQL(new StringBuilder("SELECT 1 FROM ").append(table.getTableName()), false);
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, this.trxName);
+      pstmt = prepareStatement(sql, this.trxName);
       rs = createResultSet(pstmt);
       if (rs.next()) return true;
     } catch (SQLException e) {
       throw new DBException(e, sql);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
     }
     return false;
   }
@@ -526,6 +383,7 @@ public class Query {
    * @throws DBException
    */
   public <T extends PO> Iterator<T> iterate() throws DBException {
+    MTable table = super.getTable();
     String[] keys = table.getKeyColumns();
     StringBuilder sqlBuffer = new StringBuilder(" SELECT ");
     for (int i = 0; i < keys.length; i++) {
@@ -540,7 +398,7 @@ public class Query {
     ResultSet rs = null;
     List<Object[]> idList = new ArrayList<Object[]>();
     try {
-      pstmt = DB.prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql, trxName);
       rs = createResultSet(pstmt);
       while (rs.next()) {
         Object[] ids = new Object[keys.length];
@@ -553,7 +411,7 @@ public class Query {
       log.log(Level.SEVERE, sql, e);
       throw new DBException(e, sql);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -568,12 +426,13 @@ public class Query {
    * @throws DBException
    */
   public <T extends PO> POResultSet<T> scroll() throws DBException {
+    MTable table = super.getTable();
     String sql = buildSQL(null, true);
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     POResultSet<T> rsPO = null;
     try {
-      pstmt = DB.prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql, trxName);
       rs = createResultSet(pstmt);
       rsPO = new POResultSet<T>(table, pstmt, rs, trxName);
       rsPO.setCloseOnError(true);
@@ -584,7 +443,7 @@ public class Query {
     } finally {
       // If there was an error, then close the statement and resultset
       if (rsPO == null) {
-        DB.close(rs, pstmt);
+        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }
@@ -597,9 +456,10 @@ public class Query {
    * @param selectClause optional; if null the select clause will be build according to POInfo
    * @return final SQL
    */
-  private final String buildSQL(StringBuilder selectClause, boolean useOrderByClause) {
+  protected final String buildSQL(StringBuilder selectClause, boolean useOrderByClause) {
+    MTable table = super.getTable();
     if (selectClause == null) {
-      POInfo info = POInfo.getPOInfo(this.ctx, table.getAD_Table_ID(), trxName);
+      POInfo info = POInfo.getPOInfo(this.getCtx(), table.getAD_Table_ID(), trxName);
       if (info == null) {
         throw new IllegalStateException(
             "No POInfo found for AD_Table_ID=" + table.getAD_Table_ID());
@@ -617,12 +477,14 @@ public class Query {
       if (whereBuffer.length() > 0) whereBuffer.append(" AND ");
       whereBuffer.append("(").append(this.whereClause).append(")");
     }
-    if (this.onlyActiveRecords) {
+    boolean onlyActiveRecords = super.getOnlyActiveRecords();
+    if (onlyActiveRecords) {
       if (whereBuffer.length() > 0) whereBuffer.append(" AND ");
       if (!joinClauseList.isEmpty()) whereBuffer.append(table.getTableName()).append(".");
       whereBuffer.append("IsActive=?");
     }
-    if (this.onlyClient_ID) // red1
+    boolean onlyClient_ID = super.getOnlyClient_ID();
+    if (onlyClient_ID) // red1
     {
       if (whereBuffer.length() > 0) whereBuffer.append(" AND ");
       if (!joinClauseList.isEmpty()) whereBuffer.append(table.getTableName()).append(".");
@@ -653,14 +515,14 @@ public class Query {
     }
     String sql = sqlBuffer.toString();
     if (applyAccessFilter) {
-      MRole role = MRole.getDefault(this.ctx, false);
+      MRole role = MRole.getDefault(this.getCtx(), false);
       sql =
           role.addAccessSQL(
               sql, table.getTableName(), applyAccessFilterFullyQualified, applyAccessFilterRW);
     }
     if (forUpdate) {
       sql = sql + " FOR UPDATE";
-      if (DB.isPostgreSQL()) sql = sql + " OF " + table.getTableName();
+      if (isPostgreSQL()) sql = sql + " OF " + table.getTableName();
     }
 
     // If have pagination
@@ -714,10 +576,8 @@ public class Query {
     String query = pQuery;
 
     if (pageSize > 0) {
-      if (DB.getDatabase().isPagingSupported()) {
-        query =
-            DB.getDatabase()
-                .addPagingSQL(query, (pageSize * pagesToSkip) + 1, pageSize * (pagesToSkip + 1));
+      if (isPagingSupported()) {
+        query = addPagingSQL(query, (pageSize * pagesToSkip) + 1, pageSize * (pagesToSkip + 1));
       } else {
         throw new IllegalArgumentException("Pagination not supported by database");
       }
@@ -727,20 +587,23 @@ public class Query {
   }
 
   private final ResultSet createResultSet(PreparedStatement pstmt) throws SQLException {
-    DB.setParameters(pstmt, parameters);
+    Object[] parameters = super.getParameters();
+    setParameters(pstmt, parameters);
     int i = 1 + (parameters != null ? parameters.length : 0);
 
-    if (this.onlyActiveRecords) {
-      DB.setParameter(pstmt, i++, true);
+    boolean onlyActiveRecords = super.getOnlyActiveRecords();
+    if (onlyActiveRecords) {
+      setParameter(pstmt, i++, true);
       if (log.isLoggable(Level.FINEST)) log.finest("Parameter IsActive = Y");
     }
-    if (this.onlyClient_ID) {
-      int AD_Client_ID = Env.getADClientID(ctx);
-      DB.setParameter(pstmt, i++, AD_Client_ID);
+    boolean onlyClient_ID = super.getOnlyClient_ID();
+    if (onlyClient_ID) {
+      int AD_Client_ID = Env.getADClientID(this.getCtx());
+      setParameter(pstmt, i++, AD_Client_ID);
       if (log.isLoggable(Level.FINEST)) log.finest("Parameter AD_Client_ID = " + AD_Client_ID);
     }
     if (this.onlySelection_ID > 0) {
-      DB.setParameter(pstmt, i++, this.onlySelection_ID);
+      setParameter(pstmt, i++, this.onlySelection_ID);
       if (log.isLoggable(Level.FINEST))
         log.finest("Parameter Selection AD_PInstance_ID = " + this.onlySelection_ID);
     }
@@ -756,6 +619,7 @@ public class Query {
    * @return Get a Array with the IDs
    */
   public int[] getIDs() {
+    MTable table = super.getTable();
     String[] keys = table.getKeyColumns();
     if (keys.length != 1) {
       throw new DBException("Table " + table + " has 0 or more than 1 key columns");
@@ -771,7 +635,7 @@ public class Query {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql, trxName);
       rs = createResultSet(pstmt);
       while (rs.next()) {
         list.add(rs.getInt(1));
@@ -779,7 +643,7 @@ public class Query {
     } catch (SQLException e) {
       throw new DBException(e, sql);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }

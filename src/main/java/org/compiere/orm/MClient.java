@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 import org.compiere.model.I_AD_Client;
-import org.compiere.model.I_AD_User;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Language;
@@ -25,9 +24,9 @@ public class MClient extends X_AD_Client {
    */
   public MClient(Properties ctx, int AD_Client_ID, boolean createNew, String trxName) {
     super(ctx, AD_Client_ID, trxName);
-    m_createNew = createNew;
+    createNew = createNew;
     if (AD_Client_ID == 0) {
-      if (m_createNew) {
+      if (createNew) {
         //	setValue (null);
         //	setName (null);
         setAD_Org_ID(0);
@@ -122,7 +121,7 @@ public class MClient extends X_AD_Client {
     List<MClient> list =
         new Query(ctx, I_AD_Client.Table_Name, null, null).setOrderBy(orderBy).list();
     for (MClient client : list) {
-      s_cache.put(new Integer(client.getADClientID()), client);
+      s_cache.put(new Integer(client.getClientId()), client);
     }
     MClient[] retValue = new MClient[list.size()];
     list.toArray(retValue);
@@ -135,47 +134,12 @@ public class MClient extends X_AD_Client {
    * @return Client Info
    */
   public MClientInfo getInfo() {
-    if (m_info == null) m_info = MClientInfo.get(getCtx(), getADClientID(), get_TrxName());
+    if (m_info == null) m_info = MClientInfo.get(getCtx(), getClientId(), get_TrxName());
     return m_info;
   } //	getMClientInfo
 
   /** Client Info */
   protected MClientInfo m_info = null;
-
-  public boolean sendEMail(String to, String subject, String message, File attachment) {
-    return true;
-  }
-
-  public boolean sendEMail(int AD_User_ID, String subject, String message, File attachment) {
-    return true;
-  }
-
-  public boolean sendEMail(
-      String to, String subject, String message, File attachment, boolean html) {
-    return true;
-  }
-
-  public boolean sendEMail(
-      I_AD_User from,
-      I_AD_User to,
-      String subject,
-      String message,
-      File attachment,
-      boolean isHtml) {
-    return true;
-  }
-
-  public boolean sendEMail(
-      I_AD_User from, I_AD_User to, String subject, String message, File attachment) {
-    return true;
-  }
-
-  public void sendEMailAttachments(
-      I_AD_User from,
-      I_AD_User user,
-      String schedulerName,
-      String mailContent,
-      List<File> fileList) {}
 
   /*
    * Is Client Accounting enabled?

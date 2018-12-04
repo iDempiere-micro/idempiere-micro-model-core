@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_C_DocType;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for C_DocType
@@ -36,21 +35,9 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
     return accessLevel.intValue();
   }
 
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
-  }
-
   public String toString() {
     StringBuffer sb = new StringBuffer("X_C_DocType[").append(getId()).append("]");
     return sb.toString();
-  }
-
-  public org.compiere.model.I_AD_PrintFormat getAD_PrintFormat() throws RuntimeException {
-    return (org.compiere.model.I_AD_PrintFormat)
-        MTable.get(getCtx(), org.compiere.model.I_AD_PrintFormat.Table_Name)
-            .getPO(getAD_PrintFormat_ID(), get_TrxName());
   }
 
   /**
@@ -481,12 +468,6 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
     return (String) get_Value(COLUMNNAME_DocumentNote);
   }
 
-  public org.compiere.model.I_GL_Category getGL_Category() throws RuntimeException {
-    return (org.compiere.model.I_GL_Category)
-        MTable.get(getCtx(), org.compiere.model.I_GL_Category.Table_Name)
-            .getPO(getGL_Category_ID(), get_TrxName());
-  }
-
   /**
    * Set GL Category.
    *
@@ -892,5 +873,10 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
    */
   public String getPrintName() {
     return (String) get_Value(COLUMNNAME_PrintName);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

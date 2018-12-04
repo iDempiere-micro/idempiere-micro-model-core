@@ -1,5 +1,9 @@
 package org.idempiere.orm;
 
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.createConnection;
+import static software.hsharp.core.util.DBKt.executeUpdate;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +11,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import org.compiere.util.DisplayType;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
 import org.idempiere.common.util.Trx;
 
 /**
@@ -82,7 +85,7 @@ public class PO_LOB implements Serializable {
               .append(m_columnName)
               .append("=null WHERE ")
               .append(m_whereClause);
-      int no = DB.executeUpdate(sql.toString(), trxName);
+      int no = executeUpdate(sql.toString(), trxName);
       if (log.isLoggable(Level.FINE))
         log.fine("save [" + trxName + "] #" + no + " - no data - set to null - " + m_value);
       if (no == 0) log.warning("[" + trxName + "] - not updated - " + sql);
@@ -96,8 +99,6 @@ public class PO_LOB implements Serializable {
             .append(m_columnName)
             .append("=? WHERE ")
             .append(m_whereClause);
-    if (!DB.isPostgreSQL() && !DB.isOracle())
-      sql = new StringBuffer(DB.getDatabase().convertStatement(sql.toString()));
     //
 
     if (log.isLoggable(Level.FINE)) log.fine("[" + trxName + "] - Local - " + m_value);
@@ -107,7 +108,7 @@ public class PO_LOB implements Serializable {
     Connection con = null;
     //	Create Connection
     if (trx != null) con = trx.getConnection();
-    if (con == null) con = DB.createConnection(false, Connection.TRANSACTION_READ_COMMITTED);
+    if (con == null) con = createConnection(false, Connection.TRANSACTION_READ_COMMITTED);
     if (con == null) {
       log.log(Level.SEVERE, "Could not get Connection");
       return false;
@@ -128,7 +129,7 @@ public class PO_LOB implements Serializable {
       log.log(Level.SEVERE, "[" + trxName + "] - " + sql, e);
       success = false;
     } finally {
-      DB.close(pstmt);
+      close(pstmt);
       pstmt = null;
     }
 

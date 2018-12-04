@@ -1,11 +1,8 @@
 package org.compiere.orm;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
-import java.util.logging.Level;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
 
 /**
  * (Disk) Tree Node Model
@@ -16,34 +13,6 @@ import org.idempiere.common.util.DB;
 public class MTree_Node extends X_AD_TreeNode {
   /** */
   private static final long serialVersionUID = 5473815124433234331L;
-
-  /**
-   * Get Tree Node
-   *
-   * @param tree tree
-   * @param Node_ID node
-   * @return node or null
-   */
-  public static MTree_Node get(MTree_Base tree, int Node_ID) {
-    MTree_Node retValue = null;
-    String sql = "SELECT * FROM AD_TreeNode WHERE AD_Tree_ID=? AND Node_ID=?";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, tree.get_TrxName());
-      pstmt.setInt(1, tree.getAD_Tree_ID());
-      pstmt.setInt(2, Node_ID);
-      rs = pstmt.executeQuery();
-      if (rs.next()) retValue = new MTree_Node(tree.getCtx(), rs, tree.get_TrxName());
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, sql, e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    return retValue;
-  } //	get
 
   /** Static Logger */
   private static CLogger s_log = CLogger.getCLogger(MTree_Node.class);

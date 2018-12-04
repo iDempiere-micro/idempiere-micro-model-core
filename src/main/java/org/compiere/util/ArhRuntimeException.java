@@ -15,7 +15,7 @@ import org.idempiere.common.util.Env;
  *
  * @author Teo_Sarca, SC ARHIPAC SERVICE SRL
  */
-public class ArhRuntimeException extends AdempiereException {
+public class ArhRuntimeException extends AdempiereExceptionEx {
   /** */
   private static final long serialVersionUID = -100343773302909791L;
   /** Additional attributes */

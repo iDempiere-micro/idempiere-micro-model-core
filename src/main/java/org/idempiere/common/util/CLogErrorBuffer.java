@@ -1,5 +1,7 @@
 package org.idempiere.common.util;
 
+import static software.hsharp.core.util.DBKt.isConnected;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -140,7 +142,7 @@ public class CLogErrorBuffer extends Handler {
         // String className = record.getSourceClassName();		//	physical class
         String methodName = record.getSourceMethodName(); //
         if (methodName == null) methodName = "";
-        if (DB.isConnected(false)
+        if (isConnected(false)
             && methodName != null
             && !methodName.equals("saveError")
             && !methodName.equals("get_Value")

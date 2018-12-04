@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.idempiere.common.base.IServiceHolder;
+import org.idempiere.common.base.IServiceLocator;
 import org.idempiere.common.base.Service;
 import org.idempiere.icommon.distributed.ICacheService;
 
@@ -95,12 +96,15 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
     m_distributed = distributed;
     if (distributed) {
       try {
-        IServiceHolder<ICacheService> service =
-            Service.Companion.locator().locate(ICacheService.class);
-        if (service != null) {
-          ICacheService provider = service.getService();
-          if (provider != null) {
-            nullList = provider.getSet(name);
+        IServiceLocator locator = Service.Companion.locator();
+        if (locator != null) {
+          IServiceHolder<ICacheService> service =
+              Service.Companion.locator().locate(ICacheService.class);
+          if (service != null) {
+            ICacheService provider = service.getService();
+            if (provider != null) {
+              nullList = provider.getSet(name);
+            }
           }
         }
       } catch (Exception ex) {

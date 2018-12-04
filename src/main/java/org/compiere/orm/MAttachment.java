@@ -1,5 +1,7 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.getSQLValue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +15,6 @@ import org.compiere.model.IAttachmentStore;
 import org.compiere.model.I_AD_Attachment;
 import org.compiere.model.I_AD_AttachmentEntry;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
 import org.idempiere.common.util.Util;
 
 /**
@@ -135,7 +136,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
    * @param trxName
    */
   private void initAttachmentStoreDetails(Properties ctx, String trxName) {
-    MClientInfo clientInfo = MClientInfo.get(ctx, getADClientID());
+    MClientInfo clientInfo = MClientInfo.get(ctx, getClientId());
     provider = new MStorageProvider(ctx, clientInfo.getAD_StorageProvider_ID(), trxName);
   }
 
@@ -542,7 +543,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
    */
   public static int getID(int Table_ID, int Record_ID) {
     String sql = "SELECT AD_Attachment_ID FROM AD_Attachment WHERE AD_Table_ID=? AND Record_ID=?";
-    int attachid = DB.getSQLValue(null, sql, Table_ID, Record_ID);
+    int attachid = getSQLValue(null, sql, Table_ID, Record_ID);
     return attachid;
   }
 

@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_AD_User_Roles;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_User_Roles
@@ -37,12 +36,6 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
     return accessLevel.intValue();
   }
 
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
-  }
-
   public String toString() {
     StringBuffer sb = new StringBuffer("X_AD_User_Roles[").append(getId()).append("]");
     return sb.toString();
@@ -73,12 +66,6 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Role_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_AD_User getAD_User() throws RuntimeException {
-    return (org.compiere.model.I_AD_User)
-        MTable.get(getCtx(), org.compiere.model.I_AD_User.Table_Name)
-            .getPO(getAD_User_ID(), get_TrxName());
   }
 
   /**
@@ -118,5 +105,10 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
    */
   public String getAD_User_Roles_UU() {
     return (String) get_Value(COLUMNNAME_AD_User_Roles_UU);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

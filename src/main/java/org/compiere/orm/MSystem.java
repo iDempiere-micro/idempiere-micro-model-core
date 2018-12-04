@@ -1,16 +1,10 @@
 package org.compiere.orm;
 
-import java.sql.PreparedStatement;
+import static software.hsharp.core.util.DBKt.getSQLValue;
+
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Level;
-import org.compiere.util.DisplayType;
-import org.idempiere.common.db.Database;
-import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.CCache;
-import org.idempiere.common.util.DB;
-import org.idempiere.common.util.Env;
 
 public class MSystem extends X_AD_System {
   /**
@@ -65,22 +59,6 @@ public class MSystem extends X_AD_System {
     return system;
   } //	get
 
-  /**
-   * Get DB Info SQL
-   *
-   * @param dbType database type
-   * @return sql
-   */
-  public static String getDBInfoSQL(String dbType) {
-    if (Database.DB_ORACLE.equals(dbType))
-      return "SELECT SYS_CONTEXT('USERENV','HOST') || '/' || SYS_CONTEXT('USERENV','IP_ADDRESS') AS DBAddress,"
-          + "	SYS_CONTEXT('USERENV','CURRENT_USER') || '.' || SYS_CONTEXT('USERENV','DB_NAME')"
-          + " || '.' || SYS_CONTEXT('USERENV','DB_DOMAIN') AS DBName "
-          + "FROM DUAL";
-    //
-    return "SELECT NULL,NULL FROM AD_System WHERE AD_System_ID=-1";
-  } //	getDBInfoSQL
-
   /** Set Internal User Count */
   private void setInternalUsers() {
     final String sql =
@@ -89,76 +67,7 @@ public class MSystem extends X_AD_System {
             + " INNER JOIN AD_User_Roles ur ON (u.AD_User_ID=ur.AD_User_ID) "
             + "WHERE u.AD_Client_ID<>11" //	no Demo
             + " AND u.AD_User_ID NOT IN (0,100)"; //	no System/SuperUser
-    int internalUsers = DB.getSQLValue(null, sql);
+    int internalUsers = getSQLValue(null, sql);
     setSupportUnits(internalUsers);
   } //	setInternalUsers
-
-  /**
-   * Get Statistics Info
-   *
-   * @param recalc recalculate
-   * @return statistics
-   */
-  public String getStatisticsInfo(boolean recalc) {
-    String s = super.getStatisticsInfo();
-    if (s == null || recalc) {
-      String sql =
-          "SELECT 'C'||(SELECT "
-              + DB.TO_CHAR("COUNT(*)", DisplayType.Number, Env.getADLanguage(Env.getCtx()))
-              + " FROM AD_Client)"
-              + "||'U'|| (SELECT "
-              + DB.TO_CHAR("COUNT(*)", DisplayType.Number, Env.getADLanguage(Env.getCtx()))
-              + " FROM AD_User)"
-              + "||'B'|| (SELECT "
-              + DB.TO_CHAR("COUNT(*)", DisplayType.Number, Env.getADLanguage(Env.getCtx()))
-              + " FROM C_BPartner)"
-              + "||'P'|| (SELECT "
-              + DB.TO_CHAR("COUNT(*)", DisplayType.Number, Env.getADLanguage(Env.getCtx()))
-              + " FROM M_Product)"
-              + "||'I'|| (SELECT "
-              + DB.TO_CHAR("COUNT(*)", DisplayType.Number, Env.getADLanguage(Env.getCtx()))
-              + " FROM C_Invoice)"
-              + "||'L'|| (SELECT "
-              + DB.TO_CHAR("COUNT(*)", DisplayType.Number, Env.getADLanguage(Env.getCtx()))
-              + " FROM C_InvoiceLine)"
-              + "||'M'|| (SELECT "
-              + DB.TO_CHAR("COUNT(*)", DisplayType.Number, Env.getADLanguage(Env.getCtx()))
-              + " FROM M_Transaction)"
-              + " FROM AD_System";
-      s = DB.getSQLValueString(null, sql);
-    }
-    return s;
-  } //	getStatisticsInfo
-
-  /**
-   * Get Profile Info
-   *
-   * @param recalc recalculate
-   * @return profile
-   */
-  public String getProfileInfo(boolean recalc) {
-    String s = super.getProfileInfo();
-    if (s == null || recalc) {
-      final String sql =
-          "SELECT Value FROM AD_Client " + " WHERE IsActive='Y' ORDER BY AD_Client_ID DESC";
-      PreparedStatement pstmt = null;
-      ResultSet rs = null;
-      StringBuilder sb = new StringBuilder();
-      try {
-        pstmt = DB.prepareStatement(sql, null);
-        rs = pstmt.executeQuery();
-        while (rs.next()) {
-          sb.append(rs.getString(1)).append('|');
-        }
-      } catch (SQLException e) {
-        throw new DBException(e, sql);
-      } finally {
-        DB.close(rs, pstmt);
-        rs = null;
-        pstmt = null;
-      }
-      s = sb.toString();
-    }
-    return s;
-  } //	getProfileInfo
 }

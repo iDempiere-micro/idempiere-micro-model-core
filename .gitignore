@@ -86,3 +86,5 @@ log
 /src/main/java/**/*.kt
 /src/main/java/software/hsharp/core/util/ParseKt.java
 *.tmp.*
+
+.attach*

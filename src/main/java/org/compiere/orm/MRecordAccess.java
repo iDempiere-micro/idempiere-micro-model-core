@@ -1,11 +1,13 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
 import org.compiere.util.Msg;
-import org.idempiere.common.util.DB;
 
 /**
  * Record Access Model
@@ -79,7 +81,7 @@ public class MRecordAccess extends X_AD_Record_Access {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, null);
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, getAD_Table_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
@@ -90,7 +92,7 @@ public class MRecordAccess extends X_AD_Record_Access {
     } catch (Exception e) {
       log.log(Level.SEVERE, sql, e);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -223,7 +225,7 @@ public class MRecordAccess extends X_AD_Record_Access {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = DB.prepareStatement(sql, null);
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Table_ID());
         rs = pstmt.executeQuery();
         if (rs.next()) {
@@ -232,7 +234,7 @@ public class MRecordAccess extends X_AD_Record_Access {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        DB.close(rs, pstmt);
+        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }

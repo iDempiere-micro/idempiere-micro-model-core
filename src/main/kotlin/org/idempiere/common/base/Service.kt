@@ -27,7 +27,7 @@ abstract class Service {
                     theLocator = instance!!.locator
                     return theLocator
                 } else
-                    throw IllegalStateException("Service Locator")
+                    return null
             }
         }
     }

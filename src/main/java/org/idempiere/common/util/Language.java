@@ -1,5 +1,8 @@
 package org.idempiere.common.util;
 
+import static software.hsharp.core.util.DBKt.getSQLValueStringEx;
+import static software.hsharp.core.util.DBKt.isConnected;
+
 import java.awt.ComponentOrientation;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -89,7 +92,7 @@ public class Language implements Serializable {
       if (lang.equals(s_languages.get(i).getADLanguage())
           || lang.equals(s_languages.get(i).getLanguageCode())
           || lang.equals(s_languages.get(i).getName())) {
-        if (!s_languages.get(i).m_fromDB && DB.isConnected()) {
+        if (!s_languages.get(i).m_fromDB && isConnected()) {
           // if language was not get from DB and now we're connected
           idxReplace = i;
           break;
@@ -107,7 +110,7 @@ public class Language implements Serializable {
       String country = lang.substring(3);
       Locale locale = new Locale(language, country);
       /* DAP TODO
-      if (DB.isConnected()) {
+      if (isConnected()) {
       	// first time connected?
       	if (!isBaseLanguageSet) {
       		setBaseLanguage();
@@ -161,7 +164,7 @@ public class Language implements Serializable {
   private static void setBaseLanguage() {
     isBaseLanguageSet = true;
     String baselang =
-        DB.getSQLValueStringEx(
+        getSQLValueStringEx(
             null,
             "SELECT AD_Language FROM AD_Language WHERE IsActive='Y' AND IsBaseLanguage = 'Y'");
     if (baselang != null) {

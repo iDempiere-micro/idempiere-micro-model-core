@@ -6,7 +6,6 @@ import org.compiere.model.HasName;
 import org.compiere.model.I_AD_ViewComponent;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_ViewComponent
@@ -41,12 +40,6 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -303,5 +296,10 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
    */
   public String getWhereClause() {
     return (String) get_Value(COLUMNNAME_WhereClause);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

@@ -1,13 +1,15 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.*;
+
 import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
+import kotliquery.Row;
 import org.compiere.model.HasName;
 import org.compiere.model.I_AD_Element;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.DB;
 import org.idempiere.common.util.Env;
 
 /**
@@ -125,6 +127,10 @@ public class M_Element extends X_AD_Element {
     }
   } //	M_Element
 
+  public M_Element(Properties ctx, Row row) {
+    super(ctx, row);
+  }
+
   /**
    * Load Constructor
    *
@@ -166,7 +172,7 @@ public class M_Element extends X_AD_Element {
       StringBuilder sql =
           new StringBuilder("select count(*) from AD_Element where UPPER(ColumnName)=?");
       if (!newRecord) sql.append(" AND AD_Element_ID<>").append(getId());
-      int no = DB.getSQLValue(null, sql.toString(), columnName.toUpperCase());
+      int no = getSQLValue(null, sql.toString(), columnName.toUpperCase());
       if (no > 0) {
         log.saveError(
             DBException.SAVE_ERROR_NOT_UNIQUE_MSG,
@@ -199,64 +205,64 @@ public class M_Element extends X_AD_Element {
         //	Column
         sql =
             new StringBuilder("UPDATE AD_Column SET ColumnName=")
-                .append(DB.TO_STRING(getColumnName()))
+                .append(TO_STRING(getColumnName()))
                 .append(", Name=")
-                .append(DB.TO_STRING(getName()))
+                .append(TO_STRING(getName()))
                 .append(", Description=")
-                .append(DB.TO_STRING(getDescription()))
+                .append(TO_STRING(getDescription()))
                 .append(", Help=")
-                .append(DB.TO_STRING(getHelp()))
+                .append(TO_STRING(getHelp()))
                 .append(" WHERE AD_Element_ID=")
                 .append(getId());
-        no = DB.executeUpdate(sql.toString(), get_TrxName());
+        no = executeUpdate(sql.toString(), get_TrxName());
         if (log.isLoggable(Level.FINE)) log.fine("afterSave - Columns updated #" + no);
 
         //	Parameter
         sql =
             new StringBuilder("UPDATE AD_Process_Para SET ColumnName=")
-                .append(DB.TO_STRING(getColumnName()))
+                .append(TO_STRING(getColumnName()))
                 .append(", Name=")
-                .append(DB.TO_STRING(getName()))
+                .append(TO_STRING(getName()))
                 .append(", Description=")
-                .append(DB.TO_STRING(getDescription()))
+                .append(TO_STRING(getDescription()))
                 .append(", Help=")
-                .append(DB.TO_STRING(getHelp()))
+                .append(TO_STRING(getHelp()))
                 .append(", AD_Element_ID=")
                 .append(getId())
                 .append(" WHERE UPPER(ColumnName)=")
-                .append(DB.TO_STRING(getColumnName().toUpperCase()))
+                .append(TO_STRING(getColumnName().toUpperCase()))
                 .append(" AND IsCentrallyMaintained='Y' AND AD_Element_ID IS NULL");
-        no = DB.executeUpdate(sql.toString(), get_TrxName());
+        no = executeUpdate(sql.toString(), get_TrxName());
 
         sql =
             new StringBuilder("UPDATE AD_Process_Para SET ColumnName=")
-                .append(DB.TO_STRING(getColumnName()))
+                .append(TO_STRING(getColumnName()))
                 .append(", Name=")
-                .append(DB.TO_STRING(getName()))
+                .append(TO_STRING(getName()))
                 .append(", Description=")
-                .append(DB.TO_STRING(getDescription()))
+                .append(TO_STRING(getDescription()))
                 .append(", Help=")
-                .append(DB.TO_STRING(getHelp()))
+                .append(TO_STRING(getHelp()))
                 .append(" WHERE AD_Element_ID=")
                 .append(getId())
                 .append(" AND IsCentrallyMaintained='Y'");
-        no += DB.executeUpdate(sql.toString(), get_TrxName());
+        no += executeUpdate(sql.toString(), get_TrxName());
         if (log.isLoggable(Level.FINE)) log.fine("Parameters updated #" + no);
 
         // Info Column
         sql =
             new StringBuilder("UPDATE AD_InfoColumn SET ColumnName=")
-                .append(DB.TO_STRING(getColumnName()))
+                .append(TO_STRING(getColumnName()))
                 .append(", Name=")
-                .append(DB.TO_STRING(getName()))
+                .append(TO_STRING(getName()))
                 .append(", Description=")
-                .append(DB.TO_STRING(getDescription()))
+                .append(TO_STRING(getDescription()))
                 .append(", Help=")
-                .append(DB.TO_STRING(getHelp()))
+                .append(TO_STRING(getHelp()))
                 .append(" WHERE AD_Element_ID=")
                 .append(getId())
                 .append(" AND IsCentrallyMaintained='Y'");
-        no += DB.executeUpdate(sql.toString(), get_TrxName());
+        no += executeUpdate(sql.toString(), get_TrxName());
         if (log.isLoggable(Level.FINE)) log.fine("Info Column updated #" + no);
       }
 
@@ -266,21 +272,21 @@ public class M_Element extends X_AD_Element {
         //	Field
         sql =
             new StringBuilder("UPDATE AD_Field SET Name=")
-                .append(DB.TO_STRING(getName()))
+                .append(TO_STRING(getName()))
                 .append(", Description=")
-                .append(DB.TO_STRING(getDescription()))
+                .append(TO_STRING(getDescription()))
                 .append(", Help=")
-                .append(DB.TO_STRING(getHelp()))
+                .append(TO_STRING(getHelp()))
                 .append(
                     " WHERE AD_Column_ID IN (SELECT AD_Column_ID FROM AD_Column WHERE AD_Element_ID=")
                 .append(getId())
                 .append(") AND IsCentrallyMaintained='Y'");
-        no = DB.executeUpdate(sql.toString(), get_TrxName());
+        no = executeUpdate(sql.toString(), get_TrxName());
         if (log.isLoggable(Level.FINE)) log.fine("Fields updated #" + no);
 
         // Info Column - update Name, Description, Help - doesn't have IsCentrallyMaintained
         // currently
-        // no = DB.executeUpdate(sql.toString(), get_TrxName());
+        // no =executeUpdate(sql.toString(), get_TrxName());
         // log.fine("InfoColumn updated #" + no);
       }
 
@@ -289,15 +295,15 @@ public class M_Element extends X_AD_Element {
         //	Print Info
         sql =
             new StringBuilder("UPDATE AD_PrintFormatItem SET PrintName=")
-                .append(DB.TO_STRING(getPrintName()))
+                .append(TO_STRING(getPrintName()))
                 .append(", Name=")
-                .append(DB.TO_STRING(getName()))
+                .append(TO_STRING(getName()))
                 .append(" WHERE IsCentrallyMaintained='Y'")
                 .append(" AND EXISTS (SELECT * FROM AD_Column c ")
                 .append("WHERE c.AD_Column_ID=AD_PrintFormatItem.AD_Column_ID AND c.AD_Element_ID=")
                 .append(getId())
                 .append(")");
-        no = DB.executeUpdate(sql.toString(), get_TrxName());
+        no = executeUpdate(sql.toString(), get_TrxName());
         if (log.isLoggable(Level.FINE)) log.fine("PrintFormatItem updated #" + no);
       }
     }

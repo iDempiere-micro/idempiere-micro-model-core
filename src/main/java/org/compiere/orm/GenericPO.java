@@ -4,6 +4,7 @@ package org.compiere.orm;
 // import for GenericPO
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.idempiere.orm.POInfo;
 
 /**
@@ -38,6 +39,10 @@ public class GenericPO extends PO {
     super(new PropertiesWrapper(ctx, tableName), 0, null, rs);
   }
 
+  public GenericPO(String tableName, Properties ctx, Row row) {
+    super(new PropertiesWrapper(ctx, tableName), row);
+  }
+
   /**
    * @param tableName
    * @param ctx
@@ -66,17 +71,6 @@ public class GenericPO extends PO {
 
   private String tableName;
 
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    PropertiesWrapper wrapper = (PropertiesWrapper) ctx;
-    p_ctx = wrapper.source;
-    tableName = wrapper.tableName;
-    tableID = MTable.getTable_ID(tableName);
-    // log.info("Table_ID: "+Table_ID);
-    POInfo poi = POInfo.getPOInfo(ctx, tableID, this.get_TrxName());
-    return poi;
-  }
-
   public String toString() {
     StringBuffer sb =
         new StringBuffer("GenericPO[Table=")
@@ -103,7 +97,13 @@ public class GenericPO extends PO {
 
   @Override
   protected int getAccessLevel() {
+    POInfo p_info = super.getP_info();
     return Integer.parseInt(p_info.getAccessLevel());
+  }
+
+  @Override
+  public int getTableId() {
+    return 0;
   }
 } // GenericPO
 

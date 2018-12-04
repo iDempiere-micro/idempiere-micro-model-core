@@ -6,7 +6,6 @@ import java.util.Properties;
 import org.compiere.model.I_AD_Role;
 import org.idempiere.common.util.Env;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Role
@@ -50,12 +49,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -424,12 +417,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
     BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_AmtApprovalAccum);
     if (bd == null) return Env.ZERO;
     return bd;
-  }
-
-  public org.compiere.model.I_C_Currency getC_Currency() throws RuntimeException {
-    return (org.compiere.model.I_C_Currency)
-        MTable.get(getCtx(), org.compiere.model.I_C_Currency.Table_Name)
-            .getPO(getC_Currency_ID(), get_TrxName());
   }
 
   /**
@@ -935,12 +922,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
     return (String) get_Value(COLUMNNAME_PreferenceType);
   }
 
-  public org.compiere.model.I_AD_User getSupervisor() throws RuntimeException {
-    return (org.compiere.model.I_AD_User)
-        MTable.get(getCtx(), org.compiere.model.I_AD_User.Table_Name)
-            .getPO(getSupervisor_ID(), get_TrxName());
-  }
-
   /**
    * Set Supervisor.
    *
@@ -1009,5 +990,10 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
    */
   public String getUserLevel() {
     return (String) get_Value(COLUMNNAME_UserLevel);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

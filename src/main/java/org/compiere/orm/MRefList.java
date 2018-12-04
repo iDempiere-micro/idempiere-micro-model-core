@@ -1,5 +1,8 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +12,6 @@ import java.util.logging.Level;
 import org.compiere.model.I_AD_Ref_List;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.ValueNamePair;
 import org.idempiere.orm.PO;
@@ -78,7 +80,7 @@ public class MRefList extends X_AD_Ref_List {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, null);
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, AD_Reference_ID);
       pstmt.setString(2, Value);
       if (!isBaseLanguage) pstmt.setString(3, AD_Language);
@@ -87,7 +89,7 @@ public class MRefList extends X_AD_Ref_List {
     } catch (SQLException ex) {
       s_log.log(Level.SEVERE, sql + " -- " + key, ex);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -141,7 +143,7 @@ public class MRefList extends X_AD_Ref_List {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, null);
+      pstmt = prepareStatement(sql, null);
       pstmt.setString(1, ListName);
       pstmt.setString(2, Value);
       if (!isBaseLanguage) pstmt.setString(3, AD_Language);
@@ -150,7 +152,7 @@ public class MRefList extends X_AD_Ref_List {
     } catch (SQLException ex) {
       s_log.log(Level.SEVERE, sql + " -- " + key, ex);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -188,7 +190,7 @@ public class MRefList extends X_AD_Ref_List {
     ArrayList<ValueNamePair> list = new ArrayList<ValueNamePair>();
     if (optional) list.add(new ValueNamePair("", ""));
     try {
-      pstmt = DB.prepareStatement(sql, null);
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, AD_Reference_ID);
       if (!isBaseLanguage) pstmt.setString(2, ad_language);
       rs = pstmt.executeQuery();
@@ -196,7 +198,7 @@ public class MRefList extends X_AD_Ref_List {
     } catch (SQLException e) {
       s_log.log(Level.SEVERE, sql, e);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -222,7 +224,7 @@ public class MRefList extends X_AD_Ref_List {
   public MRefList(Properties ctx, int AD_Ref_List_ID, String trxName) {
     super(ctx, AD_Ref_List_ID, trxName);
     if (AD_Ref_List_ID == 0) {
-      //	setAD_Reference_ID (0);
+      //	setReferenceId (0);
       //	setAD_Ref_List_ID (0);
       setEntityType(PO.ENTITYTYPE_UserMaintained); // U
       //	setName (null);

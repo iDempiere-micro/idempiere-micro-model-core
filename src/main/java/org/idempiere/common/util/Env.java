@@ -4,9 +4,6 @@ import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Window;
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -727,9 +724,9 @@ public final class Env {
    * @param ctx context
    * @return login AD_Org_ID
    */
-  public static int getAD_Org_ID(Properties ctx) {
+  public static int getOrgId(Properties ctx) {
     return Env.getContextAsInt(ctx, AD_ORG_ID);
-  } //	getAD_Org_ID
+  } //	getOrgId
 
   /**
    * Get Login AD_User_ID
@@ -940,120 +937,6 @@ public final class Env {
     return Language.getLoginLanguage();
   } //	getLanguage
 
-  public static ArrayList<String> getSupportedLanguages() {
-    ArrayList<String> AD_Languages = new ArrayList<String>();
-    String sql = "SELECT DISTINCT AD_Language FROM AD_Message_Trl";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, null);
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        String AD_Language = rs.getString(1);
-        // called to add the language to supported in case it's not added
-        Language.getLanguage(AD_Language);
-        AD_Languages.add(AD_Language);
-      }
-    } catch (SQLException e) {
-      log.log(Level.SEVERE, "", e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    return AD_Languages;
-  }
-
-  public static ArrayList<String> getLoginLanguages() {
-    ArrayList<String> AD_Languages = new ArrayList<String>();
-    String sql = "SELECT AD_Language FROM AD_Language WHERE IsActive='Y' AND IsLoginLocale = 'Y'";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, null);
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        String AD_Language = rs.getString(1);
-        // called to add the language to supported in case it's not added
-        Language.getLanguage(AD_Language);
-        AD_Languages.add(AD_Language);
-      }
-    } catch (SQLException e) {
-      log.log(Level.SEVERE, "", e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-
-    return AD_Languages;
-  }
-
-  /**
-   * Verify Language. Check that language is supported by the system
-   *
-   * @param ctx might be updated with new AD_Language
-   * @param language language
-   */
-  public static void verifyLanguage(Properties ctx, Language language) {
-    if (language.isBaseLanguage()) return;
-
-    boolean isSystemLanguage = false;
-    ArrayList<String> AD_Languages = new ArrayList<String>();
-    AD_Languages.add(Language.getBaseAD_Language());
-    String sql = "SELECT DISTINCT AD_Language FROM AD_Message_Trl";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, null);
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        String AD_Language = rs.getString(1);
-        if (AD_Language.equals(language.getADLanguage())) {
-          isSystemLanguage = true;
-          break;
-        }
-        AD_Languages.add(AD_Language);
-      }
-    } catch (SQLException e) {
-      log.log(Level.SEVERE, "", e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    //	Found it
-    if (isSystemLanguage) return;
-    //	No Language - set to System
-    if (AD_Languages.size() == 0) {
-      log.warning("NO System Language - Set to Base " + Language.getBaseAD_Language());
-      language.setADLanguage(Language.getBaseAD_Language());
-      return;
-    }
-
-    for (int i = 0; i < AD_Languages.size(); i++) {
-      String AD_Language = (String) AD_Languages.get(i); // 	en_US
-      String lang = AD_Language.substring(0, 2); // 	en
-      //
-      String langCompare = language.getADLanguage().substring(0, 2);
-      if (lang.equals(langCompare)) {
-        if (log.isLoggable(Level.INFO)) log.info("Found similar Language " + AD_Language);
-        language.setADLanguage(AD_Language);
-        return;
-      }
-    }
-
-    //	We found same language
-    //	if (!"0".equals(Msg.getMsg(AD_Language, "0")))
-
-    log.warning(
-        "Not System Language="
-            + language
-            + " - Set to Base Language "
-            + Language.getBaseAD_Language());
-    language.setADLanguage(Language.getBaseAD_Language());
-  } //  verifyLanguage
-
   /**
    * ************************************************************************ Get Context as String
    * array with format: key == value
@@ -1105,27 +988,6 @@ public final class Env {
         .append(getContext(ctx, "#AD_Org_Name"));
     return sb.toString();
   } //	getHeader
-
-  /**
-   * Clean up context for Window Tab (i.e. delete it). Please note that this method is not clearing
-   * the tab info context (i.e. _TabInfo).
-   *
-   * @param ctx context
-   * @param WindowNo window
-   * @param TabNo tab
-   */
-  public static void clearTabContext(Properties ctx, int WindowNo, int TabNo) {
-    if (ctx == null) throw new IllegalArgumentException("Require Context");
-    //
-    Object[] keys = ctx.keySet().toArray();
-    for (int i = 0; i < keys.length; i++) {
-      String tag = keys[i].toString();
-      if (tag.startsWith(WindowNo + "|" + TabNo + "|")
-          && !tag.startsWith(WindowNo + "|" + TabNo + "|_TabInfo")) {
-        ctx.remove(keys[i]);
-      }
-    }
-  }
 
   /**
    * Clean up all context (i.e. delete it)

@@ -1,11 +1,13 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.getSQLValueStringEx;
+
 import java.sql.ResultSet;
 import java.util.Properties;
+
+import kotliquery.Row;
 import org.compiere.model.I_AD_Tree;
-import org.compiere.model.I_C_BPartner;
 import org.idempiere.common.util.CCache;
-import org.idempiere.common.util.DB;
 
 /**
  * Base Tree Model. (see also MTree in project base)
@@ -112,7 +114,7 @@ public class MTree_Base extends X_AD_Tree {
       sourceTable = "M_Product_Category";
     else if (treeType.equals(X_AD_Tree.TREETYPE_BoM)) sourceTable = "M_BOM";
     else if (treeType.equals(X_AD_Tree.TREETYPE_ElementValue)) sourceTable = "C_ElementValue";
-    else if (treeType.equals(X_AD_Tree.TREETYPE_BPartner)) sourceTable = I_C_BPartner.Table_Name;
+    else if (treeType.equals(X_AD_Tree.TREETYPE_BPartner)) sourceTable = "C_BPartner";
     else if (treeType.equals(X_AD_Tree.TREETYPE_Campaign)) sourceTable = "C_Campaign";
     else if (treeType.equals(X_AD_Tree.TREETYPE_Project)) sourceTable = "C_Project";
     else if (treeType.equals(X_AD_Tree.TREETYPE_Activity)) sourceTable = "C_Activity";
@@ -180,6 +182,9 @@ public class MTree_Base extends X_AD_Tree {
   public MTree_Base(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   } //	MTree_Base
+  public MTree_Base(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MTree_Base
 
   /**
    * Parent Constructor
@@ -234,7 +239,7 @@ public class MTree_Base extends X_AD_Tree {
     if (tableNameOnly) return tableName;
     if ("M_Product".equals(tableName))
       return "M_Product t INNER JOIN M_Product_Category x ON (t.M_Product_Category_ID=x.M_Product_Category_ID)";
-    if (I_C_BPartner.Table_Name.equals(tableName))
+    if ("C_BPartner".equals(tableName))
       return "C_BPartner t INNER JOIN C_BP_Group x ON (t.C_BP_Group_ID=x.C_BP_Group_ID)";
     if ("AD_Org".equals(tableName))
       return "AD_Org t INNER JOIN AD_OrgInfo i ON (t.AD_Org_ID=i.AD_Org_ID) "
@@ -254,7 +259,7 @@ public class MTree_Base extends X_AD_Tree {
     String tableName = getSourceTableName(getTreeType());
     if ("AD_Menu".equals(tableName)) return "t.Action";
     if ("M_Product".equals(tableName)
-        || I_C_BPartner.Table_Name.equals(tableName)
+        || "C_BPartner".equals(tableName)
         || "AD_Org".equals(tableName)
         || "C_Campaign".equals(tableName)) return "x.AD_PrintColor_ID";
     return "NULL";
@@ -317,7 +322,7 @@ public class MTree_Base extends X_AD_Tree {
 
   /** Returns true if should load all tree nodes immediately */
   public static boolean isLoadAllNodesImmediately(int treeID, String trxName) {
-    return DB.getSQLValueStringEx(
+    return getSQLValueStringEx(
             trxName, "SELECT IsLoadAllNodesImmediately FROM AD_Tree WHERE AD_Tree_ID = ?", treeID)
         .equals("Y");
   }

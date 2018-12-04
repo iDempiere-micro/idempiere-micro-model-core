@@ -172,4 +172,8 @@ public class POInfoColumn implements Serializable {
     sb.append("]");
     return sb.toString();
   } //	toString
+
+  public static Class<?> ColumnClass_String = String.class;
+  public static Class<?> ColumnClass_Boolean = Boolean.class;
+  public static Class<?> ColumnClass_Integer = Integer.class;
 } //	POInfoColumn

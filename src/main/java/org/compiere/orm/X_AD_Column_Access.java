@@ -5,7 +5,6 @@ import java.util.Properties;
 import org.compiere.model.I_AD_Column_Access;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Column_Access
@@ -22,8 +21,8 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
   public X_AD_Column_Access(Properties ctx, int AD_Column_Access_ID, String trxName) {
     super(ctx, AD_Column_Access_ID, trxName);
     /**
-     * if (AD_Column_Access_ID == 0) { setAD_Column_ID (0); setAD_Role_ID (0); setIsExclude (true);
-     * // Y setIsReadOnly (false); }
+     * if (AD_Column_Access_ID == 0) { setColumnId (0); setAD_Role_ID (0); setIsExclude (true); // Y
+     * setIsReadOnly (false); }
      */
   }
 
@@ -39,12 +38,6 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -204,5 +197,10 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
       return "Y".equals(oo);
     }
     return false;
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

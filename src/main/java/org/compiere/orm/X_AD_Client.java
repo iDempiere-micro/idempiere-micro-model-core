@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_AD_Client;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Client
@@ -34,11 +33,6 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    return POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
   }
 
   public String toString() {
@@ -85,12 +79,6 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     return (String) get_Value(COLUMNNAME_AD_Language);
   }
 
-  public org.compiere.model.I_AD_PasswordRule getADPasswordRule() throws RuntimeException {
-    return (org.compiere.model.I_AD_PasswordRule)
-        MTable.get(getCtx(), org.compiere.model.I_AD_PasswordRule.Table_Name)
-            .getPO(getADPasswordRule_ID(), get_TrxName());
-  }
-
   /**
    * Set Password Policies.
    *
@@ -110,13 +98,6 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_PasswordRule_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_AD_ReplicationStrategy getADReplicationStrategy()
-      throws RuntimeException {
-    return (org.compiere.model.I_AD_ReplicationStrategy)
-        MTable.get(getCtx(), org.compiere.model.I_AD_ReplicationStrategy.Table_Name)
-            .getPO(getADReplicationStrategyID(), get_TrxName());
   }
 
   /**
@@ -539,5 +520,10 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     Integer ii = (Integer) get_Value(COLUMNNAME_SMTPPort);
     if (ii == null) return 0;
     return ii;
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

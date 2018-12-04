@@ -1,5 +1,7 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.*;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,7 +41,7 @@ public class MSequence extends X_AD_Sequence {
 
   private static final String NoYearNorMonth = "-";
 
-  /** @deprecated please use DB.getNextID (int, String, String) */
+  /** @deprecated please usegetNextID (int, String, String) */
   public static int getNextID(int AD_Client_ID, String TableName) {
     return getNextID(AD_Client_ID, TableName, null);
   }
@@ -77,11 +79,11 @@ public class MSequence extends X_AD_Sequence {
     adempiereSys = "y".equalsIgnoreCase(sysProperty) || "true".equalsIgnoreCase(sysProperty);
 
     if (SYSTEM_NATIVE_SEQUENCE && !adempiereSys) {
-      int m_sequence_id = -1; // TODO: FIX!  CConnection.Companion.get().getDatabase().getNextID(TableName + "_SQ");
+      int m_sequence_id = software.hsharp.core.util.DBKt.getNextID(TableName + "_SQ");
       if (m_sequence_id == -1) {
         // try to create the sequence and try again
         MSequence.createTableSequence(Env.getCtx(), TableName, trxName, true);
-        m_sequence_id = -1; // TODO: FIX! CConnection.Companion.get().getDatabase().getNextID(TableName + "_SQ");
+        m_sequence_id = software.hsharp.core.util.DBKt.getNextID(TableName + "_SQ");
       }
       return m_sequence_id;
     }
@@ -98,8 +100,8 @@ public class MSequence extends X_AD_Sequence {
    * @param trxName deprecated (NOT USED!!)
    * @return next no or (-1=not found, -2=error)
    *     <p>WARNING!! This method doesn't take into account the native sequence setting, it's just
-   *     to be called from DB.getNextID()
-   * @deprecated please use DB.getNextID (int, String, String)
+   *     to be called fromgetNextID()
+   * @deprecated please usegetNextID (int, String, String)
    */
   private static int getNextIDImpl(int AD_Client_ID, String TableName, String trxName) {
     if (TableName == null || TableName.length() == 0)
@@ -118,29 +120,19 @@ public class MSequence extends X_AD_Sequence {
       s_log.log(LOGLEVEL, TableName + " - AdempiereSys=" + adempiereSys + " [" + trxName + "]");
     // begin vpj-cd e-evolution 09/02/2005 PostgreSQL
     String selectSQL = null;
-    if (DB.isOracle() == false) {
-      selectSQL =
-          "SELECT CurrentNext, CurrentNextSys, IncrementNo, AD_Sequence_ID "
-              + "FROM AD_Sequence "
-              + "WHERE Name=?"
-              + " AND IsActive='Y' AND IsTableID='Y' AND IsAutoSequence='Y' "
-              + " FOR UPDATE OF AD_Sequence ";
-    } else {
-      selectSQL =
-          "SELECT CurrentNext, CurrentNextSys, IncrementNo, AD_Sequence_ID "
-              + "FROM AD_Sequence "
-              + "WHERE Name=?"
-              + " AND IsActive='Y' AND IsTableID='Y' AND IsAutoSequence='Y' ";
-    }
-    if (!DB.isOracle() && !DB.isPostgreSQL())
-      selectSQL = DB.getDatabase().convertStatement(selectSQL);
+    selectSQL =
+        "SELECT CurrentNext, CurrentNextSys, IncrementNo, AD_Sequence_ID "
+            + "FROM AD_Sequence "
+            + "WHERE Name=?"
+            + " AND IsActive='Y' AND IsTableID='Y' AND IsAutoSequence='Y' "
+            + " FOR UPDATE OF AD_Sequence ";
 
     Connection conn = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     for (int i = 0; i < 3; i++) {
       try {
-        conn = DB.getConnectionID();
+        conn = getConnectionID();
         //	Error
         if (conn == null) return -1;
 
@@ -149,7 +141,7 @@ public class MSequence extends X_AD_Sequence {
                 selectSQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
         pstmt.setString(1, TableName);
         //
-        if (DB.getDatabase().isQueryTimeoutSupported()) {
+        if (isQueryTimeoutSupported()) {
           pstmt.setQueryTimeout(QUERY_TIME_OUT);
         }
         rs = pstmt.executeQuery();
@@ -199,7 +191,7 @@ public class MSequence extends X_AD_Sequence {
                   updateSQL.setInt(2, AD_Sequence_ID);
                   updateSQL.executeUpdate();
                 } finally {
-                  DB.close(updateSQL);
+                  close(updateSQL);
                   updateSQL = null;
                 }
               }
@@ -230,7 +222,7 @@ public class MSequence extends X_AD_Sequence {
                   updateSQL.setInt(2, AD_Sequence_ID);
                   updateSQL.executeUpdate();
                 } finally {
-                  DB.close(updateSQL);
+                  close(updateSQL);
                   updateSQL = null;
                 }
               }
@@ -245,15 +237,11 @@ public class MSequence extends X_AD_Sequence {
               if (adempiereSys) {
                 String updateCmd =
                     "UPDATE AD_Sequence SET CurrentNextSys=CurrentNextSys+? WHERE AD_Sequence_ID=?";
-                if (!DB.isOracle() && !DB.isPostgreSQL())
-                  updateCmd = DB.getDatabase().convertStatement(updateCmd);
                 updateSQL = conn.prepareStatement(updateCmd);
                 retValue = rs.getInt(2);
               } else {
                 String updateCmd =
                     "UPDATE AD_Sequence SET CurrentNext=CurrentNext+? WHERE AD_Sequence_ID=?";
-                if (!DB.isOracle() && !DB.isPostgreSQL())
-                  updateCmd = DB.getDatabase().convertStatement(updateCmd);
                 updateSQL = conn.prepareStatement(updateCmd);
                 retValue = rs.getInt(1);
               }
@@ -261,7 +249,7 @@ public class MSequence extends X_AD_Sequence {
               updateSQL.setInt(2, AD_Sequence_ID);
               updateSQL.executeUpdate();
             } finally {
-              DB.close(updateSQL);
+              close(updateSQL);
               updateSQL = null;
             }
           }
@@ -279,7 +267,7 @@ public class MSequence extends X_AD_Sequence {
         } catch (SQLException e1) {
         }
       } finally {
-        DB.close(rs, pstmt);
+        close(rs, pstmt);
         pstmt = null;
         rs = null;
 
@@ -406,7 +394,7 @@ public class MSequence extends X_AD_Sequence {
                       outStr.append("********");
                     } else {
                       String value =
-                          DB.getSQLValueString(
+                          getSQLValueString(
                               trxName,
                               "SELECT "
                                   + columnName
@@ -495,15 +483,11 @@ public class MSequence extends X_AD_Sequence {
               + "AND s.IsActive='Y' AND s.IsTableID='N' AND s.IsAutoSequence='Y' "
               + "ORDER BY s.AD_Client_ID DESC";
     }
-    if (DB.isPostgreSQL()) {
-      if ((isStartNewYear || isUseOrgLevel) && !adempiereSys) {
-        selectSQL = selectSQL + " FOR UPDATE OF y";
-      } else {
-        selectSQL = selectSQL + " FOR UPDATE OF s";
-      }
+    if ((isStartNewYear || isUseOrgLevel) && !adempiereSys) {
+      selectSQL = selectSQL + " FOR UPDATE OF y";
+    } else {
+      selectSQL = selectSQL + " FOR UPDATE OF s";
     }
-    if (!DB.isOracle() && !DB.isPostgreSQL())
-      selectSQL = DB.getDatabase().convertStatement(selectSQL);
     Connection conn = null;
     Trx trx = trxName == null ? null : Trx.get(trxName, true);
     //
@@ -516,7 +500,7 @@ public class MSequence extends X_AD_Sequence {
     ResultSet rs = null;
     try {
       if (trx != null) conn = trx.getConnection();
-      else conn = DB.getConnectionID();
+      else conn = getConnectionID();
       //	Error
       if (conn == null) return null;
 
@@ -549,7 +533,7 @@ public class MSequence extends X_AD_Sequence {
       }
 
       //
-      if (DB.getDatabase().isQueryTimeoutSupported()) {
+      if (isQueryTimeoutSupported()) {
         pstmt.setQueryTimeout(QUERY_TIME_OUT);
       }
       rs = pstmt.executeQuery();
@@ -563,8 +547,6 @@ public class MSequence extends X_AD_Sequence {
           if (adempiereSys) {
             String updateCmd =
                 "UPDATE AD_Sequence SET CurrentNextSys = CurrentNextSys + ? WHERE AD_Sequence_ID = ?";
-            if (!DB.isOracle() && !DB.isPostgreSQL())
-              updateCmd = DB.getDatabase().convertStatement(updateCmd);
             updateSQL = conn.prepareStatement(updateCmd);
             next = rs.getInt(2);
           } else {
@@ -574,7 +556,6 @@ public class MSequence extends X_AD_Sequence {
                   "UPDATE AD_Sequence_No SET CurrentNext = CurrentNext + ? WHERE AD_Sequence_ID=? AND CalendarYearMonth=? AND AD_Org_ID=?";
             else
               sql = "UPDATE AD_Sequence SET CurrentNext = CurrentNext + ? WHERE AD_Sequence_ID=?";
-            if (!DB.isOracle() && !DB.isPostgreSQL()) sql = DB.getDatabase().convertStatement(sql);
             updateSQL = conn.prepareStatement(sql);
             next = rs.getInt(1);
           }
@@ -586,7 +567,7 @@ public class MSequence extends X_AD_Sequence {
           }
           updateSQL.executeUpdate();
         } finally {
-          DB.close(updateSQL);
+          close(updateSQL);
           updateSQL = null;
         }
       } else { // did not find sequence no
@@ -616,7 +597,7 @@ public class MSequence extends X_AD_Sequence {
       if (DBException.isTimeout(e)) throw new AdempiereException("GenerateDocumentNoTimeOut", e);
       else throw new AdempiereException("GenerateDocumentNoError", e);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       pstmt = null;
       rs = null;
       //	Finish
@@ -729,60 +710,6 @@ public class MSequence extends X_AD_Sequence {
     return getDocumentNoFromSeq(seq, trxName, po);
   } //	getDocumentNo
 
-  /**
-   * ************************************************************************ Check/Initialize
-   * Client DocumentNo/Value Sequences
-   *
-   * @param ctx context
-   * @param AD_Client_ID client
-   * @param trxName transaction
-   * @return true if no error
-   */
-  public static boolean checkClientSequences(Properties ctx, int AD_Client_ID, String trxName) {
-    String sql =
-        "SELECT TableName "
-            + "FROM AD_Table t "
-            + "WHERE IsActive='Y' AND IsView='N'"
-            //	Get all Tables with DocumentNo or Value
-            + " AND AD_Table_ID IN "
-            + "(SELECT AD_Table_ID FROM AD_Column "
-            + "WHERE ColumnName = 'DocumentNo' OR ColumnName = 'Value')"
-            //	Ability to run multiple times
-            + " AND 'DocumentNo_' || TableName NOT IN "
-            + "(SELECT Name FROM AD_Sequence s "
-            + "WHERE s.AD_Client_ID=?)";
-    int counter = 0;
-    boolean success = true;
-    //
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, trxName);
-      pstmt.setInt(1, AD_Client_ID);
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        String tableName = rs.getString(1);
-        if (s_log.isLoggable(Level.FINE)) s_log.fine("Add: " + tableName);
-        MSequence seq = new MSequence(ctx, AD_Client_ID, tableName, trxName);
-        if (seq.save()) counter++;
-        else {
-          s_log.severe("Not created - AD_Client_ID=" + AD_Client_ID + " - " + tableName);
-          success = false;
-        }
-      }
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, sql, e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    if (s_log.isLoggable(Level.INFO))
-      s_log.info(
-          "AD_Client_ID=" + AD_Client_ID + " - created #" + counter + " - success=" + success);
-    return success;
-  } //	checkClientSequences
-
   public static boolean createTableSequence(Properties ctx, String TableName, String trxName) {
     return createTableSequence(ctx, TableName, trxName, true);
   }
@@ -802,7 +729,7 @@ public class MSequence extends X_AD_Sequence {
 
     if (tableID && SYSTEM_NATIVE_SEQUENCE) {
       int next_id =
-          DB.getSQLValueEx(
+          getSQLValueEx(
               trxName,
               "SELECT CurrentNext FROM AD_Sequence WHERE Name=? AND IsActive='Y' AND IsTableID='Y' AND IsAutoSequence='Y'",
               TableName);
@@ -815,13 +742,8 @@ public class MSequence extends X_AD_Sequence {
         seq.saveEx();
         next_id = INIT_NO;
       }
-      // TODO: FIX!
-      /*
-      if (!CConnection.Companion.get()
-          .getDatabase()
-          .createSequence(TableName + "_SQ", 1, INIT_NO, Integer.MAX_VALUE, next_id, trxName))
+      if (createSequence(TableName + "_SQ", 1, INIT_NO, Integer.MAX_VALUE, next_id, trxName))
         return false;
-      */
       return true;
     }
 
@@ -878,7 +800,7 @@ public class MSequence extends X_AD_Sequence {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql, trxName);
       pstmt.setString(1, tableName.toUpperCase());
       pstmt.setString(2, (tableID ? "Y" : "N"));
       if (!tableID) pstmt.setInt(3, Env.getADClientID(Env.getCtx()));
@@ -888,7 +810,7 @@ public class MSequence extends X_AD_Sequence {
     } catch (Exception e) {
       throw new DBException(e);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -998,7 +920,7 @@ public class MSequence extends X_AD_Sequence {
     if (!isTableID()) return null;
     String tableName = getName();
     int AD_Column_ID =
-        DB.getSQLValue(
+        getSQLValue(
             null,
             "SELECT MAX(c.AD_Column_ID) "
                 + "FROM AD_Table t"
@@ -1022,7 +944,7 @@ public class MSequence extends X_AD_Sequence {
     //	Current Next
     String sql = "SELECT MAX(" + tableName + "_ID) FROM " + tableName;
     if (IDRangeEnd > 0) sql += " WHERE " + tableName + "_ID < " + IDRangeEnd;
-    int maxTableID = DB.getSQLValue(null, sql);
+    int maxTableID = getSQLValue(null, sql);
     if (maxTableID < INIT_NO) maxTableID = INIT_NO - 1;
     maxTableID++; //	Next
 
@@ -1043,7 +965,7 @@ public class MSequence extends X_AD_Sequence {
             + tableName
             + "_ID < "
             + INIT_NO;
-    int maxTableSysID = DB.getSQLValue(null, sql);
+    int maxTableSysID = getSQLValue(null, sql);
     if (maxTableSysID <= 0) maxTableSysID = INIT_SYS_NO;
     int currentNextSysValue = getCurrentNextSys();
     if (currentNextSysValue < maxTableSysID) {
@@ -1063,7 +985,7 @@ public class MSequence extends X_AD_Sequence {
   @Override
   public int getCurrentNext() {
     if (MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false) && isTableID()) {
-      return MSequence.getNextID(getADClientID(), getName(), get_TrxName());
+      return MSequence.getNextID(getClientId(), getName(), get_TrxName());
     } else {
       return super.getCurrentNext();
     }
@@ -1073,7 +995,7 @@ public class MSequence extends X_AD_Sequence {
   public void setCurrentNext(int CurrentNext) {
     if (MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false) && isTableID()) {
       while (true) {
-        int id = MSequence.getNextID(getADClientID(), getName(), get_TrxName());
+        int id = MSequence.getNextID(getClientId(), getName(), get_TrxName());
         if (id < 0 || id >= (CurrentNext - 1)) break;
       }
     } else {

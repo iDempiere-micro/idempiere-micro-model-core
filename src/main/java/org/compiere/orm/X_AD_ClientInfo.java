@@ -3,9 +3,10 @@ package org.compiere.orm;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
+
+import kotliquery.Row;
 import org.compiere.model.I_AD_ClientInfo;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_ClientInfo
@@ -31,6 +32,9 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public X_AD_ClientInfo(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+  public X_AD_ClientInfo(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MClientInfo
 
   /**
    * AccessLevel
@@ -39,12 +43,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -314,12 +312,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
-  public org.compiere.model.I_C_AcctSchema getC_AcctSchema1() throws RuntimeException {
-    return (org.compiere.model.I_C_AcctSchema)
-        MTable.get(getCtx(), org.compiere.model.I_C_AcctSchema.Table_Name)
-            .getPO(getC_AcctSchema1_ID(), get_TrxName());
-  }
-
   /**
    * Set Primary Accounting Schema.
    *
@@ -339,12 +331,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     Integer ii = (Integer) get_Value(COLUMNNAME_C_AcctSchema1_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_C_BPartner getC_BPartnerCashTrx() throws RuntimeException {
-    return (org.compiere.model.I_C_BPartner)
-        MTable.get(getCtx(), org.compiere.model.I_C_BPartner.Table_Name)
-            .getPO(getC_BPartnerCashTrx_ID(), get_TrxName());
   }
 
   /**
@@ -368,12 +354,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
-  public org.compiere.model.I_C_Calendar getC_Calendar() throws RuntimeException {
-    return (org.compiere.model.I_C_Calendar)
-        MTable.get(getCtx(), org.compiere.model.I_C_Calendar.Table_Name)
-            .getPO(getC_Calendar_ID(), get_TrxName());
-  }
-
   /**
    * Set Calendar.
    *
@@ -393,12 +373,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     Integer ii = (Integer) get_Value(COLUMNNAME_C_Calendar_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_C_Charge getC_ChargeFreight() throws RuntimeException {
-    return (org.compiere.model.I_C_Charge)
-        MTable.get(getCtx(), org.compiere.model.I_C_Charge.Table_Name)
-            .getPO(getC_ChargeFreight_ID(), get_TrxName());
   }
 
   /**
@@ -422,12 +396,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
-  public org.compiere.model.I_C_UOM getC_UOM_Length() throws RuntimeException {
-    return (org.compiere.model.I_C_UOM)
-        MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
-            .getPO(getC_UOM_Length_ID(), get_TrxName());
-  }
-
   /**
    * Set UOM for Length.
    *
@@ -447,12 +415,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Length_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_C_UOM getC_UOM_Time() throws RuntimeException {
-    return (org.compiere.model.I_C_UOM)
-        MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
-            .getPO(getC_UOM_Time_ID(), get_TrxName());
   }
 
   /**
@@ -476,12 +438,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
-  public org.compiere.model.I_C_UOM getC_UOM_Volume() throws RuntimeException {
-    return (org.compiere.model.I_C_UOM)
-        MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
-            .getPO(getC_UOM_Volume_ID(), get_TrxName());
-  }
-
   /**
    * Set UOM for Volume.
    *
@@ -501,12 +457,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Volume_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_C_UOM getC_UOM_Weight() throws RuntimeException {
-    return (org.compiere.model.I_C_UOM)
-        MTable.get(getCtx(), org.compiere.model.I_C_UOM.Table_Name)
-            .getPO(getC_UOM_Weight_ID(), get_TrxName());
   }
 
   /**
@@ -700,12 +650,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
-  public org.compiere.model.I_M_Product getM_ProductFreight() throws RuntimeException {
-    return (org.compiere.model.I_M_Product)
-        MTable.get(getCtx(), org.compiere.model.I_M_Product.Table_Name)
-            .getPO(getM_ProductFreight_ID(), get_TrxName());
-  }
-
   /**
    * Set Product for Freight.
    *
@@ -752,5 +696,10 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     Integer ii = (Integer) get_Value(COLUMNNAME_StorageArchive_ID);
     if (ii == null) return 0;
     return ii;
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

@@ -2,11 +2,11 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.HasName;
 import org.compiere.model.I_AD_Table;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Table
@@ -29,6 +29,10 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
     super(ctx, rs, trxName);
   }
 
+  public X_AD_Table(Properties ctx, Row row) {
+    super(ctx, row);
+  }
+
   /**
    * AccessLevel
    *
@@ -36,12 +40,6 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
    */
   public int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -119,10 +117,10 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
     return (String) get_Value(COLUMNNAME_AD_Table_UU);
   }
 
-  public org.compiere.model.I_AD_Val_Rule getAD_Val_Rule() throws RuntimeException {
+  public org.compiere.model.I_AD_Val_Rule getValRule() throws RuntimeException {
     return (org.compiere.model.I_AD_Val_Rule)
         MTable.get(getCtx(), org.compiere.model.I_AD_Val_Rule.Table_Name)
-            .getPO(getAD_Val_Rule_ID(), get_TrxName());
+            .getPO(getValRule_ID(), get_TrxName());
   }
 
   /**
@@ -140,16 +138,10 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
    *
    * @return Dynamic Validation Rule
    */
-  public int getAD_Val_Rule_ID() {
+  public int getValRule_ID() {
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Val_Rule_ID);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_AD_Window getAD_Window() throws RuntimeException {
-    return (org.compiere.model.I_AD_Window)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Window.Table_Name)
-            .getPO(getAD_Window_ID(), get_TrxName());
   }
 
   /**
@@ -479,12 +471,6 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
     return (String) get_Value(HasName.Companion.getCOLUMNNAME_Name());
   }
 
-  public org.compiere.model.I_AD_Window getPO_Window() throws RuntimeException {
-    return (org.compiere.model.I_AD_Window)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Window.Table_Name)
-            .getPO(getPO_Window_ID(), get_TrxName());
-  }
-
   /**
    * Set PO Window.
    *
@@ -583,5 +569,10 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
    */
   public KeyNamePair getKeyNamePair() {
     return new KeyNamePair(getId(), getTableName());
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

@@ -41,7 +41,7 @@ public class MIndexColumn extends X_AD_IndexColumn {
     this(parent.getCtx(), 0, parent.get_TrxName());
     setClientOrg(parent);
     setAD_TableIndex_ID(parent.getAD_TableIndex_ID());
-    setAD_Column_ID(column.getAD_Column_ID());
+    setAD_Column_ID(column.getColumnId());
     setSeqNo(seqNo);
   }
 

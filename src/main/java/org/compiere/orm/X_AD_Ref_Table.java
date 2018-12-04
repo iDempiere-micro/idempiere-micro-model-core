@@ -5,7 +5,6 @@ import java.util.Properties;
 import org.compiere.model.I_AD_Ref_Table;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Ref_Table
@@ -22,7 +21,7 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
   public X_AD_Ref_Table(Properties ctx, int AD_Ref_Table_ID, String trxName) {
     super(ctx, AD_Ref_Table_ID, trxName);
     /**
-     * if (AD_Ref_Table_ID == 0) { setAD_Display (0); setAD_Key (0); setAD_Reference_ID (0);
+     * if (AD_Ref_Table_ID == 0) { setAD_Display (0); setAD_Key (0); setReferenceId (0);
      * setAD_Table_ID (0); setEntityType (null); // @SQL=select
      * get_sysconfig('DEFAULT_ENTITYTYPE','U',0,0) from dual setIsValueDisplayed (false); }
      */
@@ -40,12 +39,6 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -77,12 +70,6 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Display);
     if (ii == null) return 0;
     return ii;
-  }
-
-  public org.compiere.model.I_AD_InfoWindow getAD_InfoWindow() throws RuntimeException {
-    return (org.compiere.model.I_AD_InfoWindow)
-        MTable.get(getCtx(), org.compiere.model.I_AD_InfoWindow.Table_Name)
-            .getPO(getAD_InfoWindow_ID(), get_TrxName());
   }
 
   /**
@@ -213,12 +200,6 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
     return ii;
   }
 
-  public org.compiere.model.I_AD_Window getAD_Window() throws RuntimeException {
-    return (org.compiere.model.I_AD_Window)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Window.Table_Name)
-            .getPO(getAD_Window_ID(), get_TrxName());
-  }
-
   /**
    * Set Window.
    *
@@ -318,5 +299,10 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
    */
   public String getWhereClause() {
     return (String) get_Value(COLUMNNAME_WhereClause);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

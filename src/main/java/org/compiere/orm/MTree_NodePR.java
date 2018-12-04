@@ -1,11 +1,13 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
 
 /**
  * (Disk) Tree Node Model Product
@@ -30,7 +32,7 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, tree.get_TrxName());
+      pstmt = prepareStatement(sql, tree.get_TrxName());
       pstmt.setInt(1, tree.getAD_Tree_ID());
       pstmt.setInt(2, Node_ID);
       rs = pstmt.executeQuery();
@@ -38,7 +40,7 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
     } catch (Exception e) {
       s_log.log(Level.SEVERE, sql, e);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }

@@ -1,5 +1,7 @@
 package org.idempiere.common.util;
 
+import static software.hsharp.core.util.DBKt.createConnection;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.Connection;
@@ -155,7 +157,7 @@ public class Trx {
           new Exception("Illegal to getConnection for Trx that is not register.").printStackTrace();
           return null;
         }
-        setConnection(DB.createConnection(false, Connection.TRANSACTION_READ_COMMITTED));
+        setConnection(createConnection(false, Connection.TRANSACTION_READ_COMMITTED));
       } else return null;
     }
     if (!isActive()) start();
@@ -311,7 +313,7 @@ public class Trx {
   public synchronized boolean commit(boolean throwException) throws SQLException {
     // local
     try {
-      if (m_connection != null) {
+      if (m_connection != null && !m_connection.isClosed()) {
         m_connection.commit();
         if (log.isLoggable(Level.INFO)) log.info("**** " + m_trxName);
         m_active = false;
@@ -443,14 +445,6 @@ public class Trx {
    * @see {@link Connection#releaseSavepoint(Savepoint)}
    */
   public synchronized void releaseSavepoint(Savepoint savepoint) throws SQLException {
-    if (DB.isOracle()) {
-      // Note: As of Oracle Database 10g, releaseSavepoint and
-      // oracleReleaseSavepoint are not supported. If you call either
-      // of the methods, then SQLException is thrown with the message
-      // "Unsupported feature".
-      // -- 4-4 Oracle Database JDBC Developer's Guide and Reference
-      return;
-    }
     if (m_connection == null) {
       getConnection();
     }

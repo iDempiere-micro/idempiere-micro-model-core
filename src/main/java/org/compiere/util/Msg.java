@@ -1,5 +1,7 @@
 package org.compiere.util;
 
+import static software.hsharp.core.util.DBKt.*;
+
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +10,6 @@ import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.compiere.model.I_AD_Message;
 import org.idempiere.common.util.*;
 
 /**
@@ -95,9 +96,9 @@ public final class Msg {
   private CCache<String, String> initMsg(String AD_Language) {
     //	Trace.printStack();
     CCache<String, String> msg =
-        new CCache<String, String>(I_AD_Message.Table_Name, MAP_SIZE, 0, false, 0);
+        new CCache<String, String>("AD_Message", MAP_SIZE, 0, false, 0);
     //
-    if (!DB.isConnected()) {
+    if (!isConnected()) {
       s_log.log(Level.SEVERE, "No DB Connection");
       return null;
     }
@@ -107,10 +108,10 @@ public final class Msg {
       if (AD_Language == null
           || AD_Language.length() == 0
           || Env.isBaseLanguage(AD_Language, "AD_Language"))
-        pstmt = DB.prepareStatement("SELECT Value, MsgText, MsgTip FROM AD_Message", null);
+        pstmt = prepareStatement("SELECT Value, MsgText, MsgTip FROM AD_Message", null);
       else {
         pstmt =
-            DB.prepareStatement(
+            prepareStatement(
                 "SELECT m.Value, t.MsgText, t.MsgTip "
                     + "FROM AD_Message_Trl t, AD_Message m "
                     + "WHERE m.AD_Message_ID=t.AD_Message_ID"
@@ -135,7 +136,7 @@ public final class Msg {
       s_log.log(Level.SEVERE, "initMsg", e);
       return null;
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -427,11 +428,11 @@ public final class Msg {
           || AD_Language.length() == 0
           || Env.isBaseLanguage(AD_Language, "AD_Element"))
         pstmt =
-            DB.prepareStatement(
+            prepareStatement(
                 "SELECT Name, PO_Name FROM AD_Element WHERE UPPER(ColumnName)=?", null);
       else {
         pstmt =
-            DB.prepareStatement(
+            prepareStatement(
                 "SELECT t.Name, t.PO_Name FROM AD_Element_Trl t, AD_Element e "
                     + "WHERE t.AD_Element_ID=e.AD_Element_ID AND UPPER(e.ColumnName)=? "
                     + "AND t.AD_Language=?",
@@ -452,7 +453,7 @@ public final class Msg {
       s_log.log(Level.SEVERE, "getElement", e);
       return "";
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }

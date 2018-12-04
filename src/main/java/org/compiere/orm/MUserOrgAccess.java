@@ -1,5 +1,8 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -7,7 +10,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import org.compiere.util.Msg;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
 
 /**
  * User Org Access
@@ -43,14 +45,14 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, null);
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, id);
       rs = pstmt.executeQuery();
       while (rs.next()) list.add(new MUserOrgAccess(ctx, rs, null));
     } catch (Exception e) {
       s_log.log(Level.SEVERE, sql, e);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -102,7 +104,7 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
    * User Constructor param user user param AD_Org_ID org
    *
    * <p>public MUserOrgAccess (MUser user, int AD_Org_ID) { this (user.getCtx(), 0,
-   * user.get_TrxName()); setClientOrg (user.getADClientID(), AD_Org_ID); setAD_User_ID
+   * user.get_TrxName()); setClientOrg (user.getClientId(), AD_Org_ID); setAD_User_ID
    * (user.getAD_User_ID()); } // MUserOrgAccess
    *
    * <p>/** String Representation
@@ -114,9 +116,9 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
     sb.append("AD_User_ID=")
         .append(getAD_User_ID())
         .append(",AD_Client_ID=")
-        .append(getADClientID())
+        .append(getClientId())
         .append(",AD_Org_ID=")
-        .append(getAD_Org_ID())
+        .append(getOrgId())
         .append(",RO=")
         .append(isReadOnly());
     sb.append("]");
@@ -159,8 +161,8 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = DB.prepareStatement(sql, null);
-        pstmt.setInt(1, getAD_Org_ID());
+        pstmt = prepareStatement(sql, null);
+        pstmt.setInt(1, getOrgId());
         rs = pstmt.executeQuery();
         if (rs.next()) {
           m_clientName = rs.getString(1);
@@ -169,7 +171,7 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        DB.close(rs, pstmt);
+        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }

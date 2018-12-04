@@ -1,5 +1,8 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -64,14 +67,14 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, null);
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, id);
       rs = pstmt.executeQuery();
       while (rs.next()) list.add(new MRoleOrgAccess(ctx, rs, null));
     } catch (Exception e) {
       s_log.log(Level.SEVERE, "get", e);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -146,7 +149,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    */
   public MRoleOrgAccess(MRole role, int AD_Org_ID) {
     this(role.getCtx(), 0, role.get_TrxName());
-    setClientOrg(role.getADClientID(), AD_Org_ID);
+    setClientOrg(role.getClientId(), AD_Org_ID);
     setAD_Role_ID(role.getAD_Role_ID());
   } //	MRoleOrgAccess
 
@@ -160,9 +163,9 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     sb.append("AD_Role_ID=")
         .append(getAD_Role_ID())
         .append(",AD_Client_ID=")
-        .append(getADClientID())
+        .append(getClientId())
         .append(",AD_Org_ID=")
-        .append(getAD_Org_ID())
+        .append(getOrgId())
         .append(",RO=")
         .append(isReadOnly());
     sb.append("]");
@@ -205,8 +208,8 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = DB.prepareStatement(sql, null);
-        pstmt.setInt(1, getAD_Org_ID());
+        pstmt = prepareStatement(sql, null);
+        pstmt.setInt(1, getOrgId());
         rs = pstmt.executeQuery();
         if (rs.next()) {
           m_clientName = rs.getString(1);
@@ -215,7 +218,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
       } catch (Exception e) {
         log.log(Level.SEVERE, "getClientName", e);
       } finally {
-        DB.close(rs, pstmt);
+        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }

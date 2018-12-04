@@ -1,8 +1,9 @@
 package org.idempiere.common.exceptions;
 
+import static software.hsharp.core.util.DBKt.isPostgreSQL;
+
 import java.sql.SQLException;
 import org.idempiere.common.util.CLogMgt;
-import org.idempiere.common.util.DB;
 
 /**
  * This RuntimeException is used to pass SQLException up the chain of calling methods to determine
@@ -117,7 +118,7 @@ public class DBException extends AdempiereException {
    * @param e exception
    */
   public static boolean isUniqueContraintError(Exception e) {
-    if (DB.isPostgreSQL()) return isSQLState(e, "23505");
+    if (isPostgreSQL()) return isSQLState(e, "23505");
     //
     return isErrorCode(e, 1);
   }
@@ -128,7 +129,7 @@ public class DBException extends AdempiereException {
    * @param e exception
    */
   public static boolean isChildRecordFoundError(Exception e) {
-    if (DB.isPostgreSQL()) return isSQLState(e, "23503");
+    if (isPostgreSQL()) return isSQLState(e, "23503");
     return isErrorCode(e, 2292);
   }
 
@@ -138,7 +139,7 @@ public class DBException extends AdempiereException {
    * @param e exception
    */
   public static boolean isInvalidIdentifierError(Exception e) {
-    if (DB.isPostgreSQL()) return isSQLState(e, "42P01");
+    if (isPostgreSQL()) return isSQLState(e, "42P01");
     return isErrorCode(e, 904);
   }
 
@@ -157,7 +158,7 @@ public class DBException extends AdempiereException {
    * @param e
    */
   public static boolean isTimeout(Exception e) {
-    if (DB.isPostgreSQL()) return isSQLState(e, "57014");
+    if (isPostgreSQL()) return isSQLState(e, "57014");
     return isErrorCode(e, 1013);
   }
 

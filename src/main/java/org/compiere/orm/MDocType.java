@@ -1,5 +1,7 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.*;
+
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
@@ -7,9 +9,7 @@ import java.util.logging.Level;
 import org.compiere.model.HasName;
 import org.compiere.model.I_C_DocType;
 import org.idempiere.common.util.CCache;
-import org.idempiere.common.util.DB;
 import org.idempiere.common.util.Env;
-import org.idempiere.orm.PO;
 
 /**
  * Document Type Model
@@ -153,7 +153,7 @@ public class MDocType extends X_C_DocType {
         "SELECT GL_Category_ID FROM GL_Category"
             + " WHERE AD_Client_ID=?"
             + " ORDER BY IsDefault DESC, GL_Category_ID";
-    int GL_Category_ID = DB.getSQLValue(get_TrxName(), sql, getADClientID());
+    int GL_Category_ID = getSQLValue(get_TrxName(), sql, getClientId());
     setGL_Category_ID(GL_Category_ID);
   } //	setGL_Category_ID
 
@@ -231,7 +231,7 @@ public class MDocType extends X_C_DocType {
    * @return true
    */
   protected boolean beforeSave(boolean newRecord) {
-    /*if (getAD_Org_ID() != 0)
+    /*if (getOrgId() != 0)
     setAD_Org_ID(0);*/
     return true;
   } //	beforeSave
@@ -251,7 +251,7 @@ public class MDocType extends X_C_DocType {
               .append("(AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,Updated,UpdatedBy,")
               .append("C_DocType_ID , AD_Ref_List_ID, AD_Role_ID) ")
               .append("(SELECT ")
-              .append(getADClientID())
+              .append(getClientId())
               .append(",0,'Y', SysDate,")
               .append(getUpdatedBy())
               .append(", SysDate,")
@@ -262,13 +262,13 @@ public class MDocType extends X_C_DocType {
               .append("INNER JOIN AD_Ref_List action ON (action.AD_Reference_ID=135) ")
               .append("INNER JOIN AD_Role rol ON (rol.AD_Client_ID=client.AD_Client_ID) ")
               .append("WHERE client.AD_Client_ID=")
-              .append(getADClientID())
+              .append(getClientId())
               .append(" AND doctype.C_DocType_ID=")
               .append(getId())
               .append(" AND rol.IsManual='N'")
               .append(")");
 
-      int docact = DB.executeUpdate(sqlDocAction.toString(), get_TrxName());
+      int docact = executeUpdate(sqlDocAction.toString(), get_TrxName());
       if (log.isLoggable(Level.FINE)) log.fine("AD_Document_Action_Access=" + docact);
     }
     return success;
@@ -284,55 +284,11 @@ public class MDocType extends X_C_DocType {
     StringBuilder msgdb =
         new StringBuilder("DELETE FROM AD_Document_Action_Access WHERE C_DocType_ID=")
             .append(getId());
-    int docactDel = DB.executeUpdate(msgdb.toString(), get_TrxName());
+    int docactDel = executeUpdate(msgdb.toString(), get_TrxName());
     if (log.isLoggable(Level.FINE))
       log.fine("Delete AD_Document_Action_Access=" + docactDel + " for C_DocType_ID: " + getId());
     return docactDel >= 0;
   } //  beforeDelete
-
-  /**
-   * Returns Document type for the shipment/receipt based on Document type provided for order/rma
-   *
-   * @param docTypeId
-   * @return shipment/receipt doctype id
-   */
-  public static int getShipmentReceiptDocType(int docTypeId) {
-    int relatedDocTypeId = 0;
-    if (docTypeId != 0) {
-      MDocType docType = MDocType.get(Env.getCtx(), docTypeId);
-      // FIXME: Should refactor code and remove the hard coded name
-      // Should change document type to allow query the value
-      if ("Return Material".equals(docType.getName())
-          || "Vendor Return".equals(docType.getName())
-          || !docType.isSOTrx()) {
-        String relatedDocTypeName = null;
-        if (("Purchase Order").equals(docType.getName())) {
-          relatedDocTypeName = "MM Receipt";
-        } else if ("Return Material".equals(docType.getName())) {
-          relatedDocTypeName = "MM Returns";
-        } else if ("Vendor Return".equals(docType.getName())) {
-          relatedDocTypeName = "MM Vendor Returns";
-        }
-
-        if (relatedDocTypeName != null) {
-          StringBuilder whereClause = new StringBuilder(30);
-          whereClause.append("Name='").append(relatedDocTypeName).append("' ");
-          whereClause.append("and AD_Client_ID=").append(Env.getADClientID(Env.getCtx()));
-          whereClause.append(" AND IsActive='Y'");
-
-          int relDocTypeIds[] = PO.getAllIDs(MDocType.Table_Name, whereClause.toString(), null);
-
-          if (relDocTypeIds.length > 0) {
-            relatedDocTypeId = relDocTypeIds[0];
-          }
-        }
-      } else {
-        relatedDocTypeId = docType.getC_DocTypeShipment_ID();
-      }
-    }
-
-    return relatedDocTypeId;
-  }
 
   /**
    * Get translated doctype name

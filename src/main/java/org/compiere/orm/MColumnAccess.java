@@ -1,11 +1,13 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
 import org.compiere.util.Msg;
-import org.idempiere.common.util.DB;
 
 /**
  * Column Access Model
@@ -116,7 +118,7 @@ public class MColumnAccess extends X_AD_Column_Access {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = DB.prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, get_TrxName());
         pstmt.setInt(1, getAD_Column_ID());
         rs = pstmt.executeQuery();
         if (rs.next()) {
@@ -133,7 +135,7 @@ public class MColumnAccess extends X_AD_Column_Access {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        DB.close(rs, pstmt);
+        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }

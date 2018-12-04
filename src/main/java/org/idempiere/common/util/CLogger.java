@@ -22,6 +22,8 @@ public class CLogger extends Logger implements Serializable {
   private static final String LAST_ERROR = "org.idempiere.common.util.CLogger.lastError";
   private static final String LAST_EXCEPTION = "org.idempiere.common.util.CLogger.lastException";
 
+  public static Boolean throwOnError = true;
+
   /**
    * Get Logger
    *
@@ -160,6 +162,7 @@ public class CLogger extends Logger implements Serializable {
     Env.getCtx().put(LAST_ERROR, lastError);
     //  print it
     if (issueError) severe(AD_Message + " - " + message);
+    if (throwOnError) throw new Error(AD_Message + "-" + message);
     return true;
   } //  saveError
 

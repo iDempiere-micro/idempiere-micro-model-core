@@ -1,5 +1,8 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,11 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.compiere.model.I_AD_SysConfig;
 import org.compiere.util.DisplayType;
-import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
+import software.hsharp.core.orm.MBaseSysConfig;
+import software.hsharp.core.orm.MBaseSysConfigKt;
 
 /**
  * System Configuration
@@ -24,7 +26,7 @@ import org.idempiere.common.util.DB;
  * @author Teo Sarca, SC ARHIPAC SERVICE SRL
  *     <li>BF [ 1885496 ] Performance NEEDS
  */
-public class MSysConfig extends X_AD_SysConfig {
+public class MSysConfig extends MBaseSysConfig {
   /** */
   private static final long serialVersionUID = 2617379167881737860L;
 
@@ -215,9 +217,6 @@ public class MSysConfig extends X_AD_SysConfig {
 
   /** Static Logger */
   private static CLogger s_log = CLogger.getCLogger(MSysConfig.class);
-  /** Cache */
-  private static CCache<String, String> s_cache =
-      new CCache<String, String>(I_AD_SysConfig.Table_Name, 40, 0, true);
 
   /**
    * Get system configuration property of type string
@@ -388,42 +387,7 @@ public class MSysConfig extends X_AD_SysConfig {
    * @return String
    */
   public static String getValue(String Name, String defaultValue, int AD_Client_ID, int AD_Org_ID) {
-    String key = "" + AD_Client_ID + "_" + AD_Org_ID + "_" + Name;
-    String str = s_cache.get(key);
-    if (str != null) return str;
-    if (str == null && s_cache.containsKey(key)) // found null key
-    return defaultValue;
-
-    //
-    String sql =
-        "SELECT Value FROM AD_SysConfig"
-            + " WHERE Name=? AND AD_Client_ID IN (0, ?) AND AD_Org_ID IN (0, ?) AND IsActive='Y'"
-            + " ORDER BY AD_Client_ID DESC, AD_Org_ID DESC";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, null);
-      pstmt.setString(1, Name);
-      pstmt.setInt(2, AD_Client_ID);
-      pstmt.setInt(3, AD_Org_ID);
-      rs = pstmt.executeQuery();
-      if (rs.next()) str = rs.getString(1);
-    } catch (SQLException e) {
-      s_log.log(Level.SEVERE, "getValue", e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    //
-    if (str != null) {
-      s_cache.put(key, str);
-      return str;
-    } else {
-      // anyways, put the not found key as null
-      s_cache.put(key, null);
-      return defaultValue;
-    }
+    return MBaseSysConfigKt.getValue(Name, defaultValue, AD_Client_ID, AD_Org_ID);
   }
 
   /**
@@ -591,7 +555,7 @@ public class MSysConfig extends X_AD_SysConfig {
   protected boolean beforeSave(boolean newRecord) {
     if (log.isLoggable(Level.FINE)) log.fine("New=" + newRecord);
 
-    if (getADClientID() != 0 || getAD_Org_ID() != 0) {
+    if (getClientId() != 0 || getOrgId() != 0) {
 
       // Get the configuration level from the System Record
       String configLevel = null;
@@ -600,14 +564,14 @@ public class MSysConfig extends X_AD_SysConfig {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = DB.prepareStatement(sql, null);
+        pstmt = prepareStatement(sql, null);
         pstmt.setString(1, getName());
         rs = pstmt.executeQuery();
         if (rs.next()) configLevel = rs.getString(1);
       } catch (SQLException e) {
         s_log.log(Level.SEVERE, "getValue", e);
       } finally {
-        DB.close(rs, pstmt);
+        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }
@@ -615,20 +579,20 @@ public class MSysConfig extends X_AD_SysConfig {
       if (configLevel == null) {
         // not found for system
         // if saving an org parameter - look config in client
-        if (getAD_Org_ID() != 0) {
+        if (getOrgId() != 0) {
           // Get the configuration level from the System Record
           sql =
               "SELECT ConfigurationLevel FROM AD_SysConfig WHERE Name=? AND AD_Client_ID = ? AND AD_Org_ID = 0";
           try {
-            pstmt = DB.prepareStatement(sql, null);
+            pstmt = prepareStatement(sql, null);
             pstmt.setString(1, getName());
-            pstmt.setInt(2, getADClientID());
+            pstmt.setInt(2, getClientId());
             rs = pstmt.executeQuery();
             if (rs.next()) configLevel = rs.getString(1);
           } catch (SQLException e) {
             s_log.log(Level.SEVERE, "getValue", e);
           } finally {
-            DB.close(rs, pstmt);
+            close(rs, pstmt);
             rs = null;
             pstmt = null;
           }
@@ -640,7 +604,7 @@ public class MSysConfig extends X_AD_SysConfig {
         setConfigurationLevel(configLevel);
 
         // Disallow saving org parameter if the system parameter is marked as 'S' or 'C'
-        if (getAD_Org_ID() != 0
+        if (getOrgId() != 0
             && (configLevel.equals(MSysConfig.CONFIGURATIONLEVEL_System)
                 || configLevel.equals(MSysConfig.CONFIGURATIONLEVEL_Client))) {
           log.saveError(
@@ -650,7 +614,7 @@ public class MSysConfig extends X_AD_SysConfig {
         }
 
         // Disallow saving client parameter if the system parameter is marked as 'S'
-        if (getADClientID() != 0 && configLevel.equals(MSysConfig.CONFIGURATIONLEVEL_System)) {
+        if (getClientId() != 0 && configLevel.equals(MSysConfig.CONFIGURATIONLEVEL_System)) {
           log.saveError(
               "Can't Save Client Level",
               "This is a system parameter, you can't save it as client parameter");
@@ -660,9 +624,8 @@ public class MSysConfig extends X_AD_SysConfig {
       } else {
 
         // fix possible wrong config level
-        if (getAD_Org_ID() != 0)
-          setConfigurationLevel(X_AD_SysConfig.CONFIGURATIONLEVEL_Organization);
-        else if (getADClientID() != 0
+        if (getOrgId() != 0) setConfigurationLevel(X_AD_SysConfig.CONFIGURATIONLEVEL_Organization);
+        else if (getClientId() != 0
             && getConfigurationLevel().equals(MSysConfig.CONFIGURATIONLEVEL_System))
           setConfigurationLevel(X_AD_SysConfig.CONFIGURATIONLEVEL_Client);
       }
@@ -683,9 +646,9 @@ public class MSysConfig extends X_AD_SysConfig {
         + ", ConfigurationLevel="
         + getConfigurationLevel()
         + ", Client|Org="
-        + getADClientID()
+        + getClientId()
         + "|"
-        + getAD_Org_ID()
+        + getOrgId()
         + ", EntityType="
         + getEntityType()
         + "]";

@@ -6,7 +6,6 @@ import org.compiere.model.HasName;
 import org.compiere.model.I_AD_StorageProvider;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_StorageProvider
@@ -37,12 +36,6 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -211,5 +204,10 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
    */
   public String getUserName() {
     return (String) get_Value(COLUMNNAME_UserName);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

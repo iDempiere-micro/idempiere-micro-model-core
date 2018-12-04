@@ -1,25 +1,24 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.orm.MBaseTableKt.getFactoryList;
+import static software.hsharp.core.orm.MBaseTableKt.getTableCache;
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.compiere.model.I_AD_Table;
-import org.idempiere.common.base.IServicesHolder;
-import org.idempiere.common.base.Service;
-import org.idempiere.common.util.CCache;
+import kotliquery.Row;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.DB;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.POInfo;
+import software.hsharp.core.orm.MBaseTable;
+import software.hsharp.core.orm.MBaseTableKt;
 
 /**
  * Persistent Table Model
@@ -40,7 +39,7 @@ import org.idempiere.orm.POInfo;
  *         https://sourceforge.net/tracker/?func=detail&aid=3017117&group_id=176962&atid=879332
  * @version $Id: MTable.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
  */
-public class MTable extends X_AD_Table {
+public class MTable extends MBaseTable {
   /** */
   private static final long serialVersionUID = -8757836873040013402L;
 
@@ -67,14 +66,14 @@ public class MTable extends X_AD_Table {
    */
   public static MTable get(Properties ctx, int AD_Table_ID, String trxName) {
     Integer key = Integer.valueOf(AD_Table_ID);
-    MTable retValue = s_cache.get(key);
+    MTable retValue = getTableCache().get(key);
     if (retValue != null && retValue.getCtx() == ctx) {
       if (trxName != null) retValue.set_TrxName(trxName);
       return retValue;
     }
     retValue = new MTable(ctx, AD_Table_ID, trxName);
     if (retValue.getId() != 0) {
-      s_cache.put(key, retValue);
+      getTableCache().put(key, retValue);
     }
     return retValue;
   } //	get
@@ -88,36 +87,7 @@ public class MTable extends X_AD_Table {
    */
   public static MTable get(Properties ctx, String tableName) {
     if (tableName == null) return null;
-    Iterator<MTable> it = s_cache.values().iterator();
-    while (it.hasNext()) {
-      MTable retValue = it.next();
-      if (tableName.equalsIgnoreCase(retValue.getTableName()) && retValue.getCtx() == ctx) {
-        return retValue;
-      }
-    }
-    //
-    MTable retValue = null;
-    String sql = "SELECT * FROM AD_Table WHERE UPPER(TableName)=?";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, null);
-      pstmt.setString(1, tableName.toUpperCase());
-      rs = pstmt.executeQuery();
-      if (rs.next()) retValue = new MTable(ctx, rs, null);
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, sql, e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-
-    if (retValue != null) {
-      Integer key = Integer.valueOf(retValue.getAD_Table_ID());
-      s_cache.put(key, retValue);
-    }
-    return retValue;
+    return MBaseTableKt.get(ctx, tableName);
   } //	get
 
   /**
@@ -131,26 +101,8 @@ public class MTable extends X_AD_Table {
     return MTable.get(ctx, AD_Table_ID).getTableName();
   } //	getTableName
 
-  /** Cache */
-  private static CCache<Integer, MTable> s_cache =
-      new CCache<Integer, MTable>(I_AD_Table.Table_Name, 20);
-
   /** Static Logger */
   private static CLogger s_log = CLogger.getCLogger(MTable.class);
-
-  private static List<IModelFactory> getFactoryList() {
-    IServicesHolder<IModelFactory> service = Service.Companion.locator().list(IModelFactory.class);
-    List<IModelFactory> factoryList;
-    if (service == null) {
-      factoryList = Arrays.asList(new IModelFactory[] {new DefaultModelFactory()});
-    } else {
-      factoryList = service.getServices();
-      if (factoryList == null || factoryList.size() == 0) {
-        factoryList = Arrays.asList(new IModelFactory[] {new DefaultModelFactory()});
-      }
-    }
-    return factoryList;
-  }
 
   /**
    * Get Persistence Class for Table
@@ -159,7 +111,7 @@ public class MTable extends X_AD_Table {
    * @return class or null
    */
   public static Class<?> getClass(String tableName) {
-    List<IModelFactory> factoryList = getFactoryList();
+    IModelFactory[] factoryList = getFactoryList();
     if (factoryList == null) return null;
     for (IModelFactory factory : factoryList) {
       Class<?> clazz = factory.getClass(tableName);
@@ -202,51 +154,12 @@ public class MTable extends X_AD_Table {
     super(ctx, rs, trxName);
   } //	MTable
 
-  /** Columns */
-  private MColumn[] m_columns = null;
-  /** column name to index map * */
-  private Map<String, Integer> m_columnNameMap;
-  /** ad_column_id to index map * */
-  private Map<Integer, Integer> m_columnIdMap;
+  public MTable(Properties ctx, Row row) {
+    super(ctx, row);
+  }
+
   /** View Components */
   private MViewComponent[] m_viewComponents = null;
-
-  /**
-   * Get Columns
-   *
-   * @param requery requery
-   * @return array of columns
-   */
-  public synchronized MColumn[] getColumns(boolean requery) {
-    if (m_columns != null && !requery) return m_columns;
-    m_columnNameMap = new HashMap<String, Integer>();
-    m_columnIdMap = new HashMap<Integer, Integer>();
-    String sql = "SELECT * FROM AD_Column WHERE AD_Table_ID=? AND IsActive='Y' ORDER BY ColumnName";
-    ArrayList<MColumn> list = new ArrayList<MColumn>();
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, get_TrxName());
-      pstmt.setInt(1, getAD_Table_ID());
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        MColumn column = new MColumn(getCtx(), rs, get_TrxName());
-        list.add(column);
-        m_columnNameMap.put(column.getColumnName().toUpperCase(), list.size() - 1);
-        m_columnIdMap.put(column.getAD_Column_ID(), list.size() - 1);
-      }
-    } catch (Exception e) {
-      log.log(Level.SEVERE, sql, e);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    //
-    m_columns = new MColumn[list.size()];
-    list.toArray(m_columns);
-    return m_columns;
-  } //	getColumns
 
   /**
    * Get Column
@@ -256,7 +169,7 @@ public class MTable extends X_AD_Table {
    */
   public MColumn getColumn(String columnName) {
     if (columnName == null || columnName.length() == 0) return null;
-    getColumns(false);
+    MColumn[] m_columns = getColumns(false);
     //
     for (int i = 0; i < m_columns.length; i++) {
       if (columnName.equalsIgnoreCase(m_columns[i].getColumnName())) return m_columns[i];
@@ -271,8 +184,9 @@ public class MTable extends X_AD_Table {
    * @return index of column with ColumnName or -1 if not found
    */
   public synchronized int getColumnIndex(String ColumnName) {
+    MColumn[] m_columns = super.getM_columns();
     if (m_columns == null) getColumns(false);
-    Integer i = m_columnNameMap.get(ColumnName.toUpperCase());
+    Integer i = getM_columnNameMap().get(ColumnName.toUpperCase());
     if (i != null) return i.intValue();
 
     return -1;
@@ -285,8 +199,9 @@ public class MTable extends X_AD_Table {
    * @return index of column with ColumnName or -1 if not found
    */
   public synchronized int getColumnIndex(int AD_Column_ID) {
+    MColumn[] m_columns = super.getM_columns();
     if (m_columns == null) getColumns(false);
-    Integer i = m_columnIdMap.get(AD_Column_ID);
+    Integer i = getM_columnIdMap().get(AD_Column_ID);
     if (i != null) return i.intValue();
 
     return -1;
@@ -308,7 +223,7 @@ public class MTable extends X_AD_Table {
    * @return key columns
    */
   public String[] getKeyColumns() {
-    getColumns(false);
+    MColumn[] m_columns = getColumns(false);
     ArrayList<String> list = new ArrayList<String>();
     //
     for (int i = 0; i < m_columns.length; i++) {
@@ -368,7 +283,7 @@ public class MTable extends X_AD_Table {
     }
 
     org.idempiere.orm.PO po = null;
-    List<IModelFactory> factoryList = getFactoryList();
+    IModelFactory[] factoryList = getFactoryList();
     if (factoryList != null) {
       for (IModelFactory factory : factoryList) {
         po = factory.getPO(tableName, Record_ID, trxName);
@@ -398,7 +313,7 @@ public class MTable extends X_AD_Table {
     String tableName = getTableName();
 
     org.idempiere.orm.PO po = null;
-    List<IModelFactory> factoryList = getFactoryList();
+    IModelFactory[] factoryList = getFactoryList();
     if (factoryList != null) {
       for (IModelFactory factory : factoryList) {
         po = factory.getPO(tableName, rs, trxName);
@@ -444,7 +359,7 @@ public class MTable extends X_AD_Table {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql, trxName);
       if (params != null && params.length > 0) {
         for (int i = 0; i < params.length; i++) {
           pstmt.setObject(i + 1, params[i]);
@@ -458,7 +373,7 @@ public class MTable extends X_AD_Table {
       log.log(Level.SEVERE, sql, e);
       log.saveError("Error", e);
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -510,7 +425,7 @@ public class MTable extends X_AD_Table {
     // boolean hasPK = false;
     // boolean hasParents = false;
     StringBuffer constraints = new StringBuffer();
-    getColumns(true);
+    MColumn[] m_columns = getColumns(true);
     boolean columnAdded = false;
     for (int i = 0; i < m_columns.length; i++) {
       MColumn column = m_columns[i];
@@ -535,9 +450,9 @@ public class MTable extends X_AD_Table {
     if (!hasPK && hasParents)
     {
     	StringBuffer cols = new StringBuffer();
-    	for (int i = 0; i < m_columns.length; i++)
+    	for (int i = 0; i < columns.length; i++)
     	{
-    		MColumn column = m_columns[i];
+    		MColumn column = columns[i];
     		if (!column.isParent())
     			continue;
     		if (cols.length() > 0)
@@ -567,7 +482,7 @@ public class MTable extends X_AD_Table {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = DB.prepareStatement(SQL, null);
+      pstmt = prepareStatement(SQL, null);
       pstmt.setString(1, tableName);
       rs = pstmt.executeQuery();
       if (rs.next()) retValue = rs.getInt(1);
@@ -575,7 +490,7 @@ public class MTable extends X_AD_Table {
       s_log.log(Level.SEVERE, SQL, e);
       retValue = -1;
     } finally {
-      DB.close(rs, pstmt);
+      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }

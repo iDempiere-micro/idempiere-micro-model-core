@@ -2,9 +2,9 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_SysConfig;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_SysConfig
@@ -27,6 +27,10 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
     super(ctx, rs, trxName);
   }
 
+  public X_AD_SysConfig(Properties ctx, Row r) {
+    super(ctx, r);
+  }
+
   /**
    * AccessLevel
    *
@@ -34,12 +38,6 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -150,5 +148,10 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
    */
   public String getEntityType() {
     return (String) get_Value(COLUMNNAME_EntityType);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

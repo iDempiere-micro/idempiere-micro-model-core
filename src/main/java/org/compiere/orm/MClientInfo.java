@@ -1,18 +1,18 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
+
+import kotliquery.Row;
 import org.idempiere.common.util.CCache;
-import org.idempiere.common.util.DB;
 
 public class MClientInfo extends X_AD_ClientInfo {
-  /** Cache */
-  protected static CCache<Integer, MClientInfo> s_cache =
-      new CCache<Integer, MClientInfo>(Table_Name, 2);
-
   /**
    * ************************************************************************ Standard Constructor
    *
@@ -34,6 +34,10 @@ public class MClientInfo extends X_AD_ClientInfo {
    */
   public MClientInfo(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MClientInfo
+
+  public MClientInfo(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MClientInfo
 
   /**
@@ -60,7 +64,7 @@ public class MClientInfo extends X_AD_ClientInfo {
       int AD_Tree_Activity_ID,
       String trxName) {
     super(client.getCtx(), 0, trxName);
-    setADClientID(client.getADClientID()); // 	to make sure
+    setADClientID(client.getClientId()); // 	to make sure
     setAD_Org_ID(0);
     setIsDiscountLineAmt(false);
     //
@@ -74,7 +78,7 @@ public class MClientInfo extends X_AD_ClientInfo {
     setAD_Tree_Campaign_ID(AD_Tree_Campaign_ID);
     setAD_Tree_Activity_ID(AD_Tree_Activity_ID);
     //
-    m_createNew = true;
+    setCreateNew(true);
   } //	MClientInfo
 
   /**
@@ -97,29 +101,6 @@ public class MClientInfo extends X_AD_ClientInfo {
    * @return Client Info
    */
   public static MClientInfo get(Properties ctx, int AD_Client_ID, String trxName) {
-    Integer key = new Integer(AD_Client_ID);
-    MClientInfo info = (MClientInfo) s_cache.get(key);
-    if (info != null) return info;
-    //
-    String sql = "SELECT * FROM AD_ClientInfo WHERE AD_Client_ID=?";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = DB.prepareStatement(sql, trxName);
-      pstmt.setInt(1, AD_Client_ID);
-      rs = pstmt.executeQuery();
-      if (rs.next()) {
-        info = new MClientInfo(ctx, rs, null);
-        if (trxName == null) s_cache.put(key, info);
-      }
-    } catch (SQLException ex) {
-      s_log.log(Level.SEVERE, sql, ex);
-    } finally {
-      DB.close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    //
-    return info;
+    return MBaseClientInfoKt.get(ctx, AD_Client_ID, trxName);
   } //	get
 }

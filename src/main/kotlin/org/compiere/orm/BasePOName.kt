@@ -1,5 +1,6 @@
 package org.compiere.orm
 
+import kotliquery.Row
 import org.compiere.model.HasName
 import org.idempiere.common.util.KeyNamePair
 import java.sql.ResultSet
@@ -9,6 +10,7 @@ abstract class BasePOName : PO {
     constructor(ctx: Properties, ID: Int, trxName: String?) : super(ctx, ID, trxName)
     constructor (ctx: Properties, rs: ResultSet, trxName: String?) : super(ctx, rs, trxName)
     constructor (ctx: Properties, rs: ResultSet, trxName: String?, a: String?) : super(ctx, rs, trxName, a)
+    constructor(ctx: Properties, r: Row) : super(ctx, r)
 
     /** Set Name.
      * @param Name

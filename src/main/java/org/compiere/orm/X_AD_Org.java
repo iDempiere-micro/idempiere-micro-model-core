@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_AD_Org;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Org
@@ -36,11 +35,6 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
     return accessLevel.intValue();
   }
 
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    return POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-  }
-
   public String toString() {
     return "X_AD_Org[" + getId() + "]";
   }
@@ -61,13 +55,6 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
    */
   public String getAD_Org_UU() {
     return (String) get_Value(COLUMNNAME_AD_Org_UU);
-  }
-
-  public org.compiere.model.I_AD_ReplicationStrategy getADReplicationStrategy()
-      throws RuntimeException {
-    return (org.compiere.model.I_AD_ReplicationStrategy)
-        MTable.get(getCtx(), org.compiere.model.I_AD_ReplicationStrategy.Table_Name)
-            .getPO(getADReplicationStrategyID(), get_TrxName());
   }
 
   /**
@@ -130,5 +117,10 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
       return "Y".equals(oo);
     }
     return false;
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

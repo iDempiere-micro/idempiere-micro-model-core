@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_AD_TableIndex;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_TableIndex
@@ -36,21 +35,9 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
     return accessLevel.intValue();
   }
 
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
-  }
-
   public String toString() {
     StringBuffer sb = new StringBuffer("X_AD_TableIndex[").append(getId()).append("]");
     return sb.toString();
-  }
-
-  public org.compiere.model.I_AD_Message getAD_Message() throws RuntimeException {
-    return (org.compiere.model.I_AD_Message)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Message.Table_Name)
-            .getPO(getAD_Message_ID(), get_TrxName());
   }
 
   /**
@@ -305,5 +292,10 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
    */
   public String getTableIndexDrop() {
     return (String) get_Value(COLUMNNAME_TableIndexDrop);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

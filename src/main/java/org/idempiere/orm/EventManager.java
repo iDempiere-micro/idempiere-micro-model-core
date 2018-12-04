@@ -21,18 +21,6 @@ public abstract class EventManager implements IEventManager {
    * @return EventManager
    */
   public static IEventManager getInstance() {
-    // this never NEVER EVER works now
-    // read more http://blog.vogella.com/2017/05/16/osgi-event-admin-publish-subscribe/
-    // TODO DAP HACK
-    synchronized (mutex) {
-      while (instance == null) {
-        try {
-          log.info("Waiting for the IEventManager instance...");
-          mutex.wait(10000);
-        } catch (InterruptedException e) {
-        }
-      }
-    }
     return instance;
   }
 

@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import java.util.Properties;
 import org.compiere.model.I_AD_Ref_List;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Ref_List
@@ -35,12 +34,6 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
    */
   protected int getAccessLevel() {
     return accessLevel.intValue();
-  }
-
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
   }
 
   public String toString() {
@@ -187,5 +180,10 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
    */
   public Timestamp getValidTo() {
     return (Timestamp) get_Value(COLUMNNAME_ValidTo);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }

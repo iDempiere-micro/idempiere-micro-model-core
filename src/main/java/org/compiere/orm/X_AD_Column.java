@@ -3,12 +3,11 @@ package org.compiere.orm;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
-import org.compiere.model.HasName;
-import org.compiere.model.I_AD_Column;
+import kotliquery.Row;
+import org.compiere.model.*;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
-import org.idempiere.orm.POInfo;
 
 /**
  * Generated Model for AD_Column
@@ -21,11 +20,15 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
   /** */
   private static final long serialVersionUID = 20171031L;
 
+  public X_AD_Column(Properties ctx, Row row) {
+    super(ctx, row);
+  }
+
   /** Standard Constructor */
   public X_AD_Column(Properties ctx, int AD_Column_ID, String trxName) {
     super(ctx, AD_Column_ID, trxName);
     /**
-     * if (AD_Column_ID == 0) { setAD_Column_ID (0); setAD_Element_ID (0); setAD_Reference_ID (0);
+     * if (AD_Column_ID == 0) { setColumnId (0); setAD_Element_ID (0); setReferenceId (0);
      * setAD_Table_ID (0); setColumnName (null); setEntityType (null); // @SQL=select
      * get_sysconfig('DEFAULT_ENTITYTYPE','U',0,0) from dual setIsAllowCopy (true); // Y
      * setIsAlwaysUpdateable (false); // N setIsAutocomplete (false); // N setIsEncrypted (null); //
@@ -50,21 +53,9 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return accessLevel.intValue();
   }
 
-  /** Load Meta Data */
-  protected POInfo initPO(Properties ctx) {
-    POInfo poi = POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
-    return poi;
-  }
-
   public String toString() {
     StringBuffer sb = new StringBuffer("X_AD_Column[").append(getId()).append("]");
     return sb.toString();
-  }
-
-  public org.compiere.model.I_AD_Chart getAD_Chart() throws RuntimeException {
-    return (org.compiere.model.I_AD_Chart)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Chart.Table_Name)
-            .getPO(getAD_Chart_ID(), get_TrxName());
   }
 
   /**
@@ -93,7 +84,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
    *
    * @param AD_Column_ID Column in the table
    */
-  public void setAD_Column_ID(int AD_Column_ID) {
+  public void setColumnId(int AD_Column_ID) {
     if (AD_Column_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Column_ID, null);
     else set_ValueNoCheck(COLUMNNAME_AD_Column_ID, Integer.valueOf(AD_Column_ID));
   }
@@ -103,7 +94,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
    *
    * @return Column in the table
    */
-  public int getAD_Column_ID() {
+  public int getColumnId() {
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Column_ID);
     if (ii == null) return 0;
     return ii;
@@ -127,10 +118,9 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return (String) get_Value(COLUMNNAME_AD_Column_UU);
   }
 
-  public org.compiere.model.I_AD_Element getAD_Element() throws RuntimeException {
-    return (org.compiere.model.I_AD_Element)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Element.Table_Name)
-            .getPO(getAD_Element_ID(), get_TrxName());
+  public I_AD_Element getAD_Element() throws RuntimeException {
+    return (I_AD_Element)
+        MTable.get(getCtx(), I_AD_Element.Table_Name).getPO(getAD_Element_ID(), get_TrxName());
   }
 
   /**
@@ -155,12 +145,6 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return ii;
   }
 
-  public org.compiere.model.I_AD_Process getAD_Process() throws RuntimeException {
-    return (org.compiere.model.I_AD_Process)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Process.Table_Name)
-            .getPO(getAD_Process_ID(), get_TrxName());
-  }
-
   /**
    * Set Process.
    *
@@ -182,10 +166,9 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return ii;
   }
 
-  public org.compiere.model.I_AD_Reference getAD_Reference() throws RuntimeException {
-    return (org.compiere.model.I_AD_Reference)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Reference.Table_Name)
-            .getPO(getAD_Reference_ID(), get_TrxName());
+  public I_AD_Reference getReference() throws RuntimeException {
+    return (I_AD_Reference)
+        MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getReferenceId(), get_TrxName());
   }
 
   /**
@@ -193,7 +176,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
    *
    * @param AD_Reference_ID System Reference and Validation
    */
-  public void setAD_Reference_ID(int AD_Reference_ID) {
+  public void setReferenceId(int AD_Reference_ID) {
     if (AD_Reference_ID < 1) set_Value(COLUMNNAME_AD_Reference_ID, null);
     else set_Value(COLUMNNAME_AD_Reference_ID, Integer.valueOf(AD_Reference_ID));
   }
@@ -203,15 +186,15 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
    *
    * @return System Reference and Validation
    */
-  public int getAD_Reference_ID() {
+  public int getReferenceId() {
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Reference_ID);
     if (ii == null) return 0;
     return ii;
   }
 
-  public org.compiere.model.I_AD_Reference getAD_Reference_Value() throws RuntimeException {
-    return (org.compiere.model.I_AD_Reference)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Reference.Table_Name)
+  public I_AD_Reference getAD_Reference_Value() throws RuntimeException {
+    return (I_AD_Reference)
+        MTable.get(getCtx(), I_AD_Reference.Table_Name)
             .getPO(getAD_Reference_Value_ID(), get_TrxName());
   }
 
@@ -236,10 +219,9 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return ii;
   }
 
-  public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
-    return (org.compiere.model.I_AD_Table)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), get_TrxName());
+  public I_AD_Table getAD_Table() throws RuntimeException {
+    return (I_AD_Table)
+        MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getAD_Table_ID(), get_TrxName());
   }
 
   /**
@@ -263,10 +245,9 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return ii;
   }
 
-  public org.compiere.model.I_AD_Val_Rule getAD_Val_Rule() throws RuntimeException {
-    return (org.compiere.model.I_AD_Val_Rule)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Val_Rule.Table_Name)
-            .getPO(getAD_Val_Rule_ID(), get_TrxName());
+  public I_AD_Val_Rule getValRule() throws RuntimeException {
+    return (I_AD_Val_Rule)
+        MTable.get(getCtx(), I_AD_Val_Rule.Table_Name).getPO(getValRule_ID(), get_TrxName());
   }
 
   /**
@@ -284,7 +265,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
    *
    * @return Dynamic Validation Rule
    */
-  public int getAD_Val_Rule_ID() {
+  public int getValRule_ID() {
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Val_Rule_ID);
     if (ii == null) return 0;
     return ii;
@@ -900,12 +881,6 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return (String) get_Value(HasName.Companion.getCOLUMNNAME_Name());
   }
 
-  public org.compiere.model.I_PA_DashboardContent getPA_DashboardContent() throws RuntimeException {
-    return (org.compiere.model.I_PA_DashboardContent)
-        MTable.get(getCtx(), org.compiere.model.I_PA_DashboardContent.Table_Name)
-            .getPO(getPA_DashboardContent_ID(), get_TrxName());
-  }
-
   /**
    * Set Dashboard Content.
    *
@@ -1059,5 +1034,10 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
    */
   public String getVFormat() {
     return (String) get_Value(COLUMNNAME_VFormat);
+  }
+
+  @Override
+  public int getTableId() {
+    return Table_ID;
   }
 }
