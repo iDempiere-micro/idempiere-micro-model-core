@@ -1,16 +1,9 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.close;
-import static software.hsharp.core.util.DBKt.prepareStatement;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Level;
-
 import kotliquery.Row;
-import org.idempiere.common.util.CCache;
 
 public class MClientInfo extends X_AD_ClientInfo {
   /**

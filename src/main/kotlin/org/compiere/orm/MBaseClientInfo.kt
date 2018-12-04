@@ -5,11 +5,7 @@ import kotliquery.queryOf
 import org.compiere.model.I_AD_ClientInfo
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.SQLException
 import java.util.*
-import java.util.logging.Level
 
 /** Cache  */
 private val clientInfoCache = CCache<Int, MClientInfo>(I_AD_ClientInfo.Table_Name, 2)
@@ -18,7 +14,7 @@ fun get(ctx: Properties, AD_Client_ID: Int, trxName: String?): MClientInfo? {
     return get(ctx, AD_Client_ID, trxName, { row -> MClientInfo(ctx, row) })
 }
 
-fun get(ctx: Properties, AD_Client_ID: Int, trxName: String?, factory: (Row)-> MClientInfo, retype: (MClientInfo?) -> MClientInfo? = {it} ): MClientInfo? {
+fun get(ctx: Properties, AD_Client_ID: Int, trxName: String?, factory: (Row) -> MClientInfo, retype: (MClientInfo?) -> MClientInfo? = { it }): MClientInfo? {
     val cached = clientInfoCache[AD_Client_ID]
     if (retype(cached) != null) return cached
     //
@@ -27,4 +23,4 @@ fun get(ctx: Properties, AD_Client_ID: Int, trxName: String?, factory: (Row)-> M
     val loaded = DB.current.run(loadQuery)
     if (trxName == null) clientInfoCache[AD_Client_ID] = loaded
     return loaded
-} //	get
+} // 	get

@@ -7,9 +7,6 @@ import org.compiere.orm.Query
 import org.idempiere.common.exceptions.DBException
 import org.idempiere.common.util.Env
 import software.hsharp.core.util.DB
-import java.math.BigDecimal
-import java.sql.PreparedStatement
-import java.sql.Timestamp
 import java.util.*
 
 abstract class BaseQuery(val ctx: Properties, val table: MTable) {
@@ -135,5 +132,4 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
         val sqlQuery = (if (params == null) queryOf(sql) else queryOf(sql, *params)).map { row -> table.getPO(row) as T }.asList
         return DB.current.run(sqlQuery)
     }
-
 }

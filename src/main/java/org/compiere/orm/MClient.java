@@ -1,6 +1,5 @@
 package org.compiere.orm;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;

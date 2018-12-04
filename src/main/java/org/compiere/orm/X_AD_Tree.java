@@ -2,7 +2,6 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
-
 import kotliquery.Row;
 import org.compiere.model.I_AD_Tree;
 import org.idempiere.orm.I_Persistent;
@@ -27,6 +26,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
   public X_AD_Tree(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+
   public X_AD_Tree(Properties ctx, Row row) {
     super(ctx, row);
   }

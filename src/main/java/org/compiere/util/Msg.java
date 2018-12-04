@@ -95,8 +95,7 @@ public final class Msg {
    */
   private CCache<String, String> initMsg(String AD_Language) {
     //	Trace.printStack();
-    CCache<String, String> msg =
-        new CCache<String, String>("AD_Message", MAP_SIZE, 0, false, 0);
+    CCache<String, String> msg = new CCache<String, String>("AD_Message", MAP_SIZE, 0, false, 0);
     //
     if (!isConnected()) {
       s_log.log(Level.SEVERE, "No DB Connection");
