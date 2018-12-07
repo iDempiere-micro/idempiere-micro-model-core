@@ -529,7 +529,6 @@ public class Util {
     byte[] result = new byte[size];
     System.arraycopy(bytes, 0, result, 0, size);
     return new String(result, StandardCharsets.UTF_8);
-    return str;
   } //	trimSize
 
   /**
