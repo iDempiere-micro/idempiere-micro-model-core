@@ -2,6 +2,7 @@ package org.compiere.util;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+
 import org.idempiere.common.util.Language;
 
 /**
@@ -10,27 +11,27 @@ import org.idempiere.common.util.Language;
  */
 public interface IDisplayTypeFactory {
 
-  public boolean isID(int displayType);
+    boolean isID(int displayType);
 
-  public boolean isNumeric(int displayType);
+    boolean isNumeric(int displayType);
 
-  public Integer getDefaultPrecision(int displayType);
+    Integer getDefaultPrecision(int displayType);
 
-  public boolean isText(int displayType);
+    boolean isText(int displayType);
 
-  public boolean isDate(int displayType);
+    boolean isDate(int displayType);
 
-  public boolean isLookup(int displayType);
+    boolean isLookup(int displayType);
 
-  public boolean isLOB(int displayType);
+    boolean isLOB(int displayType);
 
-  public DecimalFormat getNumberFormat(int displayType, Language language, String pattern);
+    DecimalFormat getNumberFormat(int displayType, Language language, String pattern);
 
-  public SimpleDateFormat getDateFormat(int displayType, Language language, String pattern);
+    SimpleDateFormat getDateFormat(int displayType, Language language, String pattern);
 
-  public Class<?> getClass(int displayType, boolean yesNoAsBoolean);
+    Class<?> getClass(int displayType, boolean yesNoAsBoolean);
 
-  public String getSQLDataType(int displayType, String columnName, int fieldLength);
+    String getSQLDataType(int displayType, String columnName, int fieldLength);
 
-  public String getDescription(int displayType);
+    String getDescription(int displayType);
 }

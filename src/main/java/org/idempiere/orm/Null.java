@@ -7,18 +7,23 @@ package org.idempiere.orm;
  * @version $Id: Null.java,v 1.2 2006/07/30 00:58:04 jjanke Exp $
  */
 public class Null {
-  /** Singleton */
-  public static final Null NULL = new Null();
+    /**
+     * Singleton
+     */
+    public static final Null NULL = new Null();
 
-  /** NULL Constructor */
-  private Null() {} // 	Null
+    /**
+     * NULL Constructor
+     */
+    private Null() {
+    } // 	Null
 
-  /**
-   * String Representation
-   *
-   * @return info
-   */
-  public String toString() {
-    return "NULL";
-  } //	toString
+    /**
+     * String Representation
+     *
+     * @return info
+     */
+    public String toString() {
+        return "NULL";
+    } //	toString
 } //	Null
