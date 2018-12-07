@@ -11,51 +11,21 @@ import org.idempiere.common.util.CCache;
  * Persistent Object Info. Provides structural information
  *
  * @author Jorg Janke
- * @version $Id: POInfo.java,v 1.2 2006/07/30 00:58:37 jjanke Exp $
  * @author Victor Perez, e-Evolution SC
  *     <li>[ 2195894 ] Improve performance in PO engine
  *     <li>http://sourceforge.net/tracker/index.php?func=detail&aid=2195894&group_id=176962&atid=879335
+ * @version $Id: POInfo.java,v 1.2 2006/07/30 00:58:37 jjanke Exp $
  */
 public class POInfo extends software.hsharp.core.orm.POInfo implements Serializable {
   /** */
   private static final long serialVersionUID = 3496403499343293597L;
 
   /** Used by Remote FinReport */
-  /**
-   * POInfo Factory
-   *
-   * @param ctx context
-   * @param AD_Table_ID AD_Table_ID
-   * @return POInfo
-   */
-  public static POInfo getPOInfo(Properties ctx, int AD_Table_ID) {
-    return getPOInfo(ctx, AD_Table_ID, null);
-  }
-
-  /**
-   * POInfo Factory
-   *
-   * @param ctx context
-   * @param AD_Table_ID AD_Table_ID
-   * @param trxName Transaction name
-   * @return POInfo
-   */
-  public static synchronized POInfo getPOInfo(Properties ctx, int AD_Table_ID, String trxName) {
-    Integer key = AD_Table_ID;
-    POInfo retValue = (POInfo) s_cache.get(key);
-    if (retValue == null) {
-      retValue = new POInfo(ctx, AD_Table_ID, false, trxName);
-      if (retValue.getColumnCount() == 0)
-        //	May be run before Language verification
-        retValue = new POInfo(ctx, AD_Table_ID, true, trxName);
-      else s_cache.put(key, retValue);
-    }
-    return retValue;
-  } //  getPOInfo
-
   /** Cache of POInfo */
   private static CCache<Integer, POInfo> s_cache =
       new CCache<Integer, POInfo>(I_AD_Table.Table_Name, "POInfo", 200);
+
+  private Boolean m_IsTranslated = null;
 
   /**
    * ************************************************************************ Create Persistent Info
@@ -80,7 +50,37 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     super(ctx, AD_Table_ID, baseLanguageOnly);
   } //  PInfo
 
-  private Boolean m_IsTranslated = null;
+  /**
+   * POInfo Factory
+   *
+   * @param ctx context
+   * @param AD_Table_ID AD_Table_ID
+   * @return POInfo
+   */
+  public static POInfo getPOInfo(Properties ctx, int AD_Table_ID) {
+    return getPOInfo(ctx, AD_Table_ID, null);
+  }
+
+  /**
+   * POInfo Factory
+   *
+   * @param ctx context
+   * @param AD_Table_ID AD_Table_ID
+   * @param trxName Transaction name
+   * @return POInfo
+   */
+  public static synchronized POInfo getPOInfo(Properties ctx, int AD_Table_ID, String trxName) {
+    Integer key = AD_Table_ID;
+    POInfo retValue = s_cache.get(key);
+    if (retValue == null) {
+      retValue = new POInfo(ctx, AD_Table_ID, false, trxName);
+      if (retValue.getColumnCount() == 0)
+        //	May be run before Language verification
+        retValue = new POInfo(ctx, AD_Table_ID, true, trxName);
+      else s_cache.put(key, retValue);
+    }
+    return retValue;
+  } //  getPOInfo
 
   /**
    * String representation

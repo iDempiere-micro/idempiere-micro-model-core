@@ -16,17 +16,17 @@ import java.util.logging.LogRecord;
  * @version $Id: CLogConsole.java,v 1.2 2006/07/30 00:54:35 jjanke Exp $
  */
 public class CLogConsole extends Handler {
-  /** Constructor */
-  public CLogConsole() {
-    initialize();
-  } // CLogConsole
-
   /** Printed header */
   private boolean m_doneHeader = false;
   /** Normal Writer */
   private PrintWriter m_writerOut = null;
   /** Error Writer */
   private PrintWriter m_writerErr = null;
+
+  /** Constructor */
+  public CLogConsole() {
+    initialize();
+  } // CLogConsole
 
   /** Initialize */
   private void initialize() {
@@ -71,9 +71,9 @@ public class CLogConsole extends Handler {
   /**
    * Set Level
    *
-   * @see java.util.logging.Handler#setLevel(java.util.logging.Level)
    * @param newLevel new Level
    * @throws java.lang.SecurityException
+   * @see java.util.logging.Handler#setLevel(java.util.logging.Level)
    */
   public synchronized void setLevel(Level newLevel) throws SecurityException {
     if (newLevel == null) return;
@@ -86,8 +86,8 @@ public class CLogConsole extends Handler {
   /**
    * Publish
    *
-   * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
    * @param record log record
+   * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
    */
   public void publish(LogRecord record) {
     if (!isLoggable(record) || m_writerOut == null) return;
@@ -140,8 +140,8 @@ public class CLogConsole extends Handler {
   /**
    * Close
    *
-   * @see java.util.logging.Handler#close()
    * @throws SecurityException
+   * @see java.util.logging.Handler#close()
    */
   public void close() throws SecurityException {
     if (m_writerOut == null) return;

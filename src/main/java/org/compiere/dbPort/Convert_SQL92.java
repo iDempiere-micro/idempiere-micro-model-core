@@ -143,10 +143,10 @@ public abstract class Convert_SQL92 extends Convert {
      */
     StringBuffer newFrom = new StringBuffer();
     for (int i = 0; i < joins.size(); i++) {
-      Join first = new Join((String) joins.get(i));
-      first.setMainTable((String) fromLookup.get(first.getMainAlias()));
+      Join first = new Join(joins.get(i));
+      first.setMainTable(fromLookup.get(first.getMainAlias()));
       fromAlias.remove(first.getMainAlias()); //  remove from list
-      first.setJoinTable((String) fromLookup.get(first.getJoinAlias()));
+      first.setJoinTable(fromLookup.get(first.getJoinAlias()));
       fromAlias.remove(first.getJoinAlias()); //  remove from list
       if (trace) log.info("-First: " + first);
       //
@@ -165,9 +165,9 @@ public abstract class Convert_SQL92 extends Convert {
           .append(first.getCondition());
       //  keep it open - check for other key comparisons
       for (int j = i + 1; j < joins.size(); j++) {
-        Join second = new Join((String) joins.get(j));
-        second.setMainTable((String) fromLookup.get(second.getMainAlias()));
-        second.setJoinTable((String) fromLookup.get(second.getJoinAlias()));
+        Join second = new Join(joins.get(j));
+        second.setMainTable(fromLookup.get(second.getMainAlias()));
+        second.setJoinTable(fromLookup.get(second.getJoinAlias()));
         if ((first.getMainTable().equals(second.getMainTable())
                 && first.getJoinTable().equals(second.getJoinTable()))
             || second.isConditionOf(first)) {
@@ -177,9 +177,9 @@ public abstract class Convert_SQL92 extends Convert {
           fromAlias.remove(first.getJoinAlias()); //  remove from table list
           // ----
           for (int k = i + 1; k < joins.size(); k++) {
-            Join third = new Join((String) joins.get(k));
-            third.setMainTable((String) fromLookup.get(third.getMainAlias()));
-            third.setJoinTable((String) fromLookup.get(third.getJoinAlias()));
+            Join third = new Join(joins.get(k));
+            third.setMainTable(fromLookup.get(third.getMainAlias()));
+            third.setJoinTable(fromLookup.get(third.getJoinAlias()));
             if (third.isConditionOf(second)) {
               if (trace) log.info("-Third/key: " + third);
               newFrom.append(" AND ").append(third.getCondition());
@@ -192,9 +192,9 @@ public abstract class Convert_SQL92 extends Convert {
       newFrom.append(")"); //  close ON
       //  check dependency on first table
       for (int j = i + 1; j < joins.size(); j++) {
-        Join second = new Join((String) joins.get(j));
-        second.setMainTable((String) fromLookup.get(second.getMainAlias()));
-        second.setJoinTable((String) fromLookup.get(second.getJoinAlias()));
+        Join second = new Join(joins.get(j));
+        second.setMainTable(fromLookup.get(second.getMainAlias()));
+        second.setJoinTable(fromLookup.get(second.getJoinAlias()));
         if (first.getMainTable().equals(second.getMainTable())) {
           if (trace) log.info("-Second/dep: " + second);
           //   FROM (AD_Field f LEFT OUTER JOIN AD_Column c ON (f.AD_Column_ID = c.AD_Column_ID))
@@ -216,9 +216,9 @@ public abstract class Convert_SQL92 extends Convert {
           newFrom.append(")"); //  close ON
           // ----
           for (int k = i + 1; k < joins.size(); k++) {
-            Join third = new Join((String) joins.get(k));
-            third.setMainTable((String) fromLookup.get(third.getMainAlias()));
-            third.setJoinTable((String) fromLookup.get(third.getJoinAlias()));
+            Join third = new Join(joins.get(k));
+            third.setMainTable(fromLookup.get(third.getMainAlias()));
+            third.setJoinTable(fromLookup.get(third.getJoinAlias()));
             if (second.getJoinTable().equals(third.getMainTable())) {
               if (trace) log.info("-Third-dep: " + third);
               //   FROM ((C_BPartner p LEFT OUTER JOIN AD_User c ON
@@ -402,7 +402,6 @@ public abstract class Convert_SQL92 extends Convert {
     else if ('~' == c) return true;
     else if ('&' == c) return true;
     else if ('^' == c) return true;
-    else if ('!' == c) return true;
-    else return false;
+    else return '!' == c;
   }
 }

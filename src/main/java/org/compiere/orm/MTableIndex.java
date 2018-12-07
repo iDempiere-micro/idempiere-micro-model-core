@@ -11,41 +11,10 @@ import org.idempiere.orm.PO;
 public class MTableIndex extends X_AD_TableIndex {
   /** */
   private static final long serialVersionUID = 5312095272014146977L;
-
-  /**
-   * Get active indexes from table
-   *
-   * @param table table
-   * @return array of table index
-   */
-  public static MTableIndex[] get(MTable table) {
-    Query query =
-        new Query(
-            table.getCtx(),
-            I_AD_TableIndex.Table_Name,
-            I_AD_TableIndex.COLUMNNAME_AD_Table_ID + "=?",
-            table.get_TrxName());
-    query.setParameters(table.getAD_Table_ID());
-    query.setOnlyActiveRecords(true);
-    List<MTableIndex> list = query.<MTableIndex>list();
-
-    MTableIndex[] retValue = new MTableIndex[list.size()];
-    list.toArray(retValue);
-    return retValue;
-  }
-
-  /**
-   * Get table indexes with where clause
-   *
-   * @param ctx context
-   * @param whereClause where clause
-   * @return array of table index
-   */
-  public static List<MTableIndex> getTableIndexesByQuery(Properties ctx, String whereClause) {
-    Query query = new Query(ctx, I_AD_TableIndex.Table_Name, whereClause, null);
-    List<MTableIndex> list = query.<MTableIndex>list();
-    return list;
-  }
+  /** Lines */
+  private MIndexColumn[] m_columns = null;
+  /** Index Create DDL */
+  private String m_ddl = null;
 
   /**
    * Standard constructor
@@ -89,11 +58,40 @@ public class MTableIndex extends X_AD_TableIndex {
     setName(name);
   }
 
-  /** Lines */
-  private MIndexColumn[] m_columns = null;
+  /**
+   * Get active indexes from table
+   *
+   * @param table table
+   * @return array of table index
+   */
+  public static MTableIndex[] get(MTable table) {
+    Query query =
+        new Query(
+            table.getCtx(),
+            I_AD_TableIndex.Table_Name,
+            I_AD_TableIndex.COLUMNNAME_AD_Table_ID + "=?",
+            table.get_TrxName());
+    query.setParameters(table.getAD_Table_ID());
+    query.setOnlyActiveRecords(true);
+    List<MTableIndex> list = query.list();
 
-  /** Index Create DDL */
-  private String m_ddl = null;
+    MTableIndex[] retValue = new MTableIndex[list.size()];
+    list.toArray(retValue);
+    return retValue;
+  }
+
+  /**
+   * Get table indexes with where clause
+   *
+   * @param ctx context
+   * @param whereClause where clause
+   * @return array of table index
+   */
+  public static List<MTableIndex> getTableIndexesByQuery(Properties ctx, String whereClause) {
+    Query query = new Query(ctx, I_AD_TableIndex.Table_Name, whereClause, null);
+    List<MTableIndex> list = query.list();
+    return list;
+  }
 
   /**
    * Get index columns
@@ -112,7 +110,7 @@ public class MTableIndex extends X_AD_TableIndex {
             get_TrxName());
     query.setParameters(getAD_TableIndex_ID());
     query.setOrderBy(MIndexColumn.COLUMNNAME_SeqNo);
-    List<MIndexColumn> list = query.<MIndexColumn>list();
+    List<MIndexColumn> list = query.list();
 
     m_columns = new MIndexColumn[list.size()];
     list.toArray(m_columns);

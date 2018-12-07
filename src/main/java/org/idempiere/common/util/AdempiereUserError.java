@@ -9,6 +9,8 @@ package org.idempiere.common.util;
 public class AdempiereUserError extends RuntimeException {
   /** */
   private static final long serialVersionUID = -5318376918072817705L;
+  /** Additional Info how to fix * */
+  private String m_fixHint = null;
 
   /**
    * Adempiere User Error
@@ -39,9 +41,6 @@ public class AdempiereUserError extends RuntimeException {
   public AdempiereUserError(String message, Throwable cause) {
     super(message, cause);
   } //	AdempiereUserError
-
-  /** Additional Info how to fix * */
-  private String m_fixHint = null;
 
   /** @return Returns the fixHint. */
   public String getFixHint() {

@@ -14,5 +14,5 @@ public interface AmtInWords {
    * @return amount in words (three*five*two 80/100)
    * @throws Exception
    */
-  public String getAmtInWords(String amount) throws Exception;
+  String getAmtInWords(String amount) throws Exception;
 } //	AmtInWords

@@ -14,6 +14,14 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persistent {
 
+  /** AccessTypeRule AD_Reference_ID=293 */
+  public static final int ACCESSTYPERULE_AD_Reference_ID = 293;
+  /** Accessing = A */
+  public static final String ACCESSTYPERULE_Accessing = "A";
+  /** Reporting = R */
+  public static final String ACCESSTYPERULE_Reporting = "R";
+  /** Exporting = E */
+  public static final String ACCESSTYPERULE_Exporting = "E";
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -45,14 +53,15 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
     return sb.toString();
   }
 
-  /** AccessTypeRule AD_Reference_ID=293 */
-  public static final int ACCESSTYPERULE_AD_Reference_ID = 293;
-  /** Accessing = A */
-  public static final String ACCESSTYPERULE_Accessing = "A";
-  /** Reporting = R */
-  public static final String ACCESSTYPERULE_Reporting = "R";
-  /** Exporting = E */
-  public static final String ACCESSTYPERULE_Exporting = "E";
+  /**
+   * Get Access Type.
+   *
+   * @return The type of access for this rule
+   */
+  public String getAccessTypeRule() {
+    return (String) get_Value(COLUMNNAME_AccessTypeRule);
+  }
+
   /**
    * Set Access Type.
    *
@@ -63,29 +72,10 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
     set_ValueNoCheck(COLUMNNAME_AccessTypeRule, AccessTypeRule);
   }
 
-  /**
-   * Get Access Type.
-   *
-   * @return The type of access for this rule
-   */
-  public String getAccessTypeRule() {
-    return (String) get_Value(COLUMNNAME_AccessTypeRule);
-  }
-
   public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
         MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
             .getPO(getAD_Role_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Role.
-   *
-   * @param AD_Role_ID Responsibility Role
-   */
-  public void setAD_Role_ID(int AD_Role_ID) {
-    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
   }
 
   /**
@@ -100,12 +90,13 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
   }
 
   /**
-   * Set AD_Table_Access_UU.
+   * Set Role.
    *
-   * @param AD_Table_Access_UU AD_Table_Access_UU
+   * @param AD_Role_ID Responsibility Role
    */
-  public void setAD_Table_Access_UU(String AD_Table_Access_UU) {
-    set_Value(COLUMNNAME_AD_Table_Access_UU, AD_Table_Access_UU);
+  public void setAD_Role_ID(int AD_Role_ID) {
+    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
   }
 
   /**
@@ -117,20 +108,19 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
     return (String) get_Value(COLUMNNAME_AD_Table_Access_UU);
   }
 
+  /**
+   * Set AD_Table_Access_UU.
+   *
+   * @param AD_Table_Access_UU AD_Table_Access_UU
+   */
+  public void setAD_Table_Access_UU(String AD_Table_Access_UU) {
+    set_Value(COLUMNNAME_AD_Table_Access_UU, AD_Table_Access_UU);
+  }
+
   public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
             .getPO(getAD_Table_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Table.
-   *
-   * @param AD_Table_ID Database Table information
-   */
-  public void setAD_Table_ID(int AD_Table_ID) {
-    if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
   /**
@@ -142,6 +132,16 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
     if (ii == null) return 0;
     return ii;
+  }
+
+  /**
+   * Set Table.
+   *
+   * @param AD_Table_ID Database Table information
+   */
+  public void setAD_Table_ID(int AD_Table_ID) {
+    if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
   /**

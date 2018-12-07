@@ -14,6 +14,8 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_Persistent {
 
+  /** EntityType AD_Reference_ID=389 */
+  public static final int ENTITYTYPE_AD_Reference_ID = 389;
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -48,6 +50,17 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
   }
 
   /**
+   * Get Reference.
+   *
+   * @return System Reference and Validation
+   */
+  public int getAD_Reference_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Reference_ID);
+    if (ii == null) return 0;
+    return ii;
+  }
+
+  /**
    * Set Reference.
    *
    * @param AD_Reference_ID System Reference and Validation
@@ -58,12 +71,12 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
   }
 
   /**
-   * Get Reference.
+   * Get Reference List.
    *
-   * @return System Reference and Validation
+   * @return Reference List based on Table
    */
-  public int getAD_Reference_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Reference_ID);
+  public int getAD_Ref_List_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Ref_List_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -79,14 +92,12 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
   }
 
   /**
-   * Get Reference List.
+   * Get AD_Ref_List_UU.
    *
-   * @return Reference List based on Table
+   * @return AD_Ref_List_UU
    */
-  public int getAD_Ref_List_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Ref_List_ID);
-    if (ii == null) return 0;
-    return ii;
+  public String getAD_Ref_List_UU() {
+    return (String) get_Value(COLUMNNAME_AD_Ref_List_UU);
   }
 
   /**
@@ -99,12 +110,12 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
   }
 
   /**
-   * Get AD_Ref_List_UU.
+   * Get Description.
    *
-   * @return AD_Ref_List_UU
+   * @return Optional short description of the record
    */
-  public String getAD_Ref_List_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Ref_List_UU);
+  public String getDescription() {
+    return (String) get_Value(COLUMNNAME_Description);
   }
 
   /**
@@ -117,27 +128,6 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
   }
 
   /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
-  }
-
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
-  /**
-   * Set Entity Type.
-   *
-   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
-   */
-  public void setEntityType(String EntityType) {
-
-    set_Value(COLUMNNAME_EntityType, EntityType);
-  }
-
-  /**
    * Get Entity Type.
    *
    * @return Dictionary Entity Type; Determines ownership and synchronization
@@ -147,12 +137,13 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
   }
 
   /**
-   * Set Valid from.
+   * Set Entity Type.
    *
-   * @param ValidFrom Valid from including this date (first day)
+   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
    */
-  public void setValidFrom(Timestamp ValidFrom) {
-    set_Value(COLUMNNAME_ValidFrom, ValidFrom);
+  public void setEntityType(String EntityType) {
+
+    set_Value(COLUMNNAME_EntityType, EntityType);
   }
 
   /**
@@ -165,12 +156,12 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
   }
 
   /**
-   * Set Valid to.
+   * Set Valid from.
    *
-   * @param ValidTo Valid to including this date (last day)
+   * @param ValidFrom Valid from including this date (first day)
    */
-  public void setValidTo(Timestamp ValidTo) {
-    set_Value(COLUMNNAME_ValidTo, ValidTo);
+  public void setValidFrom(Timestamp ValidFrom) {
+    set_Value(COLUMNNAME_ValidFrom, ValidFrom);
   }
 
   /**
@@ -180,6 +171,15 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
    */
   public Timestamp getValidTo() {
     return (Timestamp) get_Value(COLUMNNAME_ValidTo);
+  }
+
+  /**
+   * Set Valid to.
+   *
+   * @param ValidTo Valid to including this date (last day)
+   */
+  public void setValidTo(Timestamp ValidTo) {
+    set_Value(COLUMNNAME_ValidTo, ValidTo);
   }
 
   @Override

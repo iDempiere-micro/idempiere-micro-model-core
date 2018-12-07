@@ -27,44 +27,24 @@ import org.idempiere.common.util.Util;
  * @version $Id: MAttachment.java,v 1.4 2006/07/30 00:58:37 jjanke Exp $
  */
 public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
+  /** Indicator for no data */
+  public static final String NONE = ".";
+  /** Indicator for zip data */
+  public static final String ZIP = "zip";
+  /** Indicator for xml data (store on file system) */
+  public static final String XML = "xml";
   /** */
   private static final long serialVersionUID = -8261865873158774665L;
-
-  /**
-   * @param ctx
-   * @param AD_Table_ID
-   * @param Record_ID
-   * @return attachment or null
-   */
-  public static MAttachment get(Properties ctx, int AD_Table_ID, int Record_ID) {
-    return get(ctx, AD_Table_ID, Record_ID, (String) null);
-  }
-
-  /**
-   * Get Attachment (if there are more than one attachment it gets the first in no specific order)
-   *
-   * @param ctx context
-   * @param AD_Table_ID table
-   * @param Record_ID record
-   * @param trxName
-   * @return attachment or null
-   */
-  public static MAttachment get(Properties ctx, int AD_Table_ID, int Record_ID, String trxName) {
-    final String whereClause =
-        I_AD_Attachment.COLUMNNAME_AD_Table_ID
-            + "=? AND "
-            + I_AD_Attachment.COLUMNNAME_Record_ID
-            + "=?";
-    MAttachment retValue =
-        new Query(ctx, I_AD_Attachment.Table_Name, whereClause, trxName)
-            .setParameters(AD_Table_ID, Record_ID)
-            .first();
-    return retValue;
-  } //	get
-
   /** Static Logger */
   @SuppressWarnings("unused")
   private static CLogger s_log = CLogger.getCLogger(MAttachment.class);
+  /**
+   * string replaces the attachment root in stored xml file to allow the changing of the attachment
+   * root.
+   */
+  public final String ATTACHMENT_FOLDER_PLACEHOLDER = "%ATTACHMENT_FOLDER%";
+  /** List of Entry Data */
+  public ArrayList<I_AD_AttachmentEntry> m_items = null;
 
   private MStorageProvider provider;
 
@@ -113,21 +93,50 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     initAttachmentStoreDetails(ctx, trxName);
   } //	MAttachment
 
-  /** Indicator for no data */
-  public static final String NONE = ".";
-  /** Indicator for zip data */
-  public static final String ZIP = "zip";
-  /** Indicator for xml data (store on file system) */
-  public static final String XML = "xml";
-
-  /** List of Entry Data */
-  public ArrayList<I_AD_AttachmentEntry> m_items = null;
+  /**
+   * @param ctx
+   * @param AD_Table_ID
+   * @param Record_ID
+   * @return attachment or null
+   */
+  public static MAttachment get(Properties ctx, int AD_Table_ID, int Record_ID) {
+    return get(ctx, AD_Table_ID, Record_ID, null);
+  }
 
   /**
-   * string replaces the attachment root in stored xml file to allow the changing of the attachment
-   * root.
+   * Get Attachment (if there are more than one attachment it gets the first in no specific order)
+   *
+   * @param ctx context
+   * @param AD_Table_ID table
+   * @param Record_ID record
+   * @param trxName
+   * @return attachment or null
    */
-  public final String ATTACHMENT_FOLDER_PLACEHOLDER = "%ATTACHMENT_FOLDER%";
+  public static MAttachment get(Properties ctx, int AD_Table_ID, int Record_ID, String trxName) {
+    final String whereClause =
+        I_AD_Attachment.COLUMNNAME_AD_Table_ID
+            + "=? AND "
+            + I_AD_Attachment.COLUMNNAME_Record_ID
+            + "=?";
+    MAttachment retValue =
+        new Query(ctx, I_AD_Attachment.Table_Name, whereClause, trxName)
+            .setParameters(AD_Table_ID, Record_ID)
+            .first();
+    return retValue;
+  } //	get
+
+  /**
+   * IDEMPIERE-530 Get the attachment ID based on table_id and record_id
+   *
+   * @param AD_Table_ID
+   * @param Record_ID
+   * @return AD_Attachment_ID
+   */
+  public static int getID(int Table_ID, int Record_ID) {
+    String sql = "SELECT AD_Attachment_ID FROM AD_Attachment WHERE AD_Table_ID=? AND Record_ID=?";
+    int attachid = getSQLValue(null, sql, Table_ID, Record_ID);
+    return attachid;
+  }
 
   /**
    * Get the isStoreAttachmentsOnFileSystem and attachmentPath for the client.
@@ -243,7 +252,6 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
         } catch (IOException ex) {
           log.log(Level.SEVERE, "(file)", ex);
         }
-        ;
       }
 
       if (os != null) {
@@ -252,7 +260,6 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
         } catch (IOException ex) {
           log.log(Level.SEVERE, "(file)", ex);
         }
-        ;
       }
     }
 
@@ -532,19 +539,6 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     if (entry == null) return false;
     entry.setData(data);
     return true;
-  }
-
-  /**
-   * IDEMPIERE-530 Get the attachment ID based on table_id and record_id
-   *
-   * @param AD_Table_ID
-   * @param Record_ID
-   * @return AD_Attachment_ID
-   */
-  public static int getID(int Table_ID, int Record_ID) {
-    String sql = "SELECT AD_Attachment_ID FROM AD_Attachment WHERE AD_Table_ID=? AND Record_ID=?";
-    int attachid = getSQLValue(null, sql, Table_ID, Record_ID);
-    return attachid;
   }
 
   @Override

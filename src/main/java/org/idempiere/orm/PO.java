@@ -36,7 +36,6 @@ import software.hsharp.core.util.DB;
  * Persistent Object. Superclass for actual implementations
  *
  * @author Jorg Janke
- * @version $Id: PO.java,v 1.12 2006/08/09 16:38:47 jjanke Exp $
  * @author Teo Sarca, SC ARHIPAC SERVICE SRL
  *     <li>FR [ 1675490 ] ModelValidator on modelChange after events
  *     <li>BF [ 1704828 ] PO.is_Changed() and PO.is_ValueChanged are not consistent
@@ -59,38 +58,64 @@ import software.hsharp.core.util.DB;
  *     <li>http://sourceforge.net/tracker/index.php?func=detail&aid=2195894&group_id=176962&atid=879335
  *     <li>BF [2947622] The replication ID (Primary Key) is not working
  *     <li>https://sourceforge.net/tracker/?func=detail&aid=2947622&group_id=176962&atid=879332
+ * @version $Id: PO.java,v 1.12 2006/08/09 16:38:47 jjanke Exp $
  */
 public abstract class PO extends software.hsharp.core.orm.PO
     implements Serializable, Comparator<Object>, Evaluatee, Cloneable, IPO, I_Persistent {
-  /** */
-  private static final long serialVersionUID = -6777678451696979575L;
-
   public static final String LOCAL_TRX_PREFIX = "POSave"; // TODO DAP use one from Trx.java
-
-  private static final String USE_TIMEOUT_FOR_UPDATE = "org.adempiere.po.useTimeoutForUpdate";
-
-  /** default timeout, 300 seconds * */
-  protected static final int QUERY_TIME_OUT = 300;
-
-  /**
-   * Set Document Value Workflow Manager
-   *
-   * @param docWFMgr mgr
-   */
-  public static void setDocWorkflowMgr(DocWorkflowMgr docWFMgr) {
-    s_docWFMgr = docWFMgr;
-    s_log.config(s_docWFMgr.toString());
-  } //	setDocWorkflowMgr
-
-  /** Document Value Workflow Manager */
-  protected static DocWorkflowMgr s_docWFMgr = null;
-
   /** User Maintained Entity Type */
   public static final String ENTITYTYPE_UserMaintained = "U";
   /** Dictionary Maintained Entity Type */
   public static final String ENTITYTYPE_Dictionary = "D";
+  /** Access Level S__ 100 4 System info */
+  public static final int ACCESSLEVEL_SYSTEM = 4;
+  /** Access Level _C_ 010 2 Client info */
+  public static final int ACCESSLEVEL_CLIENT = 2;
+  /** Access Level __O 001 1 Organization info */
+  public static final int ACCESSLEVEL_ORG = 1;
+  /** Access Level SCO 111 7 System shared info */
+  public static final int ACCESSLEVEL_ALL = 7;
+  /** Access Level SC_ 110 6 System/Client info */
+  public static final int ACCESSLEVEL_SYSTEMCLIENT = 6;
+  /** Access Level _CO 011 3 Client shared info */
+  public static final int ACCESSLEVEL_CLIENTORG = 3;
+  /** default timeout, 300 seconds * */
+  protected static final int QUERY_TIME_OUT = 300;
+  /** Table ID Attribute */
+  protected static final String XML_ATTRIBUTE_AD_Table_ID = "AD_Table_ID";
+  /** Record ID Attribute */
+  protected static final String XML_ATTRIBUTE_Record_ID = "Record_ID";
+  /** */
+  private static final long serialVersionUID = -6777678451696979575L;
+
+  private static final String USE_TIMEOUT_FOR_UPDATE = "org.adempiere.po.useTimeoutForUpdate";
+  /** Document Value Workflow Manager */
+  protected static DocWorkflowMgr s_docWFMgr = null;
+  /** Logger */
+  protected static transient CLogger logS = CLogger.getCLogger(PO.class);
+  /** Static Logger */
+  protected static CLogger s_log = CLogger.getCLogger(PO.class);
+  /** Cache */
+  protected static CCache<String, String> trl_cache = new CCache<String, String>("po_trl", 5);
 
   protected String m_columnNamePrefix = null;
+  protected transient CLogger log = CLogger.getCLogger(getClass());
+  /** Errors when setting */
+  protected ValueNamePair[] m_setErrors = null;
+  /** Deleted ID */
+  protected int m_idOld = 0;
+  /** Custom Columns */
+  protected HashMap<String, String> m_custom = null;
+  /** Accounting Columns */
+  protected ArrayList<String> s_acctColumns = null;
+  /** Optional Transaction */
+  protected String m_trxName = null;
+  /** Attributes */
+  private HashMap<String, Object> m_attributes = null;
+  /** Trifon - Indicates that this record is created by replication functionality. */
+  private boolean m_isReplication = false;
+  /** LOB Info */
+  private ArrayList<PO_LOB> m_lobInfo = null;
 
   public PO(Properties ctx, Row row) {
     super(ctx, row, null);
@@ -168,40 +193,65 @@ public abstract class PO extends software.hsharp.core.orm.PO
     else load(ID, trxName);
   } //  PO
 
-  protected transient CLogger log = CLogger.getCLogger(getClass());
-  /** Logger */
-  protected static transient CLogger logS = CLogger.getCLogger(PO.class);
-  /** Static Logger */
-  protected static CLogger s_log = CLogger.getCLogger(PO.class);
+  /**
+   * Set Document Value Workflow Manager
+   *
+   * @param docWFMgr mgr
+   */
+  public static void setDocWorkflowMgr(DocWorkflowMgr docWFMgr) {
+    s_docWFMgr = docWFMgr;
+    s_log.config(s_docWFMgr.toString());
+  } //	setDocWorkflowMgr
 
-  /** Errors when setting */
-  protected ValueNamePair[] m_setErrors = null;
+  /** Returns the summary node with the corresponding value */
+  public static int retrieveIdOfParentValue(
+      String value, String tableName, int clientID, String trxName) {
+    String sql =
+        "SELECT "
+            + tableName
+            + "_ID FROM "
+            + tableName
+            + " WHERE IsSummary='Y' AND AD_Client_ID=? AND Value=?";
+    int pos = value.length() - 1;
+    while (pos > 0) {
+      String testParentValue = value.substring(0, pos);
+      int parentID = getSQLValueEx(trxName, sql, clientID, testParentValue);
+      if (parentID > 0) return parentID;
+      pos--;
+    }
+    return 0; // rootID
+  }
 
-  /** Deleted ID */
-  protected int m_idOld = 0;
-  /** Custom Columns */
-  protected HashMap<String, String> m_custom = null;
-  /** Attributes */
-  private HashMap<String, Object> m_attributes = null;
+  /**
+   * Get Find parameter. Convert to upper case and add % at the end
+   *
+   * @param query in string
+   * @return out string
+   */
+  protected static String getFindParameter(String query) {
+    if (query == null) return null;
+    if (query.length() == 0 || query.equals("%")) return null;
+    if (!query.endsWith("%")) query += "%";
+    return query.toUpperCase();
+  } //	getFindParameter
 
-  /** Accounting Columns */
-  protected ArrayList<String> s_acctColumns = null;
+  /** PO.setTrxName - set given trxName to an array of POs As suggested by teo in [ 1854603 ] */
+  public static void set_TrxName(PO[] lines, String trxName) {
+    for (PO line : lines) line.set_TrxName(trxName);
+  }
 
-  /** Trifon - Indicates that this record is created by replication functionality. */
-  private boolean m_isReplication = false;
-
-  /** Access Level S__ 100 4 System info */
-  public static final int ACCESSLEVEL_SYSTEM = 4;
-  /** Access Level _C_ 010 2 Client info */
-  public static final int ACCESSLEVEL_CLIENT = 2;
-  /** Access Level __O 001 1 Organization info */
-  public static final int ACCESSLEVEL_ORG = 1;
-  /** Access Level SCO 111 7 System shared info */
-  public static final int ACCESSLEVEL_ALL = 7;
-  /** Access Level SC_ 110 6 System/Client info */
-  public static final int ACCESSLEVEL_SYSTEMCLIENT = 6;
-  /** Access Level _CO 011 3 Client shared info */
-  public static final int ACCESSLEVEL_CLIENTORG = 3;
+  /**
+   * @param tableName
+   * @return uuid column name
+   */
+  public static String getUUIDColumnName(String tableName) {
+    String columnName = tableName + "_UU";
+    if (columnName.length() > 30) {
+      int i = columnName.length() - 30;
+      columnName = tableName.substring(0, tableName.length() - i) + "_UU";
+    }
+    return columnName;
+  }
 
   /**
    * Get Table Access Level
@@ -754,7 +804,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         //
         if (CLogMgt.isLevelAll())
           log.finest(
-              String.valueOf(index)
+              index
                   + ": "
                   + p_info.getColumnName(index)
                   + "("
@@ -769,7 +819,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
           log.log(
               Level.SEVERE,
               "(rs) - "
-                  + String.valueOf(index)
+                  + index
                   + ": "
                   + p_info.getTableName()
                   + "."
@@ -803,7 +853,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     //  load column values
     for (index = 0; index < size; index++) {
       String columnName = p_info.getColumnName(index);
-      String value = (String) hmIn.get(columnName);
+      String value = hmIn.get(columnName);
       if (value == null) continue;
       Class<?> clazz = p_info.getColumnClass(index);
       int dt = p_info.getColumnDisplayType(index);
@@ -819,7 +869,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         //
         if (CLogMgt.isLevelAll())
           log.finest(
-              String.valueOf(index)
+              index
                   + ": "
                   + p_info.getColumnName(index)
                   + "("
@@ -834,7 +884,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
           log.log(
               Level.SEVERE,
               "(ht) - "
-                  + String.valueOf(index)
+                  + index
                   + ": "
                   + p_info.getTableName()
                   + "."
@@ -893,7 +943,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     if (m_custom != null) {
       for (String column : m_custom.keySet()) {
         //				int index = p_info.getColumnIndex(column);
-        String value = (String) m_custom.get(column);
+        String value = m_custom.get(column);
         if (value != null) hmOut.put(column, value);
       }
       m_custom = null;
@@ -1029,9 +1079,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     return ii;
   } //	getUpdatedBy
 
-  /** Cache */
-  protected static CCache<String, String> trl_cache = new CCache<String, String>("po_trl", 5);
-
   public String get_Translation(String columnName, String AD_Language) {
     return get_Translation(columnName, AD_Language, false, true);
   }
@@ -1151,8 +1198,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
       // Test if the column has changed - teo_sarca [ 1704828 ]
       if (is_ValueChanged(i)) return true;
     }
-    if (m_custom != null && m_custom.size() > 0) return true; // there are custom columns modified
-    return false;
+    // there are custom columns modified
+    return m_custom != null && m_custom.size() > 0;
   } //	is_Change
 
   /**
@@ -1309,25 +1356,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     return 0; // rootID
   }
 
-  /** Returns the summary node with the corresponding value */
-  public static int retrieveIdOfParentValue(
-      String value, String tableName, int clientID, String trxName) {
-    String sql =
-        "SELECT "
-            + tableName
-            + "_ID FROM "
-            + tableName
-            + " WHERE IsSummary='Y' AND AD_Client_ID=? AND Value=?";
-    int pos = value.length() - 1;
-    while (pos > 0) {
-      String testParentValue = value.substring(0, pos);
-      int parentID = getSQLValueEx(trxName, sql, clientID, testParentValue);
-      if (parentID > 0) return parentID;
-      pos--;
-    }
-    return 0; // rootID
-  }
-
   /**
    * ************************************************************************ Lock it.
    *
@@ -1395,8 +1423,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
     return true;
   } //	unlock
 
-  /** Optional Transaction */
-  protected String m_trxName = null;
+  /**
+   * Get Trx
+   *
+   * @return transaction
+   */
+  public String get_TrxName() {
+    return m_trxName;
+  } //	getTrx
 
   /**
    * Set Trx
@@ -1407,16 +1441,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     m_trxName = trxName;
   } //	setTrx
 
-  /**
-   * Get Trx
-   *
-   * @return transaction
-   */
-  public String get_TrxName() {
-    return m_trxName;
-  } //	getTrx
-
-  /** ************************************************************************ Dump Record */
+  /** ********************************************************************** Dump Record */
   public void dump() {
     if (CLogMgt.isLevelFinest()) {
       log.finer(get_WhereClause(true));
@@ -1445,22 +1470,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         .append(")");
     if (log.isLoggable(Level.FINEST)) log.finest(sb.toString());
   } //  dump
-
-  /**
-   * Get Find parameter. Convert to upper case and add % at the end
-   *
-   * @param query in string
-   * @return out string
-   */
-  protected static String getFindParameter(String query) {
-    if (query == null) return null;
-    if (query.length() == 0 || query.equals("%")) return null;
-    if (!query.endsWith("%")) query += "%";
-    return query.toUpperCase();
-  } //	getFindParameter
-
-  /** LOB Info */
-  private ArrayList<PO_LOB> m_lobInfo = null;
 
   /** Reset LOB info */
   protected void lobReset() {
@@ -1497,7 +1506,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     if (m_lobInfo == null) return true;
     boolean retValue = true;
     for (int i = 0; i < m_lobInfo.size(); i++) {
-      PO_LOB lob = (PO_LOB) m_lobInfo.get(i);
+      PO_LOB lob = m_lobInfo.get(i);
       if (!lob.save(get_TrxName())) {
         retValue = false;
         break;
@@ -1537,11 +1546,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     }
     return xml;
   } //	get_xmlString
-
-  /** Table ID Attribute */
-  protected static final String XML_ATTRIBUTE_AD_Table_ID = "AD_Table_ID";
-  /** Record ID Attribute */
-  protected static final String XML_ATTRIBUTE_Record_ID = "Record_ID";
 
   /**
    * Get XML Document representation
@@ -1600,9 +1604,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
     if (m_custom != null) {
       Iterator<String> it = m_custom.keySet().iterator();
       while (it.hasNext()) {
-        String columnName = (String) it.next();
+        String columnName = it.next();
         //				int index = p_info.getColumnIndex(columnName);
-        String value = (String) m_custom.get(columnName);
+        String value = m_custom.get(columnName);
         //
         Element col = document.createElement(columnName);
         if (value != null) col.appendChild(document.createTextNode(value));
@@ -1613,17 +1617,12 @@ public abstract class PO extends software.hsharp.core.orm.PO
     return document;
   } //	getDocument
 
-  public void setReplication(boolean isFromReplication) {
-    m_isReplication = isFromReplication;
-  }
-
   public boolean isReplication() {
     return m_isReplication;
   }
 
-  /** PO.setTrxName - set given trxName to an array of POs As suggested by teo in [ 1854603 ] */
-  public static void set_TrxName(PO[] lines, String trxName) {
-    for (PO line : lines) line.set_TrxName(trxName);
+  public void setReplication(boolean isFromReplication) {
+    m_isReplication = isFromReplication;
   }
 
   /**
@@ -1658,19 +1657,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
   /** @return uuid column name */
   public String getUUIDColumnName() {
     return PO.getUUIDColumnName(get_TableName());
-  }
-
-  /**
-   * @param tableName
-   * @return uuid column name
-   */
-  public static String getUUIDColumnName(String tableName) {
-    String columnName = tableName + "_UU";
-    if (columnName.length() > 30) {
-      int i = columnName.length() - 30;
-      columnName = tableName.substring(0, tableName.length() - i) + "_UU";
-    }
-    return columnName;
   }
 
   /*
@@ -1939,6 +1925,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
    * MClientInfo
    * MSystem
    */
+
   /**
    * ************************************************************************ Update Value or create
    * new record. To reload call load() - not updated
@@ -2324,13 +2311,13 @@ public abstract class PO extends software.hsharp.core.orm.PO
         changes = true;
         //
         String column = s;
-        String value = (String) m_custom.get(column);
+        String value = m_custom.get(column);
         int index = p_info.getColumnIndex(column);
         if (withValues) {
           sql.append(column).append("=").append(encrypt(index, value));
         } else {
           sql.append(column).append("=?");
-          if (value == null || value.toString().length() == 0) {
+          if (value == null || value.length() == 0) {
             params.add(null);
           } else {
             params.add(encrypt(index, value));
@@ -2512,7 +2499,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     if (m_custom != null) {
       for (String column : m_custom.keySet()) {
         index = p_info.getColumnIndex(column);
-        String value = (String) m_custom.get(column);
+        String value = m_custom.get(column);
         if (value == null) continue;
         if (doComma) {
           sqlInsert.append(",");
@@ -2523,7 +2510,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
           sqlValues.append(encrypt(index, value));
         } else {
           sqlValues.append("?");
-          if (value == null || value.toString().length() == 0) {
+          if (value == null || value.length() == 0) {
             params.add(null);
           } else {
             params.add(encrypt(index, value));
@@ -2547,7 +2534,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         if (m_trxName == null) log.log(Level.SEVERE, "reloading");
         else log.log(Level.SEVERE, "[" + m_trxName + "] - reloading");
         ok = false;
-        ;
       }
     } else {
       String msg = "Not inserted - ";

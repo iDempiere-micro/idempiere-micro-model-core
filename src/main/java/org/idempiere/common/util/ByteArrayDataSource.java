@@ -18,6 +18,15 @@ import javax.activation.DataSource;
  * @author Max Spivak
  */
 public class ByteArrayDataSource implements DataSource {
+  /** Logger */
+  private static CLogger log = CLogger.getCLogger(ByteArrayDataSource.class);
+  /** Data * */
+  private byte[] m_data = null;
+  /** Content Type * */
+  private String m_type = "text/plain";
+  /** Name * */
+  private String m_name = null;
+
   /**
    * Create a DataSource from an input stream
    *
@@ -70,16 +79,6 @@ public class ByteArrayDataSource implements DataSource {
     if (type != null && type.length() > 0) m_type = type;
   } //	ByteArrayDataSource
 
-  /** Data * */
-  private byte[] m_data = null;
-  /** Content Type * */
-  private String m_type = "text/plain";
-  /** Name * */
-  private String m_name = null;
-
-  /** Logger */
-  private static CLogger log = CLogger.getCLogger(ByteArrayDataSource.class);
-
   /**
    * Return an InputStream for the data.
    *
@@ -112,6 +111,16 @@ public class ByteArrayDataSource implements DataSource {
   } //	getContentType
 
   /**
+   * Return Name or Class Name & Content Type
+   *
+   * @return dummy
+   */
+  public String getName() {
+    if (m_name != null) return m_name;
+    return "ByteArrayDataStream " + m_type;
+  } //	getName
+
+  /**
    * Set Name
    *
    * @param name name
@@ -121,14 +130,4 @@ public class ByteArrayDataSource implements DataSource {
     m_name = name;
     return this;
   } //	setName
-
-  /**
-   * Return Name or Class Name & Content Type
-   *
-   * @return dummy
-   */
-  public String getName() {
-    if (m_name != null) return m_name;
-    return "ByteArrayDataStream " + m_type;
-  } //	getName
 } //	ByteArrayDataStream

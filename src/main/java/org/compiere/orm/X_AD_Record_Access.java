@@ -46,15 +46,6 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
   }
 
   /**
-   * Set AD_Record_Access_UU.
-   *
-   * @param AD_Record_Access_UU AD_Record_Access_UU
-   */
-  public void setAD_Record_Access_UU(String AD_Record_Access_UU) {
-    set_Value(COLUMNNAME_AD_Record_Access_UU, AD_Record_Access_UU);
-  }
-
-  /**
    * Get AD_Record_Access_UU.
    *
    * @return AD_Record_Access_UU
@@ -63,20 +54,19 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
     return (String) get_Value(COLUMNNAME_AD_Record_Access_UU);
   }
 
+  /**
+   * Set AD_Record_Access_UU.
+   *
+   * @param AD_Record_Access_UU AD_Record_Access_UU
+   */
+  public void setAD_Record_Access_UU(String AD_Record_Access_UU) {
+    set_Value(COLUMNNAME_AD_Record_Access_UU, AD_Record_Access_UU);
+  }
+
   public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
         MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
             .getPO(getAD_Role_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Role.
-   *
-   * @param AD_Role_ID Responsibility Role
-   */
-  public void setAD_Role_ID(int AD_Role_ID) {
-    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
   }
 
   /**
@@ -90,20 +80,20 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
     return ii;
   }
 
+  /**
+   * Set Role.
+   *
+   * @param AD_Role_ID Responsibility Role
+   */
+  public void setAD_Role_ID(int AD_Role_ID) {
+    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
+  }
+
   public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
             .getPO(getAD_Table_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Table.
-   *
-   * @param AD_Table_ID Database Table information
-   */
-  public void setAD_Table_ID(int AD_Table_ID) {
-    if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
   /**
@@ -115,6 +105,16 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
     if (ii == null) return 0;
     return ii;
+  }
+
+  /**
+   * Set Table.
+   *
+   * @param AD_Table_ID Database Table information
+   */
+  public void setAD_Table_ID(int AD_Table_ID) {
+    if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
   /**
@@ -196,16 +196,6 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
   }
 
   /**
-   * Set Record ID.
-   *
-   * @param Record_ID Direct internal record ID
-   */
-  public void setRecord_ID(int Record_ID) {
-    if (Record_ID < 0) set_ValueNoCheck(COLUMNNAME_Record_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
-  }
-
-  /**
    * Get Record ID.
    *
    * @return Direct internal record ID
@@ -214,6 +204,16 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
     Integer ii = (Integer) get_Value(COLUMNNAME_Record_ID);
     if (ii == null) return 0;
     return ii;
+  }
+
+  /**
+   * Set Record ID.
+   *
+   * @param Record_ID Direct internal record ID
+   */
+  public void setRecord_ID(int Record_ID) {
+    if (Record_ID < 0) set_ValueNoCheck(COLUMNNAME_Record_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
   }
 
   @Override

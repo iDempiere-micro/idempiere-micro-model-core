@@ -14,6 +14,16 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I_Persistent {
 
+  /** ConfigurationLevel AD_Reference_ID=53222 */
+  public static final int CONFIGURATIONLEVEL_AD_Reference_ID = 53222;
+  /** System = S */
+  public static final String CONFIGURATIONLEVEL_System = "S";
+  /** Client = C */
+  public static final String CONFIGURATIONLEVEL_Client = "C";
+  /** Organization = O */
+  public static final String CONFIGURATIONLEVEL_Organization = "O";
+  /** EntityType AD_Reference_ID=389 */
+  public static final int ENTITYTYPE_AD_Reference_ID = 389;
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -46,6 +56,17 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
   }
 
   /**
+   * Get System Configurator.
+   *
+   * @return System Configurator
+   */
+  public int getAD_SysConfig_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_SysConfig_ID);
+    if (ii == null) return 0;
+    return ii;
+  }
+
+  /**
    * Set System Configurator.
    *
    * @param AD_SysConfig_ID System Configurator
@@ -56,14 +77,12 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
   }
 
   /**
-   * Get System Configurator.
+   * Get AD_SysConfig_UU.
    *
-   * @return System Configurator
+   * @return AD_SysConfig_UU
    */
-  public int getAD_SysConfig_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_SysConfig_ID);
-    if (ii == null) return 0;
-    return ii;
+  public String getAD_SysConfig_UU() {
+    return (String) get_Value(COLUMNNAME_AD_SysConfig_UU);
   }
 
   /**
@@ -76,22 +95,14 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
   }
 
   /**
-   * Get AD_SysConfig_UU.
+   * Get Configuration Level.
    *
-   * @return AD_SysConfig_UU
+   * @return Configuration Level for this parameter
    */
-  public String getAD_SysConfig_UU() {
-    return (String) get_Value(COLUMNNAME_AD_SysConfig_UU);
+  public String getConfigurationLevel() {
+    return (String) get_Value(COLUMNNAME_ConfigurationLevel);
   }
 
-  /** ConfigurationLevel AD_Reference_ID=53222 */
-  public static final int CONFIGURATIONLEVEL_AD_Reference_ID = 53222;
-  /** System = S */
-  public static final String CONFIGURATIONLEVEL_System = "S";
-  /** Client = C */
-  public static final String CONFIGURATIONLEVEL_Client = "C";
-  /** Organization = O */
-  public static final String CONFIGURATIONLEVEL_Organization = "O";
   /**
    * Set Configuration Level.
    *
@@ -103,12 +114,12 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
   }
 
   /**
-   * Get Configuration Level.
+   * Get Description.
    *
-   * @return Configuration Level for this parameter
+   * @return Optional short description of the record
    */
-  public String getConfigurationLevel() {
-    return (String) get_Value(COLUMNNAME_ConfigurationLevel);
+  public String getDescription() {
+    return (String) get_Value(COLUMNNAME_Description);
   }
 
   /**
@@ -121,16 +132,14 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
   }
 
   /**
-   * Get Description.
+   * Get Entity Type.
    *
-   * @return Optional short description of the record
+   * @return Dictionary Entity Type; Determines ownership and synchronization
    */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
+  public String getEntityType() {
+    return (String) get_Value(COLUMNNAME_EntityType);
   }
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
   /**
    * Set Entity Type.
    *
@@ -139,15 +148,6 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
   public void setEntityType(String EntityType) {
 
     set_Value(COLUMNNAME_EntityType, EntityType);
-  }
-
-  /**
-   * Get Entity Type.
-   *
-   * @return Dictionary Entity Type; Determines ownership and synchronization
-   */
-  public String getEntityType() {
-    return (String) get_Value(COLUMNNAME_EntityType);
   }
 
   @Override

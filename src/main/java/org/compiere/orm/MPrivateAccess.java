@@ -13,6 +13,46 @@ import org.idempiere.common.util.CLogger;
 public class MPrivateAccess extends X_AD_Private_Access {
   /** */
   private static final long serialVersionUID = -5649529789751432279L;
+  /** Logger */
+  private static CLogger s_log = CLogger.getCLogger(MPrivateAccess.class);
+
+  /**
+   * Persistency Constructor
+   *
+   * @param ctx context
+   * @param ignored ignored
+   * @param trxName transaction
+   */
+  public MPrivateAccess(Properties ctx, int ignored, String trxName) {
+    super(ctx, 0, trxName);
+    if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
+  } //	MPrivateAccess
+
+  /**
+   * Load Constructor
+   *
+   * @param ctx context
+   * @param rs result set
+   * @param trxName transaction
+   */
+  public MPrivateAccess(Properties ctx, ResultSet rs, String trxName) {
+    super(ctx, rs, trxName);
+  } //	MPrivateAccess
+
+  /**
+   * New Constructor
+   *
+   * @param ctx context
+   * @param AD_User_ID user
+   * @param AD_Table_ID table
+   * @param Record_ID record
+   */
+  public MPrivateAccess(Properties ctx, int AD_User_ID, int AD_Table_ID, int Record_ID) {
+    super(ctx, 0, null);
+    setAD_User_ID(AD_User_ID);
+    setAD_Table_ID(AD_Table_ID);
+    setRecord_ID(Record_ID);
+  } //	MPrivateAccess
 
   /**
    * Get Where Clause of Locked Records for Table
@@ -76,45 +116,4 @@ public class MPrivateAccess extends X_AD_Private_Access {
             + " AND IsActive = 'Y' )";
     return whereClause;
   } //	get
-
-  /** Logger */
-  private static CLogger s_log = CLogger.getCLogger(MPrivateAccess.class);
-
-  /**
-   * Persistency Constructor
-   *
-   * @param ctx context
-   * @param ignored ignored
-   * @param trxName transaction
-   */
-  public MPrivateAccess(Properties ctx, int ignored, String trxName) {
-    super(ctx, 0, trxName);
-    if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
-  } //	MPrivateAccess
-
-  /**
-   * Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public MPrivateAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	MPrivateAccess
-
-  /**
-   * New Constructor
-   *
-   * @param ctx context
-   * @param AD_User_ID user
-   * @param AD_Table_ID table
-   * @param Record_ID record
-   */
-  public MPrivateAccess(Properties ctx, int AD_User_ID, int AD_Table_ID, int Record_ID) {
-    super(ctx, 0, null);
-    setAD_User_ID(AD_User_ID);
-    setAD_Table_ID(AD_Table_ID);
-    setRecord_ID(Record_ID);
-  } //	MPrivateAccess
 } //	MPrivateAccess

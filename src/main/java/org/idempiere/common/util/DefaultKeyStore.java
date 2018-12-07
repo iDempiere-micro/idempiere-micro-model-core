@@ -91,7 +91,7 @@ public class DefaultKeyStore implements IKeyStore {
         if (entry == null) {
           KeyGenerator generator = KeyGenerator.getInstance(algorithm);
           SecretKey key = generator.generateKey();
-          entry = new SecretKeyEntry((SecretKey) key);
+          entry = new SecretKeyEntry(key);
 
           keyStore.setEntry(alias, entry, protParam);
           File file = new File(IDEMPIERE_KEYSTORE);

@@ -15,6 +15,18 @@ import java.util.logging.LogRecord;
  * @version $Id: CLogFormatter.java,v 1.2 2006/07/30 00:54:36 jjanke Exp $
  */
 public class CLogFormatter extends Formatter {
+  /** New Line */
+  public static String NL = System.getProperty("line.separator");
+  /** Singleton */
+  private static CLogFormatter s_formatter = null;
+  /** Short Format */
+  private boolean m_shortFormat = false;
+
+  /** ********************************************************************** CLogFormatter */
+  private CLogFormatter() {
+    super();
+  } //	CLogFormatter
+
   /**
    * Get Formatter
    *
@@ -24,135 +36,6 @@ public class CLogFormatter extends Formatter {
     if (s_formatter == null) s_formatter = new CLogFormatter();
     return s_formatter;
   } //	get
-
-  /** Singleton */
-  private static CLogFormatter s_formatter = null;
-  /** New Line */
-  public static String NL = System.getProperty("line.separator");
-
-  /** ************************************************************************ CLogFormatter */
-  private CLogFormatter() {
-    super();
-  } //	CLogFormatter
-
-  /** Short Format */
-  private boolean m_shortFormat = false;
-
-  /**
-   * Format
-   *
-   * @param record log record
-   * @return formatted string
-   */
-  public String format(LogRecord record) {
-    StringBuilder sb = new StringBuilder();
-
-    long ms = record.getMillis();
-    Timestamp ts = null;
-    if (ms == 0) ts = new Timestamp(System.currentTimeMillis());
-    else ts = new Timestamp(ms);
-    String tsStr = "";
-    try {
-      tsStr = ts.toString() + "00";
-    } catch (Exception e) {
-      System.err.println(
-          "CLogFormatter.format: Millis="
-              + ms
-              + " - "
-              + e.toString()
-              + " - "
-              + record.getMessage());
-      //      1   5    1    5    2    5
-      tsStr = "_________________________";
-    }
-
-    /** Time/Error */
-    if (record.getLevel() == Level.SEVERE) { // 		   12:12:12.123
-      sb.append(tsStr.substring(11, 23));
-      sb.append("===========> ");
-    } else if (record.getLevel() == Level.WARNING) { // 		   12:12:12.123
-      sb.append(tsStr.substring(11, 23));
-      sb.append("-----------> ");
-    } else {
-      sb.append(tsStr.substring(11, 23));
-      int spaces = 11;
-      if (record.getLevel() == Level.INFO) spaces = 1;
-      else if (record.getLevel() == Level.CONFIG) spaces = 3;
-      else if (record.getLevel() == Level.FINE) spaces = 5;
-      else if (record.getLevel() == Level.FINER) spaces = 7;
-      else if (record.getLevel() == Level.FINEST) spaces = 9;
-      sb.append("                          ".substring(0, spaces));
-    }
-
-    /** Class.method * */
-    if (!m_shortFormat) sb.append(getClassMethod(record)).append(": ");
-
-    /** Message * */
-    sb.append(record.getMessage());
-    /** Parameters * */
-    String parameters = getParameters(record);
-    if (parameters.length() > 0) sb.append(" (").append(parameters).append(")");
-
-    /** Level ** sb.append(" ") .append(record.getLevel().getLocalizedName()); /** Thread * */
-    if (record.getThreadID() != 10) sb.append(" [").append(record.getThreadID()).append("]");
-
-    //
-    sb.append(NL);
-    if (record.getThrown() != null) sb.append(getExceptionTrace(record)).append(NL);
-    return sb.toString();
-  } //	format
-
-  /**
-   * Return the header string for a set of formatted records.
-   *
-   * @param h The target handler.
-   * @return header string
-   */
-  public String getHead(Handler h) {
-    String className = h.getClass().getName();
-    int index = className.lastIndexOf('.');
-    if (index != -1) className = className.substring(index + 1);
-    StringBuffer sb =
-        new StringBuffer()
-            .append("*** ")
-            .append(new Timestamp(System.currentTimeMillis()))
-            .append(" idempiere Log (")
-            .append(className)
-            .append(") ***")
-            .append(NL);
-    return sb.toString();
-  } //	getHead
-
-  /**
-   * Return the tail string for a set of formatted records.
-   *
-   * @param h The target handler.
-   * @return tail string
-   */
-  public String getTail(Handler h) {
-    String className = h.getClass().getName();
-    int index = className.lastIndexOf('.');
-    if (index != -1) className = className.substring(index + 1);
-    StringBuffer sb =
-        new StringBuffer()
-            .append(NL)
-            .append("*** ")
-            .append(new Timestamp(System.currentTimeMillis()))
-            .append(" idempiere Log (")
-            .append(className)
-            .append(") ***")
-            .append(NL);
-    return sb.toString();
-  } //	getTail
-
-  /**
-   * Set Format
-   *
-   * @param shortFormat format
-   */
-  public void setFormat(boolean shortFormat) {
-    m_shortFormat = shortFormat;
-  } //	setFormat
 
   /**
    * ************************************************************************ Get Class Method from
@@ -253,4 +136,120 @@ public class CLogFormatter extends Formatter {
     Throwable cause = thrown.getCause();
     if (cause != null) fillExceptionTrace(sb, "caused by: ", cause);
   } //	fillExceptionTrace
+
+  /**
+   * Format
+   *
+   * @param record log record
+   * @return formatted string
+   */
+  public String format(LogRecord record) {
+    StringBuilder sb = new StringBuilder();
+
+    long ms = record.getMillis();
+    Timestamp ts = null;
+    if (ms == 0) ts = new Timestamp(System.currentTimeMillis());
+    else ts = new Timestamp(ms);
+    String tsStr = "";
+    try {
+      tsStr = ts.toString() + "00";
+    } catch (Exception e) {
+      System.err.println(
+          "CLogFormatter.format: Millis="
+              + ms
+              + " - "
+              + e.toString()
+              + " - "
+              + record.getMessage());
+      //      1   5    1    5    2    5
+      tsStr = "_________________________";
+    }
+
+    /** Time/Error */
+    if (record.getLevel() == Level.SEVERE) { // 		   12:12:12.123
+      sb.append(tsStr, 11, 23);
+      sb.append("===========> ");
+    } else if (record.getLevel() == Level.WARNING) { // 		   12:12:12.123
+      sb.append(tsStr, 11, 23);
+      sb.append("-----------> ");
+    } else {
+      sb.append(tsStr, 11, 23);
+      int spaces = 11;
+      if (record.getLevel() == Level.INFO) spaces = 1;
+      else if (record.getLevel() == Level.CONFIG) spaces = 3;
+      else if (record.getLevel() == Level.FINE) spaces = 5;
+      else if (record.getLevel() == Level.FINER) spaces = 7;
+      else if (record.getLevel() == Level.FINEST) spaces = 9;
+      sb.append("                          ", 0, spaces);
+    }
+
+    /** Class.method * */
+    if (!m_shortFormat) sb.append(getClassMethod(record)).append(": ");
+
+    /** Message * */
+    sb.append(record.getMessage());
+    /** Parameters * */
+    String parameters = getParameters(record);
+    if (parameters.length() > 0) sb.append(" (").append(parameters).append(")");
+
+    /** Level ** sb.append(" ") .append(record.getLevel().getLocalizedName()); /** Thread * */
+    if (record.getThreadID() != 10) sb.append(" [").append(record.getThreadID()).append("]");
+
+    //
+    sb.append(NL);
+    if (record.getThrown() != null) sb.append(getExceptionTrace(record)).append(NL);
+    return sb.toString();
+  } //	format
+
+  /**
+   * Return the header string for a set of formatted records.
+   *
+   * @param h The target handler.
+   * @return header string
+   */
+  public String getHead(Handler h) {
+    String className = h.getClass().getName();
+    int index = className.lastIndexOf('.');
+    if (index != -1) className = className.substring(index + 1);
+    StringBuffer sb =
+        new StringBuffer()
+            .append("*** ")
+            .append(new Timestamp(System.currentTimeMillis()))
+            .append(" idempiere Log (")
+            .append(className)
+            .append(") ***")
+            .append(NL);
+    return sb.toString();
+  } //	getHead
+
+  /**
+   * Return the tail string for a set of formatted records.
+   *
+   * @param h The target handler.
+   * @return tail string
+   */
+  public String getTail(Handler h) {
+    String className = h.getClass().getName();
+    int index = className.lastIndexOf('.');
+    if (index != -1) className = className.substring(index + 1);
+    StringBuffer sb =
+        new StringBuffer()
+            .append(NL)
+            .append("*** ")
+            .append(new Timestamp(System.currentTimeMillis()))
+            .append(" idempiere Log (")
+            .append(className)
+            .append(") ***")
+            .append(NL);
+    return sb.toString();
+  } //	getTail
+
+  /**
+   * Set Format
+   *
+   * @param shortFormat format
+   */
+  public void setFormat(boolean shortFormat) {
+    m_shortFormat = shortFormat;
+  } //	setFormat
 } //	CLogFormatter

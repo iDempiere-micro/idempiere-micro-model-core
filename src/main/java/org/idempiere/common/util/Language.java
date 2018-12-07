@@ -45,6 +45,8 @@ public class Language implements Serializable {
   private static Language s_baseLanguage = null;
 
   private static boolean isBaseLanguageSet = false;
+  /** Logger */
+  private static CLogger log = CLogger.getCLogger(Language.class.getName());
 
   static {
     s_languages.add(
@@ -52,8 +54,60 @@ public class Language implements Serializable {
     s_baseLanguage = s_languages.get(0);
   }
 
-  /** Logger */
-  private static CLogger log = CLogger.getCLogger(Language.class.getName());
+  /** Name */
+  private String m_name;
+  /** Language (key) */
+  private String m_AD_Language;
+  /** Locale */
+  private Locale m_locale;
+  //
+  private Boolean m_decimalPoint;
+  private Boolean m_leftToRight;
+  private SimpleDateFormat m_dateFormat;
+  private MediaSize m_mediaSize = MediaSize.ISO.A4;
+  private boolean m_fromDB = false;
+
+  /**
+   * ************************************************************************ Define Language
+   *
+   * @param name - displayed value, e.g. English
+   * @param AD_Language - the code of system supported language, e.g. en_US (might be different than
+   *     Locale - i.e. if the system does not support the language)
+   * @param locale - the Locale, e.g. Locale.US
+   * @param decimalPoint true if Decimal Point - if null, derived from Locale
+   * @param javaDatePattern Java date pattern as not all locales are defined - if null, derived from
+   *     Locale
+   * @param mediaSize default media size
+   */
+  public Language(
+      String name,
+      String AD_Language,
+      Locale locale,
+      Boolean decimalPoint,
+      String javaDatePattern,
+      MediaSize mediaSize) {
+    if (name == null || AD_Language == null || locale == null)
+      throw new IllegalArgumentException("Language - parameter is null");
+    m_name = name;
+    m_AD_Language = AD_Language;
+    m_locale = locale;
+    //
+    m_decimalPoint = decimalPoint;
+    setDateFormat(javaDatePattern);
+    setMediaSize(mediaSize);
+  } //  Language
+
+  /**
+   * Define Language with A4 and default decimal point and date format
+   *
+   * @param name - displayed value, e.g. English
+   * @param AD_Language - the code of system supported language, e.g. en_US (might be different than
+   *     Locale - i.e. if the system does not support the language)
+   * @param locale - the Locale, e.g. Locale.US
+   */
+  public Language(String name, String AD_Language, Locale locale) {
+    this(name, AD_Language, locale, null, null, null);
+  } //	Language
 
   /**
    * Get Number of Languages
@@ -172,11 +226,6 @@ public class Language implements Serializable {
     }
   }
 
-  public static void setBaseLanguage(String baselang) {
-    Language lang = getLanguage(baselang);
-    s_baseLanguage = lang;
-  }
-
   /**
    * Is it the base language
    *
@@ -184,12 +233,11 @@ public class Language implements Serializable {
    * @return true if base language
    */
   public static boolean isBaseLanguage(String langInfo) {
-    if (langInfo == null
+    return langInfo == null
         || langInfo.length() == 0
         || langInfo.equals(s_baseLanguage.getName())
         || langInfo.equals(s_baseLanguage.getLanguageCode())
-        || langInfo.equals(s_baseLanguage.getADLanguage())) return true;
-    return false;
+        || langInfo.equals(s_baseLanguage.getADLanguage());
   } //  isBaseLanguage
 
   /**
@@ -300,61 +348,6 @@ public class Language implements Serializable {
   } //  setLanguage
 
   /**
-   * ************************************************************************ Define Language
-   *
-   * @param name - displayed value, e.g. English
-   * @param AD_Language - the code of system supported language, e.g. en_US (might be different than
-   *     Locale - i.e. if the system does not support the language)
-   * @param locale - the Locale, e.g. Locale.US
-   * @param decimalPoint true if Decimal Point - if null, derived from Locale
-   * @param javaDatePattern Java date pattern as not all locales are defined - if null, derived from
-   *     Locale
-   * @param mediaSize default media size
-   */
-  public Language(
-      String name,
-      String AD_Language,
-      Locale locale,
-      Boolean decimalPoint,
-      String javaDatePattern,
-      MediaSize mediaSize) {
-    if (name == null || AD_Language == null || locale == null)
-      throw new IllegalArgumentException("Language - parameter is null");
-    m_name = name;
-    m_AD_Language = AD_Language;
-    m_locale = locale;
-    //
-    m_decimalPoint = decimalPoint;
-    setDateFormat(javaDatePattern);
-    setMediaSize(mediaSize);
-  } //  Language
-
-  /**
-   * Define Language with A4 and default decimal point and date format
-   *
-   * @param name - displayed value, e.g. English
-   * @param AD_Language - the code of system supported language, e.g. en_US (might be different than
-   *     Locale - i.e. if the system does not support the language)
-   * @param locale - the Locale, e.g. Locale.US
-   */
-  public Language(String name, String AD_Language, Locale locale) {
-    this(name, AD_Language, locale, null, null, null);
-  } //	Language
-
-  /** Name */
-  private String m_name;
-  /** Language (key) */
-  private String m_AD_Language;
-  /** Locale */
-  private Locale m_locale;
-  //
-  private Boolean m_decimalPoint;
-  private Boolean m_leftToRight;
-  private SimpleDateFormat m_dateFormat;
-  private MediaSize m_mediaSize = MediaSize.ISO.A4;
-  private boolean m_fromDB = false;
-
-  /**
    * Get Language Name. e.g. English
    *
    * @return name
@@ -447,23 +440,10 @@ public class Language implements Serializable {
     return this.equals(getBaseLanguage());
   } //	isBaseLanguage
 
-  /**
-   * Set Date Pattern. The date format is not checked for correctness
-   *
-   * @param javaDatePattern for details see java.text.SimpleDateFormat, format must be able to be
-   *     converted to database date format by using the upper case function. It also must have
-   *     leading zero for day and month.
-   */
-  public void setDateFormat(String javaDatePattern) {
-    if (javaDatePattern == null) return;
-    m_dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, m_locale);
-    try {
-      m_dateFormat.applyPattern(javaDatePattern);
-    } catch (Exception e) {
-      log.severe(javaDatePattern + " - " + e);
-      m_dateFormat = null;
-    }
-  } //  setDateFormat
+  public static void setBaseLanguage(String baselang) {
+    Language lang = getLanguage(baselang);
+    s_baseLanguage = lang;
+  }
 
   /**
    * Get (Short) Date Format. The date format must parseable by org.idempiere.grid.ed.MDocDate i.e.
@@ -499,6 +479,24 @@ public class Language implements Serializable {
     }
     return m_dateFormat;
   } //  getDateFormat
+
+  /**
+   * Set Date Pattern. The date format is not checked for correctness
+   *
+   * @param javaDatePattern for details see java.text.SimpleDateFormat, format must be able to be
+   *     converted to database date format by using the upper case function. It also must have
+   *     leading zero for day and month.
+   */
+  public void setDateFormat(String javaDatePattern) {
+    if (javaDatePattern == null) return;
+    m_dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, m_locale);
+    try {
+      m_dateFormat.applyPattern(javaDatePattern);
+    } catch (Exception e) {
+      log.severe(javaDatePattern + " - " + e);
+      m_dateFormat = null;
+    }
+  } //  setDateFormat
 
   /**
    * Get Date Time Format. Used for Display only
@@ -589,7 +587,7 @@ public class Language implements Serializable {
   public boolean equals(Object obj) {
     if (obj instanceof Language) {
       Language cmp = (Language) obj;
-      if (cmp.getADLanguage().equals(m_AD_Language)) return true;
+      return cmp.getADLanguage().equals(m_AD_Language);
     }
     return false;
   } //	equals

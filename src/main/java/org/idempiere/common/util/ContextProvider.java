@@ -5,7 +5,7 @@ import java.util.Properties;
 /** @author Low Heng Sin */
 public interface ContextProvider {
 
-  public Properties getContext();
+  Properties getContext();
 
-  public void showURL(String url);
+  void showURL(String url);
 }

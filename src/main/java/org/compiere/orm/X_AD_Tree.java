@@ -14,6 +14,48 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
 
+  /** TreeType AD_Reference_ID=120 */
+  public static final int TREETYPE_AD_Reference_ID = 120;
+  /** Menu = MM */
+  public static final String TREETYPE_Menu = "MM";
+  /** Element Value = EV */
+  public static final String TREETYPE_ElementValue = "EV";
+  /** Product = PR */
+  public static final String TREETYPE_Product = "PR";
+  /** BPartner = BP */
+  public static final String TREETYPE_BPartner = "BP";
+  /** Organization = OO */
+  public static final String TREETYPE_Organization = "OO";
+  /** BoM = BB */
+  public static final String TREETYPE_BoM = "BB";
+  /** Project = PJ */
+  public static final String TREETYPE_Project = "PJ";
+  /** Sales Region = SR */
+  public static final String TREETYPE_SalesRegion = "SR";
+  /** Product Category = PC */
+  public static final String TREETYPE_ProductCategory = "PC";
+  /** Campaign = MC */
+  public static final String TREETYPE_Campaign = "MC";
+  /** Activity = AY */
+  public static final String TREETYPE_Activity = "AY";
+  /** User 1 = U1 */
+  public static final String TREETYPE_User1 = "U1";
+  /** User 2 = U2 */
+  public static final String TREETYPE_User2 = "U2";
+  /** User 3 = U3 */
+  public static final String TREETYPE_User3 = "U3";
+  /** User 4 = U4 */
+  public static final String TREETYPE_User4 = "U4";
+  /** CM Container = CC */
+  public static final String TREETYPE_CMContainer = "CC";
+  /** CM Container Stage = CS */
+  public static final String TREETYPE_CMContainerStage = "CS";
+  /** CM Template = CT */
+  public static final String TREETYPE_CMTemplate = "CT";
+  /** CM Media = CM */
+  public static final String TREETYPE_CMMedia = "CM";
+  /** Custom Table = TL */
+  public static final String TREETYPE_CustomTable = "TL";
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -52,6 +94,17 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
   }
 
   /**
+   * Get Table.
+   *
+   * @return Database Table information
+   */
+  public int getAD_Table_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    if (ii == null) return 0;
+    return ii;
+  }
+
+  /**
    * Set Table.
    *
    * @param AD_Table_ID Database Table information
@@ -62,12 +115,12 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
   }
 
   /**
-   * Get Table.
+   * Get Tree.
    *
-   * @return Database Table information
+   * @return Identifies a Tree
    */
-  public int getAD_Table_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+  public int getAD_Tree_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -83,14 +136,12 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
   }
 
   /**
-   * Get Tree.
+   * Get AD_Tree_UU.
    *
-   * @return Identifies a Tree
+   * @return AD_Tree_UU
    */
-  public int getAD_Tree_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_ID);
-    if (ii == null) return 0;
-    return ii;
+  public String getAD_Tree_UU() {
+    return (String) get_Value(COLUMNNAME_AD_Tree_UU);
   }
 
   /**
@@ -103,12 +154,12 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
   }
 
   /**
-   * Get AD_Tree_UU.
+   * Get Description.
    *
-   * @return AD_Tree_UU
+   * @return Optional short description of the record
    */
-  public String getAD_Tree_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Tree_UU);
+  public String getDescription() {
+    return (String) get_Value(COLUMNNAME_Description);
   }
 
   /**
@@ -118,15 +169,6 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
    */
   public void setDescription(String Description) {
     set_Value(COLUMNNAME_Description, Description);
-  }
-
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
   }
 
   /**
@@ -222,15 +264,6 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
   }
 
   /**
-   * Set Process Now.
-   *
-   * @param Processing Process Now
-   */
-  public void setProcessing(boolean Processing) {
-    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
-  }
-
-  /**
    * Get Process Now.
    *
    * @return Process Now
@@ -244,56 +277,13 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
     return false;
   }
 
-  /** TreeType AD_Reference_ID=120 */
-  public static final int TREETYPE_AD_Reference_ID = 120;
-  /** Menu = MM */
-  public static final String TREETYPE_Menu = "MM";
-  /** Element Value = EV */
-  public static final String TREETYPE_ElementValue = "EV";
-  /** Product = PR */
-  public static final String TREETYPE_Product = "PR";
-  /** BPartner = BP */
-  public static final String TREETYPE_BPartner = "BP";
-  /** Organization = OO */
-  public static final String TREETYPE_Organization = "OO";
-  /** BoM = BB */
-  public static final String TREETYPE_BoM = "BB";
-  /** Project = PJ */
-  public static final String TREETYPE_Project = "PJ";
-  /** Sales Region = SR */
-  public static final String TREETYPE_SalesRegion = "SR";
-  /** Product Category = PC */
-  public static final String TREETYPE_ProductCategory = "PC";
-  /** Campaign = MC */
-  public static final String TREETYPE_Campaign = "MC";
-  /** Activity = AY */
-  public static final String TREETYPE_Activity = "AY";
-  /** User 1 = U1 */
-  public static final String TREETYPE_User1 = "U1";
-  /** User 2 = U2 */
-  public static final String TREETYPE_User2 = "U2";
-  /** User 3 = U3 */
-  public static final String TREETYPE_User3 = "U3";
-  /** User 4 = U4 */
-  public static final String TREETYPE_User4 = "U4";
-  /** CM Container = CC */
-  public static final String TREETYPE_CMContainer = "CC";
-  /** CM Container Stage = CS */
-  public static final String TREETYPE_CMContainerStage = "CS";
-  /** CM Template = CT */
-  public static final String TREETYPE_CMTemplate = "CT";
-  /** CM Media = CM */
-  public static final String TREETYPE_CMMedia = "CM";
-  /** Custom Table = TL */
-  public static final String TREETYPE_CustomTable = "TL";
   /**
-   * Set Type | Area.
+   * Set Process Now.
    *
-   * @param TreeType Element this tree is built on (i.e Product, Business Partner)
+   * @param Processing Process Now
    */
-  public void setTreeType(String TreeType) {
-
-    set_ValueNoCheck(COLUMNNAME_TreeType, TreeType);
+  public void setProcessing(boolean Processing) {
+    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
   }
 
   /**
@@ -303,6 +293,16 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
    */
   public String getTreeType() {
     return (String) get_Value(COLUMNNAME_TreeType);
+  }
+
+  /**
+   * Set Type | Area.
+   *
+   * @param TreeType Element this tree is built on (i.e Product, Business Partner)
+   */
+  public void setTreeType(String TreeType) {
+
+    set_ValueNoCheck(COLUMNNAME_TreeType, TreeType);
   }
 
   @Override

@@ -24,17 +24,27 @@ import org.idempiere.icommon.distributed.ICacheService;
 public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
   /** */
   private static final long serialVersionUID = -2268565219001179841L;
+  /** Vetoable Change Support Name */
+  private static String PROPERTYNAME = "cache";
 
   private Map<K, V> cache = null;
-
   private Set<K> nullList = null;
-
   private String m_tableName;
 
   @SuppressWarnings("unused")
   private boolean m_distributed;
 
   private int m_maxSize = 0;
+  /** Name */
+  private String m_name = null;
+  /** Expire after minutes */
+  private int m_expire = 0;
+  /** Time */
+  private volatile long m_timeExp = 0;
+  /** Just reset - not used */
+  private boolean m_justReset = true;
+  /** Vetoable Change Support */
+  private VetoableChangeSupport m_changeSupport = null;
 
   public CCache(String name, int initialCapacity) {
     this(name, name, initialCapacity);
@@ -117,20 +127,6 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
     }
   } //	CCache
 
-  /** Name */
-  private String m_name = null;
-  /** Expire after minutes */
-  private int m_expire = 0;
-  /** Time */
-  private volatile long m_timeExp = 0;
-  /** Just reset - not used */
-  private boolean m_justReset = true;
-
-  /** Vetoable Change Support */
-  private VetoableChangeSupport m_changeSupport = null;
-  /** Vetoable Change Support Name */
-  private static String PROPERTYNAME = "cache";
-
   /**
    * Get (table) Name
    *
@@ -143,6 +139,15 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
   public String getTableName() {
     return m_tableName;
   }
+
+  /**
+   * Get Expire Minutes
+   *
+   * @return expire minutes
+   */
+  public int getExpireMinutes() {
+    return m_expire;
+  } //	getExpireMinutes
 
   /**
    * Set Expire Minutes and start it
@@ -159,15 +164,6 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
       m_timeExp = 0;
     }
   } //	setExpireMinutes
-
-  /**
-   * Get Expire Minutes
-   *
-   * @return expire minutes
-   */
-  public int getExpireMinutes() {
-    return m_expire;
-  } //	getExpireMinutes
 
   /**
    * Cache was reset
@@ -320,8 +316,8 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
   /**
    * Get Size w/o Expire
    *
-   * @see java.util.Map#size()
    * @return size
+   * @see java.util.Map#size()
    */
   public int sizeNoExpire() {
     return cache.size() + nullList.size();

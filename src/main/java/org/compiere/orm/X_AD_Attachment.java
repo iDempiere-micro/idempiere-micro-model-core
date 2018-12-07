@@ -46,6 +46,17 @@ public class X_AD_Attachment extends PO implements I_Persistent {
   }
 
   /**
+   * Get Attachment.
+   *
+   * @return Attachment for the document
+   */
+  public int getAD_Attachment_ID() {
+    Integer ii = (Integer) get_Value(I_AD_Attachment.COLUMNNAME_AD_Attachment_ID);
+    if (ii == null) return 0;
+    return ii;
+  }
+
+  /**
    * Set Attachment.
    *
    * @param AD_Attachment_ID Attachment for the document
@@ -58,14 +69,12 @@ public class X_AD_Attachment extends PO implements I_Persistent {
   }
 
   /**
-   * Get Attachment.
+   * Get AD_Attachment_UU.
    *
-   * @return Attachment for the document
+   * @return AD_Attachment_UU
    */
-  public int getAD_Attachment_ID() {
-    Integer ii = (Integer) get_Value(I_AD_Attachment.COLUMNNAME_AD_Attachment_ID);
-    if (ii == null) return 0;
-    return ii;
+  public String getAD_Attachment_UU() {
+    return (String) get_Value(I_AD_Attachment.COLUMNNAME_AD_Attachment_UU);
   }
 
   /**
@@ -77,29 +86,10 @@ public class X_AD_Attachment extends PO implements I_Persistent {
     set_Value(I_AD_Attachment.COLUMNNAME_AD_Attachment_UU, AD_Attachment_UU);
   }
 
-  /**
-   * Get AD_Attachment_UU.
-   *
-   * @return AD_Attachment_UU
-   */
-  public String getAD_Attachment_UU() {
-    return (String) get_Value(I_AD_Attachment.COLUMNNAME_AD_Attachment_UU);
-  }
-
   public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
             .getPO(getAD_Table_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Table.
-   *
-   * @param AD_Table_ID Database Table information
-   */
-  public void setAD_Table_ID(int AD_Table_ID) {
-    if (AD_Table_ID < 1) set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, null);
-    else set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
   /**
@@ -114,12 +104,13 @@ public class X_AD_Attachment extends PO implements I_Persistent {
   }
 
   /**
-   * Set Binary Data.
+   * Set Table.
    *
-   * @param BinaryData Binary Data
+   * @param AD_Table_ID Database Table information
    */
-  public void setBinaryData(byte[] BinaryData) {
-    set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_BinaryData, BinaryData);
+  public void setAD_Table_ID(int AD_Table_ID) {
+    if (AD_Table_ID < 1) set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, null);
+    else set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
   /**
@@ -132,13 +123,12 @@ public class X_AD_Attachment extends PO implements I_Persistent {
   }
 
   /**
-   * Set Record ID.
+   * Set Binary Data.
    *
-   * @param Record_ID Direct internal record ID
+   * @param BinaryData Binary Data
    */
-  public void setRecord_ID(int Record_ID) {
-    if (Record_ID < 0) set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, null);
-    else set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
+  public void setBinaryData(byte[] BinaryData) {
+    set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_BinaryData, BinaryData);
   }
 
   /**
@@ -153,12 +143,13 @@ public class X_AD_Attachment extends PO implements I_Persistent {
   }
 
   /**
-   * Set Text Message.
+   * Set Record ID.
    *
-   * @param TextMsg Text Message
+   * @param Record_ID Direct internal record ID
    */
-  public void setTextMsg(String TextMsg) {
-    set_Value(I_AD_Attachment.COLUMNNAME_TextMsg, TextMsg);
+  public void setRecord_ID(int Record_ID) {
+    if (Record_ID < 0) set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, null);
+    else set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
   }
 
   /**
@@ -171,12 +162,12 @@ public class X_AD_Attachment extends PO implements I_Persistent {
   }
 
   /**
-   * Set Title.
+   * Set Text Message.
    *
-   * @param Title Name this entity is referred to as
+   * @param TextMsg Text Message
    */
-  public void setTitle(String Title) {
-    set_Value(I_AD_Attachment.COLUMNNAME_Title, Title);
+  public void setTextMsg(String TextMsg) {
+    set_Value(I_AD_Attachment.COLUMNNAME_TextMsg, TextMsg);
   }
 
   /**
@@ -186,6 +177,15 @@ public class X_AD_Attachment extends PO implements I_Persistent {
    */
   public String getTitle() {
     return (String) get_Value(I_AD_Attachment.COLUMNNAME_Title);
+  }
+
+  /**
+   * Set Title.
+   *
+   * @param Title Name this entity is referred to as
+   */
+  public void setTitle(String Title) {
+    set_Value(I_AD_Attachment.COLUMNNAME_Title, Title);
   }
 
   /**

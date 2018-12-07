@@ -9,9 +9,23 @@ import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Language;
 
 public class MClient extends X_AD_Client {
+  /*
+   * Is Client Accounting enabled?
+   * CLIENT_ACCOUNTING parameter allow the next values
+   *   D - Disabled (default)
+   *   Q - Queue (enabled to post by hand - queue documents for posterior processing)
+   *   I - Immediate (immediate post - allow complete on errors)
+   *
+   *	@return boolean representing if client accounting is enabled and it's on a client
+   */
+  // private static final String CLIENT_ACCOUNTING_DISABLED = "D";
+  protected static final String CLIENT_ACCOUNTING_QUEUE = "Q";
+  protected static final String CLIENT_ACCOUNTING_IMMEDIATE = "I";
   /** Cache */
   protected static CCache<Integer, MClient> s_cache =
       new CCache<Integer, MClient>(Table_Name, 3, 120, true);
+  /** Client Info */
+  protected MClientInfo m_info = null;
 
   /**
    * ************************************************************************ Standard Constructor
@@ -92,7 +106,7 @@ public class MClient extends X_AD_Client {
    */
   public static MClient get(Properties ctx, int AD_Client_ID) {
     Integer key = new Integer(AD_Client_ID);
-    MClient client = (MClient) s_cache.get(key);
+    MClient client = s_cache.get(key);
     if (client != null) return client;
     client = new MClient(ctx, AD_Client_ID, null);
     s_cache.put(key, client);
@@ -136,22 +150,6 @@ public class MClient extends X_AD_Client {
     if (m_info == null) m_info = MClientInfo.get(getCtx(), getClientId(), get_TrxName());
     return m_info;
   } //	getMClientInfo
-
-  /** Client Info */
-  protected MClientInfo m_info = null;
-
-  /*
-   * Is Client Accounting enabled?
-   * CLIENT_ACCOUNTING parameter allow the next values
-   *   D - Disabled (default)
-   *   Q - Queue (enabled to post by hand - queue documents for posterior processing)
-   *   I - Immediate (immediate post - allow complete on errors)
-   *
-   *	@return boolean representing if client accounting is enabled and it's on a client
-   */
-  // private static final String CLIENT_ACCOUNTING_DISABLED = "D";
-  protected static final String CLIENT_ACCOUNTING_QUEUE = "Q";
-  protected static final String CLIENT_ACCOUNTING_IMMEDIATE = "I";
 
   public boolean isClientAccountingImmediate() {
     String ca =

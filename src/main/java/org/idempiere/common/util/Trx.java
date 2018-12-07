@@ -36,6 +36,50 @@ import org.idempiere.common.exceptions.DBException;
  *         https://sourceforge.net/tracker/index.php?func=detail&aid=2849122&group_id=176962&atid=879332#
  */
 public class Trx {
+  public static final String PO_LOCAL_TRX_PREFIX = "POSave";
+  /** Transaction Cache */
+  private static final Map<String, Trx> s_cache = new ConcurrentHashMap<String, Trx>();
+
+  private static final Trx.TrxMonitor s_monitor = new Trx.TrxMonitor();
+  protected Exception trace;
+  private List<TrxEventListener> listeners = new ArrayList<TrxEventListener>();
+  private String m_displayName;
+  /** Logger */
+  private CLogger log = CLogger.getCLogger(getClass());
+
+  private Connection m_connection = null;
+  private String m_trxName = null;
+  private boolean m_active = false;
+  private long m_startTime;
+  /** transaction timeout, in seconds * */
+  private int m_timeout = 60 * 120; // 120 minutes
+
+  /**
+   * ************************************************************************ Transaction
+   * Constructor
+   *
+   * @param trxName unique name
+   */
+  private Trx(String trxName) {
+    this(trxName, null);
+  } //	Trx
+
+  /**
+   * Transaction Constructor
+   *
+   * @param trxName unique name
+   * @param con optional connection ( ignore for remote transaction )
+   */
+  private Trx(String trxName, Connection con) {
+    //	log.info (trxName);
+    setTrxName(trxName);
+    if (trxName.length() < 36) {
+      String msg = "Illegal transaction name format, not prefix+UUID or UUID: " + trxName;
+      log.log(Level.SEVERE, msg, new Exception(msg));
+    }
+    setConnection(con);
+  } //	Trx
+
   /**
    * Get Transaction
    *
@@ -47,24 +91,13 @@ public class Trx {
     if (trxName == null || trxName.length() == 0)
       throw new IllegalArgumentException("No Transaction Name");
 
-    Trx retValue = (Trx) s_cache.get(trxName);
+    Trx retValue = s_cache.get(trxName);
     if (retValue == null && createNew) {
       retValue = new Trx(trxName);
       s_cache.put(trxName, retValue);
     }
     return retValue;
   } //	get
-
-  /** Transaction Cache */
-  private static final Map<String, Trx> s_cache = new ConcurrentHashMap<String, Trx>();
-
-  private static final Trx.TrxMonitor s_monitor = new Trx.TrxMonitor();
-
-  private List<TrxEventListener> listeners = new ArrayList<TrxEventListener>();
-
-  protected Exception trace;
-
-  private String m_displayName;
 
   public static void startTrxMonitor(ScheduledThreadPoolExecutor threadPoolExecutor) {
     threadPoolExecutor.scheduleWithFixedDelay(s_monitor, 5, 5, TimeUnit.MINUTES);
@@ -93,43 +126,76 @@ public class Trx {
     return createTrxName(null);
   } //	createTrxName
 
-  /**
-   * ************************************************************************ Transaction
-   * Constructor
-   *
-   * @param trxName unique name
-   */
-  private Trx(String trxName) {
-    this(trxName, null);
-  } //	Trx
+  /** @return Trx[] */
+  public static Trx[] getActiveTransactions() {
+    Collection<Trx> collections = s_cache.values();
+    Trx[] trxs = new Trx[collections.size()];
+    collections.toArray(trxs);
+
+    return trxs;
+  }
+
+  /** @see #run(String, TrxRunnable) */
+  public static void run(TrxRunnable r) {
+    run(null, r);
+  }
 
   /**
-   * Transaction Constructor
+   * Execute runnable object using provided transaction. If execution fails, database operations
+   * will be rolled back.
    *
-   * @param trxName unique name
-   * @param con optional connection ( ignore for remote transaction )
+   * <p>Example:
+   *
+   * <pre>
+   * Trx.run(null, new {@link TrxRunnable}() {
+   *     public void run(String trxName) {
+   *         // do something using trxName
+   *     }
+   * )};
+   * </pre>
+   *
+   * @param trxName transaction name (if null, a new transaction will be created)
+   * @param r runnable object
+   * @throws RuntimeException or {@link AdempiereException}
    */
-  private Trx(String trxName, Connection con) {
-    //	log.info (trxName);
-    setTrxName(trxName);
-    if (trxName.length() < 36) {
-      String msg = "Illegal transaction name format, not prefix+UUID or UUID: " + trxName;
-      log.log(Level.SEVERE, msg, new Exception(msg));
+  public static void run(String trxName, TrxRunnable r) {
+    boolean localTrx = false;
+    if (trxName == null) {
+      trxName = Trx.createTrxName("TrxRun");
+      localTrx = true;
     }
-    setConnection(con);
-  } //	Trx
+    Trx trx = Trx.get(trxName, true);
+    Savepoint savepoint = null;
+    try {
+      if (!localTrx) savepoint = trx.setSavepoint(null);
 
-  /** Logger */
-  private CLogger log = CLogger.getCLogger(getClass());
+      r.run(trxName);
 
-  private Connection m_connection = null;
-  private String m_trxName = null;
-  private boolean m_active = false;
-
-  private long m_startTime;
-
-  /** transaction timeout, in seconds * */
-  private int m_timeout = 60 * 120; // 120 minutes
+      if (localTrx) trx.commit(true);
+    } catch (Throwable e) {
+      // Rollback transaction
+      if (localTrx) {
+        trx.rollback();
+      } else if (savepoint != null) {
+        try {
+          trx.rollback(savepoint);
+        } catch (SQLException e2) {
+        }
+      }
+      trx = null;
+      // Throw exception
+      if (e instanceof RuntimeException) {
+        throw (RuntimeException) e;
+      } else {
+        throw new AdempiereException(e);
+      }
+    } finally {
+      if (localTrx && trx != null) {
+        trx.close();
+        trx = null;
+      }
+    }
+  }
 
   /**
    * Get connection
@@ -139,6 +205,23 @@ public class Trx {
   public Connection getConnection() {
     return getConnection(true);
   }
+
+  /**
+   * Set Connection
+   *
+   * @param conn connection
+   */
+  private void setConnection(Connection conn) {
+    if (conn == null) return;
+    m_connection = conn;
+    if (log.isLoggable(Level.FINEST)) log.finest("Connection=" + conn);
+    try {
+      m_connection.setAutoCommit(false);
+    } catch (SQLException e) {
+      log.log(Level.SEVERE, "connection", e);
+    }
+    trace = new Exception();
+  } //	setConnection
 
   /**
    * Get Connection
@@ -169,21 +252,13 @@ public class Trx {
   } //	getConnection
 
   /**
-   * Set Connection
+   * Get Name
    *
-   * @param conn connection
+   * @return name
    */
-  private void setConnection(Connection conn) {
-    if (conn == null) return;
-    m_connection = conn;
-    if (log.isLoggable(Level.FINEST)) log.finest("Connection=" + conn);
-    try {
-      m_connection.setAutoCommit(false);
-    } catch (SQLException e) {
-      log.log(Level.SEVERE, "connection", e);
-    }
-    trace = new Exception();
-  } //	setConnection
+  public String getTrxName() {
+    return m_trxName;
+  } //	getName
 
   /**
    * Set Trx Name
@@ -195,15 +270,6 @@ public class Trx {
       throw new IllegalArgumentException("No Transaction Name");
     m_trxName = trxName;
   } //	setName
-
-  /**
-   * Get Name
-   *
-   * @return name
-   */
-  public String getTrxName() {
-    return m_trxName;
-  } //	getName
 
   /**
    * Start Trx
@@ -464,77 +530,6 @@ public class Trx {
     return sb.toString();
   } //	toString
 
-  /** @return Trx[] */
-  public static Trx[] getActiveTransactions() {
-    Collection<Trx> collections = s_cache.values();
-    Trx[] trxs = new Trx[collections.size()];
-    collections.toArray(trxs);
-
-    return trxs;
-  }
-
-  /** @see #run(String, TrxRunnable) */
-  public static void run(TrxRunnable r) {
-    run(null, r);
-  }
-
-  /**
-   * Execute runnable object using provided transaction. If execution fails, database operations
-   * will be rolled back.
-   *
-   * <p>Example:
-   *
-   * <pre>
-   * Trx.run(null, new {@link TrxRunnable}() {
-   *     public void run(String trxName) {
-   *         // do something using trxName
-   *     }
-   * )};
-   * </pre>
-   *
-   * @param trxName transaction name (if null, a new transaction will be created)
-   * @param r runnable object
-   * @throws RuntimeException or {@link AdempiereException}
-   */
-  public static void run(String trxName, TrxRunnable r) {
-    boolean localTrx = false;
-    if (trxName == null) {
-      trxName = Trx.createTrxName("TrxRun");
-      localTrx = true;
-    }
-    Trx trx = Trx.get(trxName, true);
-    Savepoint savepoint = null;
-    try {
-      if (!localTrx) savepoint = trx.setSavepoint(null);
-
-      r.run(trxName);
-
-      if (localTrx) trx.commit(true);
-    } catch (Throwable e) {
-      // Rollback transaction
-      if (localTrx) {
-        trx.rollback();
-      } else if (savepoint != null) {
-        try {
-          trx.rollback(savepoint);
-        } catch (SQLException e2) {;
-        }
-      }
-      trx = null;
-      // Throw exception
-      if (e instanceof RuntimeException) {
-        throw (RuntimeException) e;
-      } else {
-        throw new AdempiereException(e);
-      }
-    } finally {
-      if (localTrx && trx != null) {
-        trx.close();
-        trx = null;
-      }
-    }
-  }
-
   /** @return trx timoue value in second */
   public int getTimeout() {
     return m_timeout;
@@ -581,6 +576,11 @@ public class Trx {
     m_displayName = displayName;
   }
 
+  private boolean isLocalTrx(String trxName) {
+    return trxName == null || trxName.startsWith(PO_LOCAL_TRX_PREFIX) // TODO: hardcoded
+    ;
+  }
+
   static class TrxMonitor implements Runnable {
 
     public void run() {
@@ -606,13 +606,6 @@ public class Trx {
         }
       }
     }
-  }
-
-  public static final String PO_LOCAL_TRX_PREFIX = "POSave";
-
-  private boolean isLocalTrx(String trxName) {
-    return trxName == null || trxName.startsWith(PO_LOCAL_TRX_PREFIX) // TODO: hardcoded
-    ;
   }
 
   /* DAP TODO

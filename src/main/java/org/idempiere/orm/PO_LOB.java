@@ -22,6 +22,18 @@ import org.idempiere.common.util.Trx;
 public class PO_LOB implements Serializable {
   /** */
   private static final long serialVersionUID = -325477490976139224L;
+  /** Logger */
+  protected CLogger log = CLogger.getCLogger(getClass());
+  /** Table Name */
+  private String m_tableName;
+  /** Column Name */
+  private String m_columnName;
+  /** Where Clause */
+  private String m_whereClause;
+  /** Display Type */
+  private int m_displayType;
+  /** Data */
+  private Object m_value;
 
   /**
    * Constructor
@@ -40,20 +52,6 @@ public class PO_LOB implements Serializable {
     m_displayType = displayType;
     m_value = value;
   } //	PO_LOB
-
-  /** Logger */
-  protected CLogger log = CLogger.getCLogger(getClass());
-  /** Table Name */
-  private String m_tableName;
-  /** Column Name */
-  private String m_columnName;
-  /** Where Clause */
-  private String m_whereClause;
-
-  /** Display Type */
-  private int m_displayType;
-  /** Data */
-  private Object m_value;
 
   /**
    * Save LOB

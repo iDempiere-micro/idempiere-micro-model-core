@@ -2,10 +2,6 @@ package org.compiere.orm;
 
 import static software.hsharp.core.util.DBKt.*;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,20 +22,139 @@ import org.idempiere.icommon.model.IPO;
 /**
  * Sequence Model.
  *
- * @see org.compiere.process.SequenceCheck
  * @author Jorg Janke
  * @version $Id: MSequence.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
+ * @see org.compiere.process.SequenceCheck
  */
 public class MSequence extends X_AD_Sequence {
+  /** Start Number */
+  public static final int INIT_NO = 1000000; // 	1M
+  /** Start System Number */
+  // public static final int		INIT_SYS_NO = 100; // start number for Compiere
+  // public static final int		INIT_SYS_NO = 50000;   // start number for Adempiere
+  public static final int INIT_SYS_NO = 200000; // start number for iDempiere
   /** */
   private static final long serialVersionUID = 7331047665037991960L;
-
   /** Log Level for Next ID Call */
   private static final Level LOGLEVEL = Level.ALL;
 
   private static final int QUERY_TIME_OUT = 30;
-
   private static final String NoYearNorMonth = "-";
+  /** Sequence for Table Document No's */
+  private static final String PREFIX_DOCSEQ = "DocumentNo_";
+  /** Static Logger */
+  private static CLogger s_log = CLogger.getCLogger(MSequence.class);
+  /** Test */
+  private static Vector<Integer> s_list = null;
+
+  private static String[] dontUseCentralized =
+      new String[] {
+        "AD_ACCESSLOG",
+        "AD_ALERTPROCESSORLOG",
+        "AD_CHANGELOG",
+        "AD_ISSUE",
+        "AD_LDAPPROCESSORLOG",
+        "AD_PACKAGE_IMP",
+        "AD_PACKAGE_IMP_BACKUP",
+        "AD_PACKAGE_IMP_DETAIL",
+        "AD_PACKAGE_IMP_INST",
+        "AD_PACKAGE_IMP_PROC",
+        "AD_PINSTANCE",
+        "AD_PINSTANCE_LOG",
+        "AD_PINSTANCE_PARA",
+        "AD_PREFERENCE",
+        "AD_RECENTITEM",
+        "AD_REPLICATION_LOG",
+        "AD_SCHEDULERLOG",
+        "AD_SESSION",
+        "AD_WORKFLOWPROCESSORLOG",
+        "CM_WEBACCESSLOG",
+        "C_ACCTPROCESSORLOG",
+        "K_INDEXLOG",
+        "R_REQUESTPROCESSORLOG",
+        "T_AGING",
+        "T_ALTER_COLUMN",
+        "T_DISTRIBUTIONRUNDETAIL",
+        "T_INVENTORYVALUE",
+        "T_INVOICEGL",
+        "T_REPLENISH",
+        "T_REPORT",
+        "T_REPORTSTATEMENT",
+        "T_SELECTION",
+        "T_SELECTION2",
+        "T_SPOOL",
+        "T_TRANSACTION",
+        "T_TRIALBALANCE"
+      };
+
+  /**
+   * ************************************************************************ Standard Constructor
+   *
+   * @param ctx context
+   * @param AD_Sequence_ID id
+   * @param trxName transaction
+   */
+  public MSequence(Properties ctx, int AD_Sequence_ID, String trxName) {
+    super(ctx, AD_Sequence_ID, trxName);
+    if (AD_Sequence_ID == 0) {
+      //	setName (null);
+      //
+      setIsTableID(false);
+      setStartNo(INIT_NO);
+      setCurrentNext(INIT_NO);
+      setCurrentNextSys(INIT_SYS_NO);
+      setIncrementNo(1);
+      setIsAutoSequence(true);
+      setIsAudited(false);
+      setStartNewYear(false);
+    }
+  } //	MSequence
+
+  /**
+   * Load Constructor
+   *
+   * @param ctx context
+   * @param rs result set
+   * @param trxName transaction
+   */
+  public MSequence(Properties ctx, ResultSet rs, String trxName) {
+    super(ctx, rs, trxName);
+  } //	MSequence
+
+  /**
+   * New Document Sequence Constructor
+   *
+   * @param ctx context
+   * @param AD_Client_ID owner
+   * @param tableName name
+   * @param trxName transaction
+   */
+  public MSequence(Properties ctx, int AD_Client_ID, String tableName, String trxName) {
+    this(ctx, 0, trxName);
+    setClientOrg(AD_Client_ID, 0); // 	Client Ownership
+    setName(PREFIX_DOCSEQ + tableName);
+    setDescription("DocumentNo/Value for Table " + tableName);
+  } //	MSequence;
+
+  /**
+   * New Document Sequence Constructor
+   *
+   * @param ctx context
+   * @param AD_Client_ID owner
+   * @param sequenceName name
+   * @param StartNo start
+   * @param trxName trx
+   */
+  public MSequence(
+      Properties ctx, int AD_Client_ID, String sequenceName, int StartNo, String trxName) {
+    this(ctx, 0, trxName);
+    setClientOrg(AD_Client_ID, 0); // 	Client Ownership
+    setName(sequenceName);
+    setDescription(sequenceName);
+    setStartNo(StartNo);
+    setCurrentNext(StartNo);
+    setCurrentNextSys(StartNo / 10);
+  } //	MSequence;
 
   /** @deprecated please usegetNextID (int, String, String) */
   public static int getNextID(int AD_Client_ID, String TableName) {
@@ -170,88 +285,32 @@ public class MSequence extends X_AD_Sequence {
           MTable table = MTable.get(Env.getCtx(), TableName);
 
           int AD_Sequence_ID = rs.getInt(4);
-          boolean gotFromHTTP = false;
-
-          // If maintaining official dictionary try to get the ID from http official server
-          if (adempiereSys) {
-
-            String isUseCentralizedID =
-                MSysConfig.getValue(
-                    MSysConfig.DICTIONARY_ID_USE_CENTRALIZED_ID, "Y"); // defaults to Y
-            if ((!isUseCentralizedID.equals("N")) && (!isExceptionCentralized(TableName))) {
-              // get ID from http site
-              retValue = getNextOfficialID_HTTP(TableName);
-              if (retValue > 0) {
-                PreparedStatement updateSQL = null;
-                try {
-                  updateSQL =
-                      conn.prepareStatement(
-                          "UPDATE AD_Sequence SET CurrentNextSys = ? + 1 WHERE AD_Sequence_ID = ?");
-                  updateSQL.setInt(1, retValue);
-                  updateSQL.setInt(2, AD_Sequence_ID);
-                  updateSQL.executeUpdate();
-                } finally {
-                  close(updateSQL);
-                  updateSQL = null;
-                }
-              }
-              gotFromHTTP = true;
-            }
-          }
 
           boolean queryProjectServer = false;
           if (table.getColumn("EntityType") != null) queryProjectServer = true;
           if (!queryProjectServer && MSequence.Table_Name.equalsIgnoreCase(TableName))
             queryProjectServer = true;
 
-          // If not official dictionary try to get the ID from http custom server - if configured
-          if (queryProjectServer && (!adempiereSys) && (!isExceptionCentralized(TableName))) {
-
-            String isUseProjectCentralizedID =
-                MSysConfig.getValue(MSysConfig.PROJECT_ID_USE_CENTRALIZED_ID, "N"); // defaults to N
-            if (isUseProjectCentralizedID.equals("Y")) {
-              // get ID from http site
-              retValue = getNextProjectID_HTTP(TableName);
-              if (retValue > 0) {
-                PreparedStatement updateSQL = null;
-                try {
-                  updateSQL =
-                      conn.prepareStatement(
-                          "UPDATE AD_Sequence SET CurrentNext = GREATEST(CurrentNext, ? + 1) WHERE AD_Sequence_ID = ?");
-                  updateSQL.setInt(1, retValue);
-                  updateSQL.setInt(2, AD_Sequence_ID);
-                  updateSQL.executeUpdate();
-                } finally {
-                  close(updateSQL);
-                  updateSQL = null;
-                }
-              }
-              gotFromHTTP = true;
+          PreparedStatement updateSQL = null;
+          try {
+            int incrementNo = rs.getInt(3);
+            if (adempiereSys) {
+              String updateCmd =
+                  "UPDATE AD_Sequence SET CurrentNextSys=CurrentNextSys+? WHERE AD_Sequence_ID=?";
+              updateSQL = conn.prepareStatement(updateCmd);
+              retValue = rs.getInt(2);
+            } else {
+              String updateCmd =
+                  "UPDATE AD_Sequence SET CurrentNext=CurrentNext+? WHERE AD_Sequence_ID=?";
+              updateSQL = conn.prepareStatement(updateCmd);
+              retValue = rs.getInt(1);
             }
-          }
-
-          if (!gotFromHTTP) {
-            PreparedStatement updateSQL = null;
-            try {
-              int incrementNo = rs.getInt(3);
-              if (adempiereSys) {
-                String updateCmd =
-                    "UPDATE AD_Sequence SET CurrentNextSys=CurrentNextSys+? WHERE AD_Sequence_ID=?";
-                updateSQL = conn.prepareStatement(updateCmd);
-                retValue = rs.getInt(2);
-              } else {
-                String updateCmd =
-                    "UPDATE AD_Sequence SET CurrentNext=CurrentNext+? WHERE AD_Sequence_ID=?";
-                updateSQL = conn.prepareStatement(updateCmd);
-                retValue = rs.getInt(1);
-              }
-              updateSQL.setInt(1, incrementNo);
-              updateSQL.setInt(2, AD_Sequence_ID);
-              updateSQL.executeUpdate();
-            } finally {
-              close(updateSQL);
-              updateSQL = null;
-            }
+            updateSQL.setInt(1, incrementNo);
+            updateSQL.setInt(2, AD_Sequence_ID);
+            updateSQL.executeUpdate();
+          } finally {
+            close(updateSQL);
+            updateSQL = null;
           }
 
           // if (trx == null)
@@ -299,6 +358,7 @@ public class MSequence extends X_AD_Sequence {
   public static String getDocumentNo(int AD_Client_ID, String TableName, String trxName) {
     return getDocumentNo(AD_Client_ID, TableName, trxName, null);
   }
+
   /**
    * ************************************************************************ Get Document No from
    * table (when the document doesn't have a c_doctype)
@@ -338,13 +398,13 @@ public class MSequence extends X_AD_Sequence {
     if (expression == null || expression.length() == 0) return "";
 
     String token;
-    String inStr = new String(expression);
+    String inStr = expression;
     StringBuilder outStr = new StringBuilder();
 
     int i = inStr.indexOf('@');
     while (i != -1) {
-      outStr.append(inStr.substring(0, i)); // up to @
-      inStr = inStr.substring(i + 1, inStr.length()); // from first @
+      outStr.append(inStr, 0, i); // up to @
+      inStr = inStr.substring(i + 1); // from first @
 
       int j = inStr.indexOf('@'); // next @
       if (j < 0) {
@@ -436,7 +496,7 @@ public class MSequence extends X_AD_Sequence {
         outStr.append("@");
       }
 
-      inStr = inStr.substring(j + 1, inStr.length()); // from second @
+      inStr = inStr.substring(j + 1); // from second @
       i = inStr.indexOf('@');
     }
     outStr.append(inStr); // add the rest of the string
@@ -742,9 +802,7 @@ public class MSequence extends X_AD_Sequence {
         seq.saveEx();
         next_id = INIT_NO;
       }
-      if (createSequence(TableName + "_SQ", 1, INIT_NO, Integer.MAX_VALUE, next_id, trxName))
-        return false;
-      return true;
+      return !createSequence(TableName + "_SQ", 1, INIT_NO, Integer.MAX_VALUE, next_id, trxName);
     }
 
     MSequence seq = new MSequence(ctx, 0, trxName);
@@ -817,85 +875,56 @@ public class MSequence extends X_AD_Sequence {
     return retValue;
   } //	get
 
-  /** Sequence for Table Document No's */
-  private static final String PREFIX_DOCSEQ = "DocumentNo_";
-  /** Start Number */
-  public static final int INIT_NO = 1000000; // 	1M
-  /** Start System Number */
-  // public static final int		INIT_SYS_NO = 100; // start number for Compiere
-  // public static final int		INIT_SYS_NO = 50000;   // start number for Adempiere
-  public static final int INIT_SYS_NO = 200000; // start number for iDempiere
-  /** Static Logger */
-  private static CLogger s_log = CLogger.getCLogger(MSequence.class);
-
   /**
-   * ************************************************************************ Standard Constructor
+   * Get Document Number for current document. <br>
+   * - first search for DocType based Document No - then Search for DocumentNo based on TableName
    *
    * @param ctx context
-   * @param AD_Sequence_ID id
-   * @param trxName transaction
+   * @param WindowNo window
+   * @param TableName table
+   * @param onlyDocType Do not search for document no based on TableName
+   * @param trxName optional Transaction Name
+   * @return DocumentNo or null, if no doc number defined
    */
-  public MSequence(Properties ctx, int AD_Sequence_ID, String trxName) {
-    super(ctx, AD_Sequence_ID, trxName);
-    if (AD_Sequence_ID == 0) {
-      //	setName (null);
-      //
-      setIsTableID(false);
-      setStartNo(INIT_NO);
-      setCurrentNext(INIT_NO);
-      setCurrentNextSys(INIT_SYS_NO);
-      setIncrementNo(1);
-      setIsAutoSequence(true);
-      setIsAudited(false);
-      setStartNewYear(false);
+  public static String getDocumentNo(
+      Properties ctx, int WindowNo, String TableName, boolean onlyDocType, String trxName) {
+    if (ctx == null || TableName == null || TableName.length() == 0)
+      throw new IllegalArgumentException("Required parameter missing");
+    int AD_Client_ID = Env.getContextAsInt(ctx, WindowNo, "AD_Client_ID");
+
+    //	Get C_DocType_ID from context - NO Defaults -
+    int C_DocType_ID = Env.getContextAsInt(ctx, WindowNo + "|C_DocTypeTarget_ID");
+    if (C_DocType_ID == 0) C_DocType_ID = Env.getContextAsInt(ctx, WindowNo + "|C_DocType_ID");
+    if (C_DocType_ID == 0) {
+      if (s_log.isLoggable(Level.FINE))
+        s_log.fine(
+            "Window="
+                + WindowNo
+                + " - Target="
+                + Env.getContextAsInt(ctx, WindowNo + "|C_DocTypeTarget_ID")
+                + "/"
+                + Env.getContextAsInt(ctx, WindowNo, "C_DocTypeTarget_ID")
+                + " - Actual="
+                + Env.getContextAsInt(ctx, WindowNo + "|C_DocType_ID")
+                + "/"
+                + Env.getContextAsInt(ctx, WindowNo, "C_DocType_ID"));
+      return getDocumentNo(AD_Client_ID, TableName, trxName);
     }
-  } //	MSequence
 
-  /**
-   * Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public MSequence(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	MSequence
+    String retValue = getDocumentNo(C_DocType_ID, trxName, false);
+    if (!onlyDocType && retValue == null) return getDocumentNo(AD_Client_ID, TableName, trxName);
+    return retValue;
+  } //	getDocumentNo
 
-  /**
-   * New Document Sequence Constructor
-   *
-   * @param ctx context
-   * @param AD_Client_ID owner
-   * @param tableName name
-   * @param trxName transaction
-   */
-  public MSequence(Properties ctx, int AD_Client_ID, String tableName, String trxName) {
-    this(ctx, 0, trxName);
-    setClientOrg(AD_Client_ID, 0); // 	Client Ownership
-    setName(PREFIX_DOCSEQ + tableName);
-    setDescription("DocumentNo/Value for Table " + tableName);
-  } //	MSequence;
+  private static boolean isExceptionCentralized(String tableName) {
 
-  /**
-   * New Document Sequence Constructor
-   *
-   * @param ctx context
-   * @param AD_Client_ID owner
-   * @param sequenceName name
-   * @param StartNo start
-   * @param trxName trx
-   */
-  public MSequence(
-      Properties ctx, int AD_Client_ID, String sequenceName, int StartNo, String trxName) {
-    this(ctx, 0, trxName);
-    setClientOrg(AD_Client_ID, 0); // 	Client Ownership
-    setName(sequenceName);
-    setDescription(sequenceName);
-    setStartNo(StartNo);
-    setCurrentNext(StartNo);
-    setCurrentNextSys(StartNo / 10);
-  } //	MSequence;
+    for (String exceptionTable : dontUseCentralized) {
+      if (tableName.equalsIgnoreCase(exceptionTable)) return true;
+    }
+
+    // don't log selects or insert/update for exception tables (i.e. AD_Issue, AD_ChangeLog)
+    return false;
+  }
 
   /**
    * ************************************************************************ Get Next No and
@@ -1003,49 +1032,17 @@ public class MSequence extends X_AD_Sequence {
     }
   }
 
-  /**
-   * Get Document Number for current document. <br>
-   * - first search for DocType based Document No - then Search for DocumentNo based on TableName
-   *
-   * @param ctx context
-   * @param WindowNo window
-   * @param TableName table
-   * @param onlyDocType Do not search for document no based on TableName
-   * @param trxName optional Transaction Name
-   * @return DocumentNo or null, if no doc number defined
-   */
-  public static String getDocumentNo(
-      Properties ctx, int WindowNo, String TableName, boolean onlyDocType, String trxName) {
-    if (ctx == null || TableName == null || TableName.length() == 0)
-      throw new IllegalArgumentException("Required parameter missing");
-    int AD_Client_ID = Env.getContextAsInt(ctx, WindowNo, "AD_Client_ID");
+  @Override
+  protected boolean beforeSave(boolean newRecord) {
+    if (isStartNewMonth() && !isStartNewYear()) setStartNewMonth(false);
+    return true;
+  }
 
-    //	Get C_DocType_ID from context - NO Defaults -
-    int C_DocType_ID = Env.getContextAsInt(ctx, WindowNo + "|C_DocTypeTarget_ID");
-    if (C_DocType_ID == 0) C_DocType_ID = Env.getContextAsInt(ctx, WindowNo + "|C_DocType_ID");
-    if (C_DocType_ID == 0) {
-      if (s_log.isLoggable(Level.FINE))
-        s_log.fine(
-            "Window="
-                + WindowNo
-                + " - Target="
-                + Env.getContextAsInt(ctx, WindowNo + "|C_DocTypeTarget_ID")
-                + "/"
-                + Env.getContextAsInt(ctx, WindowNo, "C_DocTypeTarget_ID")
-                + " - Actual="
-                + Env.getContextAsInt(ctx, WindowNo + "|C_DocType_ID")
-                + "/"
-                + Env.getContextAsInt(ctx, WindowNo, "C_DocType_ID"));
-      return getDocumentNo(AD_Client_ID, TableName, trxName);
-    }
-
-    String retValue = getDocumentNo(C_DocType_ID, trxName, false);
-    if (!onlyDocType && retValue == null) return getDocumentNo(AD_Client_ID, TableName, trxName);
-    return retValue;
-  } //	getDocumentNo
-
-  /** Test */
-  private static Vector<Integer> s_list = null;
+  @Override
+  public String getOrgColumn() {
+    if (super.getOrgColumn() == null) return I_AD_Sequence.COLUMNNAME_AD_Org_ID;
+    else return super.getOrgColumn();
+  }
 
   /**
    * Test Sequence - Get IDs
@@ -1054,6 +1051,9 @@ public class MSequence extends X_AD_Sequence {
    * @version $Id: MSequence.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
    */
   public static class GetIDs implements Runnable {
+    @SuppressWarnings("unused")
+    private int m_i;
+
     /**
      * Get IDs
      *
@@ -1062,9 +1062,6 @@ public class MSequence extends X_AD_Sequence {
     public GetIDs(int i) {
       m_i = i;
     }
-
-    @SuppressWarnings("unused")
-    private int m_i;
 
     /** Run */
     public void run() {
@@ -1079,188 +1076,4 @@ public class MSequence extends X_AD_Sequence {
       }
     }
   } //	GetIDs
-
-  /**
-   * Get next number for Key column
-   *
-   * @param AD_Client_ID client
-   * @param TableName table name
-   * @param trxName optional Transaction Name
-   * @return next no or (-1=error)
-   */
-  public static synchronized int getNextOfficialID_HTTP(String TableName) {
-    String website =
-        MSysConfig.getValue(
-            MSysConfig.DICTIONARY_ID_WEBSITE); // "http://developer.adempiere.com/cgi-bin/get_ID";
-    String prm_USER = MSysConfig.getValue(MSysConfig.DICTIONARY_ID_USER); // "globalqss";
-    String prm_PASSWORD =
-        MSysConfig.getValue(MSysConfig.DICTIONARY_ID_PASSWORD); // "password_inseguro";
-    String prm_TABLE = TableName;
-    String prm_ALTKEY = ""; // TODO: generate alt-key based on key of table
-    String prm_COMMENT = MSysConfig.getValue(MSysConfig.DICTIONARY_ID_COMMENTS);
-    String prm_PROJECT = new String("Adempiere");
-
-    return getNextID_HTTP(
-        TableName,
-        website,
-        prm_USER,
-        prm_PASSWORD,
-        prm_TABLE,
-        prm_ALTKEY,
-        prm_COMMENT,
-        prm_PROJECT);
-  }
-
-  /**
-   * Get next number for Key column
-   *
-   * @param AD_Client_ID client
-   * @param TableName table name
-   * @param trxName optional Transaction Name
-   * @return next no or (-1=error)
-   */
-  public static synchronized int getNextProjectID_HTTP(String TableName) {
-    String website =
-        MSysConfig.getValue(
-            MSysConfig.PROJECT_ID_WEBSITE); // "http://developer.adempiere.com/cgi-bin/get_ID";
-    String prm_USER = MSysConfig.getValue(MSysConfig.PROJECT_ID_USER); // "globalqss";
-    String prm_PASSWORD =
-        MSysConfig.getValue(MSysConfig.PROJECT_ID_PASSWORD); // "password_inseguro";
-    String prm_TABLE = TableName;
-    String prm_ALTKEY = ""; // TODO: generate alt-key based on key of table
-    String prm_COMMENT = MSysConfig.getValue(MSysConfig.PROJECT_ID_COMMENTS);
-    String prm_PROJECT = MSysConfig.getValue(MSysConfig.PROJECT_ID_PROJECT);
-
-    return getNextID_HTTP(
-        TableName,
-        website,
-        prm_USER,
-        prm_PASSWORD,
-        prm_TABLE,
-        prm_ALTKEY,
-        prm_COMMENT,
-        prm_PROJECT);
-  }
-
-  private static int getNextID_HTTP(
-      String TableName,
-      String website,
-      String prm_USER,
-      String prm_PASSWORD,
-      String prm_TABLE,
-      String prm_ALTKEY,
-      String prm_COMMENT,
-      String prm_PROJECT) {
-    StringBuffer read = new StringBuffer();
-    int retValue = -1;
-    try {
-      String completeUrl =
-          website
-              + "?"
-              + "USER="
-              + URLEncoder.encode(prm_USER, "UTF-8")
-              + "&PASSWORD="
-              + URLEncoder.encode(prm_PASSWORD, "UTF-8")
-              + "&PROJECT="
-              + URLEncoder.encode(prm_PROJECT, "UTF-8")
-              + "&TABLE="
-              + URLEncoder.encode(prm_TABLE, "UTF-8")
-              + "&ALTKEY="
-              + URLEncoder.encode(prm_ALTKEY, "UTF-8")
-              + "&COMMENT="
-              + URLEncoder.encode(prm_COMMENT, "UTF-8");
-
-      // Now use the URL class to parse the user-specified URL into
-      // its various parts: protocol, host, port, filename.  Check the protocol
-      URL url = new URL(completeUrl);
-      String protocol = url.getProtocol();
-      if (!protocol.equals("http"))
-        throw new IllegalArgumentException("URL must use 'http:' protocol");
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("GET");
-      conn.setAllowUserInteraction(false);
-      InputStream is = conn.getInputStream();
-
-      // Now read the server's response, and write it to the file
-      byte[] buffer = new byte[4096];
-      int bytes_read;
-      while ((bytes_read = is.read(buffer)) != -1) {
-        for (int i = 0; i < bytes_read; i++) {
-          if (buffer[i] != 10) read.append((char) buffer[i]);
-        }
-      }
-      conn.disconnect();
-      retValue = Integer.parseInt(read.toString());
-      if (retValue <= 0) retValue = -1;
-    } catch (Exception e) { // Report any errors that arise
-      System.err.println(e);
-      retValue = -1;
-    }
-    if (s_log.isLoggable(Level.INFO))
-      s_log.log(Level.INFO, "getNextID_HTTP - " + TableName + "=" + read + "(" + retValue + ")");
-
-    return retValue;
-  }
-
-  private static String[] dontUseCentralized =
-      new String[] {
-        "AD_ACCESSLOG",
-        "AD_ALERTPROCESSORLOG",
-        "AD_CHANGELOG",
-        "AD_ISSUE",
-        "AD_LDAPPROCESSORLOG",
-        "AD_PACKAGE_IMP",
-        "AD_PACKAGE_IMP_BACKUP",
-        "AD_PACKAGE_IMP_DETAIL",
-        "AD_PACKAGE_IMP_INST",
-        "AD_PACKAGE_IMP_PROC",
-        "AD_PINSTANCE",
-        "AD_PINSTANCE_LOG",
-        "AD_PINSTANCE_PARA",
-        "AD_PREFERENCE",
-        "AD_RECENTITEM",
-        "AD_REPLICATION_LOG",
-        "AD_SCHEDULERLOG",
-        "AD_SESSION",
-        "AD_WORKFLOWPROCESSORLOG",
-        "CM_WEBACCESSLOG",
-        "C_ACCTPROCESSORLOG",
-        "K_INDEXLOG",
-        "R_REQUESTPROCESSORLOG",
-        "T_AGING",
-        "T_ALTER_COLUMN",
-        "T_DISTRIBUTIONRUNDETAIL",
-        "T_INVENTORYVALUE",
-        "T_INVOICEGL",
-        "T_REPLENISH",
-        "T_REPORT",
-        "T_REPORTSTATEMENT",
-        "T_SELECTION",
-        "T_SELECTION2",
-        "T_SPOOL",
-        "T_TRANSACTION",
-        "T_TRIALBALANCE"
-      };
-
-  private static boolean isExceptionCentralized(String tableName) {
-
-    for (String exceptionTable : dontUseCentralized) {
-      if (tableName.equalsIgnoreCase(exceptionTable)) return true;
-    }
-
-    // don't log selects or insert/update for exception tables (i.e. AD_Issue, AD_ChangeLog)
-    return false;
-  }
-
-  @Override
-  protected boolean beforeSave(boolean newRecord) {
-    if (isStartNewMonth() && !isStartNewYear()) setStartNewMonth(false);
-    return true;
-  }
-
-  @Override
-  public String getOrgColumn() {
-    if (super.getOrgColumn() == null) return I_AD_Sequence.COLUMNNAME_AD_Org_ID;
-    else return super.getOrgColumn();
-  }
 } //	MSequence

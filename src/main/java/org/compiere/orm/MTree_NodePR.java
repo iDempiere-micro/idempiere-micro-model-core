@@ -18,35 +18,6 @@ import org.idempiere.common.util.CLogger;
 public class MTree_NodePR extends X_AD_TreeNodePR {
   /** */
   private static final long serialVersionUID = 7949499593365182416L;
-
-  /**
-   * Get Tree Node
-   *
-   * @param tree tree
-   * @param Node_ID node
-   * @return node or null
-   */
-  public static MTree_NodePR get(MTree_Base tree, int Node_ID) {
-    MTree_NodePR retValue = null;
-    String sql = "SELECT * FROM AD_TreeNodePR WHERE AD_Tree_ID=? AND Node_ID=?";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = prepareStatement(sql, tree.get_TrxName());
-      pstmt.setInt(1, tree.getAD_Tree_ID());
-      pstmt.setInt(2, Node_ID);
-      rs = pstmt.executeQuery();
-      if (rs.next()) retValue = new MTree_NodePR(tree.getCtx(), rs, tree.get_TrxName());
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    return retValue;
-  } //	get
-
   /** Static Logger */
   private static CLogger s_log = CLogger.getCLogger(MTree_NodePR.class);
 
@@ -76,4 +47,32 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
     setParent_ID(0);
     setSeqNo(0);
   } //	MTree_NodePR
+
+  /**
+   * Get Tree Node
+   *
+   * @param tree tree
+   * @param Node_ID node
+   * @return node or null
+   */
+  public static MTree_NodePR get(MTree_Base tree, int Node_ID) {
+    MTree_NodePR retValue = null;
+    String sql = "SELECT * FROM AD_TreeNodePR WHERE AD_Tree_ID=? AND Node_ID=?";
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    try {
+      pstmt = prepareStatement(sql, tree.get_TrxName());
+      pstmt.setInt(1, tree.getAD_Tree_ID());
+      pstmt.setInt(2, Node_ID);
+      rs = pstmt.executeQuery();
+      if (rs.next()) retValue = new MTree_NodePR(tree.getCtx(), rs, tree.get_TrxName());
+    } catch (Exception e) {
+      s_log.log(Level.SEVERE, sql, e);
+    } finally {
+      close(rs, pstmt);
+      rs = null;
+      pstmt = null;
+    }
+    return retValue;
+  } //	get
 } //	MTree_NodePR

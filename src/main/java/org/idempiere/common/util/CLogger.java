@@ -23,6 +23,25 @@ public class CLogger extends Logger implements Serializable {
   private static final String LAST_EXCEPTION = "org.idempiere.common.util.CLogger.lastException";
 
   public static Boolean throwOnError = true;
+  /** Default Logger */
+  private static volatile CLogger s_logger = null;
+
+  /**
+   * ************************************************************************ Standard constructor
+   *
+   * @param name logger name
+   * @param resourceBundleName optional resource bundle (ignored)
+   */
+  private CLogger(String name, String resourceBundleName) {
+    super(name, resourceBundleName);
+    //	setLevel(Level.ALL);
+
+    ConsoleHandler handler = new ConsoleHandler();
+    handler.setFormatter(new SimpleFormatter());
+    addHandler(handler);
+    handler.setLevel(Level.ALL);
+    setLevel(Level.ALL);
+  } //	CLogger
 
   /**
    * Get Logger
@@ -91,27 +110,83 @@ public class CLogger extends Logger implements Serializable {
     return s_logger;
   } //	get
 
-  /** Default Logger */
-  private static volatile CLogger s_logger = null;
+  /** ********************************************************************** */
 
   /**
-   * ************************************************************************ Standard constructor
+   * Get Error from Stack
    *
-   * @param name logger name
-   * @param resourceBundleName optional resource bundle (ignored)
+   * @return AD_Message as Value and Message as String
    */
-  private CLogger(String name, String resourceBundleName) {
-    super(name, resourceBundleName);
-    //	setLevel(Level.ALL);
+  public static ValueNamePair retrieveError() {
+    ValueNamePair vp = (ValueNamePair) Env.getCtx().remove(LAST_ERROR);
+    return vp;
+  } //  retrieveError
 
-    ConsoleHandler handler = new ConsoleHandler();
-    handler.setFormatter(new SimpleFormatter());
-    addHandler(handler);
-    handler.setLevel(Level.ALL);
-    setLevel(Level.ALL);
-  } //	CLogger
+  /**
+   * Get Error message from stack
+   *
+   * @param defaultMsg default message (used when there are no errors on stack)
+   * @return error message, or defaultMsg if there is not error message saved
+   * @author Teo Sarca, SC ARHIPAC SERVICE SRL
+   * @see #retrieveError()
+   */
+  public static String retrieveErrorString(String defaultMsg) {
+    ValueNamePair vp = retrieveError();
+    if (vp == null) return defaultMsg;
+    return vp.getName();
+  }
 
-  /** ********************************************************************** */
+  /**
+   * Get Error from Stack
+   *
+   * @return last exception
+   */
+  public static Exception retrieveException() {
+    Exception ex = (Exception) Env.getCtx().remove(LAST_EXCEPTION);
+    return ex;
+  } //  retrieveError
+
+  /**
+   * Get Warning from Stack
+   *
+   * @return AD_Message as Value and Message as String
+   */
+  public static ValueNamePair retrieveWarning() {
+    ValueNamePair vp = (ValueNamePair) Env.getCtx().remove(LAST_WARNING);
+    return vp;
+  } //  retrieveWarning
+
+  /**
+   * Get Info from Stack
+   *
+   * @return AD_Message as Value and Message as String
+   */
+  public static ValueNamePair retrieveInfo() {
+    ValueNamePair vp = (ValueNamePair) Env.getCtx().remove(LAST_INFO);
+    return vp;
+  } //  retrieveInfo
+
+  /** Reset Saved Messages/Errors/Info */
+  public static void resetLast() {
+    Env.getCtx().remove(LAST_ERROR);
+    Env.getCtx().remove(LAST_EXCEPTION);
+    Env.getCtx().remove(LAST_WARNING);
+    Env.getCtx().remove(LAST_INFO);
+  } //	resetLast
+
+  /**
+   * Get root cause
+   *
+   * @param t
+   * @return Throwable
+   */
+  public static Throwable getRootCause(Throwable t) {
+    Throwable cause = t;
+    while (cause.getCause() != null) {
+      cause = cause.getCause();
+    }
+    return cause;
+  }
 
   /**
    * Set and issue Error and save as ValueNamePair
@@ -167,40 +242,6 @@ public class CLogger extends Logger implements Serializable {
   } //  saveError
 
   /**
-   * Get Error from Stack
-   *
-   * @return AD_Message as Value and Message as String
-   */
-  public static ValueNamePair retrieveError() {
-    ValueNamePair vp = (ValueNamePair) Env.getCtx().remove(LAST_ERROR);
-    return vp;
-  } //  retrieveError
-
-  /**
-   * Get Error message from stack
-   *
-   * @param defaultMsg default message (used when there are no errors on stack)
-   * @return error message, or defaultMsg if there is not error message saved
-   * @see #retrieveError()
-   * @author Teo Sarca, SC ARHIPAC SERVICE SRL
-   */
-  public static String retrieveErrorString(String defaultMsg) {
-    ValueNamePair vp = retrieveError();
-    if (vp == null) return defaultMsg;
-    return vp.getName();
-  }
-
-  /**
-   * Get Error from Stack
-   *
-   * @return last exception
-   */
-  public static Exception retrieveException() {
-    Exception ex = (Exception) Env.getCtx().remove(LAST_EXCEPTION);
-    return ex;
-  } //  retrieveError
-
-  /**
    * Save Warning as ValueNamePair.
    *
    * @param AD_Message message key
@@ -217,16 +258,6 @@ public class CLogger extends Logger implements Serializable {
   } //  saveWarning
 
   /**
-   * Get Warning from Stack
-   *
-   * @return AD_Message as Value and Message as String
-   */
-  public static ValueNamePair retrieveWarning() {
-    ValueNamePair vp = (ValueNamePair) Env.getCtx().remove(LAST_WARNING);
-    return vp;
-  } //  retrieveWarning
-
-  /**
    * Save Info as ValueNamePair
    *
    * @param AD_Message message key
@@ -239,38 +270,6 @@ public class CLogger extends Logger implements Serializable {
     Env.getCtx().put(LAST_INFO, lastInfo);
     return true;
   } //  saveInfo
-
-  /**
-   * Get Info from Stack
-   *
-   * @return AD_Message as Value and Message as String
-   */
-  public static ValueNamePair retrieveInfo() {
-    ValueNamePair vp = (ValueNamePair) Env.getCtx().remove(LAST_INFO);
-    return vp;
-  } //  retrieveInfo
-
-  /** Reset Saved Messages/Errors/Info */
-  public static void resetLast() {
-    Env.getCtx().remove(LAST_ERROR);
-    Env.getCtx().remove(LAST_EXCEPTION);
-    Env.getCtx().remove(LAST_WARNING);
-    Env.getCtx().remove(LAST_INFO);
-  } //	resetLast
-
-  /**
-   * Get root cause
-   *
-   * @param t
-   * @return Throwable
-   */
-  public static Throwable getRootCause(Throwable t) {
-    Throwable cause = t;
-    while (cause.getCause() != null) {
-      cause = cause.getCause();
-    }
-    return cause;
-  }
 
   /**
    * String Representation

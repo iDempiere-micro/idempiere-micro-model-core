@@ -41,16 +41,6 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Sequence.
-   *
-   * @param AD_Sequence_ID Document Sequence
-   */
-  public void setAD_Sequence_ID(int AD_Sequence_ID) {
-    if (AD_Sequence_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
-  }
-
-  /**
    * Get Sequence.
    *
    * @return Document Sequence
@@ -62,12 +52,13 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set AD_Sequence_UU.
+   * Set Sequence.
    *
-   * @param AD_Sequence_UU AD_Sequence_UU
+   * @param AD_Sequence_ID Document Sequence
    */
-  public void setAD_Sequence_UU(String AD_Sequence_UU) {
-    set_Value(COLUMNNAME_AD_Sequence_UU, AD_Sequence_UU);
+  public void setAD_Sequence_ID(int AD_Sequence_ID) {
+    if (AD_Sequence_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
   }
 
   /**
@@ -80,12 +71,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Current Next.
+   * Set AD_Sequence_UU.
    *
-   * @param CurrentNext The next number to be used
+   * @param AD_Sequence_UU AD_Sequence_UU
    */
-  public void setCurrentNext(int CurrentNext) {
-    set_Value(COLUMNNAME_CurrentNext, Integer.valueOf(CurrentNext));
+  public void setAD_Sequence_UU(String AD_Sequence_UU) {
+    set_Value(COLUMNNAME_AD_Sequence_UU, AD_Sequence_UU);
   }
 
   /**
@@ -100,12 +91,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Current Next (System).
+   * Set Current Next.
    *
-   * @param CurrentNextSys Next sequence for system use
+   * @param CurrentNext The next number to be used
    */
-  public void setCurrentNextSys(int CurrentNextSys) {
-    set_Value(COLUMNNAME_CurrentNextSys, Integer.valueOf(CurrentNextSys));
+  public void setCurrentNext(int CurrentNext) {
+    set_Value(COLUMNNAME_CurrentNext, Integer.valueOf(CurrentNext));
   }
 
   /**
@@ -120,12 +111,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Date Column.
+   * Set Current Next (System).
    *
-   * @param DateColumn Fully qualified date column
+   * @param CurrentNextSys Next sequence for system use
    */
-  public void setDateColumn(String DateColumn) {
-    set_Value(COLUMNNAME_DateColumn, DateColumn);
+  public void setCurrentNextSys(int CurrentNextSys) {
+    set_Value(COLUMNNAME_CurrentNextSys, Integer.valueOf(CurrentNextSys));
   }
 
   /**
@@ -138,12 +129,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Decimal Pattern.
+   * Set Date Column.
    *
-   * @param DecimalPattern Java Decimal Pattern
+   * @param DateColumn Fully qualified date column
    */
-  public void setDecimalPattern(String DecimalPattern) {
-    set_Value(COLUMNNAME_DecimalPattern, DecimalPattern);
+  public void setDateColumn(String DateColumn) {
+    set_Value(COLUMNNAME_DateColumn, DateColumn);
   }
 
   /**
@@ -156,12 +147,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Description.
+   * Set Decimal Pattern.
    *
-   * @param Description Optional short description of the record
+   * @param DecimalPattern Java Decimal Pattern
    */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
+  public void setDecimalPattern(String DecimalPattern) {
+    set_Value(COLUMNNAME_DecimalPattern, DecimalPattern);
   }
 
   /**
@@ -174,12 +165,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Increment.
+   * Set Description.
    *
-   * @param IncrementNo The number to increment the last document number by
+   * @param Description Optional short description of the record
    */
-  public void setIncrementNo(int IncrementNo) {
-    set_Value(COLUMNNAME_IncrementNo, Integer.valueOf(IncrementNo));
+  public void setDescription(String Description) {
+    set_Value(COLUMNNAME_Description, Description);
   }
 
   /**
@@ -191,6 +182,15 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
     Integer ii = (Integer) get_Value(COLUMNNAME_IncrementNo);
     if (ii == null) return 0;
     return ii;
+  }
+
+  /**
+   * Set Increment.
+   *
+   * @param IncrementNo The number to increment the last document number by
+   */
+  public void setIncrementNo(int IncrementNo) {
+    set_Value(COLUMNNAME_IncrementNo, Integer.valueOf(IncrementNo));
   }
 
   /**
@@ -286,15 +286,6 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Org Column.
-   *
-   * @param OrgColumn Fully qualified Organization column (AD_Org_ID)
-   */
-  public void setOrgColumn(String OrgColumn) {
-    set_Value(COLUMNNAME_OrgColumn, OrgColumn);
-  }
-
-  /**
    * Get Org Column.
    *
    * @return Fully qualified Organization column (AD_Org_ID)
@@ -304,12 +295,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Prefix.
+   * Set Org Column.
    *
-   * @param Prefix Prefix before the sequence number
+   * @param OrgColumn Fully qualified Organization column (AD_Org_ID)
    */
-  public void setPrefix(String Prefix) {
-    set_Value(COLUMNNAME_Prefix, Prefix);
+  public void setOrgColumn(String OrgColumn) {
+    set_Value(COLUMNNAME_OrgColumn, OrgColumn);
   }
 
   /**
@@ -322,12 +313,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Restart sequence every month.
+   * Set Prefix.
    *
-   * @param StartNewMonth Restart sequence every month
+   * @param Prefix Prefix before the sequence number
    */
-  public void setStartNewMonth(boolean StartNewMonth) {
-    set_Value(COLUMNNAME_StartNewMonth, Boolean.valueOf(StartNewMonth));
+  public void setPrefix(String Prefix) {
+    set_Value(COLUMNNAME_Prefix, Prefix);
   }
 
   /**
@@ -345,12 +336,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Restart sequence every Year.
+   * Set Restart sequence every month.
    *
-   * @param StartNewYear Restart the sequence with Start on every 1/1
+   * @param StartNewMonth Restart sequence every month
    */
-  public void setStartNewYear(boolean StartNewYear) {
-    set_Value(COLUMNNAME_StartNewYear, Boolean.valueOf(StartNewYear));
+  public void setStartNewMonth(boolean StartNewMonth) {
+    set_Value(COLUMNNAME_StartNewMonth, Boolean.valueOf(StartNewMonth));
   }
 
   /**
@@ -368,12 +359,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Start No.
+   * Set Restart sequence every Year.
    *
-   * @param StartNo Starting number/position
+   * @param StartNewYear Restart the sequence with Start on every 1/1
    */
-  public void setStartNo(int StartNo) {
-    set_Value(COLUMNNAME_StartNo, Integer.valueOf(StartNo));
+  public void setStartNewYear(boolean StartNewYear) {
+    set_Value(COLUMNNAME_StartNewYear, Boolean.valueOf(StartNewYear));
   }
 
   /**
@@ -388,12 +379,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Suffix.
+   * Set Start No.
    *
-   * @param Suffix Suffix after the number
+   * @param StartNo Starting number/position
    */
-  public void setSuffix(String Suffix) {
-    set_Value(COLUMNNAME_Suffix, Suffix);
+  public void setStartNo(int StartNo) {
+    set_Value(COLUMNNAME_StartNo, Integer.valueOf(StartNo));
   }
 
   /**
@@ -406,13 +397,12 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   }
 
   /**
-   * Set Value Format.
+   * Set Suffix.
    *
-   * @param VFormat Format of the value; Can contain fixed format elements, Variables:
-   *     "_lLoOaAcCa09"
+   * @param Suffix Suffix after the number
    */
-  public void setVFormat(String VFormat) {
-    set_Value(COLUMNNAME_VFormat, VFormat);
+  public void setSuffix(String Suffix) {
+    set_Value(COLUMNNAME_Suffix, Suffix);
   }
 
   /**
@@ -422,6 +412,16 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
    */
   public String getVFormat() {
     return (String) get_Value(COLUMNNAME_VFormat);
+  }
+
+  /**
+   * Set Value Format.
+   *
+   * @param VFormat Format of the value; Can contain fixed format elements, Variables:
+   *     "_lLoOaAcCa09"
+   */
+  public void setVFormat(String VFormat) {
+    set_Value(COLUMNNAME_VFormat, VFormat);
   }
 
   @Override

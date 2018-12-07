@@ -40,10 +40,51 @@ import software.hsharp.core.orm.MBaseTableKt;
  * @version $Id: MTable.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
  */
 public class MTable extends MBaseTable {
+  public static final int MAX_OFFICIAL_ID = 999999;
   /** */
   private static final long serialVersionUID = -8757836873040013402L;
+  /** Static Logger */
+  private static CLogger s_log = CLogger.getCLogger(MTable.class);
+  /** View Components */
+  private MViewComponent[] m_viewComponents = null;
 
-  public static final int MAX_OFFICIAL_ID = 999999;
+  /**
+   * ************************************************************************ Standard Constructor
+   *
+   * @param ctx context
+   * @param AD_Table_ID id
+   * @param trxName transaction
+   */
+  public MTable(Properties ctx, int AD_Table_ID, String trxName) {
+    super(ctx, AD_Table_ID, trxName);
+    if (AD_Table_ID == 0) {
+      //	setName (null);
+      //	setTableName (null);
+      setTableAccessLevel(X_AD_Table.ACCESSLEVEL_SystemOnly); // 4
+      setEntityType(org.idempiere.orm.PO.ENTITYTYPE_UserMaintained); // U
+      setIsChangeLog(false);
+      setIsDeleteable(false);
+      setIsHighVolume(false);
+      setIsSecurityEnabled(false);
+      setIsView(false); // N
+      setReplicationType(X_AD_Table.REPLICATIONTYPE_Local);
+    }
+  } //	MTable
+
+  /**
+   * Load Constructor
+   *
+   * @param ctx context
+   * @param rs result set
+   * @param trxName transaction
+   */
+  public MTable(Properties ctx, ResultSet rs, String trxName) {
+    super(ctx, rs, trxName);
+  } //	MTable
+
+  public MTable(Properties ctx, Row row) {
+    super(ctx, row);
+  }
 
   /**
    * Get Table from Cache
@@ -101,9 +142,6 @@ public class MTable extends MBaseTable {
     return MTable.get(ctx, AD_Table_ID).getTableName();
   } //	getTableName
 
-  /** Static Logger */
-  private static CLogger s_log = CLogger.getCLogger(MTable.class);
-
   /**
    * Get Persistence Class for Table
    *
@@ -121,45 +159,51 @@ public class MTable extends MBaseTable {
   } //	getClass
 
   /**
-   * ************************************************************************ Standard Constructor
+   * Grant independence to GenerateModel from AD_Table_ID
    *
-   * @param ctx context
-   * @param AD_Table_ID id
-   * @param trxName transaction
+   * @param String tableName
+   * @return int retValue
    */
-  public MTable(Properties ctx, int AD_Table_ID, String trxName) {
-    super(ctx, AD_Table_ID, trxName);
-    if (AD_Table_ID == 0) {
-      //	setName (null);
-      //	setTableName (null);
-      setTableAccessLevel(X_AD_Table.ACCESSLEVEL_SystemOnly); // 4
-      setEntityType(org.idempiere.orm.PO.ENTITYTYPE_UserMaintained); // U
-      setIsChangeLog(false);
-      setIsDeleteable(false);
-      setIsHighVolume(false);
-      setIsSecurityEnabled(false);
-      setIsView(false); // N
-      setReplicationType(X_AD_Table.REPLICATIONTYPE_Local);
+  public static int getTable_ID(String tableName) {
+    int retValue = 0;
+    String SQL = "SELECT AD_Table_ID FROM AD_Table WHERE tablename = ?";
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    try {
+      pstmt = prepareStatement(SQL, null);
+      pstmt.setString(1, tableName);
+      rs = pstmt.executeQuery();
+      if (rs.next()) retValue = rs.getInt(1);
+    } catch (Exception e) {
+      s_log.log(Level.SEVERE, SQL, e);
+      retValue = -1;
+    } finally {
+      close(rs, pstmt);
+      rs = null;
+      pstmt = null;
     }
-  } //	MTable
-
-  /**
-   * Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public MTable(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	MTable
-
-  public MTable(Properties ctx, Row row) {
-    super(ctx, row);
+    return retValue;
   }
 
-  /** View Components */
-  private MViewComponent[] m_viewComponents = null;
+  /**
+   * Verify if the table contains ID=0
+   *
+   * @return true if table has zero ID
+   */
+  public static boolean isZeroIDTable(String tablename) {
+    return (tablename.equals("AD_Org")
+        || tablename.equals("AD_OrgInfo")
+        || tablename.equals("AD_Client")
+        || // IDEMPIERE-668
+        tablename.equals("AD_ReportView")
+        || tablename.equals("AD_Role")
+        || tablename.equals("AD_System")
+        || tablename.equals("AD_User")
+        || tablename.equals("C_DocType")
+        || tablename.equals("GL_Category")
+        || tablename.equals("M_AttributeSet")
+        || tablename.equals("M_AttributeSetInstance"));
+  }
 
   /**
    * Get Column
@@ -393,6 +437,8 @@ public class MTable extends MBaseTable {
     return true;
   } //	beforeSave
 
+  // globalqss
+
   /**
    * After Save
    *
@@ -469,34 +515,6 @@ public class MTable extends MBaseTable {
     return sb.toString();
   } //	getSQLCreate
 
-  // globalqss
-  /**
-   * Grant independence to GenerateModel from AD_Table_ID
-   *
-   * @param String tableName
-   * @return int retValue
-   */
-  public static int getTable_ID(String tableName) {
-    int retValue = 0;
-    String SQL = "SELECT AD_Table_ID FROM AD_Table WHERE tablename = ?";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = prepareStatement(SQL, null);
-      pstmt.setString(1, tableName);
-      rs = pstmt.executeQuery();
-      if (rs.next()) retValue = rs.getInt(1);
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, SQL, e);
-      retValue = -1;
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    return retValue;
-  }
-
   /**
    * Create query to retrieve one or more PO.
    *
@@ -528,7 +546,7 @@ public class MTable extends MBaseTable {
     query.setParameters(getAD_Table_ID());
     query.setOrderBy(MViewComponent.COLUMNNAME_SeqNo);
     query.setOnlyActiveRecords(true);
-    List<MTableIndex> list = query.<MTableIndex>list();
+    List<MTableIndex> list = query.list();
 
     m_viewComponents = new MViewComponent[list.size()];
     list.toArray(m_viewComponents);
@@ -545,24 +563,4 @@ public class MTable extends MBaseTable {
     sb.append(getId()).append("-").append(getTableName()).append("]");
     return sb.toString();
   } //	toString
-
-  /**
-   * Verify if the table contains ID=0
-   *
-   * @return true if table has zero ID
-   */
-  public static boolean isZeroIDTable(String tablename) {
-    return (tablename.equals("AD_Org")
-        || tablename.equals("AD_OrgInfo")
-        || tablename.equals("AD_Client")
-        || // IDEMPIERE-668
-        tablename.equals("AD_ReportView")
-        || tablename.equals("AD_Role")
-        || tablename.equals("AD_System")
-        || tablename.equals("AD_User")
-        || tablename.equals("C_DocType")
-        || tablename.equals("GL_Category")
-        || tablename.equals("M_AttributeSet")
-        || tablename.equals("M_AttributeSetInstance"));
-  }
 } //	MTable

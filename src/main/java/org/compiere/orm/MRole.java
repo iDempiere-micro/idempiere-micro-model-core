@@ -37,13 +37,115 @@ import org.idempiere.icommon.model.IPO;
  * @author Jorg Janke
  * @author Karsten Thiemann FR [ 1782412 ]
  * @author Carlos Ruiz - globalqss - FR [ 1846929 ] - implement ASP
+ * @version $Id: MRole.java,v 1.5 2006/08/09 16:38:47 jjanke Exp $
  * @contributor KittiU - FR [ 3062553 ] - Duplicated action in DocAction list for Multiple Role
  *     Users
- * @version $Id: MRole.java,v 1.5 2006/08/09 16:38:47 jjanke Exp $
  */
 public class MRole extends X_AD_Role {
+  /** Access SQL Read Write */
+  public static final boolean SQL_RW = true;
+  /** Access SQL Read Only */
+  public static final boolean SQL_RO = false;
+  /** Access SQL Fully Qualified */
+  public static final boolean SQL_FULLYQUALIFIED = true;
+  /** Access SQL Not Fully Qualified */
+  public static final boolean SQL_NOTQUALIFIED = false;
+  /** The AD_User_ID of the SuperUser */
+  public static final int SUPERUSER_USER_ID = USER_SUPERUSER;
+  /** The AD_User_ID of the System Administrator */
+  public static final int SYSTEM_USER_ID = USER_SYSTEM;
   /** */
   private static final long serialVersionUID = 8952907008982481439L;
+
+  private static final String ROLE_KEY = "org.compiere.impl.DefaultRole";
+  /** Role/User Cache */
+  private static CCache<String, MRole> s_roles = new CCache<String, MRole>(I_AD_Role.Table_Name, 5);
+  /** Log */
+  private static CLogger s_log = CLogger.getCLogger(MRole.class);
+  /** User */
+  private int m_AD_User_ID = -1;
+  /** Positive List of Organizational Access */
+  private OrgAccess[] m_orgAccess = null;
+  /** List of Table Access */
+  private MTableAccess[] m_tableAccess = null;
+  /** List of Column Access */
+  private MColumnAccess[] m_columnAccess = null;
+  /** List of Record Access */
+  private MRecordAccess[] m_recordAccess = null;
+  /** List of Dependent Record Access */
+  private MRecordAccess[] m_recordDependentAccess = null;
+  /** Table Data Access Level */
+  private HashMap<Integer, String> m_tableAccessLevel = null;
+  /** Table Name */
+  private HashMap<String, Integer> m_tableName = null;
+  /** View Name */
+  private Set<String> m_viewName = null;
+  /** ID Column Name * */
+  private HashMap<String, String> m_tableIdName = null;
+  /** Window Access */
+  private HashMap<Integer, Boolean> m_windowAccess = null;
+  /** Process Access */
+  private HashMap<Integer, Boolean> m_processAccess = null;
+  /** Task Access */
+  private HashMap<Integer, Boolean> m_taskAccess = null;
+  /** Workflow Access */
+  private HashMap<Integer, Boolean> m_workflowAccess = null;
+  /** Form Access */
+  private HashMap<Integer, Boolean> m_formAccess = null;
+  /** Info Windows */
+  private HashMap<Integer, Boolean> m_infoAccess;
+  /** List of included roles. Do not access directly */
+  private List<MRole> m_includedRoles = null;
+  /** Parent Role */
+  private MRole m_parent = null;
+
+  private int m_includedSeqNo = -1;
+  private Boolean m_canAccess_Info_Product = null;
+
+  /**
+   * ************************************************************************ Standard Constructor
+   *
+   * @param ctx context
+   * @param AD_Role_ID id
+   * @param trxName transaction
+   */
+  public MRole(Properties ctx, int AD_Role_ID, String trxName) {
+    super(ctx, AD_Role_ID, trxName);
+    //	ID=0 == System Administrator
+    if (AD_Role_ID == 0) {
+      //	setName (null);
+      setIsCanExport(true);
+      setIsCanReport(true);
+      setIsManual(false);
+      setIsPersonalAccess(false);
+      setIsPersonalLock(false);
+      setIsShowAcct(false);
+      setIsAccessAllOrgs(false);
+      setUserLevel(X_AD_Role.USERLEVEL_Organization);
+      setPreferenceType(X_AD_Role.PREFERENCETYPE_Organization);
+      setIsChangeLog(false);
+      setOverwritePriceLimit(false);
+      setIsUseUserOrgAccess(false);
+      setMaxQueryRecords(0);
+      setConfirmQueryRecords(0);
+    }
+  } //	MRole
+
+  /**
+   * *********************************************************************** Access Management
+   * **********************************************************************
+   */
+
+  /**
+   * Load Constructor
+   *
+   * @param ctx context
+   * @param rs result set
+   * @param trxName transaction
+   */
+  public MRole(Properties ctx, ResultSet rs, String trxName) {
+    super(ctx, rs, trxName);
+  } //	MRole
 
   /**
    * Get Default (Client) Role
@@ -79,13 +181,13 @@ public class MRole extends X_AD_Role {
     return defaultRole;
   } //	getDefault
 
+  private static MRole getDefaultRole() {
+    return (MRole) Env.getCtx().get(ROLE_KEY);
+  }
+
   private static void setDefaultRole(MRole defaultRole) {
     Env.getCtx().remove(ROLE_KEY);
     Env.getCtx().put(ROLE_KEY, defaultRole);
-  }
-
-  private static MRole getDefaultRole() {
-    return (MRole) Env.getCtx().get(ROLE_KEY);
   }
 
   /**
@@ -102,7 +204,7 @@ public class MRole extends X_AD_Role {
     if (s_log.isLoggable(Level.INFO))
       s_log.info("AD_Role_ID=" + AD_Role_ID + ", AD_User_ID=" + AD_User_ID + ", reload=" + reload);
     String key = AD_Role_ID + "_" + AD_User_ID;
-    MRole role = (MRole) s_roles.get(key);
+    MRole role = s_roles.get(key);
     if (role == null || reload) {
       role = new MRole(ctx, AD_Role_ID, null);
       s_roles.put(key, role);
@@ -206,66 +308,107 @@ public class MRole extends X_AD_Role {
     return retValue;
   } //	getOf
 
-  /** Role/User Cache */
-  private static CCache<String, MRole> s_roles = new CCache<String, MRole>(I_AD_Role.Table_Name, 5);
-  /** Log */
-  private static CLogger s_log = CLogger.getCLogger(MRole.class);
-
-  /** Access SQL Read Write */
-  public static final boolean SQL_RW = true;
-  /** Access SQL Read Only */
-  public static final boolean SQL_RO = false;
-  /** Access SQL Fully Qualified */
-  public static final boolean SQL_FULLYQUALIFIED = true;
-  /** Access SQL Not Fully Qualified */
-  public static final boolean SQL_NOTQUALIFIED = false;
-
-  /** The AD_User_ID of the SuperUser */
-  public static final int SUPERUSER_USER_ID = USER_SUPERUSER;
-  /** The AD_User_ID of the System Administrator */
-  public static final int SYSTEM_USER_ID = USER_SYSTEM;
-
-  private static final String ROLE_KEY = "org.compiere.impl.DefaultRole";
-
   /**
-   * ************************************************************************ Standard Constructor
+   * Merge permissions access
    *
-   * @param ctx context
-   * @param AD_Role_ID id
-   * @param trxName transaction
+   * @param <T>
+   * @param array1
+   * @param array2
+   * @return array of merged values
+   * @see metas-2009_0021_AP1_G94
    */
-  public MRole(Properties ctx, int AD_Role_ID, String trxName) {
-    super(ctx, AD_Role_ID, trxName);
-    //	ID=0 == System Administrator
-    if (AD_Role_ID == 0) {
-      //	setName (null);
-      setIsCanExport(true);
-      setIsCanReport(true);
-      setIsManual(false);
-      setIsPersonalAccess(false);
-      setIsPersonalLock(false);
-      setIsShowAcct(false);
-      setIsAccessAllOrgs(false);
-      setUserLevel(X_AD_Role.USERLEVEL_Organization);
-      setPreferenceType(X_AD_Role.PREFERENCETYPE_Organization);
-      setIsChangeLog(false);
-      setOverwritePriceLimit(false);
-      setIsUseUserOrgAccess(false);
-      setMaxQueryRecords(0);
-      setConfirmQueryRecords(0);
+  @SuppressWarnings("unchecked")
+  private static final <T> T[] mergeAccess(T[] array1, T[] array2, boolean override) {
+    if (array1 == null) {
+      s_log.info("array1 null !!!");
     }
-  } //	MRole
+    List<T> list = new ArrayList<T>();
+    for (T po : array1) {
+      list.add(po);
+    }
+    for (T o2 : array2) {
+      boolean found = false;
+      for (int i = 0; i < array1.length; i++) {
+        final T o1 = array1[i];
+        if (o1 instanceof OrgAccess) {
+          final OrgAccess oa1 = (OrgAccess) o1;
+          final OrgAccess oa2 = (OrgAccess) o2;
+          found = oa1.equals(oa2);
+          if (found && override) {
+            // stronger permissions first
+            if (!oa2.readOnly) oa1.readOnly = false;
+          }
+        } else if (o1 instanceof MTableAccess) {
+          final MTableAccess ta1 = (MTableAccess) o1;
+          final MTableAccess ta2 = (MTableAccess) o2;
+          found = ta1.getAD_Table_ID() == ta2.getAD_Table_ID();
+          if (found && override) {
+            // stronger permissions first
+            if (!ta2.isExclude()) ta1.setIsExclude(false);
+          }
+        } else if (o1 instanceof MColumnAccess) {
+          final MColumnAccess ca1 = (MColumnAccess) o1;
+          final MColumnAccess ca2 = (MColumnAccess) o2;
+          found = ca1.getAD_Column_ID() == ca2.getAD_Column_ID();
+          if (found && override) {
+            // stronger permissions first
+            if (!ca2.isReadOnly()) ca1.setIsReadOnly(false);
+            if (!ca2.isExclude()) ca1.setIsExclude(false);
+          }
+        } else if (o1 instanceof MRecordAccess) {
+          final MRecordAccess ra1 = (MRecordAccess) o1;
+          final MRecordAccess ra2 = (MRecordAccess) o2;
+          found =
+              ra1.getAD_Table_ID() == ra2.getAD_Table_ID()
+                  && ra1.getRecord_ID() == ra2.getRecord_ID();
+          if (found && override) {
+            // stronger permissions first
+            if (!ra2.isReadOnly()) ra1.setIsReadOnly(false);
+            if (!ra2.isDependentEntities()) ra1.setIsDependentEntities(false);
+            if (!ra2.isExclude()) ra1.setIsExclude(false);
+          }
+        } else {
+          throw new AdempiereException("Not supported objects - " + o1 + ", " + o2);
+        }
+        //
+        if (found) {
+          break;
+        }
+      } // end for array1
+      if (!found) {
+        // s_log.info("add "+o2);
+        list.add(o2);
+      }
+    }
+    T[] arr = (T[]) Array.newInstance(array1.getClass().getComponentType(), list.size());
+    return list.toArray(arr);
+  }
 
-  /**
-   * Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public MRole(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	MRole
+  private static final HashMap<Integer, Boolean> mergeAccess(
+      HashMap<Integer, Boolean> map1, HashMap<Integer, Boolean> map2, boolean override) {
+    final HashMap<Integer, Boolean> map = new HashMap<Integer, Boolean>();
+    if (map1 != null) {
+      map.putAll(map1);
+    }
+    //
+    for (final Entry<Integer, Boolean> e : map2.entrySet()) {
+      final Integer key = e.getKey();
+      final Boolean b2 = e.getValue();
+      if (b2 == null) {
+        continue;
+      }
+      final Boolean b1 = map.get(key);
+      if (b1 == null) {
+        map.put(key, b2);
+      } else {
+        if (override && b2 == true && b1 == false) {
+          map.put(key, b2);
+        }
+      }
+    }
+    //
+    return map;
+  }
 
   /**
    * Get Confirm Query Records
@@ -628,45 +771,13 @@ public class MRole extends X_AD_Role {
   } //	toStringX
 
   /**
-   * *********************************************************************** Access Management
-   * **********************************************************************
+   * Get Logged in user
+   *
+   * @return AD_User_ID user requesting info
    */
-
-  /** User */
-  private int m_AD_User_ID = -1;
-
-  /** Positive List of Organizational Access */
-  private OrgAccess[] m_orgAccess = null;
-  /** List of Table Access */
-  private MTableAccess[] m_tableAccess = null;
-  /** List of Column Access */
-  private MColumnAccess[] m_columnAccess = null;
-  /** List of Record Access */
-  private MRecordAccess[] m_recordAccess = null;
-  /** List of Dependent Record Access */
-  private MRecordAccess[] m_recordDependentAccess = null;
-
-  /** Table Data Access Level */
-  private HashMap<Integer, String> m_tableAccessLevel = null;
-  /** Table Name */
-  private HashMap<String, Integer> m_tableName = null;
-  /** View Name */
-  private Set<String> m_viewName = null;
-  /** ID Column Name * */
-  private HashMap<String, String> m_tableIdName = null;
-
-  /** Window Access */
-  private HashMap<Integer, Boolean> m_windowAccess = null;
-  /** Process Access */
-  private HashMap<Integer, Boolean> m_processAccess = null;
-  /** Task Access */
-  private HashMap<Integer, Boolean> m_taskAccess = null;
-  /** Workflow Access */
-  private HashMap<Integer, Boolean> m_workflowAccess = null;
-  /** Form Access */
-  private HashMap<Integer, Boolean> m_formAccess = null;
-  /** Info Windows */
-  private HashMap<Integer, Boolean> m_infoAccess;
+  public int getAD_User_ID() {
+    return m_AD_User_ID;
+  } //	getAD_User_ID
 
   /**
    * Set Logged in user
@@ -676,15 +787,6 @@ public class MRole extends X_AD_Role {
   public void setAD_User_ID(int AD_User_ID) {
     m_AD_User_ID = AD_User_ID;
   } //	setAD_User_ID
-
-  /**
-   * Get Logged in user
-   *
-   * @return AD_User_ID user requesting info
-   */
-  public int getAD_User_ID() {
-    return m_AD_User_ID;
-  } //	getAD_User_ID
 
   /**
    * ************************************************************************ Load Access Info
@@ -1089,9 +1191,8 @@ public class MRole extends X_AD_Role {
     for (int i = 0; i < m_orgAccess.length; i++) {
       if (m_orgAccess[i].AD_Org_ID == AD_Org_ID) {
         if (!rw) return true;
-        if (!m_orgAccess[i].readOnly) // 	rw
-        return true;
-        return false;
+        // 	rw
+        return !m_orgAccess[i].readOnly;
       }
     }
     return false;
@@ -1260,7 +1361,7 @@ public class MRole extends X_AD_Role {
     //	AccessLevel
     //		1 = Org - 2 = Client - 4 = System
     //		3 = Org+Client - 6 = Client+System - 7 = All
-    String roleAccessLevel = (String) m_tableAccessLevel.get(new Integer(AD_Table_ID));
+    String roleAccessLevel = m_tableAccessLevel.get(new Integer(AD_Table_ID));
     if (roleAccessLevel == null) {
       if (log.isLoggable(Level.FINE)) log.fine("NO - No AccessLevel - AD_Table_ID=" + AD_Table_ID);
       return false;
@@ -1476,9 +1577,7 @@ public class MRole extends X_AD_Role {
           Integer winId = new Integer(rs.getInt(1));
           if ("N".equals(rs.getString(3))) {
             // inactive window on direct access
-            if (m_windowAccess.containsKey(winId)) {
-              m_windowAccess.remove(winId);
-            }
+            m_windowAccess.remove(winId);
           } else {
             directAccess.put(winId, new Boolean("Y".equals(rs.getString(2))));
           }
@@ -1562,9 +1661,7 @@ public class MRole extends X_AD_Role {
           Integer procId = new Integer(rs.getInt(1));
           if ("N".equals(rs.getString(3))) {
             // inactive process on direct access
-            if (m_processAccess.containsKey(procId)) {
-              m_processAccess.remove(procId);
-            }
+            m_processAccess.remove(procId);
           } else {
             directAccess.put(procId, new Boolean("Y".equals(rs.getString(2))));
           }
@@ -1642,9 +1739,7 @@ public class MRole extends X_AD_Role {
           Integer taskId = new Integer(rs.getInt(1));
           if ("N".equals(rs.getString(3))) {
             // inactive task on direct access
-            if (m_taskAccess.containsKey(taskId)) {
-              m_taskAccess.remove(taskId);
-            }
+            m_taskAccess.remove(taskId);
           } else {
             directAccess.put(taskId, new Boolean("Y".equals(rs.getString(2))));
           }
@@ -1721,9 +1816,7 @@ public class MRole extends X_AD_Role {
           Integer formId = new Integer(rs.getInt(1));
           if ("N".equals(rs.getString(3))) {
             // inactive form on direct access
-            if (m_formAccess.containsKey(formId)) {
-              m_formAccess.remove(formId);
-            }
+            m_formAccess.remove(formId);
           } else {
             directAccess.put(formId, new Boolean("Y".equals(rs.getString(2))));
           }
@@ -1800,9 +1893,7 @@ public class MRole extends X_AD_Role {
           Integer formId = new Integer(rs.getInt(1));
           if ("N".equals(rs.getString(3))) {
             // inactive workflow on direct access
-            if (m_workflowAccess.containsKey(formId)) {
-              m_workflowAccess.remove(formId);
-            }
+            m_workflowAccess.remove(formId);
           } else {
             directAccess.put(formId, new Boolean("Y".equals(rs.getString(2))));
           }
@@ -1837,7 +1928,7 @@ public class MRole extends X_AD_Role {
     int posOrder = SQL.lastIndexOf(" ORDER BY ");
     if (posOrder != -1) {
       orderBy = SQL.substring(posOrder);
-      retSQL.append(SQL.substring(0, posOrder));
+      retSQL.append(SQL, 0, posOrder);
     } else retSQL.append(SQL);
 
     //	Parse SQL
@@ -2114,12 +2205,12 @@ public class MRole extends X_AD_Role {
   /**
    * VIEW - Can I view record in Table with given TableLevel. <code>
    * TableLevel			S__ 100		4	System info
-   * 					SCO	111		7	System shared info
-   * 					SC_ 110		6	System/Client info
-   * 					_CO	011		3	Client shared info
-   * 					_C_	011		2	Client shared info
-   * 					__O	001		1	Organization info
-   *  </code>
+   * SCO	111		7	System shared info
+   * SC_ 110		6	System/Client info
+   * _CO	011		3	Client shared info
+   * _C_	011		2	Client shared info
+   * __O	001		1	Organization info
+   * </code>
    *
    * @param ctx context
    * @param TableLevel AccessLevel
@@ -2201,7 +2292,7 @@ public class MRole extends X_AD_Role {
    */
   private int getAD_Table_ID(String tableName) {
     loadTableInfo(false);
-    Integer ii = (Integer) m_tableName.get(tableName);
+    Integer ii = m_tableName.get(tableName);
     if (ii != null) return ii;
     //	log.log(Level.WARNING,"getAD_Table_ID - not found (" + tableName + ")");
     return 0;
@@ -2269,76 +2360,6 @@ public class MRole extends X_AD_Role {
   public boolean isShowPreference() {
     return !X_AD_Role.PREFERENCETYPE_None.equals(getPreferenceType());
   } //	isShowPreference
-
-  /** Org Access Summary */
-  class OrgAccess implements Serializable {
-    /** */
-    private static final long serialVersionUID = -4880665261978385315L;
-
-    /**
-     * Org Access constructor
-     *
-     * @param ad_Client_ID client
-     * @param ad_Org_ID org
-     * @param readonly r/o
-     */
-    public OrgAccess(int ad_Client_ID, int ad_Org_ID, boolean readonly) {
-      this.AD_Client_ID = ad_Client_ID;
-      this.AD_Org_ID = ad_Org_ID;
-      this.readOnly = readonly;
-    }
-    /** Client */
-    public int AD_Client_ID = 0;
-    /** Organization */
-    public int AD_Org_ID = 0;
-    /** Read Only */
-    public boolean readOnly = true;
-
-    /**
-     * Equals
-     *
-     * @param obj object to compare
-     * @return true if equals
-     */
-    public boolean equals(Object obj) {
-      if (obj != null && obj instanceof OrgAccess) {
-        OrgAccess comp = (OrgAccess) obj;
-        return comp.AD_Client_ID == AD_Client_ID && comp.AD_Org_ID == AD_Org_ID;
-      }
-      return false;
-    } //	equals
-
-    /**
-     * Hash Code
-     *
-     * @return hash Code
-     */
-    public int hashCode() {
-      return (AD_Client_ID * 7) + AD_Org_ID;
-    } //	hashCode
-
-    /**
-     * Extended String Representation
-     *
-     * @return extended info
-     */
-    public String toString() {
-      String clientName = "System";
-      if (AD_Client_ID != 0) clientName = MClient.get(getCtx(), AD_Client_ID).getName();
-      String orgName = "*";
-      if (AD_Org_ID != 0) orgName = MOrg.get(getCtx(), AD_Org_ID).getName();
-      StringBuilder sb = new StringBuilder();
-      sb.append(Msg.translate(getCtx(), "AD_Client_ID"))
-          .append("=")
-          .append(clientName)
-          .append(" - ")
-          .append(Msg.translate(getCtx(), "AD_Org_ID"))
-          .append("=")
-          .append(orgName);
-      if (readOnly) sb.append(" r/o");
-      return sb.toString();
-    } //	toString
-  } //	OrgAccess
 
   /**
    * Checks the access rights of the given role/client for the given document actions.
@@ -2430,9 +2451,7 @@ public class MRole extends X_AD_Role {
           String op = rs.getString(1);
           String active = rs.getString(2);
           if ("N".equals(active)) {
-            if (validOptions.contains(op)) {
-              validOptions.remove(op);
-            }
+            validOptions.remove(op);
           } else {
             if (!validOptions.contains(op)) {
               validOptions.add(op);
@@ -2455,9 +2474,6 @@ public class MRole extends X_AD_Role {
     int newMaxIndex = validOptions.size();
     return newMaxIndex;
   }
-
-  /** List of included roles. Do not access directly */
-  private List<MRole> m_includedRoles = null;
 
   /**
    * Include role permissions
@@ -2581,7 +2597,7 @@ public class MRole extends X_AD_Role {
     final String whereClause = X_AD_Role_Included.COLUMNNAME_AD_Role_ID + "=?";
     List<X_AD_Role_Included> list =
         new Query(getCtx(), X_AD_Role_Included.Table_Name, whereClause, get_TrxName())
-            .setParameters(new Object[] {getAD_Role_ID()})
+            .setParameters(getAD_Role_ID())
             .setOnlyActiveRecords(true)
             .setOrderBy(
                 X_AD_Role_Included.COLUMNNAME_SeqNo
@@ -2623,7 +2639,7 @@ public class MRole extends X_AD_Role {
 
     List<MRole> list =
         new Query(getCtx(), I_AD_Role.Table_Name, whereClause, get_TrxName())
-            .setParameters(new Object[] {AD_User_ID})
+            .setParameters(AD_User_ID)
             .setClient_ID()
             .setOrderBy(I_AD_Role.COLUMNNAME_AD_Role_ID)
             .list();
@@ -2631,9 +2647,6 @@ public class MRole extends X_AD_Role {
       includeRole(role, -1);
     }
   }
-
-  /** Parent Role */
-  private MRole m_parent = null;
 
   /**
    * Set parent role. This method is called when this role is included in a parent role.
@@ -2644,110 +2657,6 @@ public class MRole extends X_AD_Role {
   private void setParentRole(MRole parent) {
     this.setAD_User_ID(parent.getAD_User_ID());
     this.m_parent = parent;
-  }
-
-  private int m_includedSeqNo = -1;
-
-  /**
-   * Merge permissions access
-   *
-   * @param <T>
-   * @param array1
-   * @param array2
-   * @return array of merged values
-   * @see metas-2009_0021_AP1_G94
-   */
-  @SuppressWarnings("unchecked")
-  private static final <T> T[] mergeAccess(T[] array1, T[] array2, boolean override) {
-    if (array1 == null) {
-      s_log.info("array1 null !!!");
-    }
-    List<T> list = new ArrayList<T>();
-    for (T po : array1) {
-      list.add(po);
-    }
-    for (T o2 : array2) {
-      boolean found = false;
-      for (int i = 0; i < array1.length; i++) {
-        final T o1 = array1[i];
-        if (o1 instanceof OrgAccess) {
-          final OrgAccess oa1 = (OrgAccess) o1;
-          final OrgAccess oa2 = (OrgAccess) o2;
-          found = oa1.equals(oa2);
-          if (found && override) {
-            // stronger permissions first
-            if (!oa2.readOnly) oa1.readOnly = false;
-          }
-        } else if (o1 instanceof MTableAccess) {
-          final MTableAccess ta1 = (MTableAccess) o1;
-          final MTableAccess ta2 = (MTableAccess) o2;
-          found = ta1.getAD_Table_ID() == ta2.getAD_Table_ID();
-          if (found && override) {
-            // stronger permissions first
-            if (!ta2.isExclude()) ta1.setIsExclude(false);
-          }
-        } else if (o1 instanceof MColumnAccess) {
-          final MColumnAccess ca1 = (MColumnAccess) o1;
-          final MColumnAccess ca2 = (MColumnAccess) o2;
-          found = ca1.getAD_Column_ID() == ca2.getAD_Column_ID();
-          if (found && override) {
-            // stronger permissions first
-            if (!ca2.isReadOnly()) ca1.setIsReadOnly(false);
-            if (!ca2.isExclude()) ca1.setIsExclude(false);
-          }
-        } else if (o1 instanceof MRecordAccess) {
-          final MRecordAccess ra1 = (MRecordAccess) o1;
-          final MRecordAccess ra2 = (MRecordAccess) o2;
-          found =
-              ra1.getAD_Table_ID() == ra2.getAD_Table_ID()
-                  && ra1.getRecord_ID() == ra2.getRecord_ID();
-          if (found && override) {
-            // stronger permissions first
-            if (!ra2.isReadOnly()) ra1.setIsReadOnly(false);
-            if (!ra2.isDependentEntities()) ra1.setIsDependentEntities(false);
-            if (!ra2.isExclude()) ra1.setIsExclude(false);
-          }
-        } else {
-          throw new AdempiereException("Not supported objects - " + o1 + ", " + o2);
-        }
-        //
-        if (found) {
-          break;
-        }
-      } // end for array1
-      if (!found) {
-        // s_log.info("add "+o2);
-        list.add(o2);
-      }
-    }
-    T[] arr = (T[]) Array.newInstance(array1.getClass().getComponentType(), list.size());
-    return list.toArray(arr);
-  }
-
-  private static final HashMap<Integer, Boolean> mergeAccess(
-      HashMap<Integer, Boolean> map1, HashMap<Integer, Boolean> map2, boolean override) {
-    final HashMap<Integer, Boolean> map = new HashMap<Integer, Boolean>();
-    if (map1 != null) {
-      map.putAll(map1);
-    }
-    //
-    for (final Entry<Integer, Boolean> e : map2.entrySet()) {
-      final Integer key = e.getKey();
-      final Boolean b2 = e.getValue();
-      if (b2 == null) {
-        continue;
-      }
-      final Boolean b1 = map.get(key);
-      if (b1 == null) {
-        map.put(key, b2);
-      } else {
-        if (override && b2 == true && b1 == false) {
-          map.put(key, b2);
-        }
-      }
-    }
-    //
-    return map;
   }
 
   private void mergeIncludedAccess(String varname) {
@@ -2895,9 +2804,7 @@ public class MRole extends X_AD_Role {
           Integer infoId = new Integer(rs.getInt(1));
           if ("N".equals(rs.getString(2))) {
             // inactive info on direct access
-            if (m_infoAccess.containsKey(infoId)) {
-              m_infoAccess.remove(infoId);
-            }
+            m_infoAccess.remove(infoId);
           } else {
             directAccess.put(infoId, Boolean.TRUE);
           }
@@ -2913,9 +2820,77 @@ public class MRole extends X_AD_Role {
     return retValue;
   }
 
-  private Boolean m_canAccess_Info_Product = null;
-
   public void setClientOrg(IPO a) {
     super.setClientOrg(a);
   }
+
+  /** Org Access Summary */
+  class OrgAccess implements Serializable {
+    /** */
+    private static final long serialVersionUID = -4880665261978385315L;
+    /** Client */
+    public int AD_Client_ID = 0;
+    /** Organization */
+    public int AD_Org_ID = 0;
+    /** Read Only */
+    public boolean readOnly = true;
+
+    /**
+     * Org Access constructor
+     *
+     * @param ad_Client_ID client
+     * @param ad_Org_ID org
+     * @param readonly r/o
+     */
+    public OrgAccess(int ad_Client_ID, int ad_Org_ID, boolean readonly) {
+      this.AD_Client_ID = ad_Client_ID;
+      this.AD_Org_ID = ad_Org_ID;
+      this.readOnly = readonly;
+    }
+
+    /**
+     * Equals
+     *
+     * @param obj object to compare
+     * @return true if equals
+     */
+    public boolean equals(Object obj) {
+      if (obj != null && obj instanceof OrgAccess) {
+        OrgAccess comp = (OrgAccess) obj;
+        return comp.AD_Client_ID == AD_Client_ID && comp.AD_Org_ID == AD_Org_ID;
+      }
+      return false;
+    } //	equals
+
+    /**
+     * Hash Code
+     *
+     * @return hash Code
+     */
+    public int hashCode() {
+      return (AD_Client_ID * 7) + AD_Org_ID;
+    } //	hashCode
+
+    /**
+     * Extended String Representation
+     *
+     * @return extended info
+     */
+    public String toString() {
+      String clientName = "System";
+      if (AD_Client_ID != 0) clientName = MClient.get(getCtx(), AD_Client_ID).getName();
+      String orgName = "*";
+      if (AD_Org_ID != 0) orgName = MOrg.get(getCtx(), AD_Org_ID).getName();
+      StringBuilder sb = new StringBuilder();
+      sb.append(Msg.translate(getCtx(), "AD_Client_ID"))
+          .append("=")
+          .append(clientName)
+          .append(" - ")
+          .append(Msg.translate(getCtx(), "AD_Org_ID"))
+          .append("=")
+          .append(orgName);
+      if (readOnly) sb.append(" r/o");
+      return sb.toString();
+    } //	toString
+  } //	OrgAccess
 } //	MRole

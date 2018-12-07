@@ -26,6 +26,9 @@ import org.idempiere.icommon.model.IPO;
 import org.idempiere.orm.*;
 
 public abstract class PO extends org.idempiere.orm.PO {
+  /** Attachment with entries */
+  protected MAttachment m_attachment = null;
+
   public PO(Properties ctx) {
     super(ctx);
   }
@@ -50,8 +53,26 @@ public abstract class PO extends org.idempiere.orm.PO {
     super(ctx, row);
   }
 
-  /** Attachment with entries */
-  protected MAttachment m_attachment = null;
+  /**
+   * Copy old values of From to new values of To. Does not copy Keys
+   *
+   * @param from old, existing & unchanged PO
+   * @param to new, not saved PO
+   * @param AD_Client_ID client
+   * @param AD_Org_ID org
+   */
+  /*
+  protected static void copyValues(PO from, PO to, int AD_Client_ID, int AD_Org_ID) {
+    copyValues(from, to);
+    to.setADClientID(AD_Client_ID);
+    to.setAD_Org_ID(AD_Org_ID);
+  } //	copyValues*/
+  public static <T> T as(Class<T> clazz, Object o) {
+    if (clazz.isInstance(o)) {
+      return clazz.cast(o);
+    }
+    return null;
+  }
 
   /**
    * Is new record
@@ -65,8 +86,7 @@ public abstract class PO extends org.idempiere.orm.PO {
       if (getIds()[i].equals(getI_ZERO()) || getIds()[i] == Null.NULL) continue;
       return false; //	one value is non-zero
     }
-    if (MTable.isZeroIDTable(get_TableName())) return false;
-    return true;
+    return !MTable.isZeroIDTable(get_TableName());
   } //	is_new
 
   /**
@@ -738,28 +758,6 @@ public abstract class PO extends org.idempiere.orm.PO {
   }
 
   /**
-   * Copy old values of From to new values of To. Does not copy Keys
-   *
-   * @param from old, existing & unchanged PO
-   * @param to new, not saved PO
-   * @param AD_Client_ID client
-   * @param AD_Org_ID org
-   */
-  /*
-  protected static void copyValues(PO from, PO to, int AD_Client_ID, int AD_Org_ID) {
-    copyValues(from, to);
-    to.setADClientID(AD_Client_ID);
-    to.setAD_Org_ID(AD_Org_ID);
-  } //	copyValues*/
-
-  public static <T> T as(Class<T> clazz, Object o) {
-    if (clazz.isInstance(o)) {
-      return clazz.cast(o);
-    }
-    return null;
-  }
-
-  /**
    * ************************************************************************ Get Attachments. An
    * attachment may have multiple entries
    *
@@ -797,7 +795,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         Timestamp ts = getSQLValueTS(null, "SELECT CURRENT_TIMESTAMP FROM DUAL");
         long mili = ts.getTime();
         int nano = ts.getNanos();
-        double doublets = Double.parseDouble(Long.toString(mili) + "." + Integer.toString(nano));
+        double doublets = Double.parseDouble(mili + "." + nano);
         BigDecimal bdtimestamp = BigDecimal.valueOf(doublets);
         set_Value("ProcessedOn", bdtimestamp);
       }

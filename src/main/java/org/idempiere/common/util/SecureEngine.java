@@ -12,6 +12,49 @@ import java.util.logging.Level;
  * @version $Id: SecureEngine.java,v 1.2 2006/07/30 00:52:23 jjanke Exp $
  */
 public class SecureEngine {
+  /** Test String */
+  private static final String TEST = "This is a 0123456789 .,; -= Test!";
+  /** Secure Engine */
+  private static volatile SecureEngine s_engine = null;
+  /** Logger */
+  private static CLogger log = CLogger.getCLogger(SecureEngine.class.getName());
+  /** The real Engine */
+  private SecureInterface implementation = null;
+
+  /**
+   * SecureEngine constructor
+   *
+   * @param className class name if null defaults to org.idempiere.common.util.Secure
+   */
+  private SecureEngine(String className) {
+    String realClass = className;
+    if (realClass == null || realClass.length() == 0)
+      realClass = SecureInterface.ADEMPIERE_SECURE_DEFAULT;
+    Exception cause = null;
+    try {
+      Class<?> clazz = Class.forName(realClass);
+      implementation = (SecureInterface) clazz.newInstance();
+    } catch (Exception e) {
+      cause = e;
+    }
+    if (implementation == null) {
+      String msg =
+          "Could not initialize: "
+              + realClass
+              + " - "
+              + cause.toString()
+              + "\nCheck start script parameter ADEMPIERE_SECURE";
+      log.severe(msg);
+      System.err.println(msg);
+    }
+    //	See if it works
+    String testE = implementation.encrypt(TEST, 0);
+    String testC = implementation.decrypt(testE, 0);
+    if (!testC.equals(TEST))
+      throw new IllegalStateException(realClass + ": " + TEST + "->" + testE + "->" + testC);
+    if (log.isLoggable(Level.CONFIG)) log.config(realClass + " initialized - " + implementation);
+  } //	SecureEngine
+
   /**
    * Initialize Security
    *
@@ -146,40 +189,6 @@ public class SecureEngine {
   } //	decrypt
 
   /**
-   * SecureEngine constructor
-   *
-   * @param className class name if null defaults to org.idempiere.common.util.Secure
-   */
-  private SecureEngine(String className) {
-    String realClass = className;
-    if (realClass == null || realClass.length() == 0)
-      realClass = SecureInterface.ADEMPIERE_SECURE_DEFAULT;
-    Exception cause = null;
-    try {
-      Class<?> clazz = Class.forName(realClass);
-      implementation = (SecureInterface) clazz.newInstance();
-    } catch (Exception e) {
-      cause = e;
-    }
-    if (implementation == null) {
-      String msg =
-          "Could not initialize: "
-              + realClass
-              + " - "
-              + cause.toString()
-              + "\nCheck start script parameter ADEMPIERE_SECURE";
-      log.severe(msg);
-      System.err.println(msg);
-    }
-    //	See if it works
-    String testE = implementation.encrypt(TEST, 0);
-    String testC = implementation.decrypt(testE, 0);
-    if (!testC.equals(TEST))
-      throw new IllegalStateException(realClass + ": " + TEST + "->" + testE + "->" + testC);
-    if (log.isLoggable(Level.CONFIG)) log.config(realClass + " initialized - " + implementation);
-  } //	SecureEngine
-
-  /**
    * use salt in hex form and text hashed compare with plan text when has exception in hash, log to
    * server
    *
@@ -208,16 +217,6 @@ public class SecureEngine {
 
     return valid;
   }
-
-  /** Test String */
-  private static final String TEST = "This is a 0123456789 .,; -= Test!";
-  /** Secure Engine */
-  private static volatile SecureEngine s_engine = null;
-
-  /** The real Engine */
-  private SecureInterface implementation = null;
-  /** Logger */
-  private static CLogger log = CLogger.getCLogger(SecureEngine.class.getName());
 
   /**
    * Test output

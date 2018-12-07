@@ -18,30 +18,11 @@ import org.idempiere.icommon.distributed.IClusterService;
  * @version $Id: CacheMgt.java,v 1.2 2006/07/30 00:54:35 jjanke Exp $
  */
 public class CacheMgt {
-  /**
-   * Get Cache Management
-   *
-   * @return Cache Manager
-   */
-  public static synchronized CacheMgt get() {
-    if (s_cache == null) s_cache = new CacheMgt();
-    return s_cache;
-  } //	get
-
+  public static int MAX_SIZE = 1000;
   /** Singleton */
   private static CacheMgt s_cache = null;
-
-  /** Private Constructor */
-  private CacheMgt() {} // 	CacheMgt
-
-  /** List of Instances */
-  private ArrayList<CacheInterface> m_instances = new ArrayList<CacheInterface>();
-  /** List of Table Names */
-  private ArrayList<String> m_tableNames = new ArrayList<String>();
   /** Logger */
   private static CLogger log = CLogger.getCLogger(CacheMgt.class);
-
-  public static int MAX_SIZE = 1000;
 
   static {
     try {
@@ -57,6 +38,24 @@ public class CacheMgt {
     } catch (Throwable t) {
     }
   }
+
+  /** List of Instances */
+  private ArrayList<CacheInterface> m_instances = new ArrayList<CacheInterface>();
+  /** List of Table Names */
+  private ArrayList<String> m_tableNames = new ArrayList<String>();
+
+  /** Private Constructor */
+  private CacheMgt() {} // 	CacheMgt
+
+  /**
+   * Get Cache Management
+   *
+   * @return Cache Manager
+   */
+  public static synchronized CacheMgt get() {
+    if (s_cache == null) s_cache = new CacheMgt();
+    return s_cache;
+  } //	get
 
   /**
    * ************************************************************************ Create Cache Instance
@@ -106,7 +105,7 @@ public class CacheMgt {
     boolean found = false;
     //	Could be included multiple times
     for (int i = m_instances.size() - 1; i >= 0; i--) {
-      CacheInterface stored = (CacheInterface) m_instances.get(i);
+      CacheInterface stored = m_instances.get(i);
       if (instance.equals(stored)) {
         m_instances.remove(i);
         found = true;
@@ -367,7 +366,7 @@ public class CacheMgt {
 
     @Override
     protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-      return maxSize <= 0 ? false : size() > maxSize;
+      return maxSize > 0 && size() > maxSize;
     }
   }
 } //	CCache

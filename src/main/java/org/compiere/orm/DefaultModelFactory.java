@@ -36,8 +36,7 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
     try {
       Constructor<?> constructor = null;
       try {
-        constructor =
-            clazz.getDeclaredConstructor(new Class[] {Properties.class, int.class, String.class});
+        constructor = clazz.getDeclaredConstructor(Properties.class, int.class, String.class);
       } catch (Exception e) {
         String msg = e.getMessage();
         if (msg == null) msg = e.toString();
@@ -101,14 +100,13 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
     try {
       if (columnNamePrefix == null) {
         Constructor<?> constructor =
-            clazz.getDeclaredConstructor(
-                new Class[] {Properties.class, ResultSet.class, String.class});
+            clazz.getDeclaredConstructor(Properties.class, ResultSet.class, String.class);
         PO po = (PO) constructor.newInstance(new Object[] {Env.getCtx(), rs, trxName});
         return po;
       } else {
         Constructor<?> constructor =
             clazz.getDeclaredConstructor(
-                new Class[] {Properties.class, ResultSet.class, String.class, String.class});
+                Properties.class, ResultSet.class, String.class, String.class);
         PO po =
             (PO)
                 constructor.newInstance(new Object[] {Env.getCtx(), rs, trxName, columnNamePrefix});

@@ -42,6 +42,16 @@ public class POResultSet<T extends PO> {
   }
 
   /**
+   * convenient method to close a {@link POResultSet}
+   *
+   * @param rs result set
+   * @see POResultSet#close()
+   */
+  public static void close(POResultSet<?> rs) {
+    if (rs != null) rs.close();
+  }
+
+  /**
    * @return true if it has next, false otherwise
    * @throws DBException
    */
@@ -85,16 +95,6 @@ public class POResultSet<T extends PO> {
   }
 
   /**
-   * Should we automatically close the {@link PreparedStatement} and {@link ResultSet} in case we
-   * get an error.
-   *
-   * @param closeOnError
-   */
-  public void setCloseOnError(boolean closeOnError) {
-    this.closeOnError = closeOnError;
-  }
-
-  /**
    * Will be the {@link PreparedStatement} and {@link ResultSet} closed on any database exception
    *
    * @return true if yes, false otherwise
@@ -104,13 +104,13 @@ public class POResultSet<T extends PO> {
   }
 
   /**
-   * convenient method to close a {@link POResultSet}
+   * Should we automatically close the {@link PreparedStatement} and {@link ResultSet} in case we
+   * get an error.
    *
-   * @param rs result set
-   * @see POResultSet#close()
+   * @param closeOnError
    */
-  public static void close(POResultSet<?> rs) {
-    if (rs != null) rs.close();
+  public void setCloseOnError(boolean closeOnError) {
+    this.closeOnError = closeOnError;
   }
 
   /** Release database resources. */

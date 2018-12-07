@@ -48,6 +48,17 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
   }
 
   /**
+   * Get Role.
+   *
+   * @return Responsibility Role
+   */
+  public int getAD_Role_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Role_ID);
+    if (ii == null) return 0;
+    return ii;
+  }
+
+  /**
    * Set Role.
    *
    * @param AD_Role_ID Responsibility Role
@@ -58,12 +69,12 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
   }
 
   /**
-   * Get Role.
+   * Get User/Contact.
    *
-   * @return Responsibility Role
+   * @return User within the system - Internal or Business Partner Contact
    */
-  public int getAD_Role_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Role_ID);
+  public int getAD_User_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_User_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -79,14 +90,12 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
   }
 
   /**
-   * Get User/Contact.
+   * Get AD_User_Roles_UU.
    *
-   * @return User within the system - Internal or Business Partner Contact
+   * @return AD_User_Roles_UU
    */
-  public int getAD_User_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_User_ID);
-    if (ii == null) return 0;
-    return ii;
+  public String getAD_User_Roles_UU() {
+    return (String) get_Value(COLUMNNAME_AD_User_Roles_UU);
   }
 
   /**
@@ -96,15 +105,6 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
    */
   public void setAD_User_Roles_UU(String AD_User_Roles_UU) {
     set_Value(COLUMNNAME_AD_User_Roles_UU, AD_User_Roles_UU);
-  }
-
-  /**
-   * Get AD_User_Roles_UU.
-   *
-   * @return AD_User_Roles_UU
-   */
-  public String getAD_User_Roles_UU() {
-    return (String) get_Value(COLUMNNAME_AD_User_Roles_UU);
   }
 
   @Override

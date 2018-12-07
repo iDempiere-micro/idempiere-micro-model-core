@@ -9,6 +9,8 @@ package org.idempiere.common.util;
 public class AdempiereSystemError extends Exception {
   /** */
   private static final long serialVersionUID = 9111445784263763938L;
+  /** Details */
+  private Object m_detail = null;
 
   /**
    * Adempiere System Error
@@ -39,9 +41,6 @@ public class AdempiereSystemError extends Exception {
   public AdempiereSystemError(String message, Throwable cause) {
     super(message, cause);
   } //	AdempiereSystemError
-
-  /** Details */
-  private Object m_detail = null;
 
   /** @return Returns the detail. */
   public Object getDetail() {

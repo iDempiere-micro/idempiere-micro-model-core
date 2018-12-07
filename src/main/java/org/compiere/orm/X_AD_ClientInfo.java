@@ -51,15 +51,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Set AD_ClientInfo_UU.
-   *
-   * @param AD_ClientInfo_UU AD_ClientInfo_UU
-   */
-  public void setAD_ClientInfo_UU(String AD_ClientInfo_UU) {
-    set_Value(COLUMNNAME_AD_ClientInfo_UU, AD_ClientInfo_UU);
-  }
-
-  /**
    * Get AD_ClientInfo_UU.
    *
    * @return AD_ClientInfo_UU
@@ -68,20 +59,19 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return (String) get_Value(COLUMNNAME_AD_ClientInfo_UU);
   }
 
+  /**
+   * Set AD_ClientInfo_UU.
+   *
+   * @param AD_ClientInfo_UU AD_ClientInfo_UU
+   */
+  public void setAD_ClientInfo_UU(String AD_ClientInfo_UU) {
+    set_Value(COLUMNNAME_AD_ClientInfo_UU, AD_ClientInfo_UU);
+  }
+
   public org.compiere.model.I_AD_StorageProvider getAD_StorageProvider() throws RuntimeException {
     return (org.compiere.model.I_AD_StorageProvider)
         MTable.get(getCtx(), org.compiere.model.I_AD_StorageProvider.Table_Name)
             .getPO(getAD_StorageProvider_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Storage Provider.
-   *
-   * @param AD_StorageProvider_ID Storage Provider
-   */
-  public void setAD_StorageProvider_ID(int AD_StorageProvider_ID) {
-    if (AD_StorageProvider_ID < 1) set_Value(COLUMNNAME_AD_StorageProvider_ID, null);
-    else set_Value(COLUMNNAME_AD_StorageProvider_ID, Integer.valueOf(AD_StorageProvider_ID));
   }
 
   /**
@@ -95,20 +85,20 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
+  /**
+   * Set Storage Provider.
+   *
+   * @param AD_StorageProvider_ID Storage Provider
+   */
+  public void setAD_StorageProvider_ID(int AD_StorageProvider_ID) {
+    if (AD_StorageProvider_ID < 1) set_Value(COLUMNNAME_AD_StorageProvider_ID, null);
+    else set_Value(COLUMNNAME_AD_StorageProvider_ID, Integer.valueOf(AD_StorageProvider_ID));
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_Activity() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_Activity_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Activity Tree.
-   *
-   * @param AD_Tree_Activity_ID Trees are used for (financial) reporting
-   */
-  public void setAD_Tree_Activity_ID(int AD_Tree_Activity_ID) {
-    if (AD_Tree_Activity_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, Integer.valueOf(AD_Tree_Activity_ID));
   }
 
   /**
@@ -122,20 +112,20 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
+  /**
+   * Set Activity Tree.
+   *
+   * @param AD_Tree_Activity_ID Trees are used for (financial) reporting
+   */
+  public void setAD_Tree_Activity_ID(int AD_Tree_Activity_ID) {
+    if (AD_Tree_Activity_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, Integer.valueOf(AD_Tree_Activity_ID));
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_BPartner() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_BPartner_ID(), get_TrxName());
-  }
-
-  /**
-   * Set BPartner Tree.
-   *
-   * @param AD_Tree_BPartner_ID Trees are used for (financial) reporting
-   */
-  public void setAD_Tree_BPartner_ID(int AD_Tree_BPartner_ID) {
-    if (AD_Tree_BPartner_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, Integer.valueOf(AD_Tree_BPartner_ID));
   }
 
   /**
@@ -149,20 +139,20 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
+  /**
+   * Set BPartner Tree.
+   *
+   * @param AD_Tree_BPartner_ID Trees are used for (financial) reporting
+   */
+  public void setAD_Tree_BPartner_ID(int AD_Tree_BPartner_ID) {
+    if (AD_Tree_BPartner_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, Integer.valueOf(AD_Tree_BPartner_ID));
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_Campaign() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_Campaign_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Campaign Tree.
-   *
-   * @param AD_Tree_Campaign_ID Trees are used for (financial) reporting
-   */
-  public void setAD_Tree_Campaign_ID(int AD_Tree_Campaign_ID) {
-    if (AD_Tree_Campaign_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, Integer.valueOf(AD_Tree_Campaign_ID));
   }
 
   /**
@@ -176,20 +166,20 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
+  /**
+   * Set Campaign Tree.
+   *
+   * @param AD_Tree_Campaign_ID Trees are used for (financial) reporting
+   */
+  public void setAD_Tree_Campaign_ID(int AD_Tree_Campaign_ID) {
+    if (AD_Tree_Campaign_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, Integer.valueOf(AD_Tree_Campaign_ID));
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_Menu() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_Menu_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Menu Tree.
-   *
-   * @param AD_Tree_Menu_ID Tree of the menu
-   */
-  public void setAD_Tree_Menu_ID(int AD_Tree_Menu_ID) {
-    if (AD_Tree_Menu_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, Integer.valueOf(AD_Tree_Menu_ID));
   }
 
   /**
@@ -203,20 +193,20 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
+  /**
+   * Set Menu Tree.
+   *
+   * @param AD_Tree_Menu_ID Tree of the menu
+   */
+  public void setAD_Tree_Menu_ID(int AD_Tree_Menu_ID) {
+    if (AD_Tree_Menu_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, Integer.valueOf(AD_Tree_Menu_ID));
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_Org() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_Org_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Organization Tree.
-   *
-   * @param AD_Tree_Org_ID Trees are used for (financial) reporting and security access (via role)
-   */
-  public void setAD_Tree_Org_ID(int AD_Tree_Org_ID) {
-    if (AD_Tree_Org_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, Integer.valueOf(AD_Tree_Org_ID));
   }
 
   /**
@@ -230,20 +220,20 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
+  /**
+   * Set Organization Tree.
+   *
+   * @param AD_Tree_Org_ID Trees are used for (financial) reporting and security access (via role)
+   */
+  public void setAD_Tree_Org_ID(int AD_Tree_Org_ID) {
+    if (AD_Tree_Org_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, Integer.valueOf(AD_Tree_Org_ID));
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_Product() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_Product_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Product Tree.
-   *
-   * @param AD_Tree_Product_ID Trees are used for (financial) reporting
-   */
-  public void setAD_Tree_Product_ID(int AD_Tree_Product_ID) {
-    if (AD_Tree_Product_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, Integer.valueOf(AD_Tree_Product_ID));
   }
 
   /**
@@ -257,20 +247,20 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
+  /**
+   * Set Product Tree.
+   *
+   * @param AD_Tree_Product_ID Trees are used for (financial) reporting
+   */
+  public void setAD_Tree_Product_ID(int AD_Tree_Product_ID) {
+    if (AD_Tree_Product_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, Integer.valueOf(AD_Tree_Product_ID));
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_Project() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_Project_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Project Tree.
-   *
-   * @param AD_Tree_Project_ID Trees are used for (financial) reporting
-   */
-  public void setAD_Tree_Project_ID(int AD_Tree_Project_ID) {
-    if (AD_Tree_Project_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, Integer.valueOf(AD_Tree_Project_ID));
   }
 
   /**
@@ -284,10 +274,31 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     return ii;
   }
 
+  /**
+   * Set Project Tree.
+   *
+   * @param AD_Tree_Project_ID Trees are used for (financial) reporting
+   */
+  public void setAD_Tree_Project_ID(int AD_Tree_Project_ID) {
+    if (AD_Tree_Project_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, Integer.valueOf(AD_Tree_Project_ID));
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_SalesRegion() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_SalesRegion_ID(), get_TrxName());
+  }
+
+  /**
+   * Get Sales Region Tree.
+   *
+   * @return Trees are used for (financial) reporting
+   */
+  public int getAD_Tree_SalesRegion_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_SalesRegion_ID);
+    if (ii == null) return 0;
+    return ii;
   }
 
   /**
@@ -302,12 +313,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get Sales Region Tree.
+   * Get Primary Accounting Schema.
    *
-   * @return Trees are used for (financial) reporting
+   * @return Primary rules for accounting
    */
-  public int getAD_Tree_SalesRegion_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_SalesRegion_ID);
+  public int getC_AcctSchema1_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_C_AcctSchema1_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -323,12 +334,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get Primary Accounting Schema.
+   * Get Template B.Partner.
    *
-   * @return Primary rules for accounting
+   * @return Business Partner used for creating new Business Partners on the fly
    */
-  public int getC_AcctSchema1_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_C_AcctSchema1_ID);
+  public int getC_BPartnerCashTrx_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_C_BPartnerCashTrx_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -344,12 +355,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get Template B.Partner.
+   * Get Calendar.
    *
-   * @return Business Partner used for creating new Business Partners on the fly
+   * @return Accounting Calendar Name
    */
-  public int getC_BPartnerCashTrx_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_C_BPartnerCashTrx_ID);
+  public int getC_Calendar_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_C_Calendar_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -365,12 +376,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get Calendar.
+   * Get Charge for Freight.
    *
-   * @return Accounting Calendar Name
+   * @return Charge for Freight
    */
-  public int getC_Calendar_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_C_Calendar_ID);
+  public int getC_ChargeFreight_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_C_ChargeFreight_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -386,12 +397,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get Charge for Freight.
+   * Get UOM for Length.
    *
-   * @return Charge for Freight
+   * @return Standard Unit of Measure for Length
    */
-  public int getC_ChargeFreight_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_C_ChargeFreight_ID);
+  public int getC_UOM_Length_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Length_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -407,12 +418,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get UOM for Length.
+   * Get UOM for Time.
    *
-   * @return Standard Unit of Measure for Length
+   * @return Standard Unit of Measure for Time
    */
-  public int getC_UOM_Length_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Length_ID);
+  public int getC_UOM_Time_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Time_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -428,12 +439,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get UOM for Time.
+   * Get UOM for Volume.
    *
-   * @return Standard Unit of Measure for Time
+   * @return Standard Unit of Measure for Volume
    */
-  public int getC_UOM_Time_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Time_ID);
+  public int getC_UOM_Volume_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Volume_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -449,12 +460,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get UOM for Volume.
+   * Get UOM for Weight.
    *
-   * @return Standard Unit of Measure for Volume
+   * @return Standard Unit of Measure for Weight
    */
-  public int getC_UOM_Volume_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Volume_ID);
+  public int getC_UOM_Weight_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Weight_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -470,14 +481,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get UOM for Weight.
+   * Get Financial Year Start Date.
    *
-   * @return Standard Unit of Measure for Weight
+   * @return Financial Year Start Date
    */
-  public int getC_UOM_Weight_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Weight_ID);
-    if (ii == null) return 0;
-    return ii;
+  public Timestamp getFY_StartDate() {
+    return (Timestamp) get_Value(COLUMNNAME_FY_StartDate);
   }
 
   /**
@@ -487,15 +496,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
    */
   public void setFY_StartDate(Timestamp FY_StartDate) {
     set_Value(COLUMNNAME_FY_StartDate, FY_StartDate);
-  }
-
-  /**
-   * Get Financial Year Start Date.
-   *
-   * @return Financial Year Start Date
-   */
-  public Timestamp getFY_StartDate() {
-    return (Timestamp) get_Value(COLUMNNAME_FY_StartDate);
   }
 
   /**
@@ -568,6 +568,17 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
+   * Get Days to keep Log.
+   *
+   * @return Number of days to keep the log entries
+   */
+  public int getKeepLogDays() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_KeepLogDays);
+    if (ii == null) return 0;
+    return ii;
+  }
+
+  /**
    * Set Days to keep Log.
    *
    * @param KeepLogDays Number of days to keep the log entries
@@ -577,12 +588,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get Days to keep Log.
+   * Get Logo.
    *
-   * @return Number of days to keep the log entries
+   * @return Logo
    */
-  public int getKeepLogDays() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_KeepLogDays);
+  public int getLogo_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_Logo_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -598,12 +609,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get Logo.
+   * Get Logo Report.
    *
-   * @return Logo
+   * @return Logo Report
    */
-  public int getLogo_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_Logo_ID);
+  public int getLogoReport_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_LogoReport_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -619,12 +630,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get Logo Report.
+   * Get Logo Web.
    *
-   * @return Logo Report
+   * @return Logo Web
    */
-  public int getLogoReport_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_LogoReport_ID);
+  public int getLogoWeb_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_LogoWeb_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -640,12 +651,12 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /**
-   * Get Logo Web.
+   * Get Product for Freight.
    *
-   * @return Logo Web
+   * @return Product for Freight
    */
-  public int getLogoWeb_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_LogoWeb_ID);
+  public int getM_ProductFreight_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_M_ProductFreight_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -660,31 +671,10 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     else set_Value(COLUMNNAME_M_ProductFreight_ID, Integer.valueOf(M_ProductFreight_ID));
   }
 
-  /**
-   * Get Product for Freight.
-   *
-   * @return Product for Freight
-   */
-  public int getM_ProductFreight_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_M_ProductFreight_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
   public org.compiere.model.I_AD_StorageProvider getStorageArchive() throws RuntimeException {
     return (org.compiere.model.I_AD_StorageProvider)
         MTable.get(getCtx(), org.compiere.model.I_AD_StorageProvider.Table_Name)
             .getPO(getStorageArchive_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Archive Store.
-   *
-   * @param StorageArchive_ID Archive Store
-   */
-  public void setStorageArchive_ID(int StorageArchive_ID) {
-    if (StorageArchive_ID < 1) set_Value(COLUMNNAME_StorageArchive_ID, null);
-    else set_Value(COLUMNNAME_StorageArchive_ID, Integer.valueOf(StorageArchive_ID));
   }
 
   /**
@@ -696,6 +686,16 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
     Integer ii = (Integer) get_Value(COLUMNNAME_StorageArchive_ID);
     if (ii == null) return 0;
     return ii;
+  }
+
+  /**
+   * Set Archive Store.
+   *
+   * @param StorageArchive_ID Archive Store
+   */
+  public void setStorageArchive_ID(int StorageArchive_ID) {
+    if (StorageArchive_ID < 1) set_Value(COLUMNNAME_StorageArchive_ID, null);
+    else set_Value(COLUMNNAME_StorageArchive_ID, Integer.valueOf(StorageArchive_ID));
   }
 
   @Override

@@ -18,6 +18,71 @@ public class MTree_Base extends X_AD_Tree {
 
   /** */
   private static final long serialVersionUID = -7657958239525901547L;
+  /** Cache */
+  private static CCache<Integer, MTree_Base> s_cache =
+      new CCache<Integer, MTree_Base>(I_AD_Tree.Table_Name, 10);
+
+  /**
+   * ************************************************************************ Standard Constructor
+   *
+   * @param ctx context
+   * @param AD_Tree_ID id
+   * @param trxName transaction
+   */
+  public MTree_Base(Properties ctx, int AD_Tree_ID, String trxName) {
+    super(ctx, AD_Tree_ID, trxName);
+    if (AD_Tree_ID == 0) {
+      //	setName (null);
+      //	setTreeType (null);
+      setIsAllNodes(true); // 	complete tree
+      setIsDefault(false);
+    }
+  } //	MTree_Base
+
+  /**
+   * Load Constructor
+   *
+   * @param ctx context
+   * @param rs result set
+   * @param trxName transaction
+   */
+  public MTree_Base(Properties ctx, ResultSet rs, String trxName) {
+    super(ctx, rs, trxName);
+  } //	MTree_Base
+
+  public MTree_Base(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MTree_Base
+
+  /**
+   * Parent Constructor
+   *
+   * @param client client
+   * @param name name
+   * @param treeType
+   */
+  public MTree_Base(MClient client, String name, String treeType) {
+    this(client.getCtx(), 0, client.get_TrxName());
+    setClientOrg(client);
+    setName(name);
+    setTreeType(treeType);
+  } //	MTree_Base
+
+  /**
+   * Full Constructor
+   *
+   * @param ctx context
+   * @param Name name
+   * @param TreeType tree type
+   * @param trxName transaction
+   */
+  public MTree_Base(Properties ctx, String Name, String TreeType, String trxName) {
+    super(ctx, 0, trxName);
+    setName(Name);
+    setTreeType(TreeType);
+    setIsAllNodes(true); // 	complete tree
+    setIsDefault(false);
+  } //	MTree_Base
 
   /**
    * Add Node to correct tree
@@ -143,78 +208,19 @@ public class MTree_Base extends X_AD_Tree {
    */
   public static MTree_Base get(Properties ctx, int AD_Tree_ID, String trxName) {
     Integer key = new Integer(AD_Tree_ID);
-    MTree_Base retValue = (MTree_Base) s_cache.get(key);
+    MTree_Base retValue = s_cache.get(key);
     if (retValue != null) return retValue;
     retValue = new MTree_Base(ctx, AD_Tree_ID, trxName);
     if (retValue.getId() != 0) s_cache.put(key, retValue);
     return retValue;
   } //	get
 
-  /** Cache */
-  private static CCache<Integer, MTree_Base> s_cache =
-      new CCache<Integer, MTree_Base>(I_AD_Tree.Table_Name, 10);
-
-  /**
-   * ************************************************************************ Standard Constructor
-   *
-   * @param ctx context
-   * @param AD_Tree_ID id
-   * @param trxName transaction
-   */
-  public MTree_Base(Properties ctx, int AD_Tree_ID, String trxName) {
-    super(ctx, AD_Tree_ID, trxName);
-    if (AD_Tree_ID == 0) {
-      //	setName (null);
-      //	setTreeType (null);
-      setIsAllNodes(true); // 	complete tree
-      setIsDefault(false);
-    }
-  } //	MTree_Base
-
-  /**
-   * Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public MTree_Base(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	MTree_Base
-
-  public MTree_Base(Properties ctx, Row row) {
-    super(ctx, row);
-  } //	MTree_Base
-
-  /**
-   * Parent Constructor
-   *
-   * @param client client
-   * @param name name
-   * @param treeType
-   */
-  public MTree_Base(MClient client, String name, String treeType) {
-    this(client.getCtx(), 0, client.get_TrxName());
-    setClientOrg(client);
-    setName(name);
-    setTreeType(treeType);
-  } //	MTree_Base
-
-  /**
-   * Full Constructor
-   *
-   * @param ctx context
-   * @param Name name
-   * @param TreeType tree type
-   * @param trxName transaction
-   */
-  public MTree_Base(Properties ctx, String Name, String TreeType, String trxName) {
-    super(ctx, 0, trxName);
-    setName(Name);
-    setTreeType(TreeType);
-    setIsAllNodes(true); // 	complete tree
-    setIsDefault(false);
-  } //	MTree_Base
+  /** Returns true if should load all tree nodes immediately */
+  public static boolean isLoadAllNodesImmediately(int treeID, String trxName) {
+    return getSQLValueStringEx(
+            trxName, "SELECT IsLoadAllNodesImmediately FROM AD_Tree WHERE AD_Tree_ID = ?", treeID)
+        .equals("Y");
+  }
 
   /**
    * Get Node TableName
@@ -319,11 +325,4 @@ public class MTree_Base extends X_AD_Tree {
 
     return success;
   } //	afterSave
-
-  /** Returns true if should load all tree nodes immediately */
-  public static boolean isLoadAllNodesImmediately(int treeID, String trxName) {
-    return getSQLValueStringEx(
-            trxName, "SELECT IsLoadAllNodesImmediately FROM AD_Tree WHERE AD_Tree_ID = ?", treeID)
-        .equals("Y");
-  }
 } //	MTree_Base

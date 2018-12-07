@@ -21,15 +21,12 @@ import software.hsharp.core.orm.MBaseSysConfigKt;
  * System Configuration
  *
  * @author Armen Rizal
- * @version $Id: MSysConfig.java,v 1.5 2005/11/28 11:56:45 armen Exp $ Contributor: Carlos Ruiz -
- *     globalqss - [ 1800371 ] System Configurator Enhancements
  * @author Teo Sarca, SC ARHIPAC SERVICE SRL
  *     <li>BF [ 1885496 ] Performance NEEDS
+ * @version $Id: MSysConfig.java,v 1.5 2005/11/28 11:56:45 armen Exp $ Contributor: Carlos Ruiz -
+ *     globalqss - [ 1800371 ] System Configurator Enhancements
  */
 public class MSysConfig extends MBaseSysConfig {
-  /** */
-  private static final long serialVersionUID = 2617379167881737860L;
-
   public static final String ADDRESS_VALIDATION = "ADDRESS_VALIDATION";
   public static final String ALERT_SEND_ATTACHMENT_AS_XLS = "ALERT_SEND_ATTACHMENT_AS_XLS";
   public static final String ALLOCATION_DESCRIPTION = "ALLOCATION_DESCRIPTION";
@@ -190,6 +187,14 @@ public class MSysConfig extends MBaseSysConfig {
   public static final String ZK_SEQ_DEFAULT_VALUE_PANEL = "ZK_SEQ_DEFAULT_VALUE_PANEL";
   public static final String ZK_SESSION_TIMEOUT_IN_SECONDS = "ZK_SESSION_TIMEOUT_IN_SECONDS";
   public static final String ZK_THEME = "ZK_THEME";
+  /** */
+  private static final long serialVersionUID = 2617379167881737860L;
+  /** Static Logger */
+  private static CLogger s_log = CLogger.getCLogger(MSysConfig.class);
+
+  private static int lendate = DisplayType.DEFAULT_DATE_FORMAT.length();
+  private static int lentime = DisplayType.DEFAULT_TIME_FORMAT.length();
+  private static int lentimestamp = DisplayType.DEFAULT_TIMESTAMP_FORMAT.length();
 
   /**
    * Standard Constructor
@@ -214,9 +219,6 @@ public class MSysConfig extends MBaseSysConfig {
   public MSysConfig(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   } //	MSysConfig
-
-  /** Static Logger */
-  private static CLogger s_log = CLogger.getCLogger(MSysConfig.class);
 
   /**
    * Get system configuration property of type string
@@ -515,10 +517,6 @@ public class MSysConfig extends MBaseSysConfig {
 
     return defaultValue;
   }
-
-  private static int lendate = DisplayType.DEFAULT_DATE_FORMAT.length();
-  private static int lentime = DisplayType.DEFAULT_TIME_FORMAT.length();
-  private static int lentimestamp = DisplayType.DEFAULT_TIMESTAMP_FORMAT.length();
 
   /** convert a string to a timestamp */
   static Timestamp convertStringToTimestamp(String text) {

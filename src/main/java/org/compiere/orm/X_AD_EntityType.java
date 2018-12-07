@@ -46,16 +46,6 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
   }
 
   /**
-   * Set Entity Type.
-   *
-   * @param AD_EntityType_ID System Entity Type
-   */
-  public void setAD_EntityType_ID(int AD_EntityType_ID) {
-    if (AD_EntityType_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_EntityType_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_EntityType_ID, Integer.valueOf(AD_EntityType_ID));
-  }
-
-  /**
    * Get Entity Type.
    *
    * @return System Entity Type
@@ -67,12 +57,13 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
   }
 
   /**
-   * Set AD_EntityType_UU.
+   * Set Entity Type.
    *
-   * @param AD_EntityType_UU AD_EntityType_UU
+   * @param AD_EntityType_ID System Entity Type
    */
-  public void setAD_EntityType_UU(String AD_EntityType_UU) {
-    set_Value(COLUMNNAME_AD_EntityType_UU, AD_EntityType_UU);
+  public void setAD_EntityType_ID(int AD_EntityType_ID) {
+    if (AD_EntityType_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_EntityType_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_EntityType_ID, Integer.valueOf(AD_EntityType_ID));
   }
 
   /**
@@ -85,12 +76,12 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
   }
 
   /**
-   * Set Classpath.
+   * Set AD_EntityType_UU.
    *
-   * @param Classpath Extension Classpath
+   * @param AD_EntityType_UU AD_EntityType_UU
    */
-  public void setClasspath(String Classpath) {
-    set_Value(COLUMNNAME_Classpath, Classpath);
+  public void setAD_EntityType_UU(String AD_EntityType_UU) {
+    set_Value(COLUMNNAME_AD_EntityType_UU, AD_EntityType_UU);
   }
 
   /**
@@ -103,12 +94,12 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
   }
 
   /**
-   * Set Description.
+   * Set Classpath.
    *
-   * @param Description Optional short description of the record
+   * @param Classpath Extension Classpath
    */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
+  public void setClasspath(String Classpath) {
+    set_Value(COLUMNNAME_Classpath, Classpath);
   }
 
   /**
@@ -121,12 +112,12 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
   }
 
   /**
-   * Set Entity Type.
+   * Set Description.
    *
-   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
+   * @param Description Optional short description of the record
    */
-  public void setEntityType(String EntityType) {
-    set_ValueNoCheck(COLUMNNAME_EntityType, EntityType);
+  public void setDescription(String Description) {
+    set_Value(COLUMNNAME_Description, Description);
   }
 
   /**
@@ -139,12 +130,12 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
   }
 
   /**
-   * Set Comment/Help.
+   * Set Entity Type.
    *
-   * @param Help Comment or Hint
+   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
    */
-  public void setHelp(String Help) {
-    set_Value(COLUMNNAME_Help, Help);
+  public void setEntityType(String EntityType) {
+    set_ValueNoCheck(COLUMNNAME_EntityType, EntityType);
   }
 
   /**
@@ -157,12 +148,12 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
   }
 
   /**
-   * Set ModelPackage.
+   * Set Comment/Help.
    *
-   * @param ModelPackage Java Package of the model classes
+   * @param Help Comment or Hint
    */
-  public void setModelPackage(String ModelPackage) {
-    set_Value(COLUMNNAME_ModelPackage, ModelPackage);
+  public void setHelp(String Help) {
+    set_Value(COLUMNNAME_Help, Help);
   }
 
   /**
@@ -175,12 +166,12 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
   }
 
   /**
-   * Set Process Now.
+   * Set ModelPackage.
    *
-   * @param Processing Process Now
+   * @param ModelPackage Java Package of the model classes
    */
-  public void setProcessing(boolean Processing) {
-    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
+  public void setModelPackage(String ModelPackage) {
+    set_Value(COLUMNNAME_ModelPackage, ModelPackage);
   }
 
   /**
@@ -198,12 +189,12 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
   }
 
   /**
-   * Set Version.
+   * Set Process Now.
    *
-   * @param Version Version of the table definition
+   * @param Processing Process Now
    */
-  public void setVersion(String Version) {
-    set_Value(COLUMNNAME_Version, Version);
+  public void setProcessing(boolean Processing) {
+    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
   }
 
   /**
@@ -213,6 +204,15 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType, I_Pe
    */
   public String getVersion() {
     return (String) get_Value(COLUMNNAME_Version);
+  }
+
+  /**
+   * Set Version.
+   *
+   * @param Version Version of the table definition
+   */
+  public void setVersion(String Version) {
+    set_Value(COLUMNNAME_Version, Version);
   }
 
   @Override

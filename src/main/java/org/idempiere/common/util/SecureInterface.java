@@ -15,18 +15,18 @@ import java.sql.Timestamp;
  */
 public interface SecureInterface {
   /** Class Name implementing SecureInterface */
-  public static final String ADEMPIERE_SECURE = "ADEMPIERE_SECURE";
+  String ADEMPIERE_SECURE = "ADEMPIERE_SECURE";
   /** Default Class Name implementing SecureInterface */
-  public static final String ADEMPIERE_SECURE_DEFAULT = "org.idempiere.common.util.Secure";
+  String ADEMPIERE_SECURE_DEFAULT = "org.idempiere.common.util.Secure";
 
   /** Clear Text Indicator xyz */
-  public static final String CLEARVALUE_START = "xyz";
+  String CLEARVALUE_START = "xyz";
   /** Clear Text Indicator */
-  public static final String CLEARVALUE_END = "";
+  String CLEARVALUE_END = "";
   /** Encrypted Text Indiactor ~ */
-  public static final String ENCRYPTEDVALUE_START = "~";
+  String ENCRYPTEDVALUE_START = "~";
   /** Encrypted Text Indiactor ~ */
-  public static final String ENCRYPTEDVALUE_END = "~";
+  String ENCRYPTEDVALUE_END = "~";
 
   /**
    * Encryption.
@@ -35,7 +35,7 @@ public interface SecureInterface {
    * @param AD_Client_ID
    * @return encrypted String
    */
-  public String encrypt(String value, int AD_Client_ID);
+  String encrypt(String value, int AD_Client_ID);
 
   /**
    * Decryption.
@@ -43,7 +43,7 @@ public interface SecureInterface {
    * @param value encrypted value
    * @return decrypted String
    */
-  public String decrypt(String value, int AD_Client_ID);
+  String decrypt(String value, int AD_Client_ID);
 
   /**
    * Encryption. The methods must recognize clear text values
@@ -52,7 +52,7 @@ public interface SecureInterface {
    * @param AD_Client_ID
    * @return encrypted String
    */
-  public Integer encrypt(Integer value, int AD_Client_ID);
+  Integer encrypt(Integer value, int AD_Client_ID);
 
   /**
    * Decryption. The methods must recognize clear text values
@@ -61,7 +61,7 @@ public interface SecureInterface {
    * @param AD_Client_ID
    * @return decrypted String
    */
-  public Integer decrypt(Integer value, int AD_Client_ID);
+  Integer decrypt(Integer value, int AD_Client_ID);
 
   /**
    * Encryption. The methods must recognize clear text values
@@ -70,7 +70,7 @@ public interface SecureInterface {
    * @param AD_Client_ID
    * @return encrypted String
    */
-  public BigDecimal encrypt(BigDecimal value, int AD_Client_ID);
+  BigDecimal encrypt(BigDecimal value, int AD_Client_ID);
 
   /**
    * Decryption. The methods must recognize clear text values
@@ -79,7 +79,7 @@ public interface SecureInterface {
    * @param AD_Client_ID
    * @return decrypted String
    */
-  public BigDecimal decrypt(BigDecimal value, int AD_Client_ID);
+  BigDecimal decrypt(BigDecimal value, int AD_Client_ID);
 
   /**
    * Encryption. The methods must recognize clear text values
@@ -88,7 +88,7 @@ public interface SecureInterface {
    * @param AD_Client_ID
    * @return encrypted String
    */
-  public Timestamp encrypt(Timestamp value, int AD_Client_ID);
+  Timestamp encrypt(Timestamp value, int AD_Client_ID);
 
   /**
    * Decryption. The methods must recognize clear text values
@@ -97,7 +97,7 @@ public interface SecureInterface {
    * @param AD_Client_ID
    * @return decrypted String
    */
-  public Timestamp decrypt(Timestamp value, int AD_Client_ID);
+  Timestamp decrypt(Timestamp value, int AD_Client_ID);
 
   /**
    * Convert String to Digest. JavaScript version see - http://pajhome.org.uk/crypt/md5/index.html
@@ -105,7 +105,7 @@ public interface SecureInterface {
    * @param value message
    * @return HexString of message (length = 32 characters)
    */
-  public String getDigest(String value);
+  String getDigest(String value);
 
   /**
    * Checks, if value is a valid digest
@@ -113,7 +113,7 @@ public interface SecureInterface {
    * @param value digest string
    * @return true if valid digest
    */
-  public boolean isDigest(String value);
+  boolean isDigest(String value);
 
   /**
    * Convert String and salt to SHA-512 hash with iterations
@@ -124,6 +124,6 @@ public interface SecureInterface {
    * @throws NoSuchAlgorithmException
    * @throws UnsupportedEncodingException
    */
-  public String getSHA512Hash(int iterations, String value, byte[] salt)
+  String getSHA512Hash(int iterations, String value, byte[] salt)
       throws NoSuchAlgorithmException, UnsupportedEncodingException;
 } //	SecureInterface

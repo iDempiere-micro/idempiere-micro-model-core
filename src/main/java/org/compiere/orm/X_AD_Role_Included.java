@@ -52,16 +52,6 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
   }
 
   /**
-   * Set Role.
-   *
-   * @param AD_Role_ID Responsibility Role
-   */
-  public void setAD_Role_ID(int AD_Role_ID) {
-    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
-  }
-
-  /**
    * Get Role.
    *
    * @return Responsibility Role
@@ -73,12 +63,13 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
   }
 
   /**
-   * Set AD_Role_Included_UU.
+   * Set Role.
    *
-   * @param AD_Role_Included_UU AD_Role_Included_UU
+   * @param AD_Role_ID Responsibility Role
    */
-  public void setAD_Role_Included_UU(String AD_Role_Included_UU) {
-    set_Value(COLUMNNAME_AD_Role_Included_UU, AD_Role_Included_UU);
+  public void setAD_Role_ID(int AD_Role_ID) {
+    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
   }
 
   /**
@@ -90,20 +81,19 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
     return (String) get_Value(COLUMNNAME_AD_Role_Included_UU);
   }
 
+  /**
+   * Set AD_Role_Included_UU.
+   *
+   * @param AD_Role_Included_UU AD_Role_Included_UU
+   */
+  public void setAD_Role_Included_UU(String AD_Role_Included_UU) {
+    set_Value(COLUMNNAME_AD_Role_Included_UU, AD_Role_Included_UU);
+  }
+
   public org.compiere.model.I_AD_Role getIncluded_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
         MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
             .getPO(getIncluded_Role_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Included Role.
-   *
-   * @param Included_Role_ID Included Role
-   */
-  public void setIncluded_Role_ID(int Included_Role_ID) {
-    if (Included_Role_ID < 1) set_ValueNoCheck(COLUMNNAME_Included_Role_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_Included_Role_ID, Integer.valueOf(Included_Role_ID));
   }
 
   /**
@@ -118,12 +108,13 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
   }
 
   /**
-   * Set Sequence.
+   * Set Included Role.
    *
-   * @param SeqNo Method of ordering records; lowest number comes first
+   * @param Included_Role_ID Included Role
    */
-  public void setSeqNo(int SeqNo) {
-    set_Value(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
+  public void setIncluded_Role_ID(int Included_Role_ID) {
+    if (Included_Role_ID < 1) set_ValueNoCheck(COLUMNNAME_Included_Role_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_Included_Role_ID, Integer.valueOf(Included_Role_ID));
   }
 
   /**
@@ -135,6 +126,15 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
     Integer ii = (Integer) get_Value(COLUMNNAME_SeqNo);
     if (ii == null) return 0;
     return ii;
+  }
+
+  /**
+   * Set Sequence.
+   *
+   * @param SeqNo Method of ordering records; lowest number comes first
+   */
+  public void setSeqNo(int SeqNo) {
+    set_Value(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
   }
 
   @Override

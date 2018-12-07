@@ -51,16 +51,6 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
   }
 
   /**
-   * Set Sequence.
-   *
-   * @param AD_Sequence_ID Document Sequence
-   */
-  public void setAD_Sequence_ID(int AD_Sequence_ID) {
-    if (AD_Sequence_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
-  }
-
-  /**
    * Get Sequence.
    *
    * @return Document Sequence
@@ -72,12 +62,13 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
   }
 
   /**
-   * Set AD_Sequence_No_UU.
+   * Set Sequence.
    *
-   * @param AD_Sequence_No_UU AD_Sequence_No_UU
+   * @param AD_Sequence_ID Document Sequence
    */
-  public void setAD_Sequence_No_UU(String AD_Sequence_No_UU) {
-    set_Value(COLUMNNAME_AD_Sequence_No_UU, AD_Sequence_No_UU);
+  public void setAD_Sequence_ID(int AD_Sequence_ID) {
+    if (AD_Sequence_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
   }
 
   /**
@@ -90,12 +81,12 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
   }
 
   /**
-   * Set YearMonth.
+   * Set AD_Sequence_No_UU.
    *
-   * @param CalendarYearMonth YYYYMM
+   * @param AD_Sequence_No_UU AD_Sequence_No_UU
    */
-  public void setCalendarYearMonth(String CalendarYearMonth) {
-    set_ValueNoCheck(COLUMNNAME_CalendarYearMonth, CalendarYearMonth);
+  public void setAD_Sequence_No_UU(String AD_Sequence_No_UU) {
+    set_Value(COLUMNNAME_AD_Sequence_No_UU, AD_Sequence_No_UU);
   }
 
   /**
@@ -108,12 +99,12 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
   }
 
   /**
-   * Set Current Next.
+   * Set YearMonth.
    *
-   * @param CurrentNext The next number to be used
+   * @param CalendarYearMonth YYYYMM
    */
-  public void setCurrentNext(int CurrentNext) {
-    set_Value(COLUMNNAME_CurrentNext, Integer.valueOf(CurrentNext));
+  public void setCalendarYearMonth(String CalendarYearMonth) {
+    set_ValueNoCheck(COLUMNNAME_CalendarYearMonth, CalendarYearMonth);
   }
 
   /**
@@ -125,6 +116,15 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
     Integer ii = (Integer) get_Value(COLUMNNAME_CurrentNext);
     if (ii == null) return 0;
     return ii;
+  }
+
+  /**
+   * Set Current Next.
+   *
+   * @param CurrentNext The next number to be used
+   */
+  public void setCurrentNext(int CurrentNext) {
+    set_Value(COLUMNNAME_CurrentNext, Integer.valueOf(CurrentNext));
   }
 
   @Override

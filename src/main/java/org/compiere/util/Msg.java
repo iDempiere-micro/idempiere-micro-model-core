@@ -30,6 +30,17 @@ public final class Msg {
   /** Logger */
   private static CLogger s_log = CLogger.getCLogger(Msg.class);
 
+  public final String COPYRIGHT = "\u00A9 1999-2016 iDempiere\u00AE";
+  /** The Map */
+  private CCache<String, CCache<String, String>> m_languages =
+      new CCache<String, CCache<String, String>>(null, "msg_lang", 2, 0, false);
+
+  private CCache<String, CCache<String, String>> m_elementCache =
+      new CCache<String, CCache<String, String>>(null, "msg_element", 2, 0, false);
+
+  /** ********************************************************************** Constructor */
+  private Msg() {} // 	Mag
+
   /**
    * Get Message Object
    *
@@ -39,176 +50,6 @@ public final class Msg {
     if (s_msg == null) s_msg = new Msg();
     return s_msg;
   } //	get
-
-  /** ************************************************************************ Constructor */
-  private Msg() {} // 	Mag
-
-  /** The Map */
-  private CCache<String, CCache<String, String>> m_languages =
-      new CCache<String, CCache<String, String>>(null, "msg_lang", 2, 0, false);
-
-  private CCache<String, CCache<String, String>> m_elementCache =
-      new CCache<String, CCache<String, String>>(null, "msg_element", 2, 0, false);
-
-  /**
-   * Get Language specific Message Map
-   *
-   * @param ad_language Language Key
-   * @return HashMap of Language
-   */
-  private CCache<String, String> getMsgMap(String ad_language) {
-    String AD_Language = ad_language;
-    if (AD_Language == null || AD_Language.length() == 0)
-      AD_Language = Language.getBaseAD_Language();
-    //  Do we have the language ?
-    CCache<String, String> retValue = (CCache<String, String>) m_languages.get(AD_Language);
-    if (retValue != null && retValue.size() > 0) return retValue;
-
-    //  Load Language
-    retValue = initMsg(AD_Language);
-    if (retValue != null) {
-      m_languages.put(AD_Language, retValue);
-      return retValue;
-    }
-    return retValue;
-  } //  getMsgMap
-
-  private CCache<String, String> getElementMap(String ad_language) {
-    String AD_Language = ad_language;
-    if (AD_Language == null || AD_Language.length() == 0)
-      AD_Language = Language.getBaseAD_Language();
-    //  Do we have the language ?
-    CCache<String, String> retValue = (CCache<String, String>) m_elementCache.get(AD_Language);
-    if (retValue != null && retValue.size() > 0) return retValue;
-
-    retValue = new CCache<String, String>("element", 100, 0, false, 0);
-    m_elementCache.put(AD_Language, retValue);
-    return retValue;
-  }
-
-  /**
-   * Init message HashMap. The initial call is from ALogin (ConfirmPanel init). The second from
-   * Env.verifyLanguage.
-   *
-   * @param AD_Language Language
-   * @return Cache HashMap
-   */
-  private CCache<String, String> initMsg(String AD_Language) {
-    //	Trace.printStack();
-    CCache<String, String> msg = new CCache<String, String>("AD_Message", MAP_SIZE, 0, false, 0);
-    //
-    if (!isConnected()) {
-      s_log.log(Level.SEVERE, "No DB Connection");
-      return null;
-    }
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      if (AD_Language == null
-          || AD_Language.length() == 0
-          || Env.isBaseLanguage(AD_Language, "AD_Language"))
-        pstmt = prepareStatement("SELECT Value, MsgText, MsgTip FROM AD_Message", null);
-      else {
-        pstmt =
-            prepareStatement(
-                "SELECT m.Value, t.MsgText, t.MsgTip "
-                    + "FROM AD_Message_Trl t, AD_Message m "
-                    + "WHERE m.AD_Message_ID=t.AD_Message_ID"
-                    + " AND t.AD_Language=?",
-                null);
-        pstmt.setString(1, AD_Language);
-      }
-      rs = pstmt.executeQuery();
-
-      //	get values
-      while (rs.next()) {
-        String AD_Message = rs.getString(1);
-        StringBuilder MsgText = new StringBuilder();
-        MsgText.append(rs.getString(2));
-        String MsgTip = rs.getString(3);
-        //
-        if (MsgTip != null) // 	messageTip on next line, if exists
-        MsgText.append(" ").append(SEPARATOR).append(MsgTip);
-        msg.put(AD_Message, MsgText.toString());
-      }
-    } catch (SQLException e) {
-      s_log.log(Level.SEVERE, "initMsg", e);
-      return null;
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    //
-    if (msg.size() < 100) {
-      s_log.log(Level.SEVERE, "Too few (" + msg.size() + ") Records found for " + AD_Language);
-      return null;
-    }
-    if (s_log.isLoggable(Level.INFO)) s_log.info("Records=" + msg.size() + " - " + AD_Language);
-    return msg;
-  } //	initMsg
-
-  /** Reset Message cache */
-  public void reset() {
-    if (m_languages == null) return;
-
-    //  clear all languages
-    Iterator<CCache<String, String>> iterator = m_languages.values().iterator();
-    while (iterator.hasNext()) {
-      CCache<String, String> hm = iterator.next();
-      hm.reset();
-    }
-    m_languages.clear();
-  } //  reset
-
-  /**
-   * Return an array of the installed Languages
-   *
-   * @return Array of loaded Languages or null
-   */
-  public String[] getLanguages() {
-    if (m_languages == null) return null;
-    String[] retValue = new String[m_languages.size()];
-    m_languages.keySet().toArray(retValue);
-    return retValue;
-  } //  getLanguages
-
-  /**
-   * Check if Language is loaded
-   *
-   * @param language Language code
-   * @return true, if language is loaded
-   */
-  public boolean isLoaded(String language) {
-    if (m_languages == null) return false;
-    return m_languages.containsKey(language);
-  } //  isLoaded
-
-  /**
-   * Lookup term
-   *
-   * @param AD_Language language
-   * @param text text
-   * @return translated term or null
-   */
-  private String lookup(String AD_Language, String text) {
-    if (text == null) return null;
-    if (AD_Language == null || AD_Language.length() == 0) return text;
-    //  hardcoded trl
-    if (text.equals("/") || text.equals("\\")) return File.separator;
-    if (text.equals(";") || text.equals(":")) return File.pathSeparator;
-    if (text.equals("bat") || text.equals("sh")) {
-      if (System.getProperty("os.name").startsWith("Win")) return "bat";
-      return "sh";
-    }
-    if (text.equals("CopyRight")) return COPYRIGHT;
-    //
-    CCache<String, String> langMap = getMsgMap(AD_Language);
-    if (langMap == null) return null;
-    return (String) langMap.get(text);
-  } //  lookup
-
-  public final String COPYRIGHT = "\u00A9 1999-2016 iDempiere\u00AE";
 
   /**
    * ************************************************************************ Get translated text
@@ -493,7 +334,7 @@ public final class Msg {
    * 	- Check AD_Element.ColumnName	->	Name
    *  </pre>
    *
-   * If checking AD_Element, the SO terminology is used.
+   * <p>If checking AD_Element, the SO terminology is used.
    *
    * @param ad_language Language
    * @param isSOTrx sales order context
@@ -527,7 +368,7 @@ public final class Msg {
    * 	- Check AD_Element.ColumnName	->	Name
    *  </pre>
    *
-   * If checking AD_Element, the SO terminology is used.
+   * <p>If checking AD_Element, the SO terminology is used.
    *
    * @param ad_language Language
    * @param text Text - MsgText or Element Name
@@ -551,7 +392,7 @@ public final class Msg {
    */
   public static String translate(Properties ctx, String text) {
     if (text == null || text.length() == 0) return text;
-    String s = (String) ctx.getProperty(text);
+    String s = ctx.getProperty(text);
     if (s != null && s.length() > 0) return s;
     return translate(Env.getADLanguage(ctx), Env.isSOTrx(ctx), text);
   } //  translate
@@ -588,8 +429,8 @@ public final class Msg {
 
     int i = inStr.indexOf('@');
     while (i != -1) {
-      outStr.append(inStr.substring(0, i)); // up to @
-      inStr = inStr.substring(i + 1, inStr.length()); // from first @
+      outStr.append(inStr, 0, i); // up to @
+      inStr = inStr.substring(i + 1); // from first @
 
       int j = inStr.indexOf('@'); // next @
       if (j < 0) // no second tag
@@ -601,7 +442,7 @@ public final class Msg {
       token = inStr.substring(0, j);
       outStr.append(translate(ctx, token)); // replace context
 
-      inStr = inStr.substring(j + 1, inStr.length()); // from second @
+      inStr = inStr.substring(j + 1); // from second @
       i = inStr.indexOf('@');
     }
 
@@ -619,4 +460,162 @@ public final class Msg {
   public static String getCleanMsg(Properties ctx, String string) {
     return Util.cleanAmp(getMsg(Env.getADLanguage(ctx), string));
   }
+
+  /**
+   * Get Language specific Message Map
+   *
+   * @param ad_language Language Key
+   * @return HashMap of Language
+   */
+  private CCache<String, String> getMsgMap(String ad_language) {
+    String AD_Language = ad_language;
+    if (AD_Language == null || AD_Language.length() == 0)
+      AD_Language = Language.getBaseAD_Language();
+    //  Do we have the language ?
+    CCache<String, String> retValue = m_languages.get(AD_Language);
+    if (retValue != null && retValue.size() > 0) return retValue;
+
+    //  Load Language
+    retValue = initMsg(AD_Language);
+    if (retValue != null) {
+      m_languages.put(AD_Language, retValue);
+      return retValue;
+    }
+    return retValue;
+  } //  getMsgMap
+
+  private CCache<String, String> getElementMap(String ad_language) {
+    String AD_Language = ad_language;
+    if (AD_Language == null || AD_Language.length() == 0)
+      AD_Language = Language.getBaseAD_Language();
+    //  Do we have the language ?
+    CCache<String, String> retValue = m_elementCache.get(AD_Language);
+    if (retValue != null && retValue.size() > 0) return retValue;
+
+    retValue = new CCache<String, String>("element", 100, 0, false, 0);
+    m_elementCache.put(AD_Language, retValue);
+    return retValue;
+  }
+
+  /**
+   * Init message HashMap. The initial call is from ALogin (ConfirmPanel init). The second from
+   * Env.verifyLanguage.
+   *
+   * @param AD_Language Language
+   * @return Cache HashMap
+   */
+  private CCache<String, String> initMsg(String AD_Language) {
+    //	Trace.printStack();
+    CCache<String, String> msg = new CCache<String, String>("AD_Message", MAP_SIZE, 0, false, 0);
+    //
+    if (!isConnected()) {
+      s_log.log(Level.SEVERE, "No DB Connection");
+      return null;
+    }
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    try {
+      if (AD_Language == null
+          || AD_Language.length() == 0
+          || Env.isBaseLanguage(AD_Language, "AD_Language"))
+        pstmt = prepareStatement("SELECT Value, MsgText, MsgTip FROM AD_Message", null);
+      else {
+        pstmt =
+            prepareStatement(
+                "SELECT m.Value, t.MsgText, t.MsgTip "
+                    + "FROM AD_Message_Trl t, AD_Message m "
+                    + "WHERE m.AD_Message_ID=t.AD_Message_ID"
+                    + " AND t.AD_Language=?",
+                null);
+        pstmt.setString(1, AD_Language);
+      }
+      rs = pstmt.executeQuery();
+
+      //	get values
+      while (rs.next()) {
+        String AD_Message = rs.getString(1);
+        StringBuilder MsgText = new StringBuilder();
+        MsgText.append(rs.getString(2));
+        String MsgTip = rs.getString(3);
+        //
+        if (MsgTip != null) // 	messageTip on next line, if exists
+        MsgText.append(" ").append(SEPARATOR).append(MsgTip);
+        msg.put(AD_Message, MsgText.toString());
+      }
+    } catch (SQLException e) {
+      s_log.log(Level.SEVERE, "initMsg", e);
+      return null;
+    } finally {
+      close(rs, pstmt);
+      rs = null;
+      pstmt = null;
+    }
+    //
+    if (msg.size() < 100) {
+      s_log.log(Level.SEVERE, "Too few (" + msg.size() + ") Records found for " + AD_Language);
+      return null;
+    }
+    if (s_log.isLoggable(Level.INFO)) s_log.info("Records=" + msg.size() + " - " + AD_Language);
+    return msg;
+  } //	initMsg
+
+  /** Reset Message cache */
+  public void reset() {
+    if (m_languages == null) return;
+
+    //  clear all languages
+    Iterator<CCache<String, String>> iterator = m_languages.values().iterator();
+    while (iterator.hasNext()) {
+      CCache<String, String> hm = iterator.next();
+      hm.reset();
+    }
+    m_languages.clear();
+  } //  reset
+
+  /**
+   * Return an array of the installed Languages
+   *
+   * @return Array of loaded Languages or null
+   */
+  public String[] getLanguages() {
+    if (m_languages == null) return null;
+    String[] retValue = new String[m_languages.size()];
+    m_languages.keySet().toArray(retValue);
+    return retValue;
+  } //  getLanguages
+
+  /**
+   * Check if Language is loaded
+   *
+   * @param language Language code
+   * @return true, if language is loaded
+   */
+  public boolean isLoaded(String language) {
+    if (m_languages == null) return false;
+    return m_languages.containsKey(language);
+  } //  isLoaded
+
+  /**
+   * Lookup term
+   *
+   * @param AD_Language language
+   * @param text text
+   * @return translated term or null
+   */
+  private String lookup(String AD_Language, String text) {
+    if (text == null) return null;
+    if (AD_Language == null || AD_Language.length() == 0) return text;
+    //  hardcoded trl
+    if (text.equals("/") || text.equals("\\")) return File.separator;
+    if (text.equals(";") || text.equals(":")) return File.pathSeparator;
+    if (text.equals("bat") || text.equals("sh")) {
+      if (System.getProperty("os.name").startsWith("Win")) return "bat";
+      return "sh";
+    }
+    if (text.equals("CopyRight")) return COPYRIGHT;
+    //
+    CCache<String, String> langMap = getMsgMap(AD_Language);
+    if (langMap == null) return null;
+    return langMap.get(text);
+  } //  lookup
 } //	Msg

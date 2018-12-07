@@ -21,15 +21,15 @@ import org.idempiere.common.util.Util;
  *     <li>BF [ 1824256 ] Convert sql casts
  */
 public class Convert_PostgreSQL extends Convert_SQL92 {
-  /** Constructor */
-  public Convert_PostgreSQL() {
-    m_map = ConvertMap_PostgreSQL.getConvertMap();
-  } // Convert
-
   /** RegEx: insensitive and dot to include line end characters */
   public static final int REGEX_FLAGS = Pattern.CASE_INSENSITIVE | Pattern.DOTALL;
 
   private TreeMap<String, String> m_map;
+
+  /** Constructor */
+  public Convert_PostgreSQL() {
+    m_map = ConvertMap_PostgreSQL.getConvertMap();
+  } // Convert
 
   /**
    * Is Oracle DB
@@ -779,9 +779,7 @@ public class Convert_PostgreSQL extends Convert_SQL92 {
       }
     }
 
-    if (isSQLFunctions(token)) return false;
-
-    return true;
+    return !isSQLFunctions(token);
   }
 
   private boolean isSQLFunctions(String token) {
@@ -789,11 +787,11 @@ public class Convert_PostgreSQL extends Convert_SQL92 {
     else if (token.equalsIgnoreCase("current_time")) return true;
     else if (token.equalsIgnoreCase("current_date")) return true;
     else if (token.equalsIgnoreCase("localtime")) return true;
-    else if (token.equalsIgnoreCase("localtimestamp")) return true;
-    return false;
+    else return token.equalsIgnoreCase("localtimestamp");
   }
 
   // begin vpj-cd e-evolution 08/02/2005
+
   /**
    * ************************************************************************* convertAlias - for
    * compatibility with 8.1

@@ -15,26 +15,38 @@ import java.util.logging.LogRecord;
  * Client Error Buffer
  *
  * @author Jorg Janke
- * @version $Id: CLogErrorBuffer.java,v 1.3 2006/07/30 00:54:36 jjanke Exp $
  * @author Teo Sarca, teo.sarca@gmail.com
  *     <li>BF [ 2973298 ] NPE on CLogErrorBuffer
+ * @version $Id: CLogErrorBuffer.java,v 1.3 2006/07/30 00:54:36 jjanke Exp $
  */
 public class CLogErrorBuffer extends Handler {
   private static final String ISSUE_ERROR_KEY = "org.compiere.util.CLogErrorBuffer.issueError";
   private static final String HISTORY_KEY = "org.compiere.util.CLogErrorBuffer.history";
   private static final String ERRORS_KEY = "org.compiere.util.CLogErrorBuffer.errors";
   private static final String LOGS_KEY = "org.compiere.util.CLogErrorBuffer.logs";
+  /** Error Buffer Size */
+  private static final int ERROR_SIZE = 20;
+  /** Log Size */
+  private static final int LOG_SIZE = 100;
 
-  /** ************************************************************************ Constructor */
+  /** ********************************************************************** Constructor */
   public CLogErrorBuffer() {
     initialize();
   } //	CLogErrorBuffer
 
-  /** Error Buffer Size */
-  private static final int ERROR_SIZE = 20;
+  public static CLogErrorBuffer get(boolean create) {
+    Handler[] handlers = CLogMgt.getHandlers();
+    for (Handler handler : handlers) {
+      if (handler instanceof CLogErrorBuffer) return (CLogErrorBuffer) handler;
+    }
+    if (create) {
+      CLogErrorBuffer handler = new CLogErrorBuffer();
+      CLogMgt.addHandler(handler);
+      return handler;
+    }
 
-  /** Log Size */
-  private static final int LOG_SIZE = 100;
+    return null;
+  }
 
   /** Initialize */
   private void initialize() {
@@ -74,9 +86,9 @@ public class CLogErrorBuffer extends Handler {
   /**
    * Set Level. Ignore OFF - and higher then FINE
    *
-   * @see java.util.logging.Handler#setLevel(java.util.logging.Level)
    * @param newLevel ignored
    * @throws java.lang.SecurityException
+   * @see java.util.logging.Handler#setLevel(java.util.logging.Level)
    */
   public synchronized void setLevel(Level newLevel) throws SecurityException {
     if (newLevel == null) return;
@@ -89,8 +101,8 @@ public class CLogErrorBuffer extends Handler {
   /**
    * Publish
    *
-   * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
    * @param record log record
+   * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
    */
   public void publish(LogRecord record) {
     checkContext();
@@ -122,7 +134,7 @@ public class CLogErrorBuffer extends Handler {
       //	Create History
       ArrayList<LogRecord> history = new ArrayList<LogRecord>();
       for (int i = m_logs.size() - 1; i >= 0; i--) {
-        LogRecord rec = (LogRecord) m_logs.get(i);
+        LogRecord rec = m_logs.get(i);
         if (rec.getLevel() == Level.SEVERE) {
           if (history.size() == 0) history.add(rec);
           else break; // 	don't include previous error
@@ -133,7 +145,7 @@ public class CLogErrorBuffer extends Handler {
       }
       LogRecord[] historyArray = new LogRecord[history.size()];
       int no = 0;
-      for (int i = history.size() - 1; i >= 0; i--) historyArray[no++] = (LogRecord) history.get(i);
+      for (int i = history.size() - 1; i >= 0; i--) historyArray[no++] = history.get(i);
       m_history.add(historyArray);
       //	Issue Reporting
       if (isIssueError()) {
@@ -183,8 +195,8 @@ public class CLogErrorBuffer extends Handler {
   /**
    * Close
    *
-   * @see java.util.logging.Handler#close()
    * @throws SecurityException
+   * @see java.util.logging.Handler#close()
    */
   public void close() throws SecurityException {
     Env.getCtx().remove(LOGS_KEY);
@@ -312,7 +324,7 @@ public class CLogErrorBuffer extends Handler {
       LinkedList<LogRecord[]> m_history = (LinkedList<LogRecord[]>) Env.getCtx().get(HISTORY_KEY);
       for (int i = 0; i < m_history.size(); i++) {
         sb.append("-------------------------------\n");
-        LogRecord[] records = (LogRecord[]) m_history.get(i);
+        LogRecord[] records = m_history.get(i);
         for (int j = 0; j < records.length; j++) {
           LogRecord record = records[j];
           sb.append(getFormatter().format(record));
@@ -322,7 +334,7 @@ public class CLogErrorBuffer extends Handler {
       @SuppressWarnings("unchecked")
       LinkedList<LogRecord> m_logs = (LinkedList<LogRecord>) Env.getCtx().get(LOGS_KEY);
       for (int i = 0; i < m_logs.size(); i++) {
-        LogRecord record = (LogRecord) m_logs.get(i);
+        LogRecord record = m_logs.get(i);
         sb.append(getFormatter().format(record));
       }
     }
@@ -376,20 +388,6 @@ public class CLogErrorBuffer extends Handler {
         .append("]");
     return sb.toString();
   } //	toString
-
-  public static CLogErrorBuffer get(boolean create) {
-    Handler[] handlers = CLogMgt.getHandlers();
-    for (Handler handler : handlers) {
-      if (handler instanceof CLogErrorBuffer) return (CLogErrorBuffer) handler;
-    }
-    if (create) {
-      CLogErrorBuffer handler = new CLogErrorBuffer();
-      CLogMgt.addHandler(handler);
-      return handler;
-    }
-
-    return null;
-  }
 
   private static class Msg {
     private static String getMsg(Object ctx, String msg) {

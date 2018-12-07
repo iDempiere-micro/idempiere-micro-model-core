@@ -15,6 +15,12 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_Persistent {
 
+  /** Method AD_Reference_ID=200019 */
+  public static final int METHOD_AD_Reference_ID = 200019;
+  /** File System = FileSystem */
+  public static final String METHOD_FileSystem = "FileSystem";
+  /** Database = DB */
+  public static final String METHOD_Database = "DB";
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -44,16 +50,6 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
   }
 
   /**
-   * Set Storage Provider.
-   *
-   * @param AD_StorageProvider_ID Storage Provider
-   */
-  public void setAD_StorageProvider_ID(int AD_StorageProvider_ID) {
-    if (AD_StorageProvider_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_StorageProvider_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_StorageProvider_ID, Integer.valueOf(AD_StorageProvider_ID));
-  }
-
-  /**
    * Get Storage Provider.
    *
    * @return Storage Provider
@@ -65,12 +61,13 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
   }
 
   /**
-   * Set AD_StorageProvider_UU.
+   * Set Storage Provider.
    *
-   * @param AD_StorageProvider_UU AD_StorageProvider_UU
+   * @param AD_StorageProvider_ID Storage Provider
    */
-  public void setAD_StorageProvider_UU(String AD_StorageProvider_UU) {
-    set_Value(COLUMNNAME_AD_StorageProvider_UU, AD_StorageProvider_UU);
+  public void setAD_StorageProvider_ID(int AD_StorageProvider_ID) {
+    if (AD_StorageProvider_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_StorageProvider_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_StorageProvider_ID, Integer.valueOf(AD_StorageProvider_ID));
   }
 
   /**
@@ -83,12 +80,12 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
   }
 
   /**
-   * Set Folder.
+   * Set AD_StorageProvider_UU.
    *
-   * @param Folder A folder on a local or remote system to store data into
+   * @param AD_StorageProvider_UU AD_StorageProvider_UU
    */
-  public void setFolder(String Folder) {
-    set_Value(COLUMNNAME_Folder, Folder);
+  public void setAD_StorageProvider_UU(String AD_StorageProvider_UU) {
+    set_Value(COLUMNNAME_AD_StorageProvider_UU, AD_StorageProvider_UU);
   }
 
   /**
@@ -100,20 +97,13 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
     return (String) get_Value(COLUMNNAME_Folder);
   }
 
-  /** Method AD_Reference_ID=200019 */
-  public static final int METHOD_AD_Reference_ID = 200019;
-  /** File System = FileSystem */
-  public static final String METHOD_FileSystem = "FileSystem";
-  /** Database = DB */
-  public static final String METHOD_Database = "DB";
   /**
-   * Set Method.
+   * Set Folder.
    *
-   * @param Method Method
+   * @param Folder A folder on a local or remote system to store data into
    */
-  public void setMethod(String Method) {
-
-    set_Value(COLUMNNAME_Method, Method);
+  public void setFolder(String Folder) {
+    set_Value(COLUMNNAME_Folder, Folder);
   }
 
   /**
@@ -126,12 +116,13 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
   }
 
   /**
-   * Set Name.
+   * Set Method.
    *
-   * @param Name Alphanumeric identifier of the entity
+   * @param Method Method
    */
-  public void setName(String Name) {
-    set_Value(HasName.Companion.getCOLUMNNAME_Name(), Name);
+  public void setMethod(String Method) {
+
+    set_Value(COLUMNNAME_Method, Method);
   }
 
   /**
@@ -144,21 +135,21 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
   }
 
   /**
+   * Set Name.
+   *
+   * @param Name Alphanumeric identifier of the entity
+   */
+  public void setName(String Name) {
+    set_Value(HasName.Companion.getCOLUMNNAME_Name(), Name);
+  }
+
+  /**
    * Get Record ID/ColumnName
    *
    * @return ID/ColumnName pair
    */
   public KeyNamePair getKeyNamePair() {
     return new KeyNamePair(getId(), getName());
-  }
-
-  /**
-   * Set Password.
-   *
-   * @param Password Password of any length (case sensitive)
-   */
-  public void setPassword(String Password) {
-    set_Value(COLUMNNAME_Password, Password);
   }
 
   /**
@@ -171,12 +162,12 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
   }
 
   /**
-   * Set URL.
+   * Set Password.
    *
-   * @param URL Full URL address - e.g. http://www.idempiere.org
+   * @param Password Password of any length (case sensitive)
    */
-  public void setURL(String URL) {
-    set_Value(COLUMNNAME_URL, URL);
+  public void setPassword(String Password) {
+    set_Value(COLUMNNAME_Password, Password);
   }
 
   /**
@@ -189,12 +180,12 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
   }
 
   /**
-   * Set User Name.
+   * Set URL.
    *
-   * @param UserName User Name
+   * @param URL Full URL address - e.g. http://www.idempiere.org
    */
-  public void setUserName(String UserName) {
-    set_Value(COLUMNNAME_UserName, UserName);
+  public void setURL(String URL) {
+    set_Value(COLUMNNAME_URL, URL);
   }
 
   /**
@@ -204,6 +195,15 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
    */
   public String getUserName() {
     return (String) get_Value(COLUMNNAME_UserName);
+  }
+
+  /**
+   * Set User Name.
+   *
+   * @param UserName User Name
+   */
+  public void setUserName(String UserName) {
+    set_Value(COLUMNNAME_UserName, UserName);
   }
 
   @Override

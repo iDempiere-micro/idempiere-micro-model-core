@@ -22,11 +22,11 @@ import javax.swing.JFrame;
  * System Environment and static variables.
  *
  * @author Jorg Janke
- * @version $Id: Env.java,v 1.3 2006/07/30 00:54:36 jjanke Exp $
  * @author Teo Sarca, www.arhipac.ro
  *     <li>BF [ 1619390 ] Use default desktop browser as external browser
  *     <li>BF [ 2017987 ] Env.getContext(TAB_INFO) should NOT use global context
  *     <li>FR [ 2392044 ] Introduce Env.WINDOW_MAIN
+ * @version $Id: Env.java,v 1.3 2006/07/30 00:54:36 jjanke Exp $
  */
 public final class Env {
   public static final String STANDARD_REPORT_FOOTER_TRADEMARK_TEXT =
@@ -43,21 +43,43 @@ public final class Env {
   public static final String AD_ORG_NAME = "#AD_Org_Name";
 
   public static final String M_WAREHOUSE_ID = "#M_Warehouse_ID";
+  /** WindowNo for Main */
+  public static final int WINDOW_MAIN = 0;
+  /** Tab for Info */
+  public static final int TAB_INFO = 1113;
+
+  public static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  /** Context Language identifier */
+  public static final String LANGUAGE = "#AD_Language";
+  /** Context for POS ID */
+  public static final String POS_ID = "#POS_ID";
+  /** Big Decimal 0 */
+  public static final BigDecimal ZERO = BigDecimal.valueOf(0.0);
+  /** Big Decimal 1 */
+  public static final BigDecimal ONE = BigDecimal.valueOf(1.0);
+
+  /**
+   * ************************************************************************ Application Context
+   */
+  /** Big Decimal 100 */
+  public static final BigDecimal ONEHUNDRED = BigDecimal.valueOf(100.0);
+  /** New Line */
+  public static final String NL = System.getProperty("line.separator");
 
   private static final ContextProvider clientContextProvider = new DefaultContextProvider();
-
-  private static List<IEnvEventListener> eventListeners = new ArrayList<IEnvEventListener>();
-
   public static int adWindowDummyID = 200054;
-
+  private static List<IEnvEventListener> eventListeners = new ArrayList<IEnvEventListener>();
   /** Logger */
   private static CLogger log = CLogger.getCLogger(Env.class);
 
-  /**
-   * @param provider
-   * @deprecated
-   */
-  public static void setContextProvider(ContextProvider provider) {}
+  /** Static initializer */
+  static {
+    try {
+      //  Set English as default Language
+      getCtx().put(LANGUAGE, Language.getBaseAD_Language());
+    } catch (Exception ex) { // nothing too much to do here
+    }
+  } //  static
 
   /** @param listener */
   public static void addEventListener(IEnvEventListener listener) {
@@ -73,15 +95,6 @@ public final class Env {
   }
 
   /**
-   * ************************************************************************ Application Context
-   */
-  /** WindowNo for Main */
-  public static final int WINDOW_MAIN = 0;
-
-  /** Tab for Info */
-  public static final int TAB_INFO = 1113;
-
-  /**
    * Get Context
    *
    * @return Properties
@@ -89,10 +102,6 @@ public final class Env {
   public static final Properties getCtx() {
     return getContextProvider().getContext();
   } //  getCtx
-
-  public static ContextProvider getContextProvider() {
-    return ServerContextProvider.INSTANCE;
-  }
 
   /**
    * Replace the contents of the current session/process context. Don't use this to setup a new
@@ -110,6 +119,16 @@ public final class Env {
     getCtx().putAll(ctx);
   } //  setCtx
 
+  public static ContextProvider getContextProvider() {
+    return ServerContextProvider.INSTANCE;
+  }
+
+  /**
+   * @param provider
+   * @deprecated
+   */
+  public static void setContextProvider(ContextProvider provider) {}
+
   /**
    * Set Global Context to Value
    *
@@ -124,8 +143,6 @@ public final class Env {
     if (value == null || value.length() == 0) ctx.remove(context);
     else ctx.setProperty(context, value);
   } //	setContext
-
-  public static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   /**
    * JDBC Timestamp Format yyyy-mm-dd hh:mm:ss
@@ -307,8 +324,8 @@ public final class Env {
     if (value == null)
       if (context.endsWith("_ID"))
         // TODO: Research potential problems with tables with Record_ID=0
-        value = new String("0");
-      else value = new String("");
+        value = "0";
+      else value = "";
     ctx.setProperty(WindowNo + "|" + TabNo + "|" + context, value);
   } //	setContext
 
@@ -578,8 +595,7 @@ public final class Env {
   public static boolean isAutoCommit(Properties ctx) {
     if (ctx == null) throw new IllegalArgumentException("Require Context");
     String s = getContext(ctx, "AutoCommit");
-    if (s != null && s.equals("Y")) return true;
-    return false;
+    return s != null && s.equals("Y");
   } //	isAutoCommit
 
   /**
@@ -593,8 +609,7 @@ public final class Env {
     if (ctx == null) throw new IllegalArgumentException("Require Context");
     String s = getContext(ctx, WindowNo, "AutoCommit", false);
     if (s != null) {
-      if (s.equals("Y")) return true;
-      else return false;
+      return s.equals("Y");
     }
     return isAutoCommit(ctx);
   } //	isAutoCommit
@@ -608,8 +623,7 @@ public final class Env {
   public static boolean isAutoNew(Properties ctx) {
     if (ctx == null) throw new IllegalArgumentException("Require Context");
     String s = getContext(ctx, "AutoNew");
-    if (s != null && s.equals("Y")) return true;
-    return false;
+    return s != null && s.equals("Y");
   } //	isAutoNew
 
   /**
@@ -623,8 +637,7 @@ public final class Env {
     if (ctx == null) throw new IllegalArgumentException("Require Context");
     String s = getContext(ctx, WindowNo, "AutoNew", false);
     if (s != null) {
-      if (s.equals("Y")) return true;
-      else return false;
+      return s.equals("Y");
     }
     return isAutoNew(ctx);
   } //	isAutoNew
@@ -637,8 +650,7 @@ public final class Env {
    */
   public static boolean isSOTrx(Properties ctx) {
     String s = getContext(ctx, "IsSOTrx");
-    if (s != null && s.equals("N")) return false;
-    return true;
+    return s == null || !s.equals("N");
   } //	isSOTrx
 
   /**
@@ -650,8 +662,7 @@ public final class Env {
    */
   public static boolean isSOTrx(Properties ctx, int WindowNo) {
     String s = getContext(ctx, WindowNo, "IsSOTrx", true);
-    if (s != null && s.equals("N")) return false;
-    return true;
+    return s == null || !s.equals("N");
   } //	isSOTrx
 
   /**
@@ -707,6 +718,8 @@ public final class Env {
     return timeStampDate;
     // KTU
   } //	getContextAsDate
+
+  /** ************************************************************************ Language issues */
 
   /**
    * Get Login AD_Client_ID
@@ -835,14 +848,6 @@ public final class Env {
     return (retValue == null ? "" : retValue);
   } //	getPreference
 
-  /** ************************************************************************ Language issues */
-
-  /** Context Language identifier */
-  public static final String LANGUAGE = "#AD_Language";
-
-  /** Context for POS ID */
-  public static final String POS_ID = "#POS_ID";
-
   /**
    * Check Base Language
    *
@@ -895,8 +900,7 @@ public final class Env {
    * @return true if base trl
    */
   public static boolean isBaseTranslation(String tableName) {
-    if (tableName.startsWith("AD") || tableName.equals("C_Country_Trl")) return true;
-    return false;
+    return tableName.startsWith("AD") || tableName.equals("C_Country_Trl");
   } //	isBaseTranslation
 
   /**
@@ -1002,7 +1006,6 @@ public final class Env {
   /**
    * Parse Context replaces global or Window context @tag@ with actual value.
    *
-   * @tag@ are ignored otherwise "" is returned
    * @param ctx context
    * @param WindowNo Number of Window
    * @param value Message to be parsed
@@ -1010,19 +1013,20 @@ public final class Env {
    * @param ignoreUnparsable if true, unsuccessful @return parsed String or "" if not successful and
    *     ignoreUnparsable
    * @return parsed context
+   * @tag@ are ignored otherwise "" is returned
    */
   public static String parseContext(
       Properties ctx, int WindowNo, String value, boolean onlyWindow, boolean ignoreUnparsable) {
     if (value == null || value.length() == 0) return "";
 
     String token;
-    String inStr = new String(value);
+    String inStr = value;
     StringBuilder outStr = new StringBuilder();
 
     int i = inStr.indexOf('@');
     while (i != -1) {
-      outStr.append(inStr.substring(0, i)); // up to @
-      inStr = inStr.substring(i + 1, inStr.length()); // from first @
+      outStr.append(inStr, 0, i); // up to @
+      inStr = inStr.substring(i + 1); // from first @
 
       int j = inStr.indexOf('@'); // next @
       if (j < 0) {
@@ -1038,7 +1042,7 @@ public final class Env {
       String defaultV = null;
       int idx = token.indexOf(":"); // 	or clause
       if (idx >= 0) {
-        defaultV = token.substring(idx + 1, token.length());
+        defaultV = token.substring(idx + 1);
         token = token.substring(0, idx);
       }
 
@@ -1054,7 +1058,7 @@ public final class Env {
         if (!ignoreUnparsable) return ""; // 	token not found
       } else outStr.append(ctxInfo); // replace context with Context
 
-      inStr = inStr.substring(j + 1, inStr.length()); // from second @
+      inStr = inStr.substring(j + 1); // from second @
       i = inStr.indexOf('@');
     }
     outStr.append(inStr); // add the rest of the string
@@ -1065,7 +1069,6 @@ public final class Env {
   /**
    * Parse Context replaces global or Window context @tag@ with actual value.
    *
-   * @tag@ are ignored otherwise "" is returned
    * @param ctx context
    * @param WindowNo Number of Window
    * @param tabNo Number of Tab
@@ -1074,6 +1077,7 @@ public final class Env {
    * @param ignoreUnparsable if true, unsuccessful @return parsed String or "" if not successful and
    *     ignoreUnparsable
    * @return parsed context
+   * @tag@ are ignored otherwise "" is returned
    */
   public static String parseContext(
       Properties ctx,
@@ -1085,13 +1089,13 @@ public final class Env {
     if (value == null || value.length() == 0) return "";
 
     String token;
-    String inStr = new String(value);
+    String inStr = value;
     StringBuilder outStr = new StringBuilder();
 
     int i = inStr.indexOf('@');
     while (i != -1) {
-      outStr.append(inStr.substring(0, i)); // up to @
-      inStr = inStr.substring(i + 1, inStr.length()); // from first @
+      outStr.append(inStr, 0, i); // up to @
+      inStr = inStr.substring(i + 1); // from first @
 
       int j = inStr.indexOf('@'); // next @
       if (j < 0) {
@@ -1107,7 +1111,7 @@ public final class Env {
       String defaultV = null;
       int idx = token.indexOf(":"); // 	or clause
       if (idx >= 0) {
-        defaultV = token.substring(idx + 1, token.length());
+        defaultV = token.substring(idx + 1);
         token = token.substring(0, idx);
       }
 
@@ -1123,7 +1127,7 @@ public final class Env {
         if (!ignoreUnparsable) return ""; // 	token not found
       } else outStr.append(ctxInfo); // replace context with Context
 
-      inStr = inStr.substring(j + 1, inStr.length()); // from second @
+      inStr = inStr.substring(j + 1); // from second @
       i = inStr.indexOf('@');
     }
     outStr.append(inStr); // add the rest of the string
@@ -1198,6 +1202,8 @@ public final class Env {
     return null;
   } //  getParent
 
+  /** ************************************************************************ Static Variables */
+
   /**
    * ************************************************************************* Start Browser
    *
@@ -1267,25 +1273,4 @@ public final class Env {
 
     return p;
   }
-
-  /** ************************************************************************ Static Variables */
-
-  /** Big Decimal 0 */
-  public static final BigDecimal ZERO = BigDecimal.valueOf(0.0);
-  /** Big Decimal 1 */
-  public static final BigDecimal ONE = BigDecimal.valueOf(1.0);
-  /** Big Decimal 100 */
-  public static final BigDecimal ONEHUNDRED = BigDecimal.valueOf(100.0);
-
-  /** New Line */
-  public static final String NL = System.getProperty("line.separator");
-
-  /** Static initializer */
-  static {
-    try {
-      //  Set English as default Language
-      getCtx().put(LANGUAGE, Language.getBaseAD_Language());
-    } catch (Exception ex) { // nothing too much to do here
-    }
-  } //  static
 } //  Env

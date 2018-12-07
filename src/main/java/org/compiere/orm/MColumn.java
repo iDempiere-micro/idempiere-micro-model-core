@@ -31,65 +31,9 @@ import org.idempiere.orm.PO;
 public class MColumn extends X_AD_Column {
   /** */
   private static final long serialVersionUID = -6914331394933196295L;
-
-  public static MColumn get(Properties ctx, int AD_Column_ID) {
-    return get(ctx, AD_Column_ID, null);
-  }
-
-  /**
-   * Get MColumn from Cache
-   *
-   * @param ctx context
-   * @param AD_Column_ID id
-   * @return MColumn
-   */
-  public static MColumn get(Properties ctx, int AD_Column_ID, String trxName) {
-    Integer key = new Integer(AD_Column_ID);
-    MColumn retValue = (MColumn) s_cache.get(key);
-    if (retValue != null) {
-      retValue.set_TrxName(trxName);
-      return retValue;
-    }
-    retValue = new MColumn(ctx, AD_Column_ID, trxName);
-    if (retValue.getId() != 0) s_cache.put(key, retValue);
-    return retValue;
-  } //	get
-
-  /**
-   * Get MColumn given TableName and ColumnName
-   *
-   * @param ctx context
-   * @param TableName
-   * @param ColumnName
-   * @return MColumn
-   */
-  public static MColumn get(Properties ctx, String tableName, String columnName) {
-    MTable table = MTable.get(ctx, tableName);
-    return table.getColumn(columnName);
-  } //	get
-
-  public static String getColumnName(Properties ctx, int AD_Column_ID) {
-    return getColumnName(ctx, AD_Column_ID, null);
-  }
-
-  /**
-   * Get Column Name
-   *
-   * @param ctx context
-   * @param AD_Column_ID id
-   * @param trxName transaction
-   * @return Column Name or null
-   */
-  public static String getColumnName(Properties ctx, int AD_Column_ID, String trxName) {
-    MColumn col = MColumn.get(ctx, AD_Column_ID, trxName);
-    if (col.getId() == 0) return null;
-    return col.getColumnName();
-  } //	getColumnName
-
   /** Cache */
   private static CCache<Integer, MColumn> s_cache =
       new CCache<Integer, MColumn>(I_AD_Column.Table_Name, 20);
-
   /** Static Logger */
   private static CLogger s_log = CLogger.getCLogger(MColumn.class);
 
@@ -148,6 +92,89 @@ public class MColumn extends X_AD_Column {
     setEntityType(parent.getEntityType());
   } //	MColumn
 
+  public static MColumn get(Properties ctx, int AD_Column_ID) {
+    return get(ctx, AD_Column_ID, null);
+  }
+
+  /**
+   * Get MColumn from Cache
+   *
+   * @param ctx context
+   * @param AD_Column_ID id
+   * @return MColumn
+   */
+  public static MColumn get(Properties ctx, int AD_Column_ID, String trxName) {
+    Integer key = new Integer(AD_Column_ID);
+    MColumn retValue = s_cache.get(key);
+    if (retValue != null) {
+      retValue.set_TrxName(trxName);
+      return retValue;
+    }
+    retValue = new MColumn(ctx, AD_Column_ID, trxName);
+    if (retValue.getId() != 0) s_cache.put(key, retValue);
+    return retValue;
+  } //	get
+
+  /**
+   * Get MColumn given TableName and ColumnName
+   *
+   * @param ctx context
+   * @param TableName
+   * @param ColumnName
+   * @return MColumn
+   */
+  public static MColumn get(Properties ctx, String tableName, String columnName) {
+    MTable table = MTable.get(ctx, tableName);
+    return table.getColumn(columnName);
+  } //	get
+
+  public static String getColumnName(Properties ctx, int AD_Column_ID) {
+    return getColumnName(ctx, AD_Column_ID, null);
+  }
+
+  /**
+   * Get Column Name
+   *
+   * @param ctx context
+   * @param AD_Column_ID id
+   * @param trxName transaction
+   * @return Column Name or null
+   */
+  public static String getColumnName(Properties ctx, int AD_Column_ID, String trxName) {
+    MColumn col = MColumn.get(ctx, AD_Column_ID, trxName);
+    if (col.getId() == 0) return null;
+    return col.getColumnName();
+  } //	getColumnName
+
+  /**
+   * Get Table Id for a column
+   *
+   * @param ctx context
+   * @param AD_Column_ID id
+   * @param trxName transaction
+   * @return MColumn
+   */
+  public static int getTable_ID(Properties ctx, int AD_Column_ID, String trxName) {
+    String sqlStmt = "SELECT AD_Table_ID FROM AD_Column WHERE AD_Column_ID=?";
+    return getSQLValue(trxName, sqlStmt, AD_Column_ID);
+  }
+
+  public static boolean isSuggestSelectionColumn(String columnName, boolean caseSensitive) {
+    if (Util.isEmpty(columnName, true)) return false;
+    //
+    if (columnName.equals("Value") || (!caseSensitive && columnName.equalsIgnoreCase("Value")))
+      return true;
+    else if (columnName.equals("Name") || (!caseSensitive && columnName.equalsIgnoreCase("Name")))
+      return true;
+    else if (columnName.equals("DocumentNo")
+        || (!caseSensitive && columnName.equalsIgnoreCase("DocumentNo"))) return true;
+    else if (columnName.equals("Description")
+        || (!caseSensitive && columnName.equalsIgnoreCase("Description"))) return true;
+    else
+      return columnName.indexOf("Name") != -1
+          || (!caseSensitive && columnName.toUpperCase().indexOf("Name".toUpperCase()) != -1);
+  }
+
   /**
    * Is Standard Column
    *
@@ -155,16 +182,14 @@ public class MColumn extends X_AD_Column {
    */
   public boolean isStandardColumn() {
     String columnName = getColumnName();
-    if (columnName.equals("AD_Client_ID")
+    return columnName.equals("AD_Client_ID")
         || columnName.equals("AD_Org_ID")
         || columnName.equals("IsActive")
         || columnName.equals("Processing")
         || columnName.equals("Created")
         || columnName.equals("CreatedBy")
         || columnName.equals("Updated")
-        || columnName.equals("UpdatedBy")) return true;
-
-    return false;
+        || columnName.equals("UpdatedBy");
   } //	isStandardColumn
 
   /**
@@ -260,7 +285,9 @@ public class MColumn extends X_AD_Column {
                   + " AND AD_Column_ID!=?"
                   + " AND IsIdentifier='Y'"
                   + " AND SeqNo=?",
-              new Object[] {getAD_Table_ID(), getColumnId(), getSeqNo()});
+              getAD_Table_ID(),
+              getColumnId(),
+              getSeqNo());
       if (cnt > 0) {
         log.saveError(
             DBException.SAVE_ERROR_NOT_UNIQUE_MSG,
@@ -443,6 +470,38 @@ public class MColumn extends X_AD_Column {
   } //	getSQLDDL
 
   /**
+   * Get SQL Data Type
+   *
+   * @return e.g. NVARCHAR2(60)
+   */
+  /*
+  private String getSQLDataType()
+  {
+  	int dt = getReferenceId();
+  	if (DisplayType.isID(dt) || dt == DisplayType.Integer)
+  		return "NUMBER(10)";
+  	if (DisplayType.isDate(dt))
+  		return "DATE";
+  	if (DisplayType.isNumeric(dt))
+  		return "NUMBER";
+  	if (dt == DisplayType.Binary)
+  		return "BLOB";
+  	if (dt == DisplayType.TextLong)
+  		return "CLOB";
+  	if (dt == DisplayType.YesNo)
+  		return "CHAR(1)";
+  	if (dt == DisplayType.List)
+  		return "NVARCHAR2(" + getFieldLength() + ")";
+  	if (dt == DisplayType.Button)
+  		return "CHAR(" + getFieldLength() + ")";
+  	else if (!DisplayType.isText(dt))
+  		log.severe("Unhandled Data Type = " + dt);
+
+  	return "NVARCHAR2(" + getFieldLength() + ")";
+  }	//	getSQLDataType
+  */
+
+  /**
    * Get SQL Modify command
    *
    * @param table table
@@ -523,38 +582,6 @@ public class MColumn extends X_AD_Column {
   } //	getSQLDataType
 
   /**
-   * Get SQL Data Type
-   *
-   * @return e.g. NVARCHAR2(60)
-   */
-  /*
-  private String getSQLDataType()
-  {
-  	int dt = getReferenceId();
-  	if (DisplayType.isID(dt) || dt == DisplayType.Integer)
-  		return "NUMBER(10)";
-  	if (DisplayType.isDate(dt))
-  		return "DATE";
-  	if (DisplayType.isNumeric(dt))
-  		return "NUMBER";
-  	if (dt == DisplayType.Binary)
-  		return "BLOB";
-  	if (dt == DisplayType.TextLong)
-  		return "CLOB";
-  	if (dt == DisplayType.YesNo)
-  		return "CHAR(1)";
-  	if (dt == DisplayType.List)
-  		return "NVARCHAR2(" + getFieldLength() + ")";
-  	if (dt == DisplayType.Button)
-  		return "CHAR(" + getFieldLength() + ")";
-  	else if (!DisplayType.isText(dt))
-  		log.severe("Unhandled Data Type = " + dt);
-
-  	return "NVARCHAR2(" + getFieldLength() + ")";
-  }	//	getSQLDataType
-  */
-
-  /**
    * Get Table Constraint
    *
    * @param tableName table name
@@ -584,7 +611,7 @@ public class MColumn extends X_AD_Column {
     if (getColumnName().equals(PO.getUUIDColumnName(tableName))) {
       StringBuilder indexName = new StringBuilder().append(getColumnName()).append("_idx");
       if (indexName.length() > 30) {
-        indexName = new StringBuilder().append(getColumnName().substring(0, 25));
+        indexName = new StringBuilder().append(getColumnName(), 0, 25);
         indexName.append("uuidx");
       }
       StringBuilder msgreturn =
@@ -608,36 +635,6 @@ public class MColumn extends X_AD_Column {
     sb.append(getId()).append("-").append(getColumnName()).append("]");
     return sb.toString();
   } //	toString
-
-  /**
-   * Get Table Id for a column
-   *
-   * @param ctx context
-   * @param AD_Column_ID id
-   * @param trxName transaction
-   * @return MColumn
-   */
-  public static int getTable_ID(Properties ctx, int AD_Column_ID, String trxName) {
-    String sqlStmt = "SELECT AD_Table_ID FROM AD_Column WHERE AD_Column_ID=?";
-    return getSQLValue(trxName, sqlStmt, AD_Column_ID);
-  }
-
-  public static boolean isSuggestSelectionColumn(String columnName, boolean caseSensitive) {
-    if (Util.isEmpty(columnName, true)) return false;
-    //
-    if (columnName.equals("Value") || (!caseSensitive && columnName.equalsIgnoreCase("Value")))
-      return true;
-    else if (columnName.equals("Name") || (!caseSensitive && columnName.equalsIgnoreCase("Name")))
-      return true;
-    else if (columnName.equals("DocumentNo")
-        || (!caseSensitive && columnName.equalsIgnoreCase("DocumentNo"))) return true;
-    else if (columnName.equals("Description")
-        || (!caseSensitive && columnName.equalsIgnoreCase("Description"))) return true;
-    else if (columnName.indexOf("Name") != -1
-        || (!caseSensitive && columnName.toUpperCase().indexOf("Name".toUpperCase()) != -1))
-      return true;
-    else return false;
-  }
 
   public String getReferenceTableName() {
     String foreignTable = null;

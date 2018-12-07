@@ -21,6 +21,23 @@ public abstract class Lookup extends AbstractListModel<Object>
     implements MutableComboBoxModel<Object>, Serializable {
   /** */
   private static final long serialVersionUID = -28200392264647953L;
+  /** The Data List */
+  protected volatile ArrayList<Object> p_data = new ArrayList<Object>();
+  /** Logger */
+  protected CLogger log = CLogger.getCLogger(getClass());
+  /** The Selected Item */
+  private volatile Object m_selectedObject;
+
+  /** Temporary Data */
+  private Object[] m_tempData = null;
+  /** Display Type */
+  private int m_displayType;
+  /** Window No */
+  private int m_WindowNo;
+
+  private boolean m_mandatory;
+  private boolean m_loaded;
+  private boolean m_shortList; // IDEMPIERE 90
 
   /**
    * Lookup
@@ -32,29 +49,6 @@ public abstract class Lookup extends AbstractListModel<Object>
     m_displayType = displayType;
     m_WindowNo = windowNo;
   } //  Lookup
-
-  /** The Data List */
-  protected volatile ArrayList<Object> p_data = new ArrayList<Object>();
-
-  /** The Selected Item */
-  private volatile Object m_selectedObject;
-
-  /** Temporary Data */
-  private Object[] m_tempData = null;
-
-  /** Logger */
-  protected CLogger log = CLogger.getCLogger(getClass());
-
-  /** Display Type */
-  private int m_displayType;
-  /** Window No */
-  private int m_WindowNo;
-
-  private boolean m_mandatory;
-
-  private boolean m_loaded;
-
-  private boolean m_shortList; // IDEMPIERE 90
 
   /**
    * Get Display Type
@@ -73,6 +67,15 @@ public abstract class Lookup extends AbstractListModel<Object>
   public int getWindowNo() {
     return m_WindowNo;
   } //	getWindowNo
+
+  /**
+   * Return previously selected Item
+   *
+   * @return value
+   */
+  public Object getSelectedItem() {
+    return m_selectedObject;
+  } //  getSelectedItem
 
   /**
    * ************************************************************************ Set the value of the
@@ -97,15 +100,6 @@ public abstract class Lookup extends AbstractListModel<Object>
       fireContentsChanged(this, -1, -1);
     }
   } //  setSelectedItem
-
-  /**
-   * Return previously selected Item
-   *
-   * @return value
-   */
-  public Object getSelectedItem() {
-    return m_selectedObject;
-  } //  getSelectedItem
 
   /**
    * Get Size of Model
@@ -271,10 +265,7 @@ public abstract class Lookup extends AbstractListModel<Object>
     fireContentsChanged(this, 0, p_data.size());
     if (p_data.size() == 0) {
       if (log.isLoggable(Level.FINE))
-        log.fine(
-            getColumnName()
-                + ": #0 - ms="
-                + String.valueOf(System.currentTimeMillis() - startTime));
+        log.fine(getColumnName() + ": #0 - ms=" + (System.currentTimeMillis() - startTime));
     } else {
       if (log.isLoggable(Level.FINE))
         log.fine(
@@ -282,7 +273,7 @@ public abstract class Lookup extends AbstractListModel<Object>
                 + ": #"
                 + p_data.size()
                 + " - ms="
-                + String.valueOf(System.currentTimeMillis() - startTime));
+                + (System.currentTimeMillis() - startTime));
     }
   } //  fillComboBox
 
@@ -460,21 +451,21 @@ public abstract class Lookup extends AbstractListModel<Object>
   public void loadComplete() {} //  loadComplete
 
   /**
-   * Set lookup model as mandatory, use in loading data
-   *
-   * @param flag
-   */
-  public void setMandatory(boolean flag) {
-    m_mandatory = flag;
-  }
-
-  /**
    * Is lookup model mandatory
    *
    * @return boolean
    */
   public boolean isMandatory() {
     return m_mandatory;
+  }
+
+  /**
+   * Set lookup model as mandatory, use in loading data
+   *
+   * @param flag
+   */
+  public void setMandatory(boolean flag) {
+    m_mandatory = flag;
   }
 
   /**
@@ -486,13 +477,13 @@ public abstract class Lookup extends AbstractListModel<Object>
     return m_loaded;
   }
 
+  public boolean isShortList() {
+    return m_shortList;
+  }
+
   // IDEMPIERE 90
   public void setShortList(boolean shortlist) {
     m_shortList = shortlist;
-  }
-
-  public boolean isShortList() {
-    return m_shortList;
   }
   // IDEMPIERE 90
 } //	Lookup

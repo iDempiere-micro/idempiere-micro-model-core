@@ -18,6 +18,10 @@ import org.compiere.util.Msg;
 public class MRecordAccess extends X_AD_Record_Access {
   /** */
   private static final long serialVersionUID = -5115765616266528435L;
+  //	Key Column Name			*/
+  private String m_keyColumnName = null;
+  /** TableName */
+  private String m_tableName;
 
   /**
    * Persistency Constructor
@@ -62,9 +66,6 @@ public class MRecordAccess extends X_AD_Record_Access {
     setIsReadOnly(false);
     setIsDependentEntities(false);
   } //	MRecordAccess
-
-  //	Key Column Name			*/
-  private String m_keyColumnName = null;
 
   /**
    * Get Key Column Name
@@ -209,9 +210,6 @@ public class MRecordAccess extends X_AD_Record_Access {
         .append(isExclude() ? ex : in);
     return sb.toString();
   } //	toStringX
-
-  /** TableName */
-  private String m_tableName;
 
   /**
    * Get Table Name

@@ -17,43 +17,10 @@ import org.idempiere.common.util.CCache;
 public class MOrg extends X_AD_Org {
   /** */
   private static final long serialVersionUID = -5604686137606338725L;
-
-  /**
-   * Get Active Organizations Of Client
-   *
-   * @param po persistent object
-   * @return array of orgs
-   */
-  public static MOrg[] getOfClient(PO po) {
-    List<MOrg> list =
-        new Query(po.getCtx(), I_AD_Org.Table_Name, "AD_Client_ID=?", null)
-            .setOrderBy(I_AD_Org.COLUMNNAME_Value)
-            .setOnlyActiveRecords(true)
-            .setParameters(po.getClientId())
-            .list();
-    for (MOrg org : list) {
-      s_cache.put(org.getId(), org);
-    }
-    return list.toArray(new MOrg[list.size()]);
-  } //	getOfClient
-
-  /**
-   * Get Org from Cache
-   *
-   * @param ctx context
-   * @param AD_Org_ID id
-   * @return MOrg
-   */
-  public static MOrg get(Properties ctx, int AD_Org_ID) {
-    MOrg retValue = s_cache.get(AD_Org_ID);
-    if (retValue != null) return retValue;
-    retValue = new MOrg(ctx, AD_Org_ID, null);
-    if (retValue.getId() != 0) s_cache.put(AD_Org_ID, retValue);
-    return retValue;
-  } //	get
-
   /** Cache */
   private static CCache<Integer, MOrg> s_cache = new CCache<Integer, MOrg>(I_AD_Org.Table_Name, 50);
+  /** Linked Business Partner */
+  private Integer m_linkedBPartner = null;
 
   /**
    * ************************************************************************ Standard Constructor
@@ -95,8 +62,39 @@ public class MOrg extends X_AD_Org {
     setName(name);
   } //	MOrg
 
-  /** Linked Business Partner */
-  private Integer m_linkedBPartner = null;
+  /**
+   * Get Active Organizations Of Client
+   *
+   * @param po persistent object
+   * @return array of orgs
+   */
+  public static MOrg[] getOfClient(PO po) {
+    List<MOrg> list =
+        new Query(po.getCtx(), I_AD_Org.Table_Name, "AD_Client_ID=?", null)
+            .setOrderBy(I_AD_Org.COLUMNNAME_Value)
+            .setOnlyActiveRecords(true)
+            .setParameters(po.getClientId())
+            .list();
+    for (MOrg org : list) {
+      s_cache.put(org.getId(), org);
+    }
+    return list.toArray(new MOrg[list.size()]);
+  } //	getOfClient
+
+  /**
+   * Get Org from Cache
+   *
+   * @param ctx context
+   * @param AD_Org_ID id
+   * @return MOrg
+   */
+  public static MOrg get(Properties ctx, int AD_Org_ID) {
+    MOrg retValue = s_cache.get(AD_Org_ID);
+    if (retValue != null) return retValue;
+    retValue = new MOrg(ctx, AD_Org_ID, null);
+    if (retValue.getId() != 0) s_cache.put(AD_Org_ID, retValue);
+    return retValue;
+  } //	get
 
   /**
    * Get Org Info

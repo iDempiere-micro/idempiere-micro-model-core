@@ -14,6 +14,19 @@ import org.idempiere.common.util.MimeType;
  * @version $Id: MAttachmentEntry.java,v 1.2 2006/07/30 00:58:18 jjanke Exp $
  */
 public class MAttachmentEntry implements I_AD_AttachmentEntry {
+  /** Random Seed */
+  private static long s_seed = System.currentTimeMillis();
+  /** Random Number */
+  private static Random s_random = new Random(s_seed);
+  /** Logger */
+  protected CLogger log = CLogger.getCLogger(getClass());
+  /** The Name */
+  private String m_name = "?";
+  /** The Data */
+  private byte[] m_data = null;
+  /** Index */
+  private int m_index = 0;
+
   /**
    * Attachment Entry
    *
@@ -47,29 +60,16 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
     this(name, data, 0);
   } //	MAttachmentItem
 
-  /** The Name */
-  private String m_name = "?";
-  /** The Data */
-  private byte[] m_data = null;
-
-  /** Random Seed */
-  private static long s_seed = System.currentTimeMillis();
-  /** Random Number */
-  private static Random s_random = new Random(s_seed);
-  /** Index */
-  private int m_index = 0;
-
-  /** Logger */
-  protected CLogger log = CLogger.getCLogger(getClass());
-
   /** @return Returns the data. */
   public byte[] getData() {
     return m_data;
   }
+
   /** @param data The data to set. */
   public void setData(byte[] data) {
     m_data = data;
   }
+
   /** @return Returns the name. */
   public String getName() {
     return m_name;
@@ -89,6 +89,10 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
   public int getIndex() {
     return m_index;
   } //	getIndex
+
+  public void setIndex(int index) {
+    m_index = index;
+  }
 
   /**
    * To String
@@ -235,8 +239,4 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
     if (m_data == null) return null;
     return new ByteArrayInputStream(m_data);
   } //	getInputStream
-
-  public void setIndex(int index) {
-    m_index = index;
-  }
 } //	MAttachmentItem

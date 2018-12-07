@@ -2,6 +2,7 @@
 package org.compiere.orm;
 
 // import for GenericPO
+
 import java.sql.ResultSet;
 import java.util.Properties;
 import kotliquery.Row;
@@ -18,8 +19,16 @@ import org.idempiere.orm.POInfo;
  */
 public class GenericPO extends PO {
 
+  public static final int AD_ORGTRX_ID_AD_Reference_ID = 130;
   /** */
   private static final long serialVersionUID = -6558017105997010172L;
+  /**
+   * We must not use variable initializer here since the 2 variable below will be initialize inside
+   * the initPO method called by the parent constructor.
+   */
+  private int tableID;
+
+  private String tableName;
 
   /**
    * @param tableName
@@ -63,14 +72,6 @@ public class GenericPO extends PO {
     super(new PropertiesWrapper(ctx, tableName), 0, trxName, rs);
   }
 
-  /**
-   * We must not use variable initializer here since the 2 variable below will be initialize inside
-   * the initPO method called by the parent constructor.
-   */
-  private int tableID;
-
-  private String tableName;
-
   public String toString() {
     StringBuffer sb =
         new StringBuffer("GenericPO[Table=")
@@ -80,19 +81,17 @@ public class GenericPO extends PO {
     return sb.toString();
   }
 
-  public static final int AD_ORGTRX_ID_AD_Reference_ID = 130;
-
-  /** Set Trx Organization. Performing or initiating organization */
-  public void setAD_OrgTrx_ID(int AD_OrgTrx_ID) {
-    if (AD_OrgTrx_ID == 0) set_Value("AD_OrgTrx_ID", null);
-    else set_Value("AD_OrgTrx_ID", new Integer(AD_OrgTrx_ID));
-  }
-
   /** Get Trx Organization. Performing or initiating organization */
   public int getAD_OrgTrx_ID() {
     Integer ii = (Integer) get_Value("AD_OrgTrx_ID");
     if (ii == null) return 0;
     return ii;
+  }
+
+  /** Set Trx Organization. Performing or initiating organization */
+  public void setAD_OrgTrx_ID(int AD_OrgTrx_ID) {
+    if (AD_OrgTrx_ID == 0) set_Value("AD_OrgTrx_ID", null);
+    else set_Value("AD_OrgTrx_ID", new Integer(AD_OrgTrx_ID));
   }
 
   @Override

@@ -9,14 +9,29 @@ import org.idempiere.common.util.CLogger;
  * Parse FROM in SQL WHERE clause
  *
  * @author Jorg Janke
- * @version $Id: AccessSqlParser.java,v 1.3 2006/07/30 00:58:36 jjanke Exp $
  * @author Teo Sarca, SC ARHIPAC SERVICE SRL
  *     <li>BF [ 1652623 ] AccessSqlParser.getTableInfo(String) - tablename parsing bug
  *     <li>BF [ 1964496 ] AccessSqlParser is not parsing well JOIN CLAUSE
  *     <li>BF [ 2840157 ] AccessSqlParser is not parsing well ON keyword
  *         https://sourceforge.net/tracker/?func=detail&aid=2840157&group_id=176962&atid=879332
+ * @version $Id: AccessSqlParser.java,v 1.3 2006/07/30 00:58:36 jjanke Exp $
  */
 public class AccessSqlParser {
+  /** FROM String */
+  private static final String FROM = " FROM ";
+
+  private static final int FROM_LENGTH = FROM.length();
+  private static final String WHERE = " WHERE ";
+  private static final String ON = " ON ";
+  /** Logger */
+  private CLogger log = CLogger.getCLogger(getClass());
+  /** Original SQL */
+  private String m_sqlOriginal;
+  /** SQL Selects */
+  private String[] m_sql;
+  /** List of Arrays */
+  private ArrayList<TableInfo[]> m_tableInfo = new ArrayList<TableInfo[]>();
+
   /** Base Constructor. You need to set the SQL and start the parsing manually. */
   public AccessSqlParser() {} // 	AccessSqlParser
 
@@ -29,21 +44,14 @@ public class AccessSqlParser {
     setSql(sql);
   } //	AccessSqlParser
 
-  /** FROM String */
-  private static final String FROM = " FROM ";
-
-  private static final int FROM_LENGTH = FROM.length();
-  private static final String WHERE = " WHERE ";
-  private static final String ON = " ON ";
-
-  /** Logger */
-  private CLogger log = CLogger.getCLogger(getClass());
-  /** Original SQL */
-  private String m_sqlOriginal;
-  /** SQL Selects */
-  private String[] m_sql;
-  /** List of Arrays */
-  private ArrayList<TableInfo[]> m_tableInfo = new ArrayList<TableInfo[]>();
+  /**
+   * Get (original) Sql
+   *
+   * @return sql
+   */
+  public String getSql() {
+    return m_sqlOriginal;
+  } //	getSql
 
   /**
    * Set Sql and parse it
@@ -60,15 +68,6 @@ public class AccessSqlParser {
     //
     parse();
   } //	setSQL
-
-  /**
-   * Get (original) Sql
-   *
-   * @return sql
-   */
-  public String getSql() {
-    return m_sqlOriginal;
-  } //	getSql
 
   /**
    * Parse Original SQL. Called from setSql or Constructor.
@@ -239,7 +238,7 @@ public class AccessSqlParser {
     else {
       for (int i = 0; i < m_tableInfo.size(); i++) {
         if (i > 0) sb.append("|");
-        TableInfo[] info = (TableInfo[]) m_tableInfo.get(i);
+        TableInfo[] info = m_tableInfo.get(i);
         for (int ii = 0; ii < info.length; ii++) {
           if (ii > 0) sb.append(",");
           sb.append(info[ii].toString());
@@ -259,7 +258,7 @@ public class AccessSqlParser {
    */
   public TableInfo[] getTableInfo(int index) {
     if (index < 0 || index > m_tableInfo.size()) return null;
-    TableInfo[] retValue = (TableInfo[]) m_tableInfo.get(index);
+    TableInfo[] retValue = m_tableInfo.get(index);
     return retValue;
   } //	getTableInfo
 
@@ -340,6 +339,9 @@ public class AccessSqlParser {
 
   /** Table Info VO */
   public static class TableInfo {
+    private String m_tableName;
+    private String m_synonym;
+
     /**
      * Constructor
      *
@@ -359,9 +361,6 @@ public class AccessSqlParser {
     public TableInfo(String tableName) {
       this(tableName, null);
     } //	TableInfo
-
-    private String m_tableName;
-    private String m_synonym;
 
     /**
      * Get Table Synonym

@@ -8,6 +8,8 @@ public class MViewComponent extends X_AD_ViewComponent {
 
   /** */
   private static final long serialVersionUID = -8915166706061086737L;
+  /** Columns */
+  private MViewColumn[] m_columns = null;
 
   /**
    * Standard constructor
@@ -42,9 +44,6 @@ public class MViewComponent extends X_AD_ViewComponent {
     setAD_Table_ID(parent.getAD_Table_ID());
   }
 
-  /** Columns */
-  private MViewColumn[] m_columns = null;
-
   /**
    * Get columns
    *
@@ -62,7 +61,7 @@ public class MViewComponent extends X_AD_ViewComponent {
             get_TrxName());
     query.setParameters(getAD_ViewComponent_ID());
     query.setOrderBy("SeqNo, AD_ViewColumn_ID");
-    List<MViewColumn> list = query.<MViewColumn>list();
+    List<MViewColumn> list = query.list();
 
     m_columns = new MViewColumn[list.size()];
     list.toArray(m_columns);

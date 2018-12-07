@@ -13,6 +13,26 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent {
 
+  /** DBDataType AD_Reference_ID=200070 */
+  public static final int DBDATATYPE_AD_Reference_ID = 200070;
+  /** Binary LOB = B */
+  public static final String DBDATATYPE_BinaryLOB = "B";
+  /** Character Fixed = C */
+  public static final String DBDATATYPE_CharacterFixed = "C";
+  /** Decimal = D */
+  public static final String DBDATATYPE_Decimal = "D";
+  /** Integer = I */
+  public static final String DBDATATYPE_Integer = "I";
+  /** Character LOB = L */
+  public static final String DBDATATYPE_CharacterLOB = "L";
+  /** Number = N */
+  public static final String DBDATATYPE_Number = "N";
+  /** Timestamp = T */
+  public static final String DBDATATYPE_Timestamp = "T";
+  /** Character Variable = V */
+  public static final String DBDATATYPE_CharacterVariable = "V";
+  /** EntityType AD_Reference_ID=389 */
+  public static final int ENTITYTYPE_AD_Reference_ID = 389;
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -46,16 +66,6 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   }
 
   /**
-   * Set Database View Column.
-   *
-   * @param AD_ViewColumn_ID Database View Column
-   */
-  public void setAD_ViewColumn_ID(int AD_ViewColumn_ID) {
-    if (AD_ViewColumn_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_ViewColumn_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_ViewColumn_ID, Integer.valueOf(AD_ViewColumn_ID));
-  }
-
-  /**
    * Get Database View Column.
    *
    * @return Database View Column
@@ -67,12 +77,13 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   }
 
   /**
-   * Set AD_ViewColumn_UU.
+   * Set Database View Column.
    *
-   * @param AD_ViewColumn_UU AD_ViewColumn_UU
+   * @param AD_ViewColumn_ID Database View Column
    */
-  public void setAD_ViewColumn_UU(String AD_ViewColumn_UU) {
-    set_Value(COLUMNNAME_AD_ViewColumn_UU, AD_ViewColumn_UU);
+  public void setAD_ViewColumn_ID(int AD_ViewColumn_ID) {
+    if (AD_ViewColumn_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_ViewColumn_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_ViewColumn_ID, Integer.valueOf(AD_ViewColumn_ID));
   }
 
   /**
@@ -84,20 +95,19 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
     return (String) get_Value(COLUMNNAME_AD_ViewColumn_UU);
   }
 
+  /**
+   * Set AD_ViewColumn_UU.
+   *
+   * @param AD_ViewColumn_UU AD_ViewColumn_UU
+   */
+  public void setAD_ViewColumn_UU(String AD_ViewColumn_UU) {
+    set_Value(COLUMNNAME_AD_ViewColumn_UU, AD_ViewColumn_UU);
+  }
+
   public org.compiere.model.I_AD_ViewComponent getAD_ViewComponent() throws RuntimeException {
     return (org.compiere.model.I_AD_ViewComponent)
         MTable.get(getCtx(), org.compiere.model.I_AD_ViewComponent.Table_Name)
             .getPO(getAD_ViewComponent_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Database View Component.
-   *
-   * @param AD_ViewComponent_ID Database View Component
-   */
-  public void setAD_ViewComponent_ID(int AD_ViewComponent_ID) {
-    if (AD_ViewComponent_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, Integer.valueOf(AD_ViewComponent_ID));
   }
 
   /**
@@ -112,12 +122,13 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   }
 
   /**
-   * Set DB Column Name.
+   * Set Database View Component.
    *
-   * @param ColumnName Name of the column in the database
+   * @param AD_ViewComponent_ID Database View Component
    */
-  public void setColumnName(String ColumnName) {
-    set_Value(COLUMNNAME_ColumnName, ColumnName);
+  public void setAD_ViewComponent_ID(int AD_ViewComponent_ID) {
+    if (AD_ViewComponent_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, Integer.valueOf(AD_ViewComponent_ID));
   }
 
   /**
@@ -130,12 +141,12 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   }
 
   /**
-   * Set Column SQL.
+   * Set DB Column Name.
    *
-   * @param ColumnSQL Virtual Column (r/o)
+   * @param ColumnName Name of the column in the database
    */
-  public void setColumnSQL(String ColumnSQL) {
-    set_Value(COLUMNNAME_ColumnSQL, ColumnSQL);
+  public void setColumnName(String ColumnName) {
+    set_Value(COLUMNNAME_ColumnName, ColumnName);
   }
 
   /**
@@ -147,32 +158,13 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
     return (String) get_Value(COLUMNNAME_ColumnSQL);
   }
 
-  /** DBDataType AD_Reference_ID=200070 */
-  public static final int DBDATATYPE_AD_Reference_ID = 200070;
-  /** Binary LOB = B */
-  public static final String DBDATATYPE_BinaryLOB = "B";
-  /** Character Fixed = C */
-  public static final String DBDATATYPE_CharacterFixed = "C";
-  /** Decimal = D */
-  public static final String DBDATATYPE_Decimal = "D";
-  /** Integer = I */
-  public static final String DBDATATYPE_Integer = "I";
-  /** Character LOB = L */
-  public static final String DBDATATYPE_CharacterLOB = "L";
-  /** Number = N */
-  public static final String DBDATATYPE_Number = "N";
-  /** Timestamp = T */
-  public static final String DBDATATYPE_Timestamp = "T";
-  /** Character Variable = V */
-  public static final String DBDATATYPE_CharacterVariable = "V";
   /**
-   * Set Database Data Type.
+   * Set Column SQL.
    *
-   * @param DBDataType Database Data Type
+   * @param ColumnSQL Virtual Column (r/o)
    */
-  public void setDBDataType(String DBDataType) {
-
-    set_Value(COLUMNNAME_DBDataType, DBDataType);
+  public void setColumnSQL(String ColumnSQL) {
+    set_Value(COLUMNNAME_ColumnSQL, ColumnSQL);
   }
 
   /**
@@ -185,12 +177,13 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   }
 
   /**
-   * Set Description.
+   * Set Database Data Type.
    *
-   * @param Description Optional short description of the record
+   * @param DBDataType Database Data Type
    */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
+  public void setDBDataType(String DBDataType) {
+
+    set_Value(COLUMNNAME_DBDataType, DBDataType);
   }
 
   /**
@@ -202,16 +195,13 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
     return (String) get_Value(COLUMNNAME_Description);
   }
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
   /**
-   * Set Entity Type.
+   * Set Description.
    *
-   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
+   * @param Description Optional short description of the record
    */
-  public void setEntityType(String EntityType) {
-
-    set_Value(COLUMNNAME_EntityType, EntityType);
+  public void setDescription(String Description) {
+    set_Value(COLUMNNAME_Description, Description);
   }
 
   /**
@@ -224,12 +214,13 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   }
 
   /**
-   * Set Comment/Help.
+   * Set Entity Type.
    *
-   * @param Help Comment or Hint
+   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
    */
-  public void setHelp(String Help) {
-    set_Value(COLUMNNAME_Help, Help);
+  public void setEntityType(String EntityType) {
+
+    set_Value(COLUMNNAME_EntityType, EntityType);
   }
 
   /**
@@ -242,12 +233,12 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   }
 
   /**
-   * Set Sequence.
+   * Set Comment/Help.
    *
-   * @param SeqNo Method of ordering records; lowest number comes first
+   * @param Help Comment or Hint
    */
-  public void setSeqNo(int SeqNo) {
-    set_Value(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
+  public void setHelp(String Help) {
+    set_Value(COLUMNNAME_Help, Help);
   }
 
   /**
@@ -259,6 +250,15 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
     Integer ii = (Integer) get_Value(COLUMNNAME_SeqNo);
     if (ii == null) return 0;
     return ii;
+  }
+
+  /**
+   * Set Sequence.
+   *
+   * @param SeqNo Method of ordering records; lowest number comes first
+   */
+  public void setSeqNo(int SeqNo) {
+    set_Value(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
   }
 
   @Override

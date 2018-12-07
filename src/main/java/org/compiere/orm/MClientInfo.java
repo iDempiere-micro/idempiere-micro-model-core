@@ -1,6 +1,5 @@
 package org.compiere.orm;
 
-
 import java.sql.ResultSet;
 import java.util.Properties;
 import kotliquery.Row;

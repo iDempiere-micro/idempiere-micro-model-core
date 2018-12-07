@@ -45,16 +45,6 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
   }
 
   /**
-   * Set Process Instance.
-   *
-   * @param AD_PInstance_ID Instance of the process
-   */
-  public void setAD_PInstance_ID(int AD_PInstance_ID) {
-    if (AD_PInstance_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_PInstance_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_PInstance_ID, Integer.valueOf(AD_PInstance_ID));
-  }
-
-  /**
    * Get Process Instance.
    *
    * @return Instance of the process
@@ -66,12 +56,13 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
   }
 
   /**
-   * Set AD_PInstance_Log_UU.
+   * Set Process Instance.
    *
-   * @param AD_PInstance_Log_UU AD_PInstance_Log_UU
+   * @param AD_PInstance_ID Instance of the process
    */
-  public void setAD_PInstance_Log_UU(String AD_PInstance_Log_UU) {
-    set_Value(COLUMNNAME_AD_PInstance_Log_UU, AD_PInstance_Log_UU);
+  public void setAD_PInstance_ID(int AD_PInstance_ID) {
+    if (AD_PInstance_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_PInstance_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_PInstance_ID, Integer.valueOf(AD_PInstance_ID));
   }
 
   /**
@@ -83,10 +74,30 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
     return (String) get_Value(COLUMNNAME_AD_PInstance_Log_UU);
   }
 
+  /**
+   * Set AD_PInstance_Log_UU.
+   *
+   * @param AD_PInstance_Log_UU AD_PInstance_Log_UU
+   */
+  public void setAD_PInstance_Log_UU(String AD_PInstance_Log_UU) {
+    set_Value(COLUMNNAME_AD_PInstance_Log_UU, AD_PInstance_Log_UU);
+  }
+
   public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
             .getPO(getAD_Table_ID(), get_TrxName());
+  }
+
+  /**
+   * Get Table.
+   *
+   * @return Database Table information
+   */
+  public int getAD_Table_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    if (ii == null) return 0;
+    return ii;
   }
 
   /**
@@ -100,12 +111,12 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
   }
 
   /**
-   * Get Table.
+   * Get Log.
    *
-   * @return Database Table information
+   * @return Log
    */
-  public int getAD_Table_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+  public int getLog_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_Log_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -121,26 +132,6 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
   }
 
   /**
-   * Get Log.
-   *
-   * @return Log
-   */
-  public int getLog_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_Log_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set Process Date.
-   *
-   * @param P_Date Process Parameter
-   */
-  public void setP_Date(Timestamp P_Date) {
-    set_ValueNoCheck(COLUMNNAME_P_Date, P_Date);
-  }
-
-  /**
    * Get Process Date.
    *
    * @return Process Parameter
@@ -150,13 +141,12 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
   }
 
   /**
-   * Set Process ID.
+   * Set Process Date.
    *
-   * @param P_ID Process ID
+   * @param P_Date Process Parameter
    */
-  public void setP_ID(int P_ID) {
-    if (P_ID < 1) set_ValueNoCheck(COLUMNNAME_P_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_P_ID, Integer.valueOf(P_ID));
+  public void setP_Date(Timestamp P_Date) {
+    set_ValueNoCheck(COLUMNNAME_P_Date, P_Date);
   }
 
   /**
@@ -171,12 +161,13 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
   }
 
   /**
-   * Set Process Message.
+   * Set Process ID.
    *
-   * @param P_Msg Process Message
+   * @param P_ID Process ID
    */
-  public void setP_Msg(String P_Msg) {
-    set_ValueNoCheck(COLUMNNAME_P_Msg, P_Msg);
+  public void setP_ID(int P_ID) {
+    if (P_ID < 1) set_ValueNoCheck(COLUMNNAME_P_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_P_ID, Integer.valueOf(P_ID));
   }
 
   /**
@@ -189,12 +180,12 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
   }
 
   /**
-   * Set Process Number.
+   * Set Process Message.
    *
-   * @param P_Number Process Parameter
+   * @param P_Msg Process Message
    */
-  public void setP_Number(BigDecimal P_Number) {
-    set_ValueNoCheck(COLUMNNAME_P_Number, P_Number);
+  public void setP_Msg(String P_Msg) {
+    set_ValueNoCheck(COLUMNNAME_P_Msg, P_Msg);
   }
 
   /**
@@ -209,13 +200,12 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
   }
 
   /**
-   * Set Record ID.
+   * Set Process Number.
    *
-   * @param Record_ID Direct internal record ID
+   * @param P_Number Process Parameter
    */
-  public void setRecord_ID(int Record_ID) {
-    if (Record_ID < 0) set_Value(COLUMNNAME_Record_ID, null);
-    else set_Value(COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
+  public void setP_Number(BigDecimal P_Number) {
+    set_ValueNoCheck(COLUMNNAME_P_Number, P_Number);
   }
 
   /**
@@ -227,6 +217,16 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
     Integer ii = (Integer) get_Value(COLUMNNAME_Record_ID);
     if (ii == null) return 0;
     return ii;
+  }
+
+  /**
+   * Set Record ID.
+   *
+   * @param Record_ID Direct internal record ID
+   */
+  public void setRecord_ID(int Record_ID) {
+    if (Record_ID < 0) set_Value(COLUMNNAME_Record_ID, null);
+    else set_Value(COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
   }
 
   @Override

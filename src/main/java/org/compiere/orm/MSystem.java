@@ -7,6 +7,10 @@ import java.util.Properties;
 import org.idempiere.common.util.CCache;
 
 public class MSystem extends X_AD_System {
+  /** System - cached */
+  private static CCache<Integer, MSystem> s_system =
+      new CCache<Integer, MSystem>(Table_Name, 1, -1, true);
+
   /**
    * ************************************************************************ Default Constructor
    *
@@ -37,10 +41,6 @@ public class MSystem extends X_AD_System {
   public MSystem() {
     this(new Properties(), 0, null);
   } //	MSystem
-
-  /** System - cached */
-  private static CCache<Integer, MSystem> s_system =
-      new CCache<Integer, MSystem>(Table_Name, 1, -1, true);
 
   /**
    * Load System Record

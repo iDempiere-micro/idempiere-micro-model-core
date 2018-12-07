@@ -8,84 +8,6 @@ package org.idempiere.common.util;
  */
 public class MimeType {
   /**
-   * Get Mime Type of file name
-   *
-   * @param fileName file name
-   * @return mime type
-   */
-  public static String getMimeType(String fileName) {
-    if (fileName == null || fileName.indexOf('.') < 0) return BINARY;
-    //
-    String extension = fileName.substring(fileName.lastIndexOf('.'));
-    if (extension == null) return BINARY;
-
-    for (int i = 0; i < TYPES.length; i++) {
-      String[] type = TYPES[i];
-
-      if (type[0].equals(extension.toLowerCase())) return type[1];
-    }
-    return BINARY;
-  } //	getMimeType
-
-  /**
-   * Get Mime Type of file name
-   *
-   * @param fileName file name
-   * @return mime type
-   */
-  public static MimeType get(String fileName) {
-    return new MimeType(fileName, getMimeType(fileName));
-  } //	get
-
-  /** application/octet-stream */
-  public static String BINARY = "application/octet-stream";
-
-  /**
-   * ************************************************************************ MimeType
-   *
-   * @param extension extension (with dot)
-   * @param mimeType mime type
-   */
-  public MimeType(String extension, String mimeType) {
-    setExtension(extension);
-    setMimeType(mimeType);
-  } //	MimeType
-
-  /** Extension */
-  private String m_extension = null;
-  /** MIME Type */
-  private String m_mimeType = null;
-
-  /** @return Returns the extension. */
-  public String getExtension() {
-    return m_extension;
-  } //	getExtension
-
-  /** @param extension The extension to set. */
-  public void setExtension(String extension) {
-    m_extension = extension;
-  } //	setExtension
-
-  /** @return Returns the Mime Type (Content Type). */
-  public String getMimeType() {
-    return m_mimeType;
-  } //	getMimeType
-
-  /** @param mimeType The mimeType to set. */
-  public void setMimeType(String mimeType) {
-    m_mimeType = mimeType;
-  } //	setMimeType
-
-  /**
-   * String representation
-   *
-   * @return info
-   */
-  public String toString() {
-    return m_mimeType + "(" + m_extension + ")";
-  } //	toString
-
-  /**
    * ************************************************************************ Mime / Content Type
    * Map
    */
@@ -740,4 +662,80 @@ public class MimeType {
         {".zoo", "application/octet-stream"},
         {".zsh", "text/x-script.zsh"}
       };
+  /** application/octet-stream */
+  public static String BINARY = "application/octet-stream";
+  /** Extension */
+  private String m_extension = null;
+  /** MIME Type */
+  private String m_mimeType = null;
+
+  /**
+   * ************************************************************************ MimeType
+   *
+   * @param extension extension (with dot)
+   * @param mimeType mime type
+   */
+  public MimeType(String extension, String mimeType) {
+    setExtension(extension);
+    setMimeType(mimeType);
+  } //	MimeType
+
+  /**
+   * Get Mime Type of file name
+   *
+   * @param fileName file name
+   * @return mime type
+   */
+  public static String getMimeType(String fileName) {
+    if (fileName == null || fileName.indexOf('.') < 0) return BINARY;
+    //
+    String extension = fileName.substring(fileName.lastIndexOf('.'));
+    if (extension == null) return BINARY;
+
+    for (int i = 0; i < TYPES.length; i++) {
+      String[] type = TYPES[i];
+
+      if (type[0].equals(extension.toLowerCase())) return type[1];
+    }
+    return BINARY;
+  } //	getMimeType
+
+  /**
+   * Get Mime Type of file name
+   *
+   * @param fileName file name
+   * @return mime type
+   */
+  public static MimeType get(String fileName) {
+    return new MimeType(fileName, getMimeType(fileName));
+  } //	get
+
+  /** @return Returns the extension. */
+  public String getExtension() {
+    return m_extension;
+  } //	getExtension
+
+  /** @param extension The extension to set. */
+  public void setExtension(String extension) {
+    m_extension = extension;
+  } //	setExtension
+
+  /** @return Returns the Mime Type (Content Type). */
+  public String getMimeType() {
+    return m_mimeType;
+  } //	getMimeType
+
+  /** @param mimeType The mimeType to set. */
+  public void setMimeType(String mimeType) {
+    m_mimeType = mimeType;
+  } //	setMimeType
+
+  /**
+   * String representation
+   *
+   * @return info
+   */
+  public String toString() {
+    return m_mimeType + "(" + m_extension + ")";
+  } //	toString
 } //	MimeType

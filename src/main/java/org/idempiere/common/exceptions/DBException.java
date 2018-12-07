@@ -10,10 +10,10 @@ import org.idempiere.common.util.CLogMgt;
  * what to do where needed.
  *
  * @author Vincent Harcq
- * @version $Id: DBException.java,v 1.2 2006/07/30 00:54:35 jjanke Exp $
  * @author Teo Sarca, SC ARHIPAC SERVICE SRL
  * @author Armen Rizal, GOODWILL CONSULTING FR [2789943] Better DBException handling for PostgreSQL
  *     https://sourceforge.net/tracker/?func=detail&aid=2789943&group_id=176962&atid=879335
+ * @version $Id: DBException.java,v 1.2 2006/07/30 00:54:35 jjanke Exp $
  */
 public class DBException extends AdempiereException {
   public static final String DATABASE_OPERATION_TIMEOUT_MSG = "DatabaseOperationTimeout";
@@ -54,36 +54,6 @@ public class DBException extends AdempiereException {
    */
   public DBException(String msg) {
     super(msg);
-  }
-
-  /** @return SQL Query or null */
-  public String getSQL() {
-    return m_sql;
-  }
-
-  /** @return Wrapped SQLException or null */
-  public SQLException getSQLException() {
-    Throwable cause = getCause();
-    if (cause instanceof SQLException) return (SQLException) cause;
-    return null;
-  }
-
-  /** @see java.sql.SQLException#getErrorCode() */
-  public int getErrorCode() {
-    SQLException e = getSQLException();
-    return (e != null ? e.getErrorCode() : -1);
-  }
-
-  /** @see java.sql.SQLException#getNextException() */
-  public SQLException getNextException() {
-    SQLException e = getSQLException();
-    return (e != null ? e.getNextException() : null);
-  }
-
-  /** @see java.sql.SQLException#getSQLState() */
-  public String getSQLState() {
-    SQLException e = getSQLException();
-    return (e != null ? e.getSQLState() : null);
   }
 
   private static final boolean isErrorCode(Exception e, int errorCode) {
@@ -173,5 +143,35 @@ public class DBException extends AdempiereException {
     } else {
       return null;
     }
+  }
+
+  /** @return SQL Query or null */
+  public String getSQL() {
+    return m_sql;
+  }
+
+  /** @return Wrapped SQLException or null */
+  public SQLException getSQLException() {
+    Throwable cause = getCause();
+    if (cause instanceof SQLException) return (SQLException) cause;
+    return null;
+  }
+
+  /** @see java.sql.SQLException#getErrorCode() */
+  public int getErrorCode() {
+    SQLException e = getSQLException();
+    return (e != null ? e.getErrorCode() : -1);
+  }
+
+  /** @see java.sql.SQLException#getNextException() */
+  public SQLException getNextException() {
+    SQLException e = getSQLException();
+    return (e != null ? e.getNextException() : null);
+  }
+
+  /** @see java.sql.SQLException#getSQLState() */
+  public String getSQLState() {
+    SQLException e = getSQLException();
+    return (e != null ? e.getSQLState() : null);
   }
 } //	DBException

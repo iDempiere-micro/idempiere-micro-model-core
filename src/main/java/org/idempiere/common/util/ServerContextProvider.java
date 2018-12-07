@@ -5,9 +5,8 @@ import java.util.Properties;
 /** @author Low Heng Sin */
 public class ServerContextProvider implements ContextProvider {
 
-  private static final Properties context = new ServerContextPropertiesWrapper();
-
   public static final ServerContextProvider INSTANCE = new ServerContextProvider();
+  private static final Properties context = new ServerContextPropertiesWrapper();
 
   private ServerContextProvider() {}
 

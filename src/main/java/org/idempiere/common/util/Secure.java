@@ -2,6 +2,7 @@ package org.idempiere.common.util;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.security.AlgorithmParameters;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,6 +26,18 @@ import org.idempiere.icommon.base.IKeyStore;
  * @version $Id: Secure.java,v 1.2 2006/07/30 00:52:23 jjanke Exp $
  */
 public class Secure implements SecureInterface {
+  /** Logger */
+  private static CLogger log = CLogger.getCLogger(Secure.class.getName());
+  /** Message Digest */
+  private MessageDigest m_md = null;
+
+  private IKeyStore m_keyStore = null;
+
+  /** ********************************************************************** Adempiere Security */
+  public Secure() {
+    initCipher();
+  } //	Secure
+
   /**
    * ************************************************************************ Hash checksum number
    *
@@ -93,17 +106,14 @@ public class Secure implements SecureInterface {
     return null;
   } //  convertToHexString
 
-  /** ************************************************************************ Adempiere Security */
-  public Secure() {
-    initCipher();
-  } //	Secure
-
-  /** Message Digest */
-  private MessageDigest m_md = null;
-
-  private IKeyStore m_keyStore = null;
-  /** Logger */
-  private static CLogger log = CLogger.getCLogger(Secure.class.getName());
+  /** @return keystore */
+  public static IKeyStore getKeyStoreService() {
+    IServiceHolder<IKeyStore> keyStoreService = Service.Companion.locator().locate(IKeyStore.class);
+    if (keyStoreService == null) {
+      return null;
+    }
+    return keyStoreService.getService();
+  }
 
   /** Initialize Cipher & Key */
   private synchronized void initCipher() {
@@ -130,7 +140,7 @@ public class Secure implements SecureInterface {
       Cipher cipher = Cipher.getInstance(m_keyStore.getAlgorithm());
 
       cipher.init(Cipher.ENCRYPT_MODE, m_keyStore.getKey(AD_Client_ID));
-      byte[] encBytes = cipher.doFinal(clearText.getBytes("UTF8"));
+      byte[] encBytes = cipher.doFinal(clearText.getBytes(StandardCharsets.UTF_8));
 
       String encString = convertToHexString(encBytes);
       // globalqss - [ 1577737 ] Security Breach - show database password
@@ -182,7 +192,7 @@ public class Secure implements SecureInterface {
         AlgorithmParameters ap = cipher.getParameters();
         cipher.init(Cipher.DECRYPT_MODE, m_keyStore.getKey(AD_Client_ID), ap);
         byte[] out = cipher.doFinal(data);
-        String retValue = new String(out, "UTF8");
+        String retValue = new String(out, StandardCharsets.UTF_8);
         // globalqss - [ 1577737 ] Security Breach - show database password
         // log.log (Level.ALL, value + " => " + retValue);
         return retValue;
@@ -314,7 +324,7 @@ public class Secure implements SecureInterface {
     MessageDigest digest = MessageDigest.getInstance("SHA-512");
     digest.reset();
     digest.update(salt);
-    byte[] input = digest.digest(value.getBytes("UTF-8"));
+    byte[] input = digest.digest(value.getBytes(StandardCharsets.UTF_8));
     for (int i = 0; i < iterations; i++) {
       digest.reset();
       input = digest.digest(input);
@@ -334,15 +344,6 @@ public class Secure implements SecureInterface {
     sb.append(m_keyStore.getAlgorithm()).append("]");
     return sb.toString();
   } //	toString
-
-  /** @return keystore */
-  public static IKeyStore getKeyStoreService() {
-    IServiceHolder<IKeyStore> keyStoreService = Service.Companion.locator().locate(IKeyStore.class);
-    if (keyStoreService == null) {
-      return null;
-    }
-    return keyStoreService.getService();
-  }
 
   /** @return keystore */
   public IKeyStore getKeyStore() {

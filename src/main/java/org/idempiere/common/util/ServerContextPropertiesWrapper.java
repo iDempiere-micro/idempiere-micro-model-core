@@ -56,7 +56,7 @@ public class ServerContextPropertiesWrapper extends Properties {
    * @see java.util.Properties#loadFromXML(java.io.InputStream)
    */
   @Override
-  public void loadFromXML(InputStream in) throws IOException, InvalidPropertiesFormatException {
+  public void loadFromXML(InputStream in) throws IOException {
     ServerContext.getCurrentInstance().loadFromXML(in);
   }
 

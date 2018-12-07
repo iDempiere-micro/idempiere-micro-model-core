@@ -9,13 +9,39 @@ import org.idempiere.common.util.CCache;
  * Organization Info Model
  *
  * @author Jorg Janke
- * @version $Id: MOrgInfo.java,v 1.3 2006/07/30 00:58:37 jjanke Exp $
  * @author Teo Sarca, www.arhipac.ro
  *     <li>BF [ 2107083 ] Caching of MOrgInfo issue
+ * @version $Id: MOrgInfo.java,v 1.3 2006/07/30 00:58:37 jjanke Exp $
  */
 public class MOrgInfo extends X_AD_OrgInfo {
   /** */
   private static final long serialVersionUID = 2496591466841600079L;
+  /** Cache */
+  private static CCache<Integer, MOrgInfo> s_cache =
+      new CCache<Integer, MOrgInfo>(I_AD_OrgInfo.Table_Name, 50);
+
+  /**
+   * ************************************************************************ Load Constructor
+   *
+   * @param ctx context
+   * @param rs result set
+   * @param trxName transaction
+   */
+  public MOrgInfo(Properties ctx, ResultSet rs, String trxName) {
+    super(ctx, rs, trxName);
+  } //	MOrgInfo
+
+  /**
+   * Organization constructor
+   *
+   * @param org org
+   */
+  public MOrgInfo(MOrg org) {
+    super(org.getCtx(), 0, org.get_TrxName());
+    setClientOrg(org);
+    setDUNS("?");
+    setTaxID("?");
+  } //	MOrgInfo
 
   /**
    * Load Constructor
@@ -51,31 +77,4 @@ public class MOrgInfo extends X_AD_OrgInfo {
     }
     return retValue;
   } //	get
-
-  /** Cache */
-  private static CCache<Integer, MOrgInfo> s_cache =
-      new CCache<Integer, MOrgInfo>(I_AD_OrgInfo.Table_Name, 50);
-
-  /**
-   * ************************************************************************ Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public MOrgInfo(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	MOrgInfo
-
-  /**
-   * Organization constructor
-   *
-   * @param org org
-   */
-  public MOrgInfo(MOrg org) {
-    super(org.getCtx(), 0, org.get_TrxName());
-    setClientOrg(org);
-    setDUNS("?");
-    setTaxID("?");
-  } //	MOrgInfo
 }

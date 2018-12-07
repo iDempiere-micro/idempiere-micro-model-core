@@ -19,6 +19,11 @@ import java.util.zip.ZipFile;
  * @version $Id: ZipUtil.java,v 1.2 2006/07/30 00:54:36 jjanke Exp $
  */
 public class ZipUtil {
+  @SuppressWarnings("unused")
+  private File m_file;
+
+  private ZipFile m_zipFile;
+
   /** Empty Constructor, need to open explicitly. */
   public ZipUtil() {} // 	ZipUtil
 
@@ -39,166 +44,6 @@ public class ZipUtil {
   public ZipUtil(File file) {
     open(file);
   } //	ZipUtil
-
-  @SuppressWarnings("unused")
-  private File m_file;
-
-  private ZipFile m_zipFile;
-
-  /**
-   * Open the Zip File for reading
-   *
-   * @param fileName zip file
-   * @return true if opened
-   */
-  public boolean open(String fileName) {
-    if (fileName == null) return false;
-    try {
-      return open(new File(fileName));
-    } catch (Exception ex) {
-      System.err.println("ZipUtil.open - " + ex);
-    }
-    return false;
-  } //	open
-
-  /**
-   * Open the Zip File for reading
-   *
-   * @param file zip file
-   * @return true if opened
-   */
-  public boolean open(File file) {
-    if (file == null) return false;
-    m_file = file;
-    try {
-      if (file.getName().endsWith("jar")) m_zipFile = new JarFile(file, false, JarFile.OPEN_READ);
-      else m_zipFile = new ZipFile(file, ZipFile.OPEN_READ);
-    } catch (IOException ex) {
-      System.err.println("ZipUtil.open - " + ex);
-      m_zipFile = null;
-      return false;
-    }
-    return true;
-  } //	open
-
-  /** Close Zip File */
-  public void close() {
-    try {
-      if (m_zipFile != null) m_zipFile.close();
-    } catch (IOException ex) {
-      System.err.println("ZipUtil.close - " + ex);
-    }
-    m_zipFile = null;
-  } //	close
-
-  /**
-   * Is the Zip File Open
-   *
-   * @return true if yes
-   */
-  public boolean isOpen() {
-    return m_zipFile != null;
-  } //	isOpen
-
-  /**
-   * Is it a Jar
-   *
-   * @return true if yes
-   */
-  public boolean isJar() {
-    return (m_zipFile != null && m_zipFile instanceof JarFile);
-  } //	isJar
-
-  /**
-   * Get it as Jar if it is a Jar
-   *
-   * @return jar or null if not a jar
-   */
-  public JarFile getJar() {
-    if (m_zipFile != null && m_zipFile instanceof JarFile) return (JarFile) m_zipFile;
-    return null;
-  } //	getJar
-
-  /**
-   * String Representation
-   *
-   * @return info
-   */
-  public String toString() {
-    if (m_zipFile != null) return m_zipFile.toString();
-    return "ZipUtil";
-  } //	toString
-
-  /**
-   * ************************************************************************ Get Content as sorted
-   * String Array
-   *
-   * @return content
-   */
-  public String[] getContent() {
-    if (!isOpen()) return null;
-    Enumeration<? extends ZipEntry> e = m_zipFile.entries();
-    ArrayList<ZipEntry> list = new ArrayList<ZipEntry>();
-    while (e.hasMoreElements()) list.add(e.nextElement());
-    //	return sorted array
-    String[] retValue = new String[list.size()];
-    for (int i = 0; i < retValue.length; i++) retValue[i] = ((ZipEntry) list.get(i)).getName();
-    Arrays.sort(retValue);
-    return retValue;
-  } //	getContent
-
-  /**
-   * Get ZipEntries as Enumeration
-   *
-   * @return entries
-   */
-  public Enumeration<?> entries() {
-    if (!isOpen()) return null;
-    return m_zipFile.entries();
-  } //	entries
-
-  /**
-   * Get Zip Entry
-   *
-   * @param name entry name
-   * @return ZipEntry or null if not found
-   */
-  public ZipEntry getEntry(String name) {
-    if (!isOpen()) return null;
-    return m_zipFile.getEntry(name);
-  } //	getEntry
-
-  /**
-   * Get File Info
-   *
-   * @param name name
-   * @return time and size
-   */
-  public String getEntryInfo(String name) {
-    StringBuilder sb = new StringBuilder(name);
-    ZipEntry e = getEntry(name);
-    if (e == null) sb.append(": -");
-    else {
-      Timestamp ts = new Timestamp(e.getTime());
-      sb.append(": ").append(ts).append(" - ").append(e.getSize());
-    }
-    return sb.toString();
-  } //	getEntryInfo
-
-  /**
-   * Get Manifest if a Jar
-   *
-   * @return Manifest if exists or null
-   */
-  public Manifest getManifest() {
-    try {
-      JarFile jar = getJar();
-      if (jar != null) return jar.getManifest();
-    } catch (IOException ex) {
-      System.err.println("ZipUtil.getManifest - " + ex);
-    }
-    return null;
-  } //	getManifest
 
   /**
    * ************************************************************************ Get Zip Entry
@@ -335,4 +180,159 @@ public class ZipUtil {
     }
     return null;
   } //	findInPath
+
+  /**
+   * Open the Zip File for reading
+   *
+   * @param fileName zip file
+   * @return true if opened
+   */
+  public boolean open(String fileName) {
+    if (fileName == null) return false;
+    try {
+      return open(new File(fileName));
+    } catch (Exception ex) {
+      System.err.println("ZipUtil.open - " + ex);
+    }
+    return false;
+  } //	open
+
+  /**
+   * Open the Zip File for reading
+   *
+   * @param file zip file
+   * @return true if opened
+   */
+  public boolean open(File file) {
+    if (file == null) return false;
+    m_file = file;
+    try {
+      if (file.getName().endsWith("jar")) m_zipFile = new JarFile(file, false, JarFile.OPEN_READ);
+      else m_zipFile = new ZipFile(file, ZipFile.OPEN_READ);
+    } catch (IOException ex) {
+      System.err.println("ZipUtil.open - " + ex);
+      m_zipFile = null;
+      return false;
+    }
+    return true;
+  } //	open
+
+  /** Close Zip File */
+  public void close() {
+    try {
+      if (m_zipFile != null) m_zipFile.close();
+    } catch (IOException ex) {
+      System.err.println("ZipUtil.close - " + ex);
+    }
+    m_zipFile = null;
+  } //	close
+
+  /**
+   * Is the Zip File Open
+   *
+   * @return true if yes
+   */
+  public boolean isOpen() {
+    return m_zipFile != null;
+  } //	isOpen
+
+  /**
+   * Is it a Jar
+   *
+   * @return true if yes
+   */
+  public boolean isJar() {
+    return (m_zipFile != null && m_zipFile instanceof JarFile);
+  } //	isJar
+
+  /**
+   * Get it as Jar if it is a Jar
+   *
+   * @return jar or null if not a jar
+   */
+  public JarFile getJar() {
+    if (m_zipFile != null && m_zipFile instanceof JarFile) return (JarFile) m_zipFile;
+    return null;
+  } //	getJar
+
+  /**
+   * String Representation
+   *
+   * @return info
+   */
+  public String toString() {
+    if (m_zipFile != null) return m_zipFile.toString();
+    return "ZipUtil";
+  } //	toString
+
+  /**
+   * ************************************************************************ Get Content as sorted
+   * String Array
+   *
+   * @return content
+   */
+  public String[] getContent() {
+    if (!isOpen()) return null;
+    Enumeration<? extends ZipEntry> e = m_zipFile.entries();
+    ArrayList<ZipEntry> list = new ArrayList<ZipEntry>();
+    while (e.hasMoreElements()) list.add(e.nextElement());
+    //	return sorted array
+    String[] retValue = new String[list.size()];
+    for (int i = 0; i < retValue.length; i++) retValue[i] = list.get(i).getName();
+    Arrays.sort(retValue);
+    return retValue;
+  } //	getContent
+
+  /**
+   * Get ZipEntries as Enumeration
+   *
+   * @return entries
+   */
+  public Enumeration<?> entries() {
+    if (!isOpen()) return null;
+    return m_zipFile.entries();
+  } //	entries
+
+  /**
+   * Get Zip Entry
+   *
+   * @param name entry name
+   * @return ZipEntry or null if not found
+   */
+  public ZipEntry getEntry(String name) {
+    if (!isOpen()) return null;
+    return m_zipFile.getEntry(name);
+  } //	getEntry
+
+  /**
+   * Get File Info
+   *
+   * @param name name
+   * @return time and size
+   */
+  public String getEntryInfo(String name) {
+    StringBuilder sb = new StringBuilder(name);
+    ZipEntry e = getEntry(name);
+    if (e == null) sb.append(": -");
+    else {
+      Timestamp ts = new Timestamp(e.getTime());
+      sb.append(": ").append(ts).append(" - ").append(e.getSize());
+    }
+    return sb.toString();
+  } //	getEntryInfo
+
+  /**
+   * Get Manifest if a Jar
+   *
+   * @return Manifest if exists or null
+   */
+  public Manifest getManifest() {
+    try {
+      JarFile jar = getJar();
+      if (jar != null) return jar.getManifest();
+    } catch (IOException ex) {
+      System.err.println("ZipUtil.getManifest - " + ex);
+    }
+    return null;
+  } //	getManifest
 } //	ZipUtil

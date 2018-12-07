@@ -127,6 +127,7 @@ public class SetGetUtil {
   public static int copyChangedValues(PO to, PO from) {
     return copyValues(to, from, null, null, true);
   }
+
   /**
    * @param to
    * @param from
@@ -352,12 +353,7 @@ public class SetGetUtil {
   public static boolean isUserEntry(Object o) {
     if (o == null) {
       return false;
-    } else if (o instanceof PO) {
-      //			return ((PO)o).is_UserEntry();
-      return false; // TODO
-    } else {
-      return true;
-    }
+    } else return !(o instanceof PO);
   }
 
   /**

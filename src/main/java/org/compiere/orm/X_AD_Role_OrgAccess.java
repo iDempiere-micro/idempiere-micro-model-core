@@ -48,16 +48,6 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
   }
 
   /**
-   * Set Role.
-   *
-   * @param AD_Role_ID Responsibility Role
-   */
-  public void setAD_Role_ID(int AD_Role_ID) {
-    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
-  }
-
-  /**
    * Get Role.
    *
    * @return Responsibility Role
@@ -69,12 +59,13 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
   }
 
   /**
-   * Set AD_Role_OrgAccess_UU.
+   * Set Role.
    *
-   * @param AD_Role_OrgAccess_UU AD_Role_OrgAccess_UU
+   * @param AD_Role_ID Responsibility Role
    */
-  public void setAD_Role_OrgAccess_UU(String AD_Role_OrgAccess_UU) {
-    set_Value(COLUMNNAME_AD_Role_OrgAccess_UU, AD_Role_OrgAccess_UU);
+  public void setAD_Role_ID(int AD_Role_ID) {
+    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
   }
 
   /**
@@ -84,6 +75,15 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
    */
   public String getAD_Role_OrgAccess_UU() {
     return (String) get_Value(COLUMNNAME_AD_Role_OrgAccess_UU);
+  }
+
+  /**
+   * Set AD_Role_OrgAccess_UU.
+   *
+   * @param AD_Role_OrgAccess_UU AD_Role_OrgAccess_UU
+   */
+  public void setAD_Role_OrgAccess_UU(String AD_Role_OrgAccess_UU) {
+    set_Value(COLUMNNAME_AD_Role_OrgAccess_UU, AD_Role_OrgAccess_UU);
   }
 
   /**

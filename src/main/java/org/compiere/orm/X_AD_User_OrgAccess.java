@@ -42,16 +42,6 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess, I_Pe
   }
 
   /**
-   * Set User/Contact.
-   *
-   * @param AD_User_ID User within the system - Internal or Business Partner Contact
-   */
-  public void setAD_User_ID(int AD_User_ID) {
-    if (AD_User_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_User_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
-  }
-
-  /**
    * Get User/Contact.
    *
    * @return User within the system - Internal or Business Partner Contact
@@ -63,12 +53,13 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess, I_Pe
   }
 
   /**
-   * Set AD_User_OrgAccess_UU.
+   * Set User/Contact.
    *
-   * @param AD_User_OrgAccess_UU AD_User_OrgAccess_UU
+   * @param AD_User_ID User within the system - Internal or Business Partner Contact
    */
-  public void setAD_User_OrgAccess_UU(String AD_User_OrgAccess_UU) {
-    set_Value(COLUMNNAME_AD_User_OrgAccess_UU, AD_User_OrgAccess_UU);
+  public void setAD_User_ID(int AD_User_ID) {
+    if (AD_User_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_User_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
   }
 
   /**
@@ -78,6 +69,15 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess, I_Pe
    */
   public String getAD_User_OrgAccess_UU() {
     return (String) get_Value(COLUMNNAME_AD_User_OrgAccess_UU);
+  }
+
+  /**
+   * Set AD_User_OrgAccess_UU.
+   *
+   * @param AD_User_OrgAccess_UU AD_User_OrgAccess_UU
+   */
+  public void setAD_User_OrgAccess_UU(String AD_User_OrgAccess_UU) {
+    set_Value(COLUMNNAME_AD_User_OrgAccess_UU, AD_User_OrgAccess_UU);
   }
 
   /**

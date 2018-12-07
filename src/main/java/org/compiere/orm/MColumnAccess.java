@@ -18,6 +18,10 @@ import org.compiere.util.Msg;
 public class MColumnAccess extends X_AD_Column_Access {
   /** */
   private static final long serialVersionUID = -2362624234744824977L;
+  /** TableName */
+  private String m_tableName;
+  /** ColumnName */
+  private String m_columnName;
 
   /**
    * Persistency Constructor
@@ -86,11 +90,6 @@ public class MColumnAccess extends X_AD_Column_Access {
         .append(isExclude() ? ex : in);
     return sb.toString();
   } //	toStringX
-
-  /** TableName */
-  private String m_tableName;
-  /** ColumnName */
-  private String m_columnName;
 
   /**
    * Get Table Name

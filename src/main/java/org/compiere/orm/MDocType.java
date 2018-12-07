@@ -25,67 +25,6 @@ import org.idempiere.common.util.Env;
 public class MDocType extends X_C_DocType {
   /** */
   private static final long serialVersionUID = -6556521509479670059L;
-
-  /**
-   * Return the first Doc Type for this BaseType
-   *
-   * @param DocBaseType
-   * @return
-   */
-  public static int getDocType(String DocBaseType) {
-    MDocType[] doc = MDocType.getOfDocBaseType(Env.getCtx(), DocBaseType);
-    return doc.length > 0 ? doc[0].getId() : 0;
-  }
-
-  /**
-   * Get Client Document Type with DocBaseType
-   *
-   * @param ctx context
-   * @param DocBaseType base document type
-   * @return array of doc types
-   */
-  public static MDocType[] getOfDocBaseType(Properties ctx, String DocBaseType) {
-    final String whereClause = "AD_Client_ID=? AND DocBaseType=?";
-    List<MDocType> list =
-        new Query(ctx, I_C_DocType.Table_Name, whereClause, null)
-            .setParameters(Env.getADClientID(ctx), DocBaseType)
-            .setOnlyActiveRecords(true)
-            .setOrderBy("IsDefault DESC, C_DocType_ID")
-            .list();
-    return list.toArray(new MDocType[list.size()]);
-  } //	getOfDocBaseType
-
-  /**
-   * Get Client Document Types
-   *
-   * @param ctx context
-   * @return array of doc types
-   */
-  public static MDocType[] getOfClient(Properties ctx) {
-    List<MDocType> list =
-        new Query(ctx, I_C_DocType.Table_Name, null, null)
-            .setClient_ID()
-            .setOnlyActiveRecords(true)
-            .list();
-    return list.toArray(new MDocType[list.size()]);
-  } //	getOfClient
-
-  /**
-   * Get Document Type (cached)
-   *
-   * @param ctx context
-   * @param C_DocType_ID id
-   * @return document type
-   */
-  public static MDocType get(Properties ctx, int C_DocType_ID) {
-    MDocType retValue = (MDocType) s_cache.get(C_DocType_ID);
-    if (retValue == null) {
-      retValue = new MDocType(ctx, C_DocType_ID, null);
-      s_cache.put(C_DocType_ID, retValue);
-    }
-    return retValue;
-  } //	get
-
   /** Cache */
   private static CCache<Integer, MDocType> s_cache =
       new CCache<Integer, MDocType>(I_C_DocType.Table_Name, 20);
@@ -146,6 +85,66 @@ public class MDocType extends X_C_DocType {
     setPrintName(Name);
     setGL_Category_ID();
   } //	MDocType
+
+  /**
+   * Return the first Doc Type for this BaseType
+   *
+   * @param DocBaseType
+   * @return
+   */
+  public static int getDocType(String DocBaseType) {
+    MDocType[] doc = MDocType.getOfDocBaseType(Env.getCtx(), DocBaseType);
+    return doc.length > 0 ? doc[0].getId() : 0;
+  }
+
+  /**
+   * Get Client Document Type with DocBaseType
+   *
+   * @param ctx context
+   * @param DocBaseType base document type
+   * @return array of doc types
+   */
+  public static MDocType[] getOfDocBaseType(Properties ctx, String DocBaseType) {
+    final String whereClause = "AD_Client_ID=? AND DocBaseType=?";
+    List<MDocType> list =
+        new Query(ctx, I_C_DocType.Table_Name, whereClause, null)
+            .setParameters(Env.getADClientID(ctx), DocBaseType)
+            .setOnlyActiveRecords(true)
+            .setOrderBy("IsDefault DESC, C_DocType_ID")
+            .list();
+    return list.toArray(new MDocType[list.size()]);
+  } //	getOfDocBaseType
+
+  /**
+   * Get Client Document Types
+   *
+   * @param ctx context
+   * @return array of doc types
+   */
+  public static MDocType[] getOfClient(Properties ctx) {
+    List<MDocType> list =
+        new Query(ctx, I_C_DocType.Table_Name, null, null)
+            .setClient_ID()
+            .setOnlyActiveRecords(true)
+            .list();
+    return list.toArray(new MDocType[list.size()]);
+  } //	getOfClient
+
+  /**
+   * Get Document Type (cached)
+   *
+   * @param ctx context
+   * @param C_DocType_ID id
+   * @return document type
+   */
+  public static MDocType get(Properties ctx, int C_DocType_ID) {
+    MDocType retValue = s_cache.get(C_DocType_ID);
+    if (retValue == null) {
+      retValue = new MDocType(ctx, C_DocType_ID, null);
+      s_cache.put(C_DocType_ID, retValue);
+    }
+    return retValue;
+  } //	get
 
   /** Set Default GL Category */
   public void setGL_Category_ID() {

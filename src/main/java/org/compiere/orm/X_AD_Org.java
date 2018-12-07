@@ -40,15 +40,6 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
   }
 
   /**
-   * Set AD_Org_UU.
-   *
-   * @param AD_Org_UU AD_Org_UU
-   */
-  public void setAD_Org_UU(String AD_Org_UU) {
-    set_Value(COLUMNNAME_AD_Org_UU, AD_Org_UU);
-  }
-
-  /**
    * Get AD_Org_UU.
    *
    * @return AD_Org_UU
@@ -58,13 +49,12 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
   }
 
   /**
-   * Set Replication Strategy.
+   * Set AD_Org_UU.
    *
-   * @param AD_ReplicationStrategy_ID Data Replication Strategy
+   * @param AD_Org_UU AD_Org_UU
    */
-  public void setADReplicationStrategyID(int AD_ReplicationStrategy_ID) {
-    if (AD_ReplicationStrategy_ID < 1) set_Value(COLUMNNAME_AD_ReplicationStrategy_ID, null);
-    else set_Value(COLUMNNAME_AD_ReplicationStrategy_ID, AD_ReplicationStrategy_ID);
+  public void setAD_Org_UU(String AD_Org_UU) {
+    set_Value(COLUMNNAME_AD_Org_UU, AD_Org_UU);
   }
 
   /**
@@ -79,12 +69,13 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
   }
 
   /**
-   * Set Description.
+   * Set Replication Strategy.
    *
-   * @param Description Optional short description of the record
+   * @param AD_ReplicationStrategy_ID Data Replication Strategy
    */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
+  public void setADReplicationStrategyID(int AD_ReplicationStrategy_ID) {
+    if (AD_ReplicationStrategy_ID < 1) set_Value(COLUMNNAME_AD_ReplicationStrategy_ID, null);
+    else set_Value(COLUMNNAME_AD_ReplicationStrategy_ID, AD_ReplicationStrategy_ID);
   }
 
   /**
@@ -94,6 +85,15 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
    */
   public String getDescription() {
     return (String) get_Value(COLUMNNAME_Description);
+  }
+
+  /**
+   * Set Description.
+   *
+   * @param Description Optional short description of the record
+   */
+  public void setDescription(String Description) {
+    set_Value(COLUMNNAME_Description, Description);
   }
 
   /**

@@ -12,14 +12,8 @@ import java.util.logging.Level;
  * @version $Id: Task.java,v 1.2 2006/07/30 00:51:05 jjanke Exp $
  */
 public class Task extends Thread {
-  /**
-   * Create Process with cmd
-   *
-   * @param cmd o/s command
-   */
-  public Task(String cmd) {
-    m_cmd = cmd;
-  } //  Task
+  /** Logger */
+  private static CLogger log = CLogger.getCLogger(Task.class);
 
   private String m_cmd;
   private Process m_child = null;
@@ -33,10 +27,6 @@ public class Task extends Thread {
   private InputStream m_errStream;
   /** The Input Stream of process */
   private OutputStream m_inStream;
-
-  /** Logger */
-  private static CLogger log = CLogger.getCLogger(Task.class);
-
   /** Read Out */
   private Thread m_outReader =
       new Thread() {
@@ -55,7 +45,6 @@ public class Task extends Thread {
           log.fine("outReader - done");
         } //  run
       }; //  m_outReader
-
   /** Read Out */
   private Thread m_errReader =
       new Thread() {
@@ -74,6 +63,15 @@ public class Task extends Thread {
           log.fine("errReader - done");
         } //  run
       }; //  m_errReader
+
+  /**
+   * Create Process with cmd
+   *
+   * @param cmd o/s command
+   */
+  public Task(String cmd) {
+    m_cmd = cmd;
+  } //  Task
 
   /** Execute it */
   public void run() {

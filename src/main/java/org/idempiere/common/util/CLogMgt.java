@@ -34,11 +34,29 @@ import org.idempiere.icommon.distributed.IClusterService;
  * @version $Id: CLogMgt.java,v 1.4 2006/07/30 00:54:36 jjanke Exp $
  */
 public class CLogMgt {
+  /** LOG Levels */
+  public static final Level[] LEVELS =
+      new Level[] {
+        Level.OFF,
+        Level.SEVERE,
+        Level.WARNING,
+        Level.INFO,
+        Level.CONFIG,
+        Level.FINE,
+        Level.FINER,
+        Level.FINEST,
+        Level.ALL
+      };
+
   private static final CLogConsole CONSOLE_HANDLER = new CLogConsole();
   private static final CLogErrorBuffer ERROR_BUFFER_HANDLER = new CLogErrorBuffer();
-  private static CLogFile fileHandler;
-
   private static final Map<String, Level> levelMap = new HashMap<String, Level>();
+  /** New Line */
+  private static final String NL = System.getProperty("line.separator");
+
+  private static CLogFile fileHandler;
+  /** Logger */
+  private static Logger log = Logger.getAnonymousLogger();
 
   private static final PropertyChangeListener listener =
       new PropertyChangeListener() {
@@ -49,6 +67,11 @@ public class CLogMgt {
           }
         }
       };
+
+  /** ********************************************************************** CLogMgt */
+  public CLogMgt() {
+    testLog();
+  }
 
   private static synchronized void reInit() {
     CLogMgt.initialize(false);
@@ -153,25 +176,6 @@ public class CLogMgt {
     // mgr.addPropertyChangeListener(listener);
   } //	initialize
 
-  /** Logger */
-  private static Logger log = Logger.getAnonymousLogger();
-  /** LOG Levels */
-  public static final Level[] LEVELS =
-      new Level[] {
-        Level.OFF,
-        Level.SEVERE,
-        Level.WARNING,
-        Level.INFO,
-        Level.CONFIG,
-        Level.FINE,
-        Level.FINER,
-        Level.FINEST,
-        Level.ALL
-      };
-
-  /** New Line */
-  private static final String NL = System.getProperty("line.separator");
-
   /**
    * Get Handlers
    *
@@ -248,15 +252,6 @@ public class CLogMgt {
    *
    * @param level log level
    */
-  public static void setLevel(Level level) {
-    setLevel(null, level);
-  }
-
-  /**
-   * Set Level for all handlers
-   *
-   * @param level log level
-   */
   public static synchronized void setLevel(String loggerName, Level level) {
     if (level == null) return;
     Logger logger =
@@ -282,24 +277,6 @@ public class CLogMgt {
     String key = loggerName == null ? "" : loggerName;
     if (!levelMap.containsKey(key)) levelMap.put(key, level);
   } //	setHandlerLevel
-
-  /**
-   * Set Level
-   *
-   * @param intLevel integer value of level
-   */
-  public static void setLevel(int intLevel) {
-    setLevel(String.valueOf(intLevel));
-  } //	setLevel
-
-  /**
-   * Set Level
-   *
-   * @param levelString string representation of level
-   */
-  public static void setLevel(String levelString) {
-    setLevel(null, levelString);
-  } //	setLevel
 
   public static void setLevel(String loggerName, String levelString) {
     if (levelString == null) return;
@@ -332,6 +309,33 @@ public class CLogMgt {
     Logger rootLogger = getRootLogger();
     return rootLogger.getLevel();
   } //	getLevel
+
+  /**
+   * Set Level for all handlers
+   *
+   * @param level log level
+   */
+  public static void setLevel(Level level) {
+    setLevel(null, level);
+  }
+
+  /**
+   * Set Level
+   *
+   * @param intLevel integer value of level
+   */
+  public static void setLevel(int intLevel) {
+    setLevel(String.valueOf(intLevel));
+  } //	setLevel
+
+  /**
+   * Set Level
+   *
+   * @param levelString string representation of level
+   */
+  public static void setLevel(String levelString) {
+    setLevel(null, levelString);
+  } //	setLevel
 
   /**
    * Get logging Level of handlers
@@ -634,11 +638,6 @@ public class CLogMgt {
     }
 
     return rootLogger;
-  }
-
-  /** ************************************************************************ CLogMgt */
-  public CLogMgt() {
-    testLog();
   }
 
   /** Test Log */

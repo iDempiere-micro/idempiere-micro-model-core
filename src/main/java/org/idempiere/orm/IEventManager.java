@@ -3,8 +3,8 @@ package org.idempiere.orm;
 /** @author hengsin */
 public interface IEventManager {
 
-  public static final String EVENT_DATA = "event.data";
-  public static final String EVENT_ERROR_MESSAGES = "event.errorMessages";
+  String EVENT_DATA = "event.data";
+  String EVENT_ERROR_MESSAGES = "event.errorMessages";
 
   /**
    * Initiate asynchronous delivery of an event. This method returns to the caller before delivery
@@ -12,9 +12,9 @@ public interface IEventManager {
    *
    * @param event The event to send to all listeners which subscribe to the topic of the event.
    * @throws SecurityException If the caller does not have <code>TopicPermission[topic,PUBLISH]
-   *     </code> for the topic specified in the event.
+   *                           </code> for the topic specified in the event.
    */
-  public abstract boolean postEvent(IEvent event);
+  boolean postEvent(IEvent event);
 
   /**
    * Initiate synchronous delivery of an event. This method does not return to the caller until
@@ -22,9 +22,9 @@ public interface IEventManager {
    *
    * @param event The event to send to all listeners which subscribe to the topic of the event.
    * @throws SecurityException If the caller does not have <code>TopicPermission[topic,PUBLISH]
-   *     </code> for the topic specified in the event.
+   *                           </code> for the topic specified in the event.
    */
-  public abstract boolean sendEvent(IEvent event);
+  boolean sendEvent(IEvent event);
 
   /**
    * register a new event handler
@@ -33,7 +33,7 @@ public interface IEventManager {
    * @param eventHandler
    * @return true if registration is successful, false otherwise
    */
-  public abstract boolean register(String topic, IEventHandler eventHandler);
+  boolean register(String topic, IEventHandler eventHandler);
 
   /**
    * register a new event handler
@@ -42,7 +42,7 @@ public interface IEventManager {
    * @param eventHandler
    * @return true if registration is successful, false otherwise
    */
-  public abstract boolean register(String[] topics, IEventHandler eventHandler);
+  boolean register(String[] topics, IEventHandler eventHandler);
 
   /**
    * register a new event handler
@@ -52,7 +52,7 @@ public interface IEventManager {
    * @param eventHandler
    * @return true if registration is successful, false otherwise
    */
-  public abstract boolean register(String topic, String filter, IEventHandler eventHandler);
+  boolean register(String topic, String filter, IEventHandler eventHandler);
 
   /**
    * register a new event handler
@@ -62,7 +62,7 @@ public interface IEventManager {
    * @param eventHandler
    * @return true if registration is successful, false otherwise
    */
-  public abstract boolean register(String[] topics, String filter, IEventHandler eventHandler);
+  boolean register(String[] topics, String filter, IEventHandler eventHandler);
 
   /**
    * un-register an event handler
@@ -70,9 +70,9 @@ public interface IEventManager {
    * @param eventHandler
    * @return true if unregistration is done, false otherwise
    */
-  public abstract boolean unregister(IEventHandler eventHandler);
+  boolean unregister(IEventHandler eventHandler);
 
-  public abstract IEvent createNewEvent(String topic, Object data);
+  IEvent createNewEvent(String topic, Object data);
 
-  public abstract IEvent createNewEvent(String topic, EventProperty... properties);
+  IEvent createNewEvent(String topic, EventProperty... properties);
 }

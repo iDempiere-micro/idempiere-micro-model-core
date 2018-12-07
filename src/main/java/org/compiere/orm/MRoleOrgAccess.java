@@ -20,6 +20,59 @@ import org.idempiere.common.util.*;
 public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
   /** */
   private static final long serialVersionUID = 4664267788838719168L;
+  /** Static Logger */
+  private static CLogger s_log = CLogger.getCLogger(MRoleOrgAccess.class);
+
+  private String m_clientName;
+  private String m_orgName;
+
+  /**
+   * ************************************************************************ Load Constructor
+   *
+   * @param ctx context
+   * @param rs result set
+   * @param trxName transaction
+   */
+  public MRoleOrgAccess(Properties ctx, ResultSet rs, String trxName) {
+    super(ctx, rs, trxName);
+  } //	MRoleOrgAccess
+
+  /**
+   * Persistency Constructor
+   *
+   * @param ctx context
+   * @param ignored ignored
+   * @param trxName transaction
+   */
+  public MRoleOrgAccess(Properties ctx, int ignored, String trxName) {
+    super(ctx, 0, trxName);
+    if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
+    setIsReadOnly(false);
+  } //	MRoleOrgAccess
+
+  /**
+   * Organization Constructor
+   *
+   * @param org org
+   * @param AD_Role_ID role
+   */
+  public MRoleOrgAccess(MOrg org, int AD_Role_ID) {
+    this(org.getCtx(), 0, org.get_TrxName());
+    setClientOrg(org);
+    setAD_Role_ID(AD_Role_ID);
+  } //	MRoleOrgAccess
+
+  /**
+   * Role Constructor
+   *
+   * @param role role
+   * @param AD_Org_ID org
+   */
+  public MRoleOrgAccess(MRole role, int AD_Org_ID) {
+    this(role.getCtx(), 0, role.get_TrxName());
+    setClientOrg(role.getClientId(), AD_Org_ID);
+    setAD_Role_ID(role.getAD_Role_ID());
+  } //	MRoleOrgAccess
 
   /**
    * Get Organizational Access of Role
@@ -102,57 +155,6 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     return counter != 0;
   } //	createForOrg
 
-  /** Static Logger */
-  private static CLogger s_log = CLogger.getCLogger(MRoleOrgAccess.class);
-
-  /**
-   * ************************************************************************ Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public MRoleOrgAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	MRoleOrgAccess
-
-  /**
-   * Persistency Constructor
-   *
-   * @param ctx context
-   * @param ignored ignored
-   * @param trxName transaction
-   */
-  public MRoleOrgAccess(Properties ctx, int ignored, String trxName) {
-    super(ctx, 0, trxName);
-    if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
-    setIsReadOnly(false);
-  } //	MRoleOrgAccess
-
-  /**
-   * Organization Constructor
-   *
-   * @param org org
-   * @param AD_Role_ID role
-   */
-  public MRoleOrgAccess(MOrg org, int AD_Role_ID) {
-    this(org.getCtx(), 0, org.get_TrxName());
-    setClientOrg(org);
-    setAD_Role_ID(AD_Role_ID);
-  } //	MRoleOrgAccess
-
-  /**
-   * Role Constructor
-   *
-   * @param role role
-   * @param AD_Org_ID org
-   */
-  public MRoleOrgAccess(MRole role, int AD_Org_ID) {
-    this(role.getCtx(), 0, role.get_TrxName());
-    setClientOrg(role.getClientId(), AD_Org_ID);
-    setAD_Role_ID(role.getAD_Role_ID());
-  } //	MRoleOrgAccess
-
   /**
    * String Representation
    *
@@ -190,9 +192,6 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
         .append(getOrgName());
     return sb.toString();
   } //	toStringX
-
-  private String m_clientName;
-  private String m_orgName;
 
   /**
    * Get Client Name

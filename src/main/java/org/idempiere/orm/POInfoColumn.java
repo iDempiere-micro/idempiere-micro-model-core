@@ -16,6 +16,57 @@ public class POInfoColumn implements Serializable {
   private static final long serialVersionUID = 3882249785085847367L;
 
   /** Used by Remote FinReport */
+  public static Class<?> ColumnClass_String = String.class;
+
+  public static Class<?> ColumnClass_Boolean = Boolean.class;
+  public static Class<?> ColumnClass_Integer = Integer.class;
+  /** Column ID */
+  public int AD_Column_ID;
+  /** Column Name */
+  public String ColumnName;
+  /** Virtual Column */
+  public String ColumnSQL;
+  /** Display Type */
+  public int DisplayType;
+  /** Data Type */
+  public Class<?> ColumnClass;
+  /** Mandatory */
+  public boolean IsMandatory;
+  /** Default Value */
+  public String DefaultLogic;
+  /** Updateable */
+  public boolean IsUpdateable;
+  /** Label */
+  public String ColumnLabel;
+  /** Description */
+  public String ColumnDescription;
+  /** PK */
+  public boolean IsKey;
+  /** FK to Parent */
+  public boolean IsParent;
+  /** Translated */
+  public boolean IsTranslated;
+  /** Encrypted */
+  public boolean IsEncrypted;
+  /** Allow Logging */
+  public boolean IsAllowLogging;
+  /** Allow Copy */
+  public boolean IsAllowCopy;
+  /** Reference Value */
+  public int AD_Reference_Value_ID;
+  /** Validation */
+  public String ValidationCode;
+  /** Field Length */
+  public int FieldLength;
+  /** Min Value */
+  public String ValueMin;
+  /** Max Value */
+  public String ValueMax;
+  /** Min Value */
+  public BigDecimal ValueMin_BD = null;
+  /** Max Value */
+  public BigDecimal ValueMax_BD = null;
+
   /**
    * Constructor
    *
@@ -106,55 +157,6 @@ public class POInfoColumn implements Serializable {
     IsAllowCopy = isAllowCopy;
   } //  Column
 
-  /** Column ID */
-  public int AD_Column_ID;
-  /** Column Name */
-  public String ColumnName;
-  /** Virtual Column */
-  public String ColumnSQL;
-  /** Display Type */
-  public int DisplayType;
-  /** Data Type */
-  public Class<?> ColumnClass;
-  /** Mandatory */
-  public boolean IsMandatory;
-  /** Default Value */
-  public String DefaultLogic;
-  /** Updateable */
-  public boolean IsUpdateable;
-  /** Label */
-  public String ColumnLabel;
-  /** Description */
-  public String ColumnDescription;
-  /** PK */
-  public boolean IsKey;
-  /** FK to Parent */
-  public boolean IsParent;
-  /** Translated */
-  public boolean IsTranslated;
-  /** Encrypted */
-  public boolean IsEncrypted;
-  /** Allow Logging */
-  public boolean IsAllowLogging;
-  /** Allow Copy */
-  public boolean IsAllowCopy;
-
-  /** Reference Value */
-  public int AD_Reference_Value_ID;
-  /** Validation */
-  public String ValidationCode;
-
-  /** Field Length */
-  public int FieldLength;
-  /** Min Value */
-  public String ValueMin;
-  /** Max Value */
-  public String ValueMax;
-  /** Min Value */
-  public BigDecimal ValueMin_BD = null;
-  /** Max Value */
-  public BigDecimal ValueMax_BD = null;
-
   /**
    * String representation
    *
@@ -172,8 +174,4 @@ public class POInfoColumn implements Serializable {
     sb.append("]");
     return sb.toString();
   } //	toString
-
-  public static Class<?> ColumnClass_String = String.class;
-  public static Class<?> ColumnClass_Boolean = Boolean.class;
-  public static Class<?> ColumnClass_Integer = Integer.class;
 } //	POInfoColumn

@@ -1,6 +1,6 @@
 package org.idempiere.common.util;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -22,8 +21,8 @@ import javax.swing.KeyStroke;
  * General Utilities
  *
  * @author Jorg Janke
- * @version $Id: Util.java,v 1.3 2006/07/30 00:52:23 jjanke Exp $
  * @author Teo Sarca, SC ARHIPAC SERVICE SRL - BF [ 1748346 ]
+ * @version $Id: Util.java,v 1.3 2006/07/30 00:52:23 jjanke Exp $
  */
 public class Util {
   /** Logger */
@@ -46,7 +45,7 @@ public class Util {
     StringBuilder retValue = new StringBuilder();
     int pos = oldValue.indexOf(oldPart);
     while (pos != -1) {
-      retValue.append(oldValue.substring(0, pos));
+      retValue.append(oldValue, 0, pos);
       if (newPart != null && newPart.length() > 0) retValue.append(newPart);
       oldValue = oldValue.substring(pos + oldPartLength);
       pos = oldValue.indexOf(oldPart);
@@ -280,7 +279,7 @@ public class Util {
    * @return Hex
    */
   public static String toHex(byte b) {
-    char hexDigit[] = {
+    char[] hexDigit = {
       '0', '1', '2', '3', '4', '5', '6', '7',
       '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
@@ -507,11 +506,7 @@ public class Util {
     if (str == null) return 0;
     int length = str.length();
     int size = length;
-    try {
-      size = str.getBytes("UTF-8").length;
-    } catch (UnsupportedEncodingException e) {
-      log.log(Level.SEVERE, str, e);
-    }
+    size = str.getBytes(StandardCharsets.UTF_8).length;
     return size;
   } //	size
 
@@ -528,17 +523,12 @@ public class Util {
     //	Assume two byte code
     int length = str.length();
     if (length < size / 2) return str;
-    try {
-      byte[] bytes = str.getBytes("UTF-8");
-      if (bytes.length <= size) return str;
-      //	create new - may cut last character in half
-      byte[] result = new byte[size];
-      System.arraycopy(bytes, 0, result, 0, size);
-      return new String(result, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      log.log(Level.SEVERE, str, e);
-    }
-    return str;
+    byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+    if (bytes.length <= size) return str;
+    //	create new - may cut last character in half
+    byte[] result = new byte[size];
+    System.arraycopy(bytes, 0, result, 0, size);
+    return new String(result, StandardCharsets.UTF_8);
   } //	trimSize
 
   /**

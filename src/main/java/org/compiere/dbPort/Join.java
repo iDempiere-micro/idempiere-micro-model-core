@@ -13,6 +13,14 @@ import org.idempiere.common.util.Util;
  * @version $Id: Join.java,v 1.2 2006/07/30 00:55:04 jjanke Exp $
  */
 public class Join {
+  private String m_joinClause;
+  private String m_mainTable;
+  private String m_mainAlias;
+  private String m_joinTable;
+  private String m_joinAlias;
+  private boolean m_left;
+  private String m_condition;
+
   /**
    * Constructor
    *
@@ -22,14 +30,6 @@ public class Join {
     if (joinClause == null) throw new IllegalArgumentException("Join - clause cannot be null");
     evaluate(joinClause);
   } //  Join
-
-  private String m_joinClause;
-  private String m_mainTable;
-  private String m_mainAlias;
-  private String m_joinTable;
-  private String m_joinAlias;
-  private boolean m_left;
-  private String m_condition;
 
   /**
    * Evaluate the clause. e.g. tb.AD_User_ID(+)=? f.AD_Column_ID = c.AD_Column_ID(+)
@@ -107,6 +107,15 @@ public class Join {
   /** ********************************************************************** */
 
   /**
+   * Get Main Table Name
+   *
+   * @return Main Table Name
+   */
+  public String getMainTable() {
+    return m_mainTable;
+  } //  getMainTable
+
+  /**
    * Set Main Table Name. If table name equals alias, the alias is set to ""
    *
    * @param mainTable
@@ -118,13 +127,13 @@ public class Join {
   } //  setMainTable
 
   /**
-   * Get Main Table Name
+   * Get Join Table Name
    *
-   * @return Main Table Name
+   * @return Join Table Name
    */
-  public String getMainTable() {
-    return m_mainTable;
-  } //  getMainTable
+  public String getJoinTable() {
+    return m_joinTable;
+  } //  getJoinTable
 
   /**
    * Set Main Table Name. If table name equals alias, the alias is set to ""
@@ -137,15 +146,6 @@ public class Join {
     if (m_joinAlias.equals(joinTable)) m_joinAlias = "";
   } //  setJoinTable
 
-  /**
-   * Get Join Table Name
-   *
-   * @return Join Table Name
-   */
-  public String getJoinTable() {
-    return m_joinTable;
-  } //  getJoinTable
-
   /** ********************************************************************** */
 
   /**
@@ -155,11 +155,10 @@ public class Join {
    * @return true if condition
    */
   public boolean isConditionOf(Join first) {
-    if (m_mainTable == null //  did not find Table from "Alias"
+    //  same main table
+    return m_mainTable == null //  did not find Table from "Alias"
         && (first.getJoinTable().equals(m_joinTable) //  same join table
-            || first.getMainAlias().equals(m_joinTable))) //  same main table
-    return true;
-    return false;
+            || first.getMainAlias().equals(m_joinTable));
   } //  isConditionOf
 
   /**

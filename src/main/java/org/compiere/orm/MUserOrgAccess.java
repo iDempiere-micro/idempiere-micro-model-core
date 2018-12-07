@@ -20,6 +20,47 @@ import org.idempiere.common.util.CLogger;
 public class MUserOrgAccess extends X_AD_User_OrgAccess {
   /** */
   private static final long serialVersionUID = 11601583764711895L;
+  /** Static Logger */
+  private static CLogger s_log = CLogger.getCLogger(MUserOrgAccess.class);
+
+  private String m_clientName;
+  private String m_orgName;
+
+  /**
+   * ************************************************************************ Load Constructor
+   *
+   * @param ctx context
+   * @param rs result set
+   * @param trxName transaction
+   */
+  public MUserOrgAccess(Properties ctx, ResultSet rs, String trxName) {
+    super(ctx, rs, trxName);
+  } //	MUserOrgAccess
+
+  /**
+   * Persistency Constructor
+   *
+   * @param ctx context
+   * @param ignored ignored
+   * @param trxName transaction
+   */
+  public MUserOrgAccess(Properties ctx, int ignored, String trxName) {
+    super(ctx, 0, trxName);
+    if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
+    setIsReadOnly(false);
+  } //	MUserOrgAccess
+
+  /**
+   * Organization Constructor
+   *
+   * @param org org
+   * @param AD_User_ID role
+   */
+  public MUserOrgAccess(MOrg org, int AD_User_ID) {
+    this(org.getCtx(), 0, org.get_TrxName());
+    setClientOrg(org);
+    setAD_User_ID(AD_User_ID);
+  } //	MUserOrgAccess
 
   /**
    * Get Organizational Access of User
@@ -60,45 +101,6 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
     list.toArray(retValue);
     return retValue;
   } //	get
-
-  /** Static Logger */
-  private static CLogger s_log = CLogger.getCLogger(MUserOrgAccess.class);
-
-  /**
-   * ************************************************************************ Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public MUserOrgAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	MUserOrgAccess
-
-  /**
-   * Persistency Constructor
-   *
-   * @param ctx context
-   * @param ignored ignored
-   * @param trxName transaction
-   */
-  public MUserOrgAccess(Properties ctx, int ignored, String trxName) {
-    super(ctx, 0, trxName);
-    if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
-    setIsReadOnly(false);
-  } //	MUserOrgAccess
-
-  /**
-   * Organization Constructor
-   *
-   * @param org org
-   * @param AD_User_ID role
-   */
-  public MUserOrgAccess(MOrg org, int AD_User_ID) {
-    this(org.getCtx(), 0, org.get_TrxName());
-    setClientOrg(org);
-    setAD_User_ID(AD_User_ID);
-  } //	MUserOrgAccess
 
   /**
    * User Constructor param user user param AD_Org_ID org
@@ -143,9 +145,6 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
         .append(getOrgName());
     return sb.toString();
   } //	toStringX
-
-  private String m_clientName;
-  private String m_orgName;
 
   /**
    * Get Client Name

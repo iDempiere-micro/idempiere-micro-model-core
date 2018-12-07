@@ -16,6 +16,8 @@ import org.compiere.util.Msg;
 public class MTableAccess extends X_AD_Table_Access {
   /** */
   private static final long serialVersionUID = -3747261579266442904L;
+  /** TableName */
+  private String m_tableName;
 
   /**
    * Persistency Constructor
@@ -85,9 +87,6 @@ public class MTableAccess extends X_AD_Table_Access {
     sb.append(" - ").append(isExclude() ? ex : in);
     return sb.toString();
   } //	toStringX
-
-  /** TableName */
-  private String m_tableName;
 
   /**
    * Get Table Name

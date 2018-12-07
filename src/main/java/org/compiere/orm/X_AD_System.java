@@ -16,6 +16,24 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent {
 
+  /** ReplicationType AD_Reference_ID=126 */
+  public static final int REPLICATIONTYPE_AD_Reference_ID = 126;
+  /** Local = L */
+  public static final String REPLICATIONTYPE_Local = "L";
+  /** Merge = M */
+  public static final String REPLICATIONTYPE_Merge = "M";
+  /** Reference = R */
+  public static final String REPLICATIONTYPE_Reference = "R";
+  /** Broadcast = B */
+  public static final String REPLICATIONTYPE_Broadcast = "B";
+  /** SystemStatus AD_Reference_ID=374 */
+  public static final int SYSTEMSTATUS_AD_Reference_ID = 374;
+  /** Evaluation = E */
+  public static final String SYSTEMSTATUS_Evaluation = "E";
+  /** Implementation = I */
+  public static final String SYSTEMSTATUS_Implementation = "I";
+  /** Production = P */
+  public static final String SYSTEMSTATUS_Production = "P";
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -51,16 +69,6 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set System.
-   *
-   * @param AD_System_ID System Definition
-   */
-  public void setAD_System_ID(int AD_System_ID) {
-    if (AD_System_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_System_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_System_ID, Integer.valueOf(AD_System_ID));
-  }
-
-  /**
    * Get System.
    *
    * @return System Definition
@@ -72,12 +80,13 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set AD_System_UU.
+   * Set System.
    *
-   * @param AD_System_UU AD_System_UU
+   * @param AD_System_ID System Definition
    */
-  public void setAD_System_UU(String AD_System_UU) {
-    set_Value(COLUMNNAME_AD_System_UU, AD_System_UU);
+  public void setAD_System_ID(int AD_System_ID) {
+    if (AD_System_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_System_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_System_ID, Integer.valueOf(AD_System_ID));
   }
 
   /**
@@ -90,12 +99,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Custom Prefix.
+   * Set AD_System_UU.
    *
-   * @param CustomPrefix Prefix for Custom entities
+   * @param AD_System_UU AD_System_UU
    */
-  public void setCustomPrefix(String CustomPrefix) {
-    set_Value(COLUMNNAME_CustomPrefix, CustomPrefix);
+  public void setAD_System_UU(String AD_System_UU) {
+    set_Value(COLUMNNAME_AD_System_UU, AD_System_UU);
   }
 
   /**
@@ -108,12 +117,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set DB Address.
+   * Set Custom Prefix.
    *
-   * @param DBAddress JDBC URL of the database server
+   * @param CustomPrefix Prefix for Custom entities
    */
-  public void setDBAddress(String DBAddress) {
-    set_Value(COLUMNNAME_DBAddress, DBAddress);
+  public void setCustomPrefix(String CustomPrefix) {
+    set_Value(COLUMNNAME_CustomPrefix, CustomPrefix);
   }
 
   /**
@@ -126,12 +135,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Database Name.
+   * Set DB Address.
    *
-   * @param DBInstance Database Name
+   * @param DBAddress JDBC URL of the database server
    */
-  public void setDBInstance(String DBInstance) {
-    set_Value(COLUMNNAME_DBInstance, DBInstance);
+  public void setDBAddress(String DBAddress) {
+    set_Value(COLUMNNAME_DBAddress, DBAddress);
   }
 
   /**
@@ -144,12 +153,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Description.
+   * Set Database Name.
    *
-   * @param Description Optional short description of the record
+   * @param DBInstance Database Name
    */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
+  public void setDBInstance(String DBInstance) {
+    set_Value(COLUMNNAME_DBInstance, DBInstance);
   }
 
   /**
@@ -162,12 +171,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Encryption Class.
+   * Set Description.
    *
-   * @param EncryptionKey Encryption Class used for securing data content
+   * @param Description Optional short description of the record
    */
-  public void setEncryptionKey(String EncryptionKey) {
-    set_ValueNoCheck(COLUMNNAME_EncryptionKey, EncryptionKey);
+  public void setDescription(String Description) {
+    set_Value(COLUMNNAME_Description, Description);
   }
 
   /**
@@ -180,12 +189,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set ID Range End.
+   * Set Encryption Class.
    *
-   * @param IDRangeEnd End if the ID Range used
+   * @param EncryptionKey Encryption Class used for securing data content
    */
-  public void setIDRangeEnd(BigDecimal IDRangeEnd) {
-    set_Value(COLUMNNAME_IDRangeEnd, IDRangeEnd);
+  public void setEncryptionKey(String EncryptionKey) {
+    set_ValueNoCheck(COLUMNNAME_EncryptionKey, EncryptionKey);
   }
 
   /**
@@ -200,12 +209,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set ID Range Start.
+   * Set ID Range End.
    *
-   * @param IDRangeStart Start of the ID Range used
+   * @param IDRangeEnd End if the ID Range used
    */
-  public void setIDRangeStart(BigDecimal IDRangeStart) {
-    set_Value(COLUMNNAME_IDRangeStart, IDRangeStart);
+  public void setIDRangeEnd(BigDecimal IDRangeEnd) {
+    set_Value(COLUMNNAME_IDRangeEnd, IDRangeEnd);
   }
 
   /**
@@ -220,12 +229,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Info.
+   * Set ID Range Start.
    *
-   * @param Info Information
+   * @param IDRangeStart Start of the ID Range used
    */
-  public void setInfo(String Info) {
-    set_ValueNoCheck(COLUMNNAME_Info, Info);
+  public void setIDRangeStart(BigDecimal IDRangeStart) {
+    set_Value(COLUMNNAME_IDRangeStart, IDRangeStart);
   }
 
   /**
@@ -235,6 +244,15 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
    */
   public String getInfo() {
     return (String) get_Value(COLUMNNAME_Info);
+  }
+
+  /**
+   * Set Info.
+   *
+   * @param Info Information
+   */
+  public void setInfo(String Info) {
+    set_ValueNoCheck(COLUMNNAME_Info, Info);
   }
 
   /**
@@ -354,6 +372,15 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
+   * Get Last Build Info.
+   *
+   * @return Last Build Info
+   */
+  public String getLastBuildInfo() {
+    return (String) get_Value(COLUMNNAME_LastBuildInfo);
+  }
+
+  /**
    * Set Last Build Info.
    *
    * @param LastBuildInfo Last Build Info
@@ -363,12 +390,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Get Last Build Info.
+   * Get Last Migration Script Applied.
    *
-   * @return Last Build Info
+   * @return Register of the filename for the last migration script applied on this database
    */
-  public String getLastBuildInfo() {
-    return (String) get_Value(COLUMNNAME_LastBuildInfo);
+  public String getLastMigrationScriptApplied() {
+    return (String) get_Value(COLUMNNAME_LastMigrationScriptApplied);
   }
 
   /**
@@ -382,12 +409,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Get Last Migration Script Applied.
+   * Get LDAP Domain.
    *
-   * @return Register of the filename for the last migration script applied on this database
+   * @return Directory service domain name - e.g. idempiere.org
    */
-  public String getLastMigrationScriptApplied() {
-    return (String) get_Value(COLUMNNAME_LastMigrationScriptApplied);
+  public String getLDAPDomain() {
+    return (String) get_Value(COLUMNNAME_LDAPDomain);
   }
 
   /**
@@ -400,24 +427,6 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Get LDAP Domain.
-   *
-   * @return Directory service domain name - e.g. idempiere.org
-   */
-  public String getLDAPDomain() {
-    return (String) get_Value(COLUMNNAME_LDAPDomain);
-  }
-
-  /**
-   * Set LDAP URL.
-   *
-   * @param LDAPHost Connection String to LDAP server starting with ldap://
-   */
-  public void setLDAPHost(String LDAPHost) {
-    set_Value(COLUMNNAME_LDAPHost, LDAPHost);
-  }
-
-  /**
    * Get LDAP URL.
    *
    * @return Connection String to LDAP server starting with ldap://
@@ -427,12 +436,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Processors.
+   * Set LDAP URL.
    *
-   * @param NoProcessors Number of Database Processors
+   * @param LDAPHost Connection String to LDAP server starting with ldap://
    */
-  public void setNoProcessors(int NoProcessors) {
-    set_Value(COLUMNNAME_NoProcessors, Integer.valueOf(NoProcessors));
+  public void setLDAPHost(String LDAPHost) {
+    set_Value(COLUMNNAME_LDAPHost, LDAPHost);
   }
 
   /**
@@ -447,12 +456,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Old Name.
+   * Set Processors.
    *
-   * @param OldName Old Name
+   * @param NoProcessors Number of Database Processors
    */
-  public void setOldName(String OldName) {
-    set_ValueNoCheck(COLUMNNAME_OldName, OldName);
+  public void setNoProcessors(int NoProcessors) {
+    set_Value(COLUMNNAME_NoProcessors, Integer.valueOf(NoProcessors));
   }
 
   /**
@@ -465,12 +474,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Password.
+   * Set Old Name.
    *
-   * @param Password Password of any length (case sensitive)
+   * @param OldName Old Name
    */
-  public void setPassword(String Password) {
-    set_Value(COLUMNNAME_Password, Password);
+  public void setOldName(String OldName) {
+    set_ValueNoCheck(COLUMNNAME_OldName, OldName);
   }
 
   /**
@@ -483,12 +492,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Process Now.
+   * Set Password.
    *
-   * @param Processing Process Now
+   * @param Password Password of any length (case sensitive)
    */
-  public void setProcessing(boolean Processing) {
-    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
+  public void setPassword(String Password) {
+    set_Value(COLUMNNAME_Password, Password);
   }
 
   /**
@@ -506,12 +515,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Profile.
+   * Set Process Now.
    *
-   * @param ProfileInfo Information to help profiling the system for solving support issues
+   * @param Processing Process Now
    */
-  public void setProfileInfo(String ProfileInfo) {
-    set_ValueNoCheck(COLUMNNAME_ProfileInfo, ProfileInfo);
+  public void setProcessing(boolean Processing) {
+    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
   }
 
   /**
@@ -524,13 +533,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Record ID.
+   * Set Profile.
    *
-   * @param Record_ID Direct internal record ID
+   * @param ProfileInfo Information to help profiling the system for solving support issues
    */
-  public void setRecord_ID(int Record_ID) {
-    if (Record_ID < 0) set_Value(COLUMNNAME_Record_ID, null);
-    else set_Value(COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
+  public void setProfileInfo(String ProfileInfo) {
+    set_ValueNoCheck(COLUMNNAME_ProfileInfo, ProfileInfo);
   }
 
   /**
@@ -545,12 +553,13 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Release No.
+   * Set Record ID.
    *
-   * @param ReleaseNo Internal Release Number
+   * @param Record_ID Direct internal record ID
    */
-  public void setReleaseNo(String ReleaseNo) {
-    set_ValueNoCheck(COLUMNNAME_ReleaseNo, ReleaseNo);
+  public void setRecord_ID(int Record_ID) {
+    if (Record_ID < 0) set_Value(COLUMNNAME_Record_ID, null);
+    else set_Value(COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
   }
 
   /**
@@ -562,24 +571,13 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
     return (String) get_Value(COLUMNNAME_ReleaseNo);
   }
 
-  /** ReplicationType AD_Reference_ID=126 */
-  public static final int REPLICATIONTYPE_AD_Reference_ID = 126;
-  /** Local = L */
-  public static final String REPLICATIONTYPE_Local = "L";
-  /** Merge = M */
-  public static final String REPLICATIONTYPE_Merge = "M";
-  /** Reference = R */
-  public static final String REPLICATIONTYPE_Reference = "R";
-  /** Broadcast = B */
-  public static final String REPLICATIONTYPE_Broadcast = "B";
   /**
-   * Set Replication Type.
+   * Set Release No.
    *
-   * @param ReplicationType Type of Data Replication
+   * @param ReleaseNo Internal Release Number
    */
-  public void setReplicationType(String ReplicationType) {
-
-    set_Value(COLUMNNAME_ReplicationType, ReplicationType);
+  public void setReleaseNo(String ReleaseNo) {
+    set_ValueNoCheck(COLUMNNAME_ReleaseNo, ReleaseNo);
   }
 
   /**
@@ -592,12 +590,13 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Statistics.
+   * Set Replication Type.
    *
-   * @param StatisticsInfo Information to help profiling the system for solving support issues
+   * @param ReplicationType Type of Data Replication
    */
-  public void setStatisticsInfo(String StatisticsInfo) {
-    set_ValueNoCheck(COLUMNNAME_StatisticsInfo, StatisticsInfo);
+  public void setReplicationType(String ReplicationType) {
+
+    set_Value(COLUMNNAME_ReplicationType, ReplicationType);
   }
 
   /**
@@ -610,12 +609,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Summary.
+   * Set Statistics.
    *
-   * @param Summary Textual summary of this request
+   * @param StatisticsInfo Information to help profiling the system for solving support issues
    */
-  public void setSummary(String Summary) {
-    set_Value(COLUMNNAME_Summary, Summary);
+  public void setStatisticsInfo(String StatisticsInfo) {
+    set_ValueNoCheck(COLUMNNAME_StatisticsInfo, StatisticsInfo);
   }
 
   /**
@@ -628,12 +627,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Support EMail.
+   * Set Summary.
    *
-   * @param SupportEMail EMail address to send support information and updates to
+   * @param Summary Textual summary of this request
    */
-  public void setSupportEMail(String SupportEMail) {
-    set_Value(COLUMNNAME_SupportEMail, SupportEMail);
+  public void setSummary(String Summary) {
+    set_Value(COLUMNNAME_Summary, Summary);
   }
 
   /**
@@ -646,12 +645,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Support Expires.
+   * Set Support EMail.
    *
-   * @param SupportExpDate Date when the iDempiere support expires
+   * @param SupportEMail EMail address to send support information and updates to
    */
-  public void setSupportExpDate(Timestamp SupportExpDate) {
-    set_ValueNoCheck(COLUMNNAME_SupportExpDate, SupportExpDate);
+  public void setSupportEMail(String SupportEMail) {
+    set_Value(COLUMNNAME_SupportEMail, SupportEMail);
   }
 
   /**
@@ -664,12 +663,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Internal Users.
+   * Set Support Expires.
    *
-   * @param SupportUnits Number of Internal Users for iDempiere Support
+   * @param SupportExpDate Date when the iDempiere support expires
    */
-  public void setSupportUnits(int SupportUnits) {
-    set_ValueNoCheck(COLUMNNAME_SupportUnits, Integer.valueOf(SupportUnits));
+  public void setSupportExpDate(Timestamp SupportExpDate) {
+    set_ValueNoCheck(COLUMNNAME_SupportExpDate, SupportExpDate);
   }
 
   /**
@@ -683,22 +682,13 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
     return ii;
   }
 
-  /** SystemStatus AD_Reference_ID=374 */
-  public static final int SYSTEMSTATUS_AD_Reference_ID = 374;
-  /** Evaluation = E */
-  public static final String SYSTEMSTATUS_Evaluation = "E";
-  /** Implementation = I */
-  public static final String SYSTEMSTATUS_Implementation = "I";
-  /** Production = P */
-  public static final String SYSTEMSTATUS_Production = "P";
   /**
-   * Set System Status.
+   * Set Internal Users.
    *
-   * @param SystemStatus Status of the system - Support priority depends on system status
+   * @param SupportUnits Number of Internal Users for iDempiere Support
    */
-  public void setSystemStatus(String SystemStatus) {
-
-    set_Value(COLUMNNAME_SystemStatus, SystemStatus);
+  public void setSupportUnits(int SupportUnits) {
+    set_ValueNoCheck(COLUMNNAME_SupportUnits, Integer.valueOf(SupportUnits));
   }
 
   /**
@@ -711,12 +701,13 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set User Name.
+   * Set System Status.
    *
-   * @param UserName User Name
+   * @param SystemStatus Status of the system - Support priority depends on system status
    */
-  public void setUserName(String UserName) {
-    set_Value(COLUMNNAME_UserName, UserName);
+  public void setSystemStatus(String SystemStatus) {
+
+    set_Value(COLUMNNAME_SystemStatus, SystemStatus);
   }
 
   /**
@@ -729,12 +720,12 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /**
-   * Set Version.
+   * Set User Name.
    *
-   * @param Version Version of the table definition
+   * @param UserName User Name
    */
-  public void setVersion(String Version) {
-    set_ValueNoCheck(COLUMNNAME_Version, Version);
+  public void setUserName(String UserName) {
+    set_Value(COLUMNNAME_UserName, UserName);
   }
 
   /**
@@ -744,6 +735,15 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
    */
   public String getVersion() {
     return (String) get_Value(COLUMNNAME_Version);
+  }
+
+  /**
+   * Set Version.
+   *
+   * @param Version Version of the table definition
+   */
+  public void setVersion(String Version) {
+    set_ValueNoCheck(COLUMNNAME_Version, Version);
   }
 
   @Override

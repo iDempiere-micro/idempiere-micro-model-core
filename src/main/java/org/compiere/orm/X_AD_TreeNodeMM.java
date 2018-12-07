@@ -48,6 +48,17 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM, I_Persistent
   }
 
   /**
+   * Get Tree.
+   *
+   * @return Identifies a Tree
+   */
+  public int getAD_Tree_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_ID);
+    if (ii == null) return 0;
+    return ii;
+  }
+
+  /**
    * Set Tree.
    *
    * @param AD_Tree_ID Identifies a Tree
@@ -58,14 +69,12 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM, I_Persistent
   }
 
   /**
-   * Get Tree.
+   * Get AD_TreeNodeMM_UU.
    *
-   * @return Identifies a Tree
+   * @return AD_TreeNodeMM_UU
    */
-  public int getAD_Tree_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_ID);
-    if (ii == null) return 0;
-    return ii;
+  public String getAD_TreeNodeMM_UU() {
+    return (String) get_Value(COLUMNNAME_AD_TreeNodeMM_UU);
   }
 
   /**
@@ -78,12 +87,14 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM, I_Persistent
   }
 
   /**
-   * Get AD_TreeNodeMM_UU.
+   * Get Node.
    *
-   * @return AD_TreeNodeMM_UU
+   * @return Node
    */
-  public String getAD_TreeNodeMM_UU() {
-    return (String) get_Value(COLUMNNAME_AD_TreeNodeMM_UU);
+  public int getNode_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_Node_ID);
+    if (ii == null) return 0;
+    return ii;
   }
 
   /**
@@ -97,12 +108,12 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM, I_Persistent
   }
 
   /**
-   * Get Node.
+   * Get Parent.
    *
-   * @return Node
+   * @return Parent of Entity
    */
-  public int getNode_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_Node_ID);
+  public int getParent_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_Parent_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -118,12 +129,12 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM, I_Persistent
   }
 
   /**
-   * Get Parent.
+   * Get Sequence.
    *
-   * @return Parent of Entity
+   * @return Method of ordering records; lowest number comes first
    */
-  public int getParent_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_Parent_ID);
+  public int getSeqNo() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_SeqNo);
     if (ii == null) return 0;
     return ii;
   }
@@ -135,17 +146,6 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM, I_Persistent
    */
   public void setSeqNo(int SeqNo) {
     set_Value(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
-  }
-
-  /**
-   * Get Sequence.
-   *
-   * @return Method of ordering records; lowest number comes first
-   */
-  public int getSeqNo() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_SeqNo);
-    if (ii == null) return 0;
-    return ii;
   }
 
   @Override

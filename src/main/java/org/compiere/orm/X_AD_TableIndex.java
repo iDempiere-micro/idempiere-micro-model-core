@@ -13,6 +13,8 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Persistent {
 
+  /** EntityType AD_Reference_ID=389 */
+  public static final int ENTITYTYPE_AD_Reference_ID = 389;
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -41,16 +43,6 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
   }
 
   /**
-   * Set Message.
-   *
-   * @param AD_Message_ID System Message
-   */
-  public void setAD_Message_ID(int AD_Message_ID) {
-    if (AD_Message_ID < 1) set_Value(COLUMNNAME_AD_Message_ID, null);
-    else set_Value(COLUMNNAME_AD_Message_ID, Integer.valueOf(AD_Message_ID));
-  }
-
-  /**
    * Get Message.
    *
    * @return System Message
@@ -61,10 +53,31 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
     return ii;
   }
 
+  /**
+   * Set Message.
+   *
+   * @param AD_Message_ID System Message
+   */
+  public void setAD_Message_ID(int AD_Message_ID) {
+    if (AD_Message_ID < 1) set_Value(COLUMNNAME_AD_Message_ID, null);
+    else set_Value(COLUMNNAME_AD_Message_ID, Integer.valueOf(AD_Message_ID));
+  }
+
   public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
             .getPO(getAD_Table_ID(), get_TrxName());
+  }
+
+  /**
+   * Get Table.
+   *
+   * @return Database Table information
+   */
+  public int getAD_Table_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    if (ii == null) return 0;
+    return ii;
   }
 
   /**
@@ -78,12 +91,12 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
   }
 
   /**
-   * Get Table.
+   * Get Table Index.
    *
-   * @return Database Table information
+   * @return Table Index
    */
-  public int getAD_Table_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+  public int getAD_TableIndex_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_TableIndex_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -99,14 +112,12 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
   }
 
   /**
-   * Get Table Index.
+   * Get AD_TableIndex_UU.
    *
-   * @return Table Index
+   * @return AD_TableIndex_UU
    */
-  public int getAD_TableIndex_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_TableIndex_ID);
-    if (ii == null) return 0;
-    return ii;
+  public String getAD_TableIndex_UU() {
+    return (String) get_Value(COLUMNNAME_AD_TableIndex_UU);
   }
 
   /**
@@ -119,12 +130,12 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
   }
 
   /**
-   * Get AD_TableIndex_UU.
+   * Get Description.
    *
-   * @return AD_TableIndex_UU
+   * @return Optional short description of the record
    */
-  public String getAD_TableIndex_UU() {
-    return (String) get_Value(COLUMNNAME_AD_TableIndex_UU);
+  public String getDescription() {
+    return (String) get_Value(COLUMNNAME_Description);
   }
 
   /**
@@ -137,16 +148,14 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
   }
 
   /**
-   * Get Description.
+   * Get Entity Type.
    *
-   * @return Optional short description of the record
+   * @return Dictionary Entity Type; Determines ownership and synchronization
    */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
+  public String getEntityType() {
+    return (String) get_Value(COLUMNNAME_EntityType);
   }
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
   /**
    * Set Entity Type.
    *
@@ -158,12 +167,12 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
   }
 
   /**
-   * Get Entity Type.
+   * Get Comment/Help.
    *
-   * @return Dictionary Entity Type; Determines ownership and synchronization
+   * @return Comment or Hint
    */
-  public String getEntityType() {
-    return (String) get_Value(COLUMNNAME_EntityType);
+  public String getHelp() {
+    return (String) get_Value(COLUMNNAME_Help);
   }
 
   /**
@@ -173,15 +182,6 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
    */
   public void setHelp(String Help) {
     set_Value(COLUMNNAME_Help, Help);
-  }
-
-  /**
-   * Get Comment/Help.
-   *
-   * @return Comment or Hint
-   */
-  public String getHelp() {
-    return (String) get_Value(COLUMNNAME_Help);
   }
 
   /**
@@ -254,15 +254,6 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
   }
 
   /**
-   * Set Process Now.
-   *
-   * @param Processing Process Now
-   */
-  public void setProcessing(boolean Processing) {
-    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
-  }
-
-  /**
    * Get Process Now.
    *
    * @return Process Now
@@ -277,12 +268,12 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
   }
 
   /**
-   * Set Drop table index.
+   * Set Process Now.
    *
-   * @param TableIndexDrop Drop table index
+   * @param Processing Process Now
    */
-  public void setTableIndexDrop(String TableIndexDrop) {
-    set_Value(COLUMNNAME_TableIndexDrop, TableIndexDrop);
+  public void setProcessing(boolean Processing) {
+    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
   }
 
   /**
@@ -292,6 +283,15 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
    */
   public String getTableIndexDrop() {
     return (String) get_Value(COLUMNNAME_TableIndexDrop);
+  }
+
+  /**
+   * Set Drop table index.
+   *
+   * @param TableIndexDrop Drop table index
+   */
+  public void setTableIndexDrop(String TableIndexDrop) {
+    set_Value(COLUMNNAME_TableIndexDrop, TableIndexDrop);
   }
 
   @Override

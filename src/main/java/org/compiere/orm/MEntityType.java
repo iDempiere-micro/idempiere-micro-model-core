@@ -14,7 +14,6 @@ import org.idempiere.common.util.CLogger;
  * Enitity Type Model
  *
  * @author Jorg Janke
- * @version $Id: MEntityType.java,v 1.2 2006/07/30 00:51:02 jjanke Exp $
  * @author Teo Sarca
  *     <li>BF [ 2827777 ] MEntityType.isSystemMaintained not working well
  *         https://sourceforge.net/tracker/?func=detail&aid=2827777&group_id=176962&atid=879332
@@ -22,29 +21,13 @@ import org.idempiere.common.util.CLogger;
  *         https://sourceforge.net/tracker/?func=detail&aid=2827786&group_id=176962&atid=879335
  *     <li>BF [ 2861194 ] EntityType is not using normal PO framework for getting IDs
  *         https://sourceforge.net/tracker/?func=detail&aid=2861194&group_id=176962&atid=879332
+ * @version $Id: MEntityType.java,v 1.2 2006/07/30 00:51:02 jjanke Exp $
  */
 public class MEntityType extends X_AD_EntityType {
   /** */
   private static final long serialVersionUID = -8449015496292546851L;
-
-  /**
-   * Get EntityType object by name
-   *
-   * @param ctx
-   * @param entityType
-   * @return
-   */
-  public static MEntityType get(Properties ctx, String entityType) {
-    MEntityType retValue = (MEntityType) s_cache.get(entityType);
-    if (retValue != null) return retValue;
-    retValue =
-        new Query(ctx, I_AD_EntityType.Table_Name, "EntityType=?", null)
-            .setParameters(entityType)
-            .firstOnly();
-    if (retValue != null) s_cache.put(entityType, retValue);
-    return retValue;
-  }
-
+  /** First Not System Entity ID 10=D, 20=C, 100=U, 110=CUST, 200=A, 210=EXT, 220=XX etc */
+  private static final int s_maxAD_EntityType_ID = 1000000;
   /** Cached EntityTypes */
   private static CCache<String, MEntityType> s_cache =
       new CCache<String, MEntityType>(I_AD_EntityType.Table_Name, 20);
@@ -78,8 +61,23 @@ public class MEntityType extends X_AD_EntityType {
     super(ctx, row);
   } //	MEntityType
 
-  /** First Not System Entity ID 10=D, 20=C, 100=U, 110=CUST, 200=A, 210=EXT, 220=XX etc */
-  private static final int s_maxAD_EntityType_ID = 1000000;
+  /**
+   * Get EntityType object by name
+   *
+   * @param ctx
+   * @param entityType
+   * @return
+   */
+  public static MEntityType get(Properties ctx, String entityType) {
+    MEntityType retValue = s_cache.get(entityType);
+    if (retValue != null) return retValue;
+    retValue =
+        new Query(ctx, I_AD_EntityType.Table_Name, "EntityType=?", null)
+            .setParameters(entityType)
+            .firstOnly();
+    if (retValue != null) s_cache.put(entityType, retValue);
+    return retValue;
+  }
 
   /**
    * Is System Maintained. Any Entity Type with ID < 1000000.

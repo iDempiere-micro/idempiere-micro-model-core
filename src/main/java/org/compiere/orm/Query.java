@@ -234,7 +234,7 @@ public class Query extends BaseQuery {
   /**
    * red1 - returns full SQL string - for caller needs
    *
-   * @return buildSQL(null,true)
+   * @return buildSQL(null, true)
    */
   public String getSQL() throws DBException {
     return buildSQL(null, true);
@@ -350,6 +350,7 @@ public class Query extends BaseQuery {
   public BigDecimal sum(String sqlExpression) {
     return aggregate(sqlExpression, AGGREGATE_SUM);
   }
+
   /**
    * Check if there items for query criteria
    *

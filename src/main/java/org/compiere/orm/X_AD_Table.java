@@ -16,6 +16,30 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
 
+  /** AccessLevel AD_Reference_ID=5 */
+  public static final int ACCESSLEVEL_AD_Reference_ID = 5;
+  /** Client+Organization = 3 */
+  public static final String ACCESSLEVEL_ClientPlusOrganization = "3";
+  /** System only = 4 */
+  public static final String ACCESSLEVEL_SystemOnly = "4";
+  /** All = 7 */
+  public static final String ACCESSLEVEL_All = "7";
+  /** System+Client = 6 */
+  public static final String ACCESSLEVEL_SystemPlusClient = "6";
+  /** Client only = 2 */
+  public static final String ACCESSLEVEL_ClientOnly = "2";
+  /** EntityType AD_Reference_ID=389 */
+  public static final int ENTITYTYPE_AD_Reference_ID = 389;
+  /** ReplicationType AD_Reference_ID=126 */
+  public static final int REPLICATIONTYPE_AD_Reference_ID = 126;
+  /** Local = L */
+  public static final String REPLICATIONTYPE_Local = "L";
+  /** Merge = M */
+  public static final String REPLICATIONTYPE_Merge = "M";
+  /** Reference = R */
+  public static final String REPLICATIONTYPE_Reference = "R";
+  /** Broadcast = B */
+  public static final String REPLICATIONTYPE_Broadcast = "B";
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -47,28 +71,6 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
     return sb.toString();
   }
 
-  /** AccessLevel AD_Reference_ID=5 */
-  public static final int ACCESSLEVEL_AD_Reference_ID = 5;
-  /** Client+Organization = 3 */
-  public static final String ACCESSLEVEL_ClientPlusOrganization = "3";
-  /** System only = 4 */
-  public static final String ACCESSLEVEL_SystemOnly = "4";
-  /** All = 7 */
-  public static final String ACCESSLEVEL_All = "7";
-  /** System+Client = 6 */
-  public static final String ACCESSLEVEL_SystemPlusClient = "6";
-  /** Client only = 2 */
-  public static final String ACCESSLEVEL_ClientOnly = "2";
-  /**
-   * Set Data Access Level.
-   *
-   * @param AccessLevel Access Level required
-   */
-  public void setTableAccessLevel(String AccessLevel) {
-
-    set_Value(COLUMNNAME_AccessLevel, AccessLevel);
-  }
-
   /**
    * Get Data Access Level.
    *
@@ -79,13 +81,13 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Table.
+   * Set Data Access Level.
    *
-   * @param AD_Table_ID Database Table information
+   * @param AccessLevel Access Level required
    */
-  public void setAD_Table_ID(int AD_Table_ID) {
-    if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
+  public void setTableAccessLevel(String AccessLevel) {
+
+    set_Value(COLUMNNAME_AccessLevel, AccessLevel);
   }
 
   /**
@@ -100,12 +102,13 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set AD_Table_UU.
+   * Set Table.
    *
-   * @param AD_Table_UU AD_Table_UU
+   * @param AD_Table_ID Database Table information
    */
-  public void setAD_Table_UU(String AD_Table_UU) {
-    set_Value(COLUMNNAME_AD_Table_UU, AD_Table_UU);
+  public void setAD_Table_ID(int AD_Table_ID) {
+    if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
   /**
@@ -115,6 +118,15 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
    */
   public String getAD_Table_UU() {
     return (String) get_Value(COLUMNNAME_AD_Table_UU);
+  }
+
+  /**
+   * Set AD_Table_UU.
+   *
+   * @param AD_Table_UU AD_Table_UU
+   */
+  public void setAD_Table_UU(String AD_Table_UU) {
+    set_Value(COLUMNNAME_AD_Table_UU, AD_Table_UU);
   }
 
   public org.compiere.model.I_AD_Val_Rule getValRule() throws RuntimeException {
@@ -145,16 +157,6 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Window.
-   *
-   * @param AD_Window_ID Data entry or display window
-   */
-  public void setAD_Window_ID(int AD_Window_ID) {
-    if (AD_Window_ID < 1) set_Value(COLUMNNAME_AD_Window_ID, null);
-    else set_Value(COLUMNNAME_AD_Window_ID, Integer.valueOf(AD_Window_ID));
-  }
-
-  /**
    * Get Window.
    *
    * @return Data entry or display window
@@ -166,12 +168,13 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Copy Columns From Table.
+   * Set Window.
    *
-   * @param CopyColumnsFromTable Copy Columns From Table
+   * @param AD_Window_ID Data entry or display window
    */
-  public void setCopyColumnsFromTable(String CopyColumnsFromTable) {
-    set_Value(COLUMNNAME_CopyColumnsFromTable, CopyColumnsFromTable);
+  public void setAD_Window_ID(int AD_Window_ID) {
+    if (AD_Window_ID < 1) set_Value(COLUMNNAME_AD_Window_ID, null);
+    else set_Value(COLUMNNAME_AD_Window_ID, Integer.valueOf(AD_Window_ID));
   }
 
   /**
@@ -184,12 +187,12 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Copy Components From View.
+   * Set Copy Columns From Table.
    *
-   * @param CopyComponentsFromView Copy Components From View
+   * @param CopyColumnsFromTable Copy Columns From Table
    */
-  public void setCopyComponentsFromView(String CopyComponentsFromView) {
-    set_Value(COLUMNNAME_CopyComponentsFromView, CopyComponentsFromView);
+  public void setCopyColumnsFromTable(String CopyColumnsFromTable) {
+    set_Value(COLUMNNAME_CopyColumnsFromTable, CopyColumnsFromTable);
   }
 
   /**
@@ -202,12 +205,12 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Drop view.
+   * Set Copy Components From View.
    *
-   * @param DatabaseViewDrop Drop view
+   * @param CopyComponentsFromView Copy Components From View
    */
-  public void setDatabaseViewDrop(String DatabaseViewDrop) {
-    set_Value(COLUMNNAME_DatabaseViewDrop, DatabaseViewDrop);
+  public void setCopyComponentsFromView(String CopyComponentsFromView) {
+    set_Value(COLUMNNAME_CopyComponentsFromView, CopyComponentsFromView);
   }
 
   /**
@@ -220,12 +223,12 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Description.
+   * Set Drop view.
    *
-   * @param Description Optional short description of the record
+   * @param DatabaseViewDrop Drop view
    */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
+  public void setDatabaseViewDrop(String DatabaseViewDrop) {
+    set_Value(COLUMNNAME_DatabaseViewDrop, DatabaseViewDrop);
   }
 
   /**
@@ -237,16 +240,13 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
     return (String) get_Value(COLUMNNAME_Description);
   }
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
   /**
-   * Set Entity Type.
+   * Set Description.
    *
-   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
+   * @param Description Optional short description of the record
    */
-  public void setEntityType(String EntityType) {
-
-    set_Value(COLUMNNAME_EntityType, EntityType);
+  public void setDescription(String Description) {
+    set_Value(COLUMNNAME_Description, Description);
   }
 
   /**
@@ -259,12 +259,13 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Comment/Help.
+   * Set Entity Type.
    *
-   * @param Help Comment or Hint
+   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
    */
-  public void setHelp(String Help) {
-    set_Value(COLUMNNAME_Help, Help);
+  public void setEntityType(String EntityType) {
+
+    set_Value(COLUMNNAME_EntityType, EntityType);
   }
 
   /**
@@ -277,12 +278,12 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Import Table.
+   * Set Comment/Help.
    *
-   * @param ImportTable Import Table Columns from Database
+   * @param Help Comment or Hint
    */
-  public void setImportTable(String ImportTable) {
-    set_Value(COLUMNNAME_ImportTable, ImportTable);
+  public void setHelp(String Help) {
+    set_Value(COLUMNNAME_Help, Help);
   }
 
   /**
@@ -292,6 +293,15 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
    */
   public String getImportTable() {
     return (String) get_Value(COLUMNNAME_ImportTable);
+  }
+
+  /**
+   * Set Import Table.
+   *
+   * @param ImportTable Import Table Columns from Database
+   */
+  public void setImportTable(String ImportTable) {
+    set_Value(COLUMNNAME_ImportTable, ImportTable);
   }
 
   /**
@@ -434,15 +444,6 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Sequence.
-   *
-   * @param LoadSeq Sequence
-   */
-  public void setLoadSeq(int LoadSeq) {
-    set_ValueNoCheck(COLUMNNAME_LoadSeq, Integer.valueOf(LoadSeq));
-  }
-
-  /**
    * Get Sequence.
    *
    * @return Sequence
@@ -454,12 +455,12 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Name.
+   * Set Sequence.
    *
-   * @param Name Alphanumeric identifier of the entity
+   * @param LoadSeq Sequence
    */
-  public void setName(String Name) {
-    set_Value(HasName.Companion.getCOLUMNNAME_Name(), Name);
+  public void setLoadSeq(int LoadSeq) {
+    set_ValueNoCheck(COLUMNNAME_LoadSeq, Integer.valueOf(LoadSeq));
   }
 
   /**
@@ -472,13 +473,12 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set PO Window.
+   * Set Name.
    *
-   * @param PO_Window_ID Purchase Order Window
+   * @param Name Alphanumeric identifier of the entity
    */
-  public void setPO_Window_ID(int PO_Window_ID) {
-    if (PO_Window_ID < 1) set_Value(COLUMNNAME_PO_Window_ID, null);
-    else set_Value(COLUMNNAME_PO_Window_ID, Integer.valueOf(PO_Window_ID));
+  public void setName(String Name) {
+    set_Value(HasName.Companion.getCOLUMNNAME_Name(), Name);
   }
 
   /**
@@ -493,12 +493,13 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set Process Now.
+   * Set PO Window.
    *
-   * @param Processing Process Now
+   * @param PO_Window_ID Purchase Order Window
    */
-  public void setProcessing(boolean Processing) {
-    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
+  public void setPO_Window_ID(int PO_Window_ID) {
+    if (PO_Window_ID < 1) set_Value(COLUMNNAME_PO_Window_ID, null);
+    else set_Value(COLUMNNAME_PO_Window_ID, Integer.valueOf(PO_Window_ID));
   }
 
   /**
@@ -515,24 +516,13 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
     return false;
   }
 
-  /** ReplicationType AD_Reference_ID=126 */
-  public static final int REPLICATIONTYPE_AD_Reference_ID = 126;
-  /** Local = L */
-  public static final String REPLICATIONTYPE_Local = "L";
-  /** Merge = M */
-  public static final String REPLICATIONTYPE_Merge = "M";
-  /** Reference = R */
-  public static final String REPLICATIONTYPE_Reference = "R";
-  /** Broadcast = B */
-  public static final String REPLICATIONTYPE_Broadcast = "B";
   /**
-   * Set Replication Type.
+   * Set Process Now.
    *
-   * @param ReplicationType Type of Data Replication
+   * @param Processing Process Now
    */
-  public void setReplicationType(String ReplicationType) {
-
-    set_Value(COLUMNNAME_ReplicationType, ReplicationType);
+  public void setProcessing(boolean Processing) {
+    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
   }
 
   /**
@@ -545,12 +535,13 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   }
 
   /**
-   * Set DB Table Name.
+   * Set Replication Type.
    *
-   * @param TableName Name of the table in the database
+   * @param ReplicationType Type of Data Replication
    */
-  public void setTableName(String TableName) {
-    set_Value(COLUMNNAME_TableName, TableName);
+  public void setReplicationType(String ReplicationType) {
+
+    set_Value(COLUMNNAME_ReplicationType, ReplicationType);
   }
 
   /**
@@ -560,6 +551,15 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
    */
   public String getTableName() {
     return (String) get_Value(COLUMNNAME_TableName);
+  }
+
+  /**
+   * Set DB Table Name.
+   *
+   * @param TableName Name of the table in the database
+   */
+  public void setTableName(String TableName) {
+    set_Value(COLUMNNAME_TableName, TableName);
   }
 
   /**

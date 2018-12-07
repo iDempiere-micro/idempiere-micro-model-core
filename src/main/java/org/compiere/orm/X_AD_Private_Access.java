@@ -44,15 +44,6 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access, I_Pe
   }
 
   /**
-   * Set AD_Private_Access_UU.
-   *
-   * @param AD_Private_Access_UU AD_Private_Access_UU
-   */
-  public void setAD_Private_Access_UU(String AD_Private_Access_UU) {
-    set_Value(COLUMNNAME_AD_Private_Access_UU, AD_Private_Access_UU);
-  }
-
-  /**
    * Get AD_Private_Access_UU.
    *
    * @return AD_Private_Access_UU
@@ -61,10 +52,30 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access, I_Pe
     return (String) get_Value(COLUMNNAME_AD_Private_Access_UU);
   }
 
+  /**
+   * Set AD_Private_Access_UU.
+   *
+   * @param AD_Private_Access_UU AD_Private_Access_UU
+   */
+  public void setAD_Private_Access_UU(String AD_Private_Access_UU) {
+    set_Value(COLUMNNAME_AD_Private_Access_UU, AD_Private_Access_UU);
+  }
+
   public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
             .getPO(getAD_Table_ID(), get_TrxName());
+  }
+
+  /**
+   * Get Table.
+   *
+   * @return Database Table information
+   */
+  public int getAD_Table_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    if (ii == null) return 0;
+    return ii;
   }
 
   /**
@@ -78,12 +89,12 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access, I_Pe
   }
 
   /**
-   * Get Table.
+   * Get User/Contact.
    *
-   * @return Database Table information
+   * @return User within the system - Internal or Business Partner Contact
    */
-  public int getAD_Table_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+  public int getAD_User_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_AD_User_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -99,12 +110,12 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access, I_Pe
   }
 
   /**
-   * Get User/Contact.
+   * Get Record ID.
    *
-   * @return User within the system - Internal or Business Partner Contact
+   * @return Direct internal record ID
    */
-  public int getAD_User_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_User_ID);
+  public int getRecord_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_Record_ID);
     if (ii == null) return 0;
     return ii;
   }
@@ -117,17 +128,6 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access, I_Pe
   public void setRecord_ID(int Record_ID) {
     if (Record_ID < 0) set_ValueNoCheck(COLUMNNAME_Record_ID, null);
     else set_ValueNoCheck(COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
-  }
-
-  /**
-   * Get Record ID.
-   *
-   * @return Direct internal record ID
-   */
-  public int getRecord_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_Record_ID);
-    if (ii == null) return 0;
-    return ii;
   }
 
   @Override

@@ -23,9 +23,9 @@ import org.idempiere.common.util.Language;
  *  </pre>
  *
  * @author Jorg Janke
- * @version $Id: DisplayType.java,v 1.6 2006/08/30 20:30:44 comdivision Exp $
  * @author Teo Sarca, SC ARHIPAC SERVICE SRL
  *     <li>BF [ 1810632 ] PricePrecision error in InfoProduct (and similar)
+ * @version $Id: DisplayType.java,v 1.6 2006/08/30 20:30:44 comdivision Exp $
  */
 public final class DisplayType {
   /** Display Type 10 String */
@@ -116,7 +116,10 @@ public final class DisplayType {
    */
 
   //  See DBA_DisplayType.sql ----------------------------------------------
+  public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
+  public static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
   /** Maximum number of digits */
   private static final int MAX_DIGITS = 28; //  Oracle Standard Limitation 38 digits
   /** Digits of an Integer */
@@ -125,11 +128,6 @@ public final class DisplayType {
   private static final int MAX_FRACTION = 12;
   /** Default Amount Precision */
   private static final int AMOUNT_FRACTION = 2;
-
-  public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
-  public static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
-  public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-
   /** Logger */
   private static CLogger s_log = CLogger.getCLogger(DisplayType.class);
 
@@ -445,6 +443,7 @@ public final class DisplayType {
   public static SimpleDateFormat getDateFormat(int displayType, Language language) {
     return getDateFormat(displayType, language, null);
   }
+
   /**
    * Return format for date displayType
    *

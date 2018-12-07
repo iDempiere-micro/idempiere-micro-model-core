@@ -25,6 +25,55 @@ public class M_Element extends X_AD_Element {
   private static final long serialVersionUID = -6644398794862560030L;
 
   /**
+   * ************************************************************************ Standard Constructor
+   *
+   * @param ctx context
+   * @param AD_Element_ID element
+   * @param trxName transaction
+   */
+  public M_Element(Properties ctx, int AD_Element_ID, String trxName) {
+    super(ctx, AD_Element_ID, trxName);
+    if (AD_Element_ID == 0) {
+      //	setColumnName (null);
+      //	setEntityType (null);	// U
+      //	setName (null);
+      //	setPrintName (null);
+    }
+  } //	M_Element
+
+  public M_Element(Properties ctx, Row row) {
+    super(ctx, row);
+  }
+
+  /**
+   * Load Constructor
+   *
+   * @param ctx context
+   * @param rs result set
+   * @param trxName transaction
+   */
+  public M_Element(Properties ctx, ResultSet rs, String trxName) {
+    super(ctx, rs, trxName);
+  } //	M_Element
+
+  /**
+   * Minimum Constructor
+   *
+   * @param ctx context
+   * @param columnName column
+   * @param EntityType entity type
+   * @param trxName trx
+   */
+  public M_Element(Properties ctx, String columnName, String EntityType, String trxName) {
+    super(ctx, 0, trxName);
+    setColumnName(columnName);
+    setName(columnName);
+    setPrintName(columnName);
+    //
+    setEntityType(EntityType); // U
+  } //	M_Element
+
+  /**
    * Get case sensitive Column Name
    *
    * @param columnName case insensitive column name
@@ -109,55 +158,6 @@ public class M_Element extends X_AD_Element {
   public static M_Element getOfColumn(Properties ctx, int AD_Column_ID) {
     return getOfColumn(ctx, AD_Column_ID, null);
   } //	get
-
-  /**
-   * ************************************************************************ Standard Constructor
-   *
-   * @param ctx context
-   * @param AD_Element_ID element
-   * @param trxName transaction
-   */
-  public M_Element(Properties ctx, int AD_Element_ID, String trxName) {
-    super(ctx, AD_Element_ID, trxName);
-    if (AD_Element_ID == 0) {
-      //	setColumnName (null);
-      //	setEntityType (null);	// U
-      //	setName (null);
-      //	setPrintName (null);
-    }
-  } //	M_Element
-
-  public M_Element(Properties ctx, Row row) {
-    super(ctx, row);
-  }
-
-  /**
-   * Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public M_Element(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	M_Element
-
-  /**
-   * Minimum Constructor
-   *
-   * @param ctx context
-   * @param columnName column
-   * @param EntityType entity type
-   * @param trxName trx
-   */
-  public M_Element(Properties ctx, String columnName, String EntityType, String trxName) {
-    super(ctx, 0, trxName);
-    setColumnName(columnName);
-    setName(columnName);
-    setPrintName(columnName);
-    //
-    setEntityType(EntityType); // U
-  } //	M_Element
 
   /* (non-Javadoc)
    * @see PO#beforeSave(boolean)

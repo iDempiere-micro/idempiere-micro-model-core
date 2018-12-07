@@ -15,19 +15,6 @@ import java.util.logging.LogRecord;
  * @version $Id: CLogFile.java,v 1.3 2006/07/30 00:54:35 jjanke Exp $
  */
 public class CLogFile extends Handler {
-  /**
-   * ************************************************************************ Constructor
-   *
-   * @param idempiereHome idempiere home
-   * @param createLogDir create log directory if missing
-   * @param isClient client
-   */
-  public CLogFile(String idempiereHome, boolean createLogDir, boolean isClient) {
-    //
-    m_idempiereHome = null;
-    initialize(m_idempiereHome, createLogDir, isClient);
-  } //	CLogFile
-
   /** idempiere Home */
   private String m_idempiereHome = null;
   /** Printed header */
@@ -42,6 +29,44 @@ public class CLogFile extends Handler {
   private int m_records = 0;
 
   private File m_previousFile;
+
+  /**
+   * ************************************************************************ Constructor
+   *
+   * @param idempiereHome idempiere home
+   * @param createLogDir create log directory if missing
+   * @param isClient client
+   */
+  public CLogFile(String idempiereHome, boolean createLogDir, boolean isClient) {
+    //
+    m_idempiereHome = null;
+    initialize(m_idempiereHome, createLogDir, isClient);
+  } //	CLogFile
+
+  /**
+   * Get File Name Date portion
+   *
+   * @param time time in ms
+   * @return Date String
+   */
+  public static String getFileNameDate(long time) {
+    Timestamp ts = new Timestamp(time);
+    String s = ts.toString();
+    return s.substring(0, 10);
+  } //	getFileNameDate
+
+  public static CLogFile get(boolean create, String idempiereHome, boolean isClient) {
+    Handler[] handlers = CLogMgt.getHandlers();
+    for (Handler handler : handlers) {
+      if (handler instanceof CLogFile) return (CLogFile) handler;
+    }
+    if (create) {
+      CLogFile handler = new CLogFile(idempiereHome, true, isClient);
+      CLogMgt.addHandler(handler);
+      return handler;
+    }
+    return null;
+  }
 
   /**
    * Initialize
@@ -133,18 +158,6 @@ public class CLogFile extends Handler {
   } //	createFile
 
   /**
-   * Get File Name Date portion
-   *
-   * @param time time in ms
-   * @return Date String
-   */
-  public static String getFileNameDate(long time) {
-    Timestamp ts = new Timestamp(time);
-    String s = ts.toString();
-    return s.substring(0, 10);
-  } //	getFileNameDate
-
-  /**
    * Rotate Log when day changes
    *
    * @param time time
@@ -196,9 +209,9 @@ public class CLogFile extends Handler {
   /**
    * Set Level
    *
-   * @see java.util.logging.Handler#setLevel(java.util.logging.Level)
    * @param newLevel new Level
    * @throws java.lang.SecurityException
+   * @see java.util.logging.Handler#setLevel(java.util.logging.Level)
    */
   public synchronized void setLevel(Level newLevel) throws SecurityException {
     if (newLevel == null) return;
@@ -208,8 +221,8 @@ public class CLogFile extends Handler {
   /**
    * Publish
    *
-   * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
    * @param record log record
+   * @see java.util.logging.Handler#publish(java.util.logging.LogRecord)
    */
   public synchronized void publish(LogRecord record) {
     if (!isLoggable(record) || m_writer == null) return;
@@ -260,8 +273,8 @@ public class CLogFile extends Handler {
   /**
    * Close
    *
-   * @see java.util.logging.Handler#close()
    * @throws java.lang.SecurityException
+   * @see java.util.logging.Handler#close()
    */
   public synchronized void close() throws SecurityException {
     if (m_writer == null) return;
@@ -297,17 +310,4 @@ public class CLogFile extends Handler {
     sb.append(getFileName()).append(",Level=").append(getLevel()).append("]");
     return sb.toString();
   } //	toString
-
-  public static CLogFile get(boolean create, String idempiereHome, boolean isClient) {
-    Handler[] handlers = CLogMgt.getHandlers();
-    for (Handler handler : handlers) {
-      if (handler instanceof CLogFile) return (CLogFile) handler;
-    }
-    if (create) {
-      CLogFile handler = new CLogFile(idempiereHome, true, isClient);
-      CLogMgt.addHandler(handler);
-      return handler;
-    }
-    return null;
-  }
 } //	CLogFile

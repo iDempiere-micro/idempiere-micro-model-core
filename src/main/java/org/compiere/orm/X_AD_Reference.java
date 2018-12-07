@@ -13,6 +13,16 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Persistent {
 
+  /** EntityType AD_Reference_ID=389 */
+  public static final int ENTITYTYPE_AD_Reference_ID = 389;
+  /** ValidationType AD_Reference_ID=2 */
+  public static final int VALIDATIONTYPE_AD_Reference_ID = 2;
+  /** List Validation = L */
+  public static final String VALIDATIONTYPE_ListValidation = "L";
+  /** DataType = D */
+  public static final String VALIDATIONTYPE_DataType = "D";
+  /** Table Validation = T */
+  public static final String VALIDATIONTYPE_TableValidation = "T";
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -41,16 +51,6 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
   }
 
   /**
-   * Set Reference.
-   *
-   * @param AD_Reference_ID System Reference and Validation
-   */
-  public void setAD_Reference_ID(int AD_Reference_ID) {
-    if (AD_Reference_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Reference_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Reference_ID, Integer.valueOf(AD_Reference_ID));
-  }
-
-  /**
    * Get Reference.
    *
    * @return System Reference and Validation
@@ -62,12 +62,13 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
   }
 
   /**
-   * Set AD_Reference_UU.
+   * Set Reference.
    *
-   * @param AD_Reference_UU AD_Reference_UU
+   * @param AD_Reference_ID System Reference and Validation
    */
-  public void setAD_Reference_UU(String AD_Reference_UU) {
-    set_Value(COLUMNNAME_AD_Reference_UU, AD_Reference_UU);
+  public void setAD_Reference_ID(int AD_Reference_ID) {
+    if (AD_Reference_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Reference_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Reference_ID, Integer.valueOf(AD_Reference_ID));
   }
 
   /**
@@ -80,12 +81,12 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
   }
 
   /**
-   * Set Description.
+   * Set AD_Reference_UU.
    *
-   * @param Description Optional short description of the record
+   * @param AD_Reference_UU AD_Reference_UU
    */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
+  public void setAD_Reference_UU(String AD_Reference_UU) {
+    set_Value(COLUMNNAME_AD_Reference_UU, AD_Reference_UU);
   }
 
   /**
@@ -97,16 +98,13 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
     return (String) get_Value(COLUMNNAME_Description);
   }
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
   /**
-   * Set Entity Type.
+   * Set Description.
    *
-   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
+   * @param Description Optional short description of the record
    */
-  public void setEntityType(String EntityType) {
-
-    set_Value(COLUMNNAME_EntityType, EntityType);
+  public void setDescription(String Description) {
+    set_Value(COLUMNNAME_Description, Description);
   }
 
   /**
@@ -119,12 +117,13 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
   }
 
   /**
-   * Set Comment/Help.
+   * Set Entity Type.
    *
-   * @param Help Comment or Hint
+   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
    */
-  public void setHelp(String Help) {
-    set_Value(COLUMNNAME_Help, Help);
+  public void setEntityType(String EntityType) {
+
+    set_Value(COLUMNNAME_EntityType, EntityType);
   }
 
   /**
@@ -134,6 +133,15 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
    */
   public String getHelp() {
     return (String) get_Value(COLUMNNAME_Help);
+  }
+
+  /**
+   * Set Comment/Help.
+   *
+   * @param Help Comment or Hint
+   */
+  public void setHelp(String Help) {
+    set_Value(COLUMNNAME_Help, Help);
   }
 
   /**
@@ -159,14 +167,15 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
     return false;
   }
 
-  /** ValidationType AD_Reference_ID=2 */
-  public static final int VALIDATIONTYPE_AD_Reference_ID = 2;
-  /** List Validation = L */
-  public static final String VALIDATIONTYPE_ListValidation = "L";
-  /** DataType = D */
-  public static final String VALIDATIONTYPE_DataType = "D";
-  /** Table Validation = T */
-  public static final String VALIDATIONTYPE_TableValidation = "T";
+  /**
+   * Get Validation type.
+   *
+   * @return Different method of validating data
+   */
+  public String getValidationType() {
+    return (String) get_Value(COLUMNNAME_ValidationType);
+  }
+
   /**
    * Set Validation type.
    *
@@ -178,12 +187,12 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
   }
 
   /**
-   * Get Validation type.
+   * Get Value Format.
    *
-   * @return Different method of validating data
+   * @return Format of the value; Can contain fixed format elements, Variables: "_lLoOaAcCa09"
    */
-  public String getValidationType() {
-    return (String) get_Value(COLUMNNAME_ValidationType);
+  public String getVFormat() {
+    return (String) get_Value(COLUMNNAME_VFormat);
   }
 
   /**
@@ -194,15 +203,6 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
    */
   public void setVFormat(String VFormat) {
     set_Value(COLUMNNAME_VFormat, VFormat);
-  }
-
-  /**
-   * Get Value Format.
-   *
-   * @return Format of the value; Can contain fixed format elements, Variables: "_lLoOaAcCa09"
-   */
-  public String getVFormat() {
-    return (String) get_Value(COLUMNNAME_VFormat);
   }
 
   @Override

@@ -13,5 +13,5 @@ public interface Evaluatee {
    * @param variableName name
    * @return value
    */
-  public String get_ValueAsString(String variableName);
+  String get_ValueAsString(String variableName);
 } //	Evaluatee

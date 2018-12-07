@@ -12,26 +12,26 @@ public interface CacheInterface {
    *
    * @return number of items reset
    */
-  public int reset();
+  int reset();
 
   /**
    * Reset Cache
    *
    * @return number of items reset
    */
-  public int reset(int recordId);
+  int reset(int recordId);
 
   /**
    * Get Size of Cache
    *
    * @return number of items
    */
-  public int size();
+  int size();
 
   /**
    * New record created notification
    *
    * @param record_ID
    */
-  public void newRecord(int record_ID);
+  void newRecord(int record_ID);
 } //	CacheInterface

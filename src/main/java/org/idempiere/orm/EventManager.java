@@ -10,10 +10,9 @@ import org.idempiere.common.util.CLogger;
  */
 public abstract class EventManager implements IEventManager {
 
-  protected static IEventManager instance = null;
   protected static final CLogger log = CLogger.getCLogger(EventManager.class);
-
   protected static final Object mutex = new Object();
+  protected static IEventManager instance = null;
 
   /**
    * Get the singleton instance created by the osgi service framework
@@ -22,6 +21,23 @@ public abstract class EventManager implements IEventManager {
    */
   public static IEventManager getInstance() {
     return instance;
+  }
+
+  /**
+   * @param topic
+   * @param parameter
+   */
+  public static IEvent newEvent(String topic, Object data) {
+    return getInstance().createNewEvent(topic, data);
+  }
+
+  /**
+   * @param topic
+   * @param properties
+   * @return event object
+   */
+  public static IEvent newEvent(String topic, EventProperty... properties) {
+    return getInstance().createNewEvent(topic, properties);
   }
 
   /* (non-Javadoc)
@@ -47,22 +63,5 @@ public abstract class EventManager implements IEventManager {
   public boolean register(String topic, String filter, IEventHandler eventHandler) {
     String[] topics = new String[] {topic};
     return register(topics, filter, eventHandler);
-  }
-
-  /**
-   * @param topic
-   * @param parameter
-   */
-  public static IEvent newEvent(String topic, Object data) {
-    return getInstance().createNewEvent(topic, data);
-  }
-
-  /**
-   * @param topic
-   * @param properties
-   * @return event object
-   */
-  public static IEvent newEvent(String topic, EventProperty... properties) {
-    return getInstance().createNewEvent(topic, properties);
   }
 }

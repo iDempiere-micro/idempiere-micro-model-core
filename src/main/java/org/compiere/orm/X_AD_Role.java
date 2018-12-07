@@ -15,6 +15,26 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
 
+  /** PreferenceType AD_Reference_ID=330 */
+  public static final int PREFERENCETYPE_AD_Reference_ID = 330;
+  /** Client = C */
+  public static final String PREFERENCETYPE_Client = "C";
+  /** Organization = O */
+  public static final String PREFERENCETYPE_Organization = "O";
+  /** User = U */
+  public static final String PREFERENCETYPE_User = "U";
+  /** None = N */
+  public static final String PREFERENCETYPE_None = "N";
+  /** UserLevel AD_Reference_ID=226 */
+  public static final int USERLEVEL_AD_Reference_ID = 226;
+  /** System = S */
+  public static final String USERLEVEL_System = "S  ";
+  /** Client = C */
+  public static final String USERLEVEL_Client = " C ";
+  /** Organization = O */
+  public static final String USERLEVEL_Organization = "  O";
+  /** Client+Organization = CO */
+  public static final String USERLEVEL_ClientPlusOrganization = " CO";
   /** */
   private static final long serialVersionUID = 20171031L;
 
@@ -57,16 +77,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Role.
-   *
-   * @param AD_Role_ID Responsibility Role
-   */
-  public void setAD_Role_ID(int AD_Role_ID) {
-    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
-  }
-
-  /**
    * Get Role.
    *
    * @return Responsibility Role
@@ -78,12 +88,13 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set AD_Role_UU.
+   * Set Role.
    *
-   * @param AD_Role_UU AD_Role_UU
+   * @param AD_Role_ID Responsibility Role
    */
-  public void setAD_Role_UU(String AD_Role_UU) {
-    set_Value(COLUMNNAME_AD_Role_UU, AD_Role_UU);
+  public void setAD_Role_ID(int AD_Role_ID) {
+    if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
+    else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
   }
 
   /**
@@ -95,20 +106,19 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
     return (String) get_Value(COLUMNNAME_AD_Role_UU);
   }
 
+  /**
+   * Set AD_Role_UU.
+   *
+   * @param AD_Role_UU AD_Role_UU
+   */
+  public void setAD_Role_UU(String AD_Role_UU) {
+    set_Value(COLUMNNAME_AD_Role_UU, AD_Role_UU);
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_Menu() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_Menu_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Menu Tree.
-   *
-   * @param AD_Tree_Menu_ID Tree of the menu
-   */
-  public void setAD_Tree_Menu_ID(int AD_Tree_Menu_ID) {
-    if (AD_Tree_Menu_ID < 1) set_Value(COLUMNNAME_AD_Tree_Menu_ID, null);
-    else set_Value(COLUMNNAME_AD_Tree_Menu_ID, Integer.valueOf(AD_Tree_Menu_ID));
   }
 
   /**
@@ -122,20 +132,20 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
     return ii;
   }
 
+  /**
+   * Set Menu Tree.
+   *
+   * @param AD_Tree_Menu_ID Tree of the menu
+   */
+  public void setAD_Tree_Menu_ID(int AD_Tree_Menu_ID) {
+    if (AD_Tree_Menu_ID < 1) set_Value(COLUMNNAME_AD_Tree_Menu_ID, null);
+    else set_Value(COLUMNNAME_AD_Tree_Menu_ID, Integer.valueOf(AD_Tree_Menu_ID));
+  }
+
   public org.compiere.model.I_AD_Tree getAD_Tree_Org() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
             .getPO(getAD_Tree_Org_ID(), get_TrxName());
-  }
-
-  /**
-   * Set Organization Tree.
-   *
-   * @param AD_Tree_Org_ID Trees are used for (financial) reporting and security access (via role)
-   */
-  public void setAD_Tree_Org_ID(int AD_Tree_Org_ID) {
-    if (AD_Tree_Org_ID < 1) set_Value(COLUMNNAME_AD_Tree_Org_ID, null);
-    else set_Value(COLUMNNAME_AD_Tree_Org_ID, Integer.valueOf(AD_Tree_Org_ID));
   }
 
   /**
@@ -150,12 +160,13 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info Account.
+   * Set Organization Tree.
    *
-   * @param Allow_Info_Account Allow Info Account
+   * @param AD_Tree_Org_ID Trees are used for (financial) reporting and security access (via role)
    */
-  public void setAllow_Info_Account(boolean Allow_Info_Account) {
-    set_Value(COLUMNNAME_Allow_Info_Account, Boolean.valueOf(Allow_Info_Account));
+  public void setAD_Tree_Org_ID(int AD_Tree_Org_ID) {
+    if (AD_Tree_Org_ID < 1) set_Value(COLUMNNAME_AD_Tree_Org_ID, null);
+    else set_Value(COLUMNNAME_AD_Tree_Org_ID, Integer.valueOf(AD_Tree_Org_ID));
   }
 
   /**
@@ -173,12 +184,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info Asset.
+   * Set Allow Info Account.
    *
-   * @param Allow_Info_Asset Allow Info Asset
+   * @param Allow_Info_Account Allow Info Account
    */
-  public void setAllow_Info_Asset(boolean Allow_Info_Asset) {
-    set_Value(COLUMNNAME_Allow_Info_Asset, Boolean.valueOf(Allow_Info_Asset));
+  public void setAllow_Info_Account(boolean Allow_Info_Account) {
+    set_Value(COLUMNNAME_Allow_Info_Account, Boolean.valueOf(Allow_Info_Account));
   }
 
   /**
@@ -196,12 +207,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info BPartner.
+   * Set Allow Info Asset.
    *
-   * @param Allow_Info_BPartner Allow Info BPartner
+   * @param Allow_Info_Asset Allow Info Asset
    */
-  public void setAllow_Info_BPartner(boolean Allow_Info_BPartner) {
-    set_Value(COLUMNNAME_Allow_Info_BPartner, Boolean.valueOf(Allow_Info_BPartner));
+  public void setAllow_Info_Asset(boolean Allow_Info_Asset) {
+    set_Value(COLUMNNAME_Allow_Info_Asset, Boolean.valueOf(Allow_Info_Asset));
   }
 
   /**
@@ -219,12 +230,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info InOut.
+   * Set Allow Info BPartner.
    *
-   * @param Allow_Info_InOut Allow Info InOut
+   * @param Allow_Info_BPartner Allow Info BPartner
    */
-  public void setAllow_Info_InOut(boolean Allow_Info_InOut) {
-    set_Value(COLUMNNAME_Allow_Info_InOut, Boolean.valueOf(Allow_Info_InOut));
+  public void setAllow_Info_BPartner(boolean Allow_Info_BPartner) {
+    set_Value(COLUMNNAME_Allow_Info_BPartner, Boolean.valueOf(Allow_Info_BPartner));
   }
 
   /**
@@ -242,12 +253,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info Invoice.
+   * Set Allow Info InOut.
    *
-   * @param Allow_Info_Invoice Allow Info Invoice
+   * @param Allow_Info_InOut Allow Info InOut
    */
-  public void setAllow_Info_Invoice(boolean Allow_Info_Invoice) {
-    set_Value(COLUMNNAME_Allow_Info_Invoice, Boolean.valueOf(Allow_Info_Invoice));
+  public void setAllow_Info_InOut(boolean Allow_Info_InOut) {
+    set_Value(COLUMNNAME_Allow_Info_InOut, Boolean.valueOf(Allow_Info_InOut));
   }
 
   /**
@@ -265,12 +276,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info Order.
+   * Set Allow Info Invoice.
    *
-   * @param Allow_Info_Order Allow Info Order
+   * @param Allow_Info_Invoice Allow Info Invoice
    */
-  public void setAllow_Info_Order(boolean Allow_Info_Order) {
-    set_Value(COLUMNNAME_Allow_Info_Order, Boolean.valueOf(Allow_Info_Order));
+  public void setAllow_Info_Invoice(boolean Allow_Info_Invoice) {
+    set_Value(COLUMNNAME_Allow_Info_Invoice, Boolean.valueOf(Allow_Info_Invoice));
   }
 
   /**
@@ -288,12 +299,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info Payment.
+   * Set Allow Info Order.
    *
-   * @param Allow_Info_Payment Allow Info Payment
+   * @param Allow_Info_Order Allow Info Order
    */
-  public void setAllow_Info_Payment(boolean Allow_Info_Payment) {
-    set_Value(COLUMNNAME_Allow_Info_Payment, Boolean.valueOf(Allow_Info_Payment));
+  public void setAllow_Info_Order(boolean Allow_Info_Order) {
+    set_Value(COLUMNNAME_Allow_Info_Order, Boolean.valueOf(Allow_Info_Order));
   }
 
   /**
@@ -311,12 +322,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info Product.
+   * Set Allow Info Payment.
    *
-   * @param Allow_Info_Product Allow Info Product
+   * @param Allow_Info_Payment Allow Info Payment
    */
-  public void setAllow_Info_Product(boolean Allow_Info_Product) {
-    set_Value(COLUMNNAME_Allow_Info_Product, Boolean.valueOf(Allow_Info_Product));
+  public void setAllow_Info_Payment(boolean Allow_Info_Payment) {
+    set_Value(COLUMNNAME_Allow_Info_Payment, Boolean.valueOf(Allow_Info_Payment));
   }
 
   /**
@@ -334,12 +345,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info Resource.
+   * Set Allow Info Product.
    *
-   * @param Allow_Info_Resource Allow Info Resource
+   * @param Allow_Info_Product Allow Info Product
    */
-  public void setAllow_Info_Resource(boolean Allow_Info_Resource) {
-    set_Value(COLUMNNAME_Allow_Info_Resource, Boolean.valueOf(Allow_Info_Resource));
+  public void setAllow_Info_Product(boolean Allow_Info_Product) {
+    set_Value(COLUMNNAME_Allow_Info_Product, Boolean.valueOf(Allow_Info_Product));
   }
 
   /**
@@ -357,12 +368,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Allow Info Schedule.
+   * Set Allow Info Resource.
    *
-   * @param Allow_Info_Schedule Allow Info Schedule
+   * @param Allow_Info_Resource Allow Info Resource
    */
-  public void setAllow_Info_Schedule(boolean Allow_Info_Schedule) {
-    set_Value(COLUMNNAME_Allow_Info_Schedule, Boolean.valueOf(Allow_Info_Schedule));
+  public void setAllow_Info_Resource(boolean Allow_Info_Resource) {
+    set_Value(COLUMNNAME_Allow_Info_Resource, Boolean.valueOf(Allow_Info_Resource));
   }
 
   /**
@@ -380,12 +391,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Approval Amount.
+   * Set Allow Info Schedule.
    *
-   * @param AmtApproval The approval amount limit for this role
+   * @param Allow_Info_Schedule Allow Info Schedule
    */
-  public void setAmtApproval(BigDecimal AmtApproval) {
-    set_Value(COLUMNNAME_AmtApproval, AmtApproval);
+  public void setAllow_Info_Schedule(boolean Allow_Info_Schedule) {
+    set_Value(COLUMNNAME_Allow_Info_Schedule, Boolean.valueOf(Allow_Info_Schedule));
   }
 
   /**
@@ -400,12 +411,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Approval Amount Accumulated.
+   * Set Approval Amount.
    *
-   * @param AmtApprovalAccum The approval amount limit for this role accumulated on a period
+   * @param AmtApproval The approval amount limit for this role
    */
-  public void setAmtApprovalAccum(BigDecimal AmtApprovalAccum) {
-    set_Value(COLUMNNAME_AmtApprovalAccum, AmtApprovalAccum);
+  public void setAmtApproval(BigDecimal AmtApproval) {
+    set_Value(COLUMNNAME_AmtApproval, AmtApproval);
   }
 
   /**
@@ -420,6 +431,26 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
+   * Set Approval Amount Accumulated.
+   *
+   * @param AmtApprovalAccum The approval amount limit for this role accumulated on a period
+   */
+  public void setAmtApprovalAccum(BigDecimal AmtApprovalAccum) {
+    set_Value(COLUMNNAME_AmtApprovalAccum, AmtApprovalAccum);
+  }
+
+  /**
+   * Get Currency.
+   *
+   * @return The Currency for this record
+   */
+  public int getC_Currency_ID() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_C_Currency_ID);
+    if (ii == null) return 0;
+    return ii;
+  }
+
+  /**
    * Set Currency.
    *
    * @param C_Currency_ID The Currency for this record
@@ -430,12 +461,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Get Currency.
+   * Get Confirm Query Records.
    *
-   * @return The Currency for this record
+   * @return Require Confirmation if more records will be returned by the query (If not defined 500)
    */
-  public int getC_Currency_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_C_Currency_ID);
+  public int getConfirmQueryRecords() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_ConfirmQueryRecords);
     if (ii == null) return 0;
     return ii;
   }
@@ -451,12 +482,13 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Get Confirm Query Records.
+   * Get Days Approval Accumulated.
    *
-   * @return Require Confirmation if more records will be returned by the query (If not defined 500)
+   * @return The days approval indicates the days to take into account to verify the accumulated
+   *     approval amount.
    */
-  public int getConfirmQueryRecords() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_ConfirmQueryRecords);
+  public int getDaysApprovalAccum() {
+    Integer ii = (Integer) get_Value(COLUMNNAME_DaysApprovalAccum);
     if (ii == null) return 0;
     return ii;
   }
@@ -472,15 +504,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Get Days Approval Accumulated.
+   * Get Description.
    *
-   * @return The days approval indicates the days to take into account to verify the accumulated
-   *     approval amount.
+   * @return Optional short description of the record
    */
-  public int getDaysApprovalAccum() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_DaysApprovalAccum);
-    if (ii == null) return 0;
-    return ii;
+  public String getDescription() {
+    return (String) get_Value(COLUMNNAME_Description);
   }
 
   /**
@@ -490,15 +519,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
    */
   public void setDescription(String Description) {
     set_Value(COLUMNNAME_Description, Description);
-  }
-
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
   }
 
   /**
@@ -849,16 +869,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Max Query Records.
-   *
-   * @param MaxQueryRecords If defined, you cannot query more records as defined - the query
-   *     criteria needs to be changed to query less records
-   */
-  public void setMaxQueryRecords(int MaxQueryRecords) {
-    set_Value(COLUMNNAME_MaxQueryRecords, Integer.valueOf(MaxQueryRecords));
-  }
-
-  /**
    * Get Max Query Records.
    *
    * @return If defined, you cannot query more records as defined - the query criteria needs to be
@@ -871,12 +881,13 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Overwrite Price Limit.
+   * Set Max Query Records.
    *
-   * @param OverwritePriceLimit Overwrite Price Limit if the Price List enforces the Price Limit
+   * @param MaxQueryRecords If defined, you cannot query more records as defined - the query
+   *     criteria needs to be changed to query less records
    */
-  public void setOverwritePriceLimit(boolean OverwritePriceLimit) {
-    set_Value(COLUMNNAME_OverwritePriceLimit, OverwritePriceLimit);
+  public void setMaxQueryRecords(int MaxQueryRecords) {
+    set_Value(COLUMNNAME_MaxQueryRecords, Integer.valueOf(MaxQueryRecords));
   }
 
   /**
@@ -893,24 +904,13 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
     return false;
   }
 
-  /** PreferenceType AD_Reference_ID=330 */
-  public static final int PREFERENCETYPE_AD_Reference_ID = 330;
-  /** Client = C */
-  public static final String PREFERENCETYPE_Client = "C";
-  /** Organization = O */
-  public static final String PREFERENCETYPE_Organization = "O";
-  /** User = U */
-  public static final String PREFERENCETYPE_User = "U";
-  /** None = N */
-  public static final String PREFERENCETYPE_None = "N";
   /**
-   * Set Preference Level.
+   * Set Overwrite Price Limit.
    *
-   * @param PreferenceType Determines what preferences the user can set
+   * @param OverwritePriceLimit Overwrite Price Limit if the Price List enforces the Price Limit
    */
-  public void setPreferenceType(String PreferenceType) {
-
-    set_Value(COLUMNNAME_PreferenceType, PreferenceType);
+  public void setOverwritePriceLimit(boolean OverwritePriceLimit) {
+    set_Value(COLUMNNAME_OverwritePriceLimit, OverwritePriceLimit);
   }
 
   /**
@@ -923,13 +923,13 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set Supervisor.
+   * Set Preference Level.
    *
-   * @param Supervisor_ID Supervisor for this user/organization - used for escalation and approval
+   * @param PreferenceType Determines what preferences the user can set
    */
-  public void setSupervisor_ID(int Supervisor_ID) {
-    if (Supervisor_ID < 1) set_Value(COLUMNNAME_Supervisor_ID, null);
-    else set_Value(COLUMNNAME_Supervisor_ID, Supervisor_ID);
+  public void setPreferenceType(String PreferenceType) {
+
+    set_Value(COLUMNNAME_PreferenceType, PreferenceType);
   }
 
   /**
@@ -944,12 +944,13 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /**
-   * Set UserDiscount.
+   * Set Supervisor.
    *
-   * @param UserDiscount UserDiscount
+   * @param Supervisor_ID Supervisor for this user/organization - used for escalation and approval
    */
-  public void setUserDiscount(BigDecimal UserDiscount) {
-    set_Value(COLUMNNAME_UserDiscount, UserDiscount);
+  public void setSupervisor_ID(int Supervisor_ID) {
+    if (Supervisor_ID < 1) set_Value(COLUMNNAME_Supervisor_ID, null);
+    else set_Value(COLUMNNAME_Supervisor_ID, Supervisor_ID);
   }
 
   /**
@@ -963,24 +964,13 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
     return bd;
   }
 
-  /** UserLevel AD_Reference_ID=226 */
-  public static final int USERLEVEL_AD_Reference_ID = 226;
-  /** System = S */
-  public static final String USERLEVEL_System = "S  ";
-  /** Client = C */
-  public static final String USERLEVEL_Client = " C ";
-  /** Organization = O */
-  public static final String USERLEVEL_Organization = "  O";
-  /** Client+Organization = CO */
-  public static final String USERLEVEL_ClientPlusOrganization = " CO";
   /**
-   * Set User Level.
+   * Set UserDiscount.
    *
-   * @param UserLevel System Client Organization
+   * @param UserDiscount UserDiscount
    */
-  public void setUserLevel(String UserLevel) {
-
-    set_Value(COLUMNNAME_UserLevel, UserLevel);
+  public void setUserDiscount(BigDecimal UserDiscount) {
+    set_Value(COLUMNNAME_UserDiscount, UserDiscount);
   }
 
   /**
@@ -990,6 +980,16 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
    */
   public String getUserLevel() {
     return (String) get_Value(COLUMNNAME_UserLevel);
+  }
+
+  /**
+   * Set User Level.
+   *
+   * @param UserLevel System Client Organization
+   */
+  public void setUserLevel(String UserLevel) {
+
+    set_Value(COLUMNNAME_UserLevel, UserLevel);
   }
 
   @Override
