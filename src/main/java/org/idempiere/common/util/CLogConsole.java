@@ -22,6 +22,7 @@ public class CLogConsole extends Handler {
   private PrintWriter m_writerOut = null;
   /** Error Writer */
   private PrintWriter m_writerErr = null;
+
   /** Constructor */
   public CLogConsole() {
     initialize();

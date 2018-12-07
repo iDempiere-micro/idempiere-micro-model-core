@@ -14,7 +14,7 @@ public class CLogFilter implements Filter {
   /** Singleton */
   private static CLogFilter s_filter = null;
 
-  /** *********************************************************************** Constructor */
+  /** ********************************************************************** Constructor */
   public CLogFilter() {} // 	CLogFilter
 
   /**

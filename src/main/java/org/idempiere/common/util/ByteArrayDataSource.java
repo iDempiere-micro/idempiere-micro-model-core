@@ -26,6 +26,7 @@ public class ByteArrayDataSource implements DataSource {
   private String m_type = "text/plain";
   /** Name * */
   private String m_name = null;
+
   /**
    * Create a DataSource from an input stream
    *
@@ -48,6 +49,7 @@ public class ByteArrayDataSource implements DataSource {
     }
     if (type != null && type.length() > 0) m_type = type;
   } //	ByteArrayDataSource
+
   /**
    * Create a DataSource from a byte array
    *

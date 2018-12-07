@@ -34,6 +34,7 @@ public class PO_LOB implements Serializable {
   private int m_displayType;
   /** Data */
   private Object m_value;
+
   /**
    * Constructor
    *

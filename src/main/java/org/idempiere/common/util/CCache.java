@@ -62,6 +62,7 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
       String name, int initialCapacity, int expireMinutes, boolean distributed, int maxSize) {
     this(name, name, initialCapacity, expireMinutes, distributed, maxSize);
   }
+
   /**
    * Adempiere Cache - expires after 2 hours
    *
@@ -80,6 +81,7 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
       String tableName, String name, int initialCapacity, int expireMinutes, boolean distributed) {
     this(tableName, name, initialCapacity, expireMinutes, distributed, CacheMgt.MAX_SIZE);
   }
+
   /**
    * Adempiere Cache
    *

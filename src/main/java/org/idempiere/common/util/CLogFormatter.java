@@ -22,7 +22,7 @@ public class CLogFormatter extends Formatter {
   /** Short Format */
   private boolean m_shortFormat = false;
 
-  /** *********************************************************************** CLogFormatter */
+  /** ********************************************************************** CLogFormatter */
   private CLogFormatter() {
     super();
   } //	CLogFormatter

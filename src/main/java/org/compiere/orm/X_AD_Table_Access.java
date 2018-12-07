@@ -33,6 +33,7 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
      * setAD_Table_ID (0); setIsExclude (true); // Y setIsReadOnly (false); }
      */
   }
+
   /** Load Constructor */
   public X_AD_Table_Access(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);

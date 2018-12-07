@@ -31,8 +31,10 @@ public class AccessSqlParser {
   private String[] m_sql;
   /** List of Arrays */
   private ArrayList<TableInfo[]> m_tableInfo = new ArrayList<TableInfo[]>();
+
   /** Base Constructor. You need to set the SQL and start the parsing manually. */
   public AccessSqlParser() {} // 	AccessSqlParser
+
   /**
    * Full Constructor
    *
@@ -350,6 +352,7 @@ public class AccessSqlParser {
       m_tableName = tableName;
       m_synonym = synonym;
     } //	TableInfo
+
     /**
      * Short Constuctor - no syn
      *

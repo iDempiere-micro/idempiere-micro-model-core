@@ -107,10 +107,12 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
   public static final String DOCSUBTYPESO_PrepayOrder = "PR";
   /** */
   private static final long serialVersionUID = 20171031L;
+
   /** Standard Constructor */
   public X_C_DocType(Properties ctx, int C_DocType_ID, String trxName) {
     super(ctx, C_DocType_ID, trxName);
   }
+
   /** Load Constructor */
   public X_C_DocType(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);

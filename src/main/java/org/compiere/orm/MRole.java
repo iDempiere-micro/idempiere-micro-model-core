@@ -2834,6 +2834,7 @@ public class MRole extends X_AD_Role {
     public int AD_Org_ID = 0;
     /** Read Only */
     public boolean readOnly = true;
+
     /**
      * Org Access constructor
      *

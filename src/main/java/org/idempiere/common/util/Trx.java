@@ -63,6 +63,7 @@ public class Trx {
   private Trx(String trxName) {
     this(trxName, null);
   } //	Trx
+
   /**
    * Transaction Constructor
    *

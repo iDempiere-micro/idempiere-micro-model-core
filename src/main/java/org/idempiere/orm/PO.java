@@ -1441,7 +1441,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     m_trxName = trxName;
   } //	setTrx
 
-  /** *********************************************************************** Dump Record */
+  /** ********************************************************************** Dump Record */
   public void dump() {
     if (CLogMgt.isLevelFinest()) {
       log.finer(get_WhereClause(true));

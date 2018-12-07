@@ -59,6 +59,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     super(ctx, AD_Attachment_ID, trxName);
     initAttachmentStoreDetails(ctx, trxName);
   } //	MAttachment
+
   /**
    * New Constructor
    *
@@ -79,6 +80,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
       setRecord_ID(Record_ID);
     }
   } //	MAttachment
+
   /**
    * Load Constructor
    *

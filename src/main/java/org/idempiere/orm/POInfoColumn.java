@@ -66,6 +66,7 @@ public class POInfoColumn implements Serializable {
   public BigDecimal ValueMin_BD = null;
   /** Max Value */
   public BigDecimal ValueMax_BD = null;
+
   /**
    * Constructor
    *

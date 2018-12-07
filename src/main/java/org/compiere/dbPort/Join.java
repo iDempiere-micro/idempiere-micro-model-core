@@ -20,6 +20,7 @@ public class Join {
   private String m_joinAlias;
   private boolean m_left;
   private String m_condition;
+
   /**
    * Constructor
    *

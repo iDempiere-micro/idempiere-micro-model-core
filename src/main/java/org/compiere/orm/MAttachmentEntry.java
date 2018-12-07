@@ -26,6 +26,7 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
   private byte[] m_data = null;
   /** Index */
   private int m_index = 0;
+
   /**
    * Attachment Entry
    *
