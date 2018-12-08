@@ -36,13 +36,16 @@ fun getSQLValue(trxName: String?, sql: String, vararg params: Any): Int = getSQL
 fun getSQLValueEx(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
 fun getSQLValueEx(trxName: String?, sql: String): Int = getSQLValueEx(trxName, sql, listOf())
 
+fun getSQLValueBD(trxName: String, sql: String, vararg params: Any): BigDecimal =
+    throw IllegalArgumentException(NYI)
+
 internal fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? =
     throw IllegalArgumentException(NYI)
 
 internal fun getSQLValueTSEx(trxName: String, sql: String, vararg params: Any): Timestamp? =
     throw IllegalArgumentException(NYI)
 
-internal fun getSQLValueString(trxName: String, sql: String, vararg params: Any): String? =
+fun getSQLValueString(trxName: String, sql: String, vararg params: Any): String? =
     throw IllegalArgumentException(NYI)
 
 internal fun getSQLValueStringEx(trxName: String, sql: String, vararg params: Any): String? =

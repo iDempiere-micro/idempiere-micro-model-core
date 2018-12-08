@@ -6,6 +6,8 @@ import mu.KotlinLogging
 import org.compiere.model.I_AD_Column
 import org.compiere.model.I_AD_Element
 import org.compiere.model.I_AD_Field
+import org.compiere.orm.MColumn
+import org.compiere.orm.PO
 import org.compiere.util.DisplayType
 import org.idempiere.common.util.SecureEngine
 import org.idempiere.icommon.model.IPO
@@ -28,6 +30,50 @@ private val log = KotlinLogging.logger {}
 const val I_ZERO = 0
 
 internal abstract class PO(final override val ctx: Properties, row: Row?, val columnNamePrefix: String?) : IPO {
+
+    companion object {
+        fun copyValues(from: PO, to: PO) {
+            log.trace { "From ID=" + from.id + " - To ID=" + to.id }
+            // 	Different Classes
+            if (from.javaClass != to.javaClass) {
+                for (i1 in 0 until from.oldValues.size) {
+                    val colName = from.p_info.getColumnName(i1)
+                    val column = MColumn.get(from.ctx, from.p_info.getAD_Column_ID(colName))
+                    if (column.isVirtualColumn ||
+                        column.isKey || // 	KeyColumn
+
+                        column.isUUIDColumn || // IDEMPIERE-67
+
+                        column.isStandardColumn ||
+                        !column.isAllowCopy
+                    )
+                        continue
+                    for (i2 in 0 until to.oldValues.size) {
+                        if (to.p_info.getColumnName(i2) == colName) {
+                            to.newValues[i2] = from.oldValues[i1]
+                            break
+                        }
+                    }
+                } // 	from loop
+            } else
+            // 	same class
+            {
+                for (i in 0 until from.oldValues.size) {
+                    val colName = from.p_info.getColumnName(i)
+                    val column = MColumn.get(from.ctx, from.p_info.getAD_Column_ID(colName))
+                    if (column.isVirtualColumn ||
+                        column.isKey || // 	KeyColumn
+
+                        column.isUUIDColumn ||
+                        column.isStandardColumn ||
+                        !column.isAllowCopy
+                    )
+                        continue
+                    to.newValues[i] = from.oldValues[i]
+                }
+            } // 	same class
+        } // 	copy
+    }
 
     /** Create New for Multi Key  */
     protected var createNew = false
@@ -385,4 +431,12 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     init {
         if (row != null) load(row)
     }
+}
+
+fun getAllIDs(tableName: String, whereClause: String?): IntArray {
+    val sql = StringBuilder("SELECT ")
+    sql.append(tableName).append("_ID FROM ").append(tableName)
+    if (whereClause != null && whereClause.isNotEmpty()) sql.append(" WHERE ").append(whereClause)
+    val loadQuery = software.hsharp.core.util.queryOf(sql.toString(), listOf()).map { row -> row.int(1) }.asList
+    return DB.current.run(loadQuery).toIntArray()
 }

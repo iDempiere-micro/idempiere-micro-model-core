@@ -57,12 +57,12 @@ public abstract class PO extends org.idempiere.orm.PO {
    * @param AD_Client_ID client
    * @param AD_Org_ID org
    */
-  /*
   protected static void copyValues(PO from, PO to, int AD_Client_ID, int AD_Org_ID) {
-    copyValues(from, to);
+    Companion.copyValues(from, to);
     to.setADClientID(AD_Client_ID);
     to.setAD_Org_ID(AD_Org_ID);
-  } //	copyValues*/
+  } //	copyValues
+
   public static <T> T as(Class<T> clazz, Object o) {
     if (clazz.isInstance(o)) {
       return clazz.cast(o);
