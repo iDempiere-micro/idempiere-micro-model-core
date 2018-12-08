@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import org.compiere.util.Msg;
-import org.idempiere.common.util.*;
+import org.idempiere.common.util.CLogger;
 
 /**
  * Role Org Access Model

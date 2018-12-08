@@ -1,6 +1,7 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.*;
+import static software.hsharp.core.util.DBKt.executeUpdate;
+import static software.hsharp.core.util.DBKt.getSQLValue;
 
 import java.sql.ResultSet;
 import java.util.List;

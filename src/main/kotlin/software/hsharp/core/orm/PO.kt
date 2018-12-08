@@ -18,13 +18,14 @@ import java.sql.Blob
 import java.sql.Clob
 import java.sql.Timestamp
 import java.util.Properties
+import kotlin.collections.ArrayList
 
 private val log = KotlinLogging.logger {}
 
-internal abstract class PO(final override val ctx: Properties, row: Row?, val columnNamePrefix: String?) : IPO {
+/** Zero Integer  */
+const val I_ZERO = 0
 
-    /** Zero Integer  */
-    protected val I_ZERO = 0
+internal abstract class PO(final override val ctx: Properties, row: Row?, val columnNamePrefix: String?) : IPO {
 
     /** Create New for Multi Key  */
     protected var createNew = false

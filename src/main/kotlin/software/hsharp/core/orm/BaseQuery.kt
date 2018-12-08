@@ -7,7 +7,7 @@ import org.compiere.orm.Query
 import org.idempiere.common.exceptions.DBException
 import org.idempiere.common.util.Env
 import software.hsharp.core.util.DB
-import java.util.*
+import java.util.Properties
 
 abstract class BaseQuery(val ctx: Properties, val table: MTable) {
     protected abstract fun buildSQL(selectClause: StringBuilder?, useOrderByClause: Boolean): String

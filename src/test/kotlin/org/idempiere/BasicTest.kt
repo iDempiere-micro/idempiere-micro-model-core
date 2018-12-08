@@ -9,8 +9,8 @@ import org.compiere.orm.MColumn
 import org.compiere.orm.MTable
 import org.compiere.orm.M_Element
 import org.idempiere.common.util.Env
-import org.junit.Test
 import org.junit.Before
+import org.junit.Test
 import software.hsharp.core.orm.DummyEventManager
 import software.hsharp.core.util.DB
 import java.sql.Timestamp
