@@ -1,6 +1,11 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.*;
+import org.compiere.model.SetGetModel;
+import org.idempiere.common.exceptions.AdempiereException;
+import org.idempiere.common.exceptions.DBException;
+import org.idempiere.common.util.CLogger;
+import org.idempiere.common.util.Env;
+import org.idempiere.common.util.Util;
 
 import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
@@ -8,15 +13,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.compiere.model.SetGetModel;
-import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.Env;
-import org.idempiere.common.util.Util;
+
+import static software.hsharp.core.util.DBKt.*;
 
 public class SetGetUtil {
   /** Static logger */
@@ -75,9 +78,42 @@ public class SetGetUtil {
     }
   } //	updateColumns
 
+  /**
+   * Update columns from the result of the given query.
+   *
+   * @param models
+   * @param columnNames
+   * @param sql
+   * @param params
+   * @param trxName
+   * @see #updateColumns(SetGetModel[], String[], ResultSet)
+   */
+  public static void updateColumns(
+          SetGetModel[] models, String[] columnNames, String sql, Object[] params, String trxName) {
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    try {
+      pstmt = prepareStatement(sql, trxName);
+      setParameters(pstmt, params);
+      rs = pstmt.executeQuery();
+      updateColumns(models, columnNames, rs);
+    } catch (SQLException e) {
+      throw new DBException(e, sql);
+    } finally {
+      close(rs, pstmt);
+      rs = null;
+      pstmt = null;
+    }
+  } //	updateColumns
+
   public static void updateColumns(SetGetModel model, String[] columnNames, ResultSet rs)
       throws SQLException {
     updateColumns(new SetGetModel[] {model}, columnNames, rs);
+  }
+
+  public static void updateColumns(
+          SetGetModel model, String[] columnNames, String sql, String trxName) {
+    updateColumns(new SetGetModel[] {model}, columnNames, sql, null, trxName);
   }
 
   /**
@@ -227,6 +263,42 @@ public class SetGetUtil {
     if (s_log.isLoggable(Level.FINEST)) s_log.finest("Leaving: to=" + to);
     return copiedFields;
   } //	copyValues
+
+  /**
+   * Copy from the fields to the. The two objects do not need to be in the same table.
+   *
+   * @param to destination object
+   * @param from_tableName source object table
+   * @param from_id source object ID
+   * @param includeFields name fields to be excluded, null will be interpreted as String[0];
+   * @see #updateColumns(SetGetModel, String[], String, String)
+   */
+  public static boolean copyValues(
+          SetGetModel to, String from_tableName, int from_id, String[] includeFields) {
+    if (to == null
+            || from_tableName == null
+            || from_id <= 0
+            || includeFields == null
+            || includeFields.length == 0) {
+      return false;
+    }
+
+    StringBuilder sql = new StringBuilder();
+    for (String f : includeFields) {
+      if (sql.length() > 0) sql.append(",");
+      sql.append(f);
+    }
+    sql.insert(0, "SELECT ");
+    sql.append(" FROM ")
+            .append(from_tableName)
+            .append(" WHERE ")
+            .append(from_tableName)
+            .append("_ID=")
+            .append(from_id);
+
+    updateColumns(to, includeFields, sql.toString(), null);
+    return true;
+  }
 
   /**
    * Get Value as integer
