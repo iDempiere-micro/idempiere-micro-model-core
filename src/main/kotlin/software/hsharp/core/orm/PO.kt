@@ -322,6 +322,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      * @return AD_User_ID
      */
     fun getUpdatedBy(): Int {
+        @Suppress("UNCHECKED_CAST")
         return get_Value("UpdatedBy") as Int? ?: return 0
     } // 	getUpdatedBy
 
