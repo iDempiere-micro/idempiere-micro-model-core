@@ -30,21 +30,23 @@ internal fun getSQLValueEx(trxName: String?, sql: String, params: List<Any?>): I
     return DB.current.run(loadQuery) ?: -1
 }
 
+private const val NYI = "Not yet implemented"
+
 fun getSQLValue(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
 fun getSQLValueEx(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
 fun getSQLValueEx(trxName: String?, sql: String): Int = getSQLValueEx(trxName, sql, listOf())
 
 internal fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? =
-    throw Exception("Not yet implemented")
+    throw IllegalArgumentException(NYI)
 
 internal fun getSQLValueTSEx(trxName: String, sql: String, vararg params: Any): Timestamp? =
-    throw Exception("Not yet implemented")
+    throw IllegalArgumentException(NYI)
 
 internal fun getSQLValueString(trxName: String, sql: String, vararg params: Any): String? =
-    throw Exception("Not yet implemented")
+    throw IllegalArgumentException(NYI)
 
 internal fun getSQLValueStringEx(trxName: String, sql: String, vararg params: Any): String? =
-    throw Exception("Not yet implemented")
+    throw IllegalArgumentException(NYI)
 
 fun queryOf(statement: String, params: List<Any?>): Query {
     return Query(statement, params = params)
@@ -80,7 +82,7 @@ fun executeUpdateEx(sql: String, objects: List<Any>, trxName: String, timeOut: I
 fun prepareStatement(
     sql: String?,
     trxName: String?
-): PreparedStatement? = throw Exception("Not yet implemented")
+): PreparedStatement? = throw IllegalArgumentException(NYI)
 
 internal fun setParameter(pstmt: PreparedStatement, index: Int, param: Any?) {
     if (param == null)
@@ -108,10 +110,10 @@ internal fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
 }
 
 // CONVERTERS
-internal fun TO_DATE(time: Timestamp, dayOnly: Boolean): String = throw Exception("Not yet implemented")
+internal fun TO_DATE(time: Timestamp, dayOnly: Boolean): String = throw IllegalArgumentException(NYI)
 
-internal fun TO_STRING(txt: String?, maxLength: Int): String = throw Exception("Not yet implemented")
-fun TO_STRING(txt: String?): String = throw Exception("Not yet implemented")
+internal fun TO_STRING(txt: String?, maxLength: Int): String = throw IllegalArgumentException(NYI)
+fun TO_STRING(txt: String?): String = throw IllegalArgumentException(NYI)
 internal val convert: Convert = Convert_PostgreSQL()
 
 // CONNECTION
@@ -166,7 +168,7 @@ internal fun createSequence(
     maxvalue: Int,
     start: Int,
     trxName: String
-): Boolean = throw Exception("Not yet implemented")
+): Boolean = throw IllegalArgumentException(NYI)
 
 // WRAPPER
 

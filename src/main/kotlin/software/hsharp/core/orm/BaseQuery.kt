@@ -131,7 +131,8 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
         val sql = buildSQL(null, true)
         val params = getQueryParameters()
         val sqlQuery =
-            (if (params == null) queryOf(sql) else queryOf(sql, *params)).map { row -> table.getPO(row) as T }.asList
+            @Suppress("UNCHECKED_CAST")
+            (if (params == null) queryOf(sql) else software.hsharp.core.util.queryOf(sql, params.toList())).map { row -> table.getPO(row) as T }.asList
         return DB.current.run(sqlQuery)
     }
 }
