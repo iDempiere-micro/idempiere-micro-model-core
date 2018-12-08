@@ -1,6 +1,7 @@
 package org.idempiere.orm;
 
 import static kotliquery.PackageKt.queryOf;
+import static software.hsharp.core.orm.POKt.I_ZERO;
 import static software.hsharp.core.util.DBKt.*;
 
 import java.io.IOException;
@@ -8,7 +9,10 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Savepoint;
+import java.sql.Timestamp;
 import java.text.Collator;
 import java.util.*;
 import java.util.logging.Level;
@@ -986,7 +990,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
       else if (colName.equals("Created") || colName.equals("Updated"))
         newValues[i] = new Timestamp(System.currentTimeMillis());
       else if (colName.equals(p_info.getTableName() + "_ID")) //  KeyColumn
-      newValues[i] = getI_ZERO();
+      newValues[i] = I_ZERO;
       else if (colName.equals("IsActive")) newValues[i] = Boolean.TRUE;
       else if (colName.equals("AD_Client_ID")) newValues[i] = Env.getADClientID(getCtx());
       else if (colName.equals("AD_Org_ID")) newValues[i] = Env.getOrgId(getCtx());
@@ -1101,7 +1105,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     if (columnName == null
         || AD_Language == null
         || getIds().length > 1
-        || getIds()[0].equals(getI_ZERO())
+        || getIds()[0].equals(I_ZERO)
         || !(getIds()[0] instanceof Integer)) {
       throw new IllegalArgumentException(
           "ColumnName="
@@ -1318,7 +1322,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     POInfo p_info = super.getP_info();
     //	Not a translation table
     if (getIds().length > 1
-        || getIds()[0].equals(getI_ZERO())
+        || getIds()[0].equals(I_ZERO)
         || !(getIds()[0] instanceof Integer)
         || !p_info.isTranslated()) return true;
     //

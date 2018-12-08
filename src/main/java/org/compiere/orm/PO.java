@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.orm.POKt.I_ZERO;
 import static software.hsharp.core.util.DBKt.*;
 
 import java.math.BigDecimal;
@@ -16,12 +17,7 @@ import org.compiere.model.I_C_ElementValue;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.AdempiereUserError;
-import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.CacheMgt;
-import org.idempiere.common.util.Env;
-import org.idempiere.common.util.Trx;
-import org.idempiere.common.util.ValueNamePair;
+import org.idempiere.common.util.*;
 import org.idempiere.icommon.model.IPO;
 import org.idempiere.orm.*;
 
@@ -83,7 +79,7 @@ public abstract class PO extends org.idempiere.orm.PO {
     if (getCreateNew()) return true;
     //
     for (int i = 0; i < getIds().length; i++) {
-      if (getIds()[i].equals(getI_ZERO()) || getIds()[i] == Null.NULL) continue;
+      if (getIds()[i].equals(I_ZERO) || getIds()[i] == Null.NULL) continue;
       return false; //	one value is non-zero
     }
     return !MTable.isZeroIDTable(get_TableName());

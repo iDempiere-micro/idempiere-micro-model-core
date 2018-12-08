@@ -29,7 +29,7 @@ internal fun getSQLValueEx(trxName: String?, sql: String, params: List<Any?>): I
     return DB.current.run(loadQuery) ?: -1
 }
 fun getSQLValue(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
-internal fun getSQLValueEx(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
+fun getSQLValueEx(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
 fun getSQLValueEx(trxName: String?, sql: String): Int = getSQLValueEx(trxName, sql, listOf())
 
 internal fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? = throw Exception("Not yet implemented")
@@ -43,7 +43,7 @@ fun queryOf(statement: String, params: List<Any?>): Query {
 }
 
 // INSERT/UPDATE
-internal fun executeUpdate(sql: String, trxName: String): Int =
+fun executeUpdate(sql: String, trxName: String): Int =
     convert.convert(sql).map { DB.current.run(queryOf(it, listOf()).asUpdate) }.sum()
 internal fun executeUpdate(
     sql: String,
@@ -63,7 +63,7 @@ fun executeUpdateEx(sql: String, objects: List<Any>, trxName: String, timeOut: I
     DB.current.run(queryOf(sql, objects).asUpdate)
 
 // STATEMENT
-internal fun prepareStatement(
+fun prepareStatement(
     sql: String?,
     trxName: String?
 ): PreparedStatement? = throw Exception("Not yet implemented")
@@ -94,7 +94,7 @@ internal fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
 // CONVERTERS
 internal fun TO_DATE(time: Timestamp, dayOnly: Boolean): String = throw Exception("Not yet implemented")
 internal fun TO_STRING(txt: String?, maxLength: Int): String = throw Exception("Not yet implemented")
-internal fun TO_STRING(txt: String?): String = throw Exception("Not yet implemented")
+fun TO_STRING(txt: String?): String = throw Exception("Not yet implemented")
 internal val convert: Convert = Convert_PostgreSQL()
 
 // CONNECTION
@@ -108,7 +108,7 @@ internal fun isConnected() = isConnected(false)
 // DUMMY
 internal fun close(rs: ResultSet?) {}
 internal fun close(st: Statement?) {}
-internal fun close(rs: ResultSet?, st: Statement?) {}
+fun close(rs: ResultSet?, st: Statement?) {}
 
 // HELPERS
 internal fun addPagingSQL(sql: String, start: Int, end: Int): String {
