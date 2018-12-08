@@ -110,8 +110,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
   protected int m_idOld = 0;
   /** Custom Columns */
   protected HashMap<String, String> m_custom = null;
-  /** Accounting Columns */
-  protected ArrayList<String> s_acctColumns = null;
   /** Optional Transaction */
   protected String m_trxName = null;
   /** Attributes */
@@ -1072,17 +1070,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     return ii;
   } //	getCreateddBy
 
-  /**
-   * Get UpdatedBy
-   *
-   * @return AD_User_ID
-   */
-  public final int getUpdatedBy() {
-    Integer ii = (Integer) get_Value("UpdatedBy");
-    if (ii == null) return 0;
-    return ii;
-  } //	getUpdatedBy
-
   public String get_Translation(String columnName, String AD_Language) {
     return get_Translation(columnName, AD_Language, false, true);
   }
@@ -1445,7 +1432,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     m_trxName = trxName;
   } //	setTrx
 
-  /** ********************************************************************* Dump Record */
+  /** ******************************************************************** Dump Record */
   public void dump() {
     if (CLogMgt.isLevelFinest()) {
       log.finer(get_WhereClause(true));

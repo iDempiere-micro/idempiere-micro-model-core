@@ -1,11 +1,7 @@
 package org.idempiere.common.util;
 
 import java.io.Serializable;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.*;
 
 /**
  * idempiere Logger

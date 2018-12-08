@@ -11,8 +11,8 @@ private fun getMessageFromLogger(): String {
 }
 
 open class AdempiereExceptionEx : AdempiereException {
-    constructor(): super(getMessageFromLogger())
-    constructor(msg: String): super(msg)
-    constructor(cause: Throwable): super(cause)
-    constructor(msg: String, cause: Throwable): super(msg, cause)
+    constructor() : super(getMessageFromLogger())
+    constructor(msg: String) : super(msg)
+    constructor(cause: Throwable) : super(cause)
+    constructor(msg: String, cause: Throwable) : super(msg, cause)
 }

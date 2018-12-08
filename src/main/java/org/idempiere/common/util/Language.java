@@ -3,7 +3,7 @@ package org.idempiere.common.util;
 import static software.hsharp.core.util.DBKt.getSQLValueStringEx;
 import static software.hsharp.core.util.DBKt.isConnected;
 
-import java.awt.ComponentOrientation;
+import java.awt.*;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DecimalFormatSymbols;

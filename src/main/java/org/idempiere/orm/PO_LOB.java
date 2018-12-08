@@ -1,8 +1,6 @@
 package org.idempiere.orm;
 
-import static software.hsharp.core.util.DBKt.close;
-import static software.hsharp.core.util.DBKt.createConnection;
-import static software.hsharp.core.util.DBKt.executeUpdate;
+import static software.hsharp.core.util.DBKt.*;
 
 import java.io.Serializable;
 import java.sql.Connection;

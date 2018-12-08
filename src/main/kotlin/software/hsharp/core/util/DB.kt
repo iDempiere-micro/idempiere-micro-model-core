@@ -17,6 +17,7 @@ import java.sql.SQLException
 
 // CONSTANTS
 internal fun isGenerateUUIDSupported() = true
+
 internal fun isPostgreSQL() = true
 internal fun isPagingSupported() = true
 internal fun isQueryTimeoutSupported() = true
@@ -28,15 +29,22 @@ internal fun getSQLValueEx(trxName: String?, sql: String, params: List<Any?>): I
     val loadQuery = queryOf(sql, params).map { row -> row.intOrNull(1) }.asSingle
     return DB.current.run(loadQuery) ?: -1
 }
+
 fun getSQLValue(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
 fun getSQLValueEx(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
 fun getSQLValueEx(trxName: String?, sql: String): Int = getSQLValueEx(trxName, sql, listOf())
 
-internal fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? = throw Exception("Not yet implemented")
-internal fun getSQLValueTSEx(trxName: String, sql: String, vararg params: Any): Timestamp? = throw Exception("Not yet implemented")
+internal fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? =
+    throw Exception("Not yet implemented")
 
-internal fun getSQLValueString(trxName: String, sql: String, vararg params: Any): String? = throw Exception("Not yet implemented")
-internal fun getSQLValueStringEx(trxName: String, sql: String, vararg params: Any): String? = throw Exception("Not yet implemented")
+internal fun getSQLValueTSEx(trxName: String, sql: String, vararg params: Any): Timestamp? =
+    throw Exception("Not yet implemented")
+
+internal fun getSQLValueString(trxName: String, sql: String, vararg params: Any): String? =
+    throw Exception("Not yet implemented")
+
+internal fun getSQLValueStringEx(trxName: String, sql: String, vararg params: Any): String? =
+    throw Exception("Not yet implemented")
 
 fun queryOf(statement: String, params: List<Any?>): Query {
     return Query(statement, params = params)
@@ -45,20 +53,26 @@ fun queryOf(statement: String, params: List<Any?>): Query {
 // INSERT/UPDATE
 fun executeUpdate(sql: String, trxName: String): Int =
     convert.convert(sql).map { DB.current.run(queryOf(it, listOf()).asUpdate) }.sum()
+
 internal fun executeUpdate(
     sql: String,
     params: List<Any?>,
     ignoreError: Boolean,
     trxName: String?
 ): Int = DB.current.run(queryOf(sql, params).asUpdate)
+
 fun executeUpdateEx(sql: String, trxName: String): Int =
     executeUpdateEx(sql, arrayOf(), trxName, 0)
+
 fun executeUpdateEx(sql: String, trxName: String, timeOut: Int): Int =
     executeUpdateEx(sql, arrayOf(), trxName, timeOut)
+
 fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String): Int =
     executeUpdateEx(sql, objects, trxName, 0)
+
 fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String, timeOut: Int): Int =
     DB.current.run(queryOf(sql, objects.toList()).asUpdate)
+
 fun executeUpdateEx(sql: String, objects: List<Any>, trxName: String, timeOut: Int): Int =
     DB.current.run(queryOf(sql, objects).asUpdate)
 
@@ -67,6 +81,7 @@ fun prepareStatement(
     sql: String?,
     trxName: String?
 ): PreparedStatement? = throw Exception("Not yet implemented")
+
 internal fun setParameter(pstmt: PreparedStatement, index: Int, param: Any?) {
     if (param == null)
         pstmt.setObject(index, null)
@@ -85,6 +100,7 @@ internal fun setParameter(pstmt: PreparedStatement, index: Int, param: Any?) {
     else
         throw DBException("Unknown parameter type $index - $param")
 }
+
 internal fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
     for (i in 0 until params.size) {
         setParameter(stmt, i + 1, params.get(i))
@@ -93,6 +109,7 @@ internal fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
 
 // CONVERTERS
 internal fun TO_DATE(time: Timestamp, dayOnly: Boolean): String = throw Exception("Not yet implemented")
+
 internal fun TO_STRING(txt: String?, maxLength: Int): String = throw Exception("Not yet implemented")
 fun TO_STRING(txt: String?): String = throw Exception("Not yet implemented")
 internal val convert: Convert = Convert_PostgreSQL()
@@ -100,13 +117,16 @@ internal val convert: Convert = Convert_PostgreSQL()
 // CONNECTION
 
 internal fun getConnectionID(): Connection? = DB.current.connection.underlying
-internal fun createConnection(autoCommit: Boolean, readOnly: Boolean, trxLevel: Int): Connection? = DB.current.connection.underlying
+internal fun createConnection(autoCommit: Boolean, readOnly: Boolean, trxLevel: Int): Connection? =
+    DB.current.connection.underlying
+
 internal fun createConnection(autoCommit: Boolean, trxLevel: Int): Connection? = DB.current.connection.underlying
 internal fun isConnected(createNew: Boolean): Boolean = !DB.current.connection.underlying.isClosed
 internal fun isConnected() = isConnected(false)
 
 // DUMMY
 internal fun close(rs: ResultSet?) {}
+
 internal fun close(st: Statement?) {}
 fun close(rs: ResultSet?, st: Statement?) {}
 
@@ -135,9 +155,18 @@ internal fun getSQLException(e: Exception): Exception? {
 // SEQUENCE
 
 internal fun getNextID(name: String): Int {
-    return getSQLValueEx(null, "SELECT nextval('" + name.toLowerCase() + "')") ?: throw Exception("Sequence $name not found")
+    return getSQLValueEx(null, "SELECT nextval('" + name.toLowerCase() + "')")
+        ?: throw Exception("Sequence $name not found")
 }
-internal fun createSequence(name: String, increment: Int, minvalue: Int, maxvalue: Int, start: Int, trxName: String): Boolean = throw Exception("Not yet implemented")
+
+internal fun createSequence(
+    name: String,
+    increment: Int,
+    minvalue: Int,
+    maxvalue: Int,
+    start: Int,
+    trxName: String
+): Boolean = throw Exception("Not yet implemented")
 
 // WRAPPER
 

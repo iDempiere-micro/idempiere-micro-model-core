@@ -29,7 +29,7 @@ public class CLogErrorBuffer extends Handler {
   /** Log Size */
   private static final int LOG_SIZE = 100;
 
-  /** ********************************************************************** Constructor */
+  /** ********************************************************************* Constructor */
   public CLogErrorBuffer() {
     initialize();
   } //	CLogErrorBuffer

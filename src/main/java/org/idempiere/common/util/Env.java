@@ -1,22 +1,14 @@
 package org.idempiere.common.util;
 
-import java.awt.Container;
-import java.awt.Graphics;
-import java.awt.Window;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Level;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 /**
  * System Environment and static variables.

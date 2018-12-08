@@ -15,6 +15,7 @@ import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
 import java.sql.ResultSet
 import java.util.Properties
+import kotlin.collections.set
 
 internal val tableCache = CCache<Int, MTable>(I_AD_Table.Table_Name, 20)
 
@@ -51,12 +52,12 @@ fun getFactoryList(): Array<IModelFactory>? {
             locator.list(IModelFactory::class.java)
         } else null
     return if (service == null) {
-            arrayOf(DefaultModelFactory())
-        } else {
-            if (service.services.isEmpty()) {
-                arrayOf(DefaultModelFactory() as IModelFactory)
-            } else service.services.toTypedArray()
-        }
+        arrayOf(DefaultModelFactory())
+    } else {
+        if (service.services.isEmpty()) {
+            arrayOf(DefaultModelFactory() as IModelFactory)
+        } else service.services.toTypedArray()
+    }
 }
 
 private data class MBaseTableDetail(

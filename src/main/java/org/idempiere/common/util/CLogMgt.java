@@ -7,22 +7,10 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.sql.DriverManager;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-import java.util.logging.Filter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import java.util.logging.*;
 import org.idempiere.common.base.Service;
 import org.idempiere.icommon.distributed.IClusterMember;
 import org.idempiere.icommon.distributed.IClusterService;
@@ -68,7 +56,7 @@ public class CLogMgt {
         }
       };
 
-  /** ********************************************************************** CLogMgt */
+  /** ********************************************************************* CLogMgt */
   public CLogMgt() {
     testLog();
   }

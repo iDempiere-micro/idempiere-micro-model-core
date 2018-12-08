@@ -33,7 +33,7 @@ public class Secure implements SecureInterface {
 
   private IKeyStore m_keyStore = null;
 
-  /** ********************************************************************** Adempiere Security */
+  /** ********************************************************************* Adempiere Security */
   public Secure() {
     initCipher();
   } //	Secure

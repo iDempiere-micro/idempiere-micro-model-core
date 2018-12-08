@@ -4,8 +4,10 @@ import static software.hsharp.core.orm.POKt.I_ZERO;
 import static software.hsharp.core.util.DBKt.*;
 
 import java.math.BigDecimal;
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Savepoint;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -805,86 +807,6 @@ public abstract class PO extends org.idempiere.orm.PO {
    * @return true if records inserted
    */
   protected boolean insert_Accounting(String acctTable, String acctBaseTable, String whereClause) {
-    if (s_acctColumns == null // 	cannot cache C_BP_*_Acct as there are 3
-        || acctTable.startsWith("C_BP_")) {
-      s_acctColumns = new ArrayList<String>();
-      String sql =
-          "SELECT c.ColumnName "
-              + "FROM AD_Column c INNER JOIN AD_Table t ON (c.AD_Table_ID=t.AD_Table_ID) "
-              + "WHERE t.TableName=? AND c.IsActive='Y' AND c.AD_Reference_ID=25 ORDER BY c.ColumnName";
-      PreparedStatement pstmt = null;
-      ResultSet rs = null;
-      try {
-        pstmt = prepareStatement(sql, null);
-        pstmt.setString(1, acctTable);
-        rs = pstmt.executeQuery();
-        while (rs.next()) s_acctColumns.add(rs.getString(1));
-      } catch (Exception e) {
-        log.log(Level.SEVERE, acctTable, e);
-      } finally {
-        close(rs, pstmt);
-        rs = null;
-        pstmt = null;
-      }
-      if (s_acctColumns.size() == 0) {
-        log.severe("No Columns for " + acctTable);
-        return false;
-      }
-    }
-
-    //	Create SQL Statement - INSERT
-    StringBuilder sb =
-        new StringBuilder("INSERT INTO ")
-            .append(acctTable)
-            .append(" (")
-            .append(get_TableName())
-            .append(
-                "_ID, C_AcctSchema_ID, AD_Client_ID,AD_Org_ID,IsActive, Created,CreatedBy,Updated,UpdatedBy ");
-    for (int i = 0; i < s_acctColumns.size(); i++) sb.append(",").append(s_acctColumns.get(i));
-
-    // check whether db have working generate_uuid function.
-    boolean uuidFunction = isGenerateUUIDSupported();
-
-    // uuid column
-    int uuidColumnId =
-        getSQLValue(
-            get_TrxName(),
-            "SELECT col.AD_Column_ID FROM AD_Column col INNER JOIN AD_Table tbl ON col.AD_Table_ID = tbl.AD_Table_ID WHERE tbl.TableName=? AND col.ColumnName=?",
-            acctTable,
-            org.idempiere.orm.PO.getUUIDColumnName(acctTable));
-    if (uuidColumnId > 0 && uuidFunction)
-      sb.append(",").append(org.idempiere.orm.PO.getUUIDColumnName(acctTable));
-    //	..	SELECT
-    sb.append(") SELECT ")
-        .append(getId())
-        .append(", p.C_AcctSchema_ID, p.AD_Client_ID,0,'Y', SysDate,")
-        .append(getUpdatedBy())
-        .append(",SysDate,")
-        .append(getUpdatedBy());
-    for (int i = 0; i < s_acctColumns.size(); i++) sb.append(",p.").append(s_acctColumns.get(i));
-    // uuid column
-    if (uuidColumnId > 0 && uuidFunction) sb.append(",generate_uuid()");
-    //	.. 	FROM
-    sb.append(" FROM ")
-        .append(acctBaseTable)
-        .append(" p WHERE p.AD_Client_ID=")
-        .append(getClientId());
-    if (whereClause != null && whereClause.length() > 0) sb.append(" AND ").append(whereClause);
-    sb.append(" AND NOT EXISTS (SELECT * FROM ")
-        .append(acctTable)
-        .append(" e WHERE e.C_AcctSchema_ID=p.C_AcctSchema_ID AND e.")
-        .append(get_TableName())
-        .append("_ID=")
-        .append(getId())
-        .append(")");
-    //
-    int no = executeUpdate(sb.toString(), get_TrxName());
-    if (no > 0) {
-      if (log.isLoggable(Level.FINE)) log.fine("#" + no);
-    } else {
-      log.warning("#" + no + " - Table=" + acctTable + " from " + acctBaseTable);
-    }
-
-    return no > 0;
+    return insertAccounting(acctTable, acctBaseTable, whereClause);
   } //	insert_Accounting
 }
