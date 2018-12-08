@@ -1,3 +1,4 @@
 package org.idempiere.orm;
 
-public interface IEventHandler {}
+public interface IEventHandler {
+}

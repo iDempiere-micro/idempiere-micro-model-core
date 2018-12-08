@@ -1,9 +1,8 @@
 package org.compiere.orm
 
-import java.sql.ResultSet
-
 import kotliquery.Row
 import org.idempiere.orm.PO
+import java.sql.ResultSet
 
 /**
  * Model factory interface, extracted from legacy code in MTable.

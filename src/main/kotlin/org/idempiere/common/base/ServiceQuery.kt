@@ -1,6 +1,6 @@
 package org.idempiere.common.base
 
-import java.util.LinkedHashMap
+import java.util.*
 
 /**
  * A sequence of name value pair filter

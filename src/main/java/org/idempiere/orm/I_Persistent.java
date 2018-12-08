@@ -20,5 +20,5 @@ package org.idempiere.orm;
  */
 public interface I_Persistent {
 
-  boolean save();
+    boolean save();
 }

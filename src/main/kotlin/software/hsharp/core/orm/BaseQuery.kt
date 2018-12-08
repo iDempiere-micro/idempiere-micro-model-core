@@ -7,7 +7,7 @@ import org.compiere.orm.Query
 import org.idempiere.common.exceptions.DBException
 import org.idempiere.common.util.Env
 import software.hsharp.core.util.DB
-import java.util.Properties
+import java.util.*
 
 abstract class BaseQuery(val ctx: Properties, val table: MTable) {
     protected abstract fun buildSQL(selectClause: StringBuilder?, useOrderByClause: Boolean): String
@@ -86,7 +86,8 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
     private fun <T : PO> doFindFirst(): List<T> {
         val sql = buildSQL(null, true)
         val params = getQueryParameters()
-        val sqlQuery = (if (params == null) queryOf(sql) else queryOf(sql, *params)).map { row -> table.getPO(row) as T }.asList
+        val sqlQuery =
+            (if (params == null) queryOf(sql) else queryOf(sql, *params)).map { row -> table.getPO(row) as T }.asList
         val result = DB.current.run(sqlQuery)
         return result
     }
@@ -129,7 +130,8 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
     fun <T : PO> list(): List<T> {
         val sql = buildSQL(null, true)
         val params = getQueryParameters()
-        val sqlQuery = (if (params == null) queryOf(sql) else queryOf(sql, *params)).map { row -> table.getPO(row) as T }.asList
+        val sqlQuery =
+            (if (params == null) queryOf(sql) else queryOf(sql, *params)).map { row -> table.getPO(row) as T }.asList
         return DB.current.run(sqlQuery)
     }
 }

@@ -7,7 +7,7 @@ import org.compiere.orm.X_AD_SysConfig
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
 import java.sql.ResultSet
-import java.util.Properties
+import java.util.*
 
 /** Cache  */
 internal val sysConfigCache = CCache<String, String>(I_AD_SysConfig.Table_Name, 40, 0, true)
@@ -33,6 +33,6 @@ internal fun getValue(name: String, defaultValue: String?, clientId: Int, orgId:
 open class MBaseSysConfig : X_AD_SysConfig {
     constructor(ctx: Properties, r: Row) : super(ctx, r)
 
-    constructor(ctx: Properties, AD_SysConfig_ID: Int, trxName: String): super(ctx, AD_SysConfig_ID, trxName)
-    constructor(ctx: Properties, rs: ResultSet, trxName: String): super(ctx, rs, trxName)
+    constructor(ctx: Properties, AD_SysConfig_ID: Int, trxName: String) : super(ctx, AD_SysConfig_ID, trxName)
+    constructor(ctx: Properties, rs: ResultSet, trxName: String) : super(ctx, rs, trxName)
 }

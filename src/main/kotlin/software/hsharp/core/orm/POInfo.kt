@@ -6,7 +6,7 @@ import org.compiere.model.I_AD_Table
 import org.idempiere.common.util.Env
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
-import java.util.Properties
+import java.util.*
 
 data class POInfoDetail(
     val tableName: String,
@@ -22,7 +22,8 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
         if (baseLanguageOnly) true else Env.isBaseLanguage(
             ctx,
             "AD_Table"
-        ))
+        )
+    )
 
     protected val columnNameMap: MutableMap<String, Int> = detail.first.columnNameMap
     protected val columnIdMap: MutableMap<Int, Int> = detail.first.columnIdMap
@@ -66,8 +67,10 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
             val isChangeLog = "Y" == row.stringOrNull(23)
 
             Pair(
-                POInfoDetail(tableName, hasKeyColumn, accessLevel ?: I_AD_Table.ACCESSLEVEL_Organization,
-                    isChangeLog, mutableMapOf(), mutableMapOf()),
+                POInfoDetail(
+                    tableName, hasKeyColumn, accessLevel ?: I_AD_Table.ACCESSLEVEL_Organization,
+                    isChangeLog, mutableMapOf(), mutableMapOf()
+                ),
                 POInfoColumn(
                     AD_Column_ID,
                     ColumnName,
@@ -112,8 +115,16 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
         """.trimIndent()
         val allColumnsQuery = queryOf(sql, tableId).map(toPOInfoColumn).asList
         val result = DB.current.run(allColumnsQuery).toTypedArray()
-        result.map { it.second }.forEachIndexed { index, column -> columnNameMap[column.ColumnName.toUpperCase()] = index; columnIdMap[column.AD_Column_ID] = index }
+        result.map { it.second }.forEachIndexed { index, column ->
+            columnNameMap[column.ColumnName.toUpperCase()] = index; columnIdMap[column.AD_Column_ID] = index
+        }
         val hasKeyColumn = result.filter { it.first.hasKeyColumn }.isNotEmpty()
-        return Pair(result.first().first.copy(columnNameMap = columnNameMap, columnIdMap = columnIdMap, hasKeyColumn = hasKeyColumn), result.map { it.second }.toTypedArray())
+        return Pair(
+            result.first().first.copy(
+                columnNameMap = columnNameMap,
+                columnIdMap = columnIdMap,
+                hasKeyColumn = hasKeyColumn
+            ), result.map { it.second }.toTypedArray()
+        )
     }
 }

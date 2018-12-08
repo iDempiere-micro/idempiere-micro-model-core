@@ -2,17 +2,16 @@ package software.hsharp.core.orm
 
 import kotliquery.Row
 import mu.KotlinLogging
-import org.compiere.orm.IModelFactory
-import org.compiere.orm.MEntityType
-import org.compiere.orm.MTable
-import org.compiere.orm.M_Element
-import org.compiere.orm.MTree_Base
+import org.compiere.orm.*
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.CCache
 import org.idempiere.common.util.Env
 import org.idempiere.common.util.Util
 import org.idempiere.icommon.model.IPO
-import java.util.Properties
+import java.util.*
+import kotlin.collections.find
+import kotlin.collections.indices
+import kotlin.collections.set
 
 private val log = KotlinLogging.logger {}
 
@@ -58,12 +57,12 @@ private val s_packages = arrayOf(
 abstract class DefaultBaseModelFactory : IModelFactory {
 
     /**
-    * Get PO class
-    *
-    * @param className fully qualified class name
-    * @param tableName Optional. If specified, the loaded class will be validated for that table name
-    * @return class or null
-    */
+     * Get PO class
+     *
+     * @param className fully qualified class name
+     * @param tableName Optional. If specified, the loaded class will be validated for that table name
+     * @return class or null
+     */
     private fun getPOclass(className: String, tableName: String?): Class<*>? {
         try {
             val clazz = Class.forName(className)

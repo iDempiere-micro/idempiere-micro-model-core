@@ -13,6 +13,8 @@ import org.idempiere.orm.POInfo
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.TO_DATE
+import software.hsharp.core.util.executeUpdate
+import software.hsharp.core.util.getSQLValue
 import java.math.BigDecimal
 import java.sql.Blob
 import java.sql.Clob
@@ -39,6 +41,9 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     protected fun initPO(ctx: Properties): POInfo {
         return POInfo.getPOInfo(ctx, this.tableId, _TrxName)
     }
+
+    /** Accounting Columns  */
+    protected var s_acctColumns: List<String> = listOf()
 
     /** Original Values  */
     protected val oldValues: Array<Any?> = arrayOfNulls(p_info.columnCount)
@@ -184,7 +189,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
 
     protected fun load(row: Row): Boolean {
         for (index in 0 until p_info.columnCount) {
-            val columnName = columnNamePrefix ?: "" + p_info.getColumnName(index)
+            val columnName = columnNamePrefix ?: ""+p_info.getColumnName(index)
             val clazz = p_info.getColumnClass(index)
             val dt = p_info.getColumnDisplayType(index)
 
@@ -289,6 +294,91 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             return if (oo is Boolean) oo else "Y" == oo
         }
         return false
+    }
+
+    protected fun setAccountingColumns(acctTable: String): List<String> {
+        if (s_acctColumns.isEmpty() // 	cannot cache C_BP_*_Acct as there are 3
+            || acctTable.startsWith("C_BP_")
+        ) {
+            val sql = """
+                SELECT c.ColumnName
+                FROM AD_Column c INNER JOIN AD_Table t ON (c.AD_Table_ID=t.AD_Table_ID)
+                WHERE t.TableName=? AND c.IsActive='Y' AND c.AD_Reference_ID=25 ORDER BY c.ColumnName"
+            """.trimIndent()
+
+            val loadQuery = queryOf(sql, acctTable).map { row -> row.string(1) }.asList
+            s_acctColumns = DB.current.run(loadQuery)
+
+            if (s_acctColumns.isEmpty()) {
+                log.error { "No Columns for $acctTable" }
+            }
+        }
+        return s_acctColumns
+    }
+
+    /**
+     * Get UpdatedBy
+     *
+     * @return AD_User_ID
+     */
+    fun getUpdatedBy(): Int {
+        return get_Value("UpdatedBy") as Int? ?: return 0
+    } //	getUpdatedBy
+
+    protected fun insertAccounting(acctTable: String, acctBaseTable: String, whereClause: String?): Boolean {
+        val s_acctColumns = setAccountingColumns(acctTable)
+        val tableName = p_info.tableName
+
+        //	Create SQL Statement - INSERT
+        val sb = StringBuilder("INSERT INTO ")
+            .append(acctTable)
+            .append(" (")
+            .append(tableName)
+            .append(
+                "_ID, C_AcctSchema_ID, AD_Client_ID,AD_Org_ID,IsActive, Created,CreatedBy,Updated,UpdatedBy "
+            )
+        for (i in s_acctColumns.indices) sb.append(",").append(s_acctColumns[i])
+
+        val uuidColumnId = getSQLValue(
+            null,
+            "SELECT col.AD_Column_ID FROM AD_Column col INNER JOIN AD_Table tbl ON col.AD_Table_ID = tbl.AD_Table_ID WHERE tbl.TableName=? AND col.ColumnName=?",
+            acctTable,
+            org.idempiere.orm.PO.getUUIDColumnName(acctTable)
+        )
+        if (uuidColumnId > 0)
+            sb.append(",").append(org.idempiere.orm.PO.getUUIDColumnName(acctTable))
+        //	..	SELECT
+        sb.append(") SELECT ")
+            .append(id)
+            .append(", p.C_AcctSchema_ID, p.AD_Client_ID,0,'Y', SysDate,")
+            .append(getUpdatedBy())
+            .append(",SysDate,")
+            .append(getUpdatedBy())
+        for (i in s_acctColumns.indices) sb.append(",p.").append(s_acctColumns[i])
+        // uuid column
+        if (uuidColumnId > 0) sb.append(",generate_uuid()")
+        //	.. 	FROM
+        sb.append(" FROM ")
+            .append(acctBaseTable)
+            .append(" p WHERE p.AD_Client_ID=")
+            .append(clientId)
+        if (whereClause != null && whereClause.length > 0) sb.append(" AND ").append(whereClause)
+        sb.append(" AND NOT EXISTS (SELECT * FROM ")
+            .append(acctTable)
+            .append(" e WHERE e.C_AcctSchema_ID=p.C_AcctSchema_ID AND e.")
+            .append(tableName)
+            .append("_ID=")
+            .append(id)
+            .append(")")
+        //
+        val no = executeUpdate(sb.toString(), "")
+        if (no > 0) {
+            log.trace {"#$no"}
+        } else {
+            log.warn { "#$no - Table=$acctTable from $acctBaseTable" }
+        }
+
+        return no > 0
     }
 
     init {
