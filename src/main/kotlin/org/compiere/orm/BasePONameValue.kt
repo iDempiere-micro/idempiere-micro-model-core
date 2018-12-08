@@ -3,7 +3,7 @@ package org.compiere.orm
 import kotliquery.Row
 import org.compiere.model.I_AD_Client.COLUMNNAME_Value
 import java.sql.ResultSet
-import java.util.*
+import java.util.Properties
 
 abstract class BasePONameValue : BasePOName {
     constructor(ctx: Properties, ID: Int, trxName: String?) : super(ctx, ID, trxName)

@@ -3,21 +3,19 @@ package software.hsharp.core.orm
 import kotliquery.Row
 import kotliquery.queryOf
 import org.compiere.model.I_AD_Table
-import org.compiere.orm.*
+import org.compiere.orm.DefaultModelFactory
+import org.compiere.orm.IModelFactory
+import org.compiere.orm.MTable
+import org.compiere.orm.X_AD_Table
+import org.compiere.orm.MColumn
+import org.compiere.orm.GenericPO
 import org.idempiere.common.base.IServicesHolder
 import org.idempiere.common.base.Service
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
 import java.sql.ResultSet
-import java.util.*
-import kotlin.collections.MutableMap
-import kotlin.collections.first
-import kotlin.collections.forEachIndexed
-import kotlin.collections.isNotEmpty
-import kotlin.collections.map
-import kotlin.collections.mutableMapOf
+import java.util.Properties
 import kotlin.collections.set
-import kotlin.collections.toTypedArray
 
 internal val tableCache = CCache<Int, MTable>(I_AD_Table.Table_Name, 20)
 

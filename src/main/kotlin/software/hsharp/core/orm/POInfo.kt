@@ -6,7 +6,7 @@ import org.compiere.model.I_AD_Table
 import org.idempiere.common.util.Env
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
-import java.util.*
+import java.util.Properties
 
 data class POInfoDetail(
     val tableName: String,

@@ -9,44 +9,39 @@ import java.util.Properties;
  * @date Feb 25, 2007
  */
 public final class ServerContext implements Serializable {
-    /**
-     * generated serial version Id
-     */
-    private static final long serialVersionUID = -8274580404204046413L;
+  /** generated serial version Id */
+  private static final long serialVersionUID = -8274580404204046413L;
 
-    private static InheritableThreadLocal<Properties> context =
-            new InheritableThreadLocal<Properties>() {
-                protected Properties initialValue() {
-                    Properties ctx = new Properties();
-                    return ctx;
-                }
-            };
+  private static InheritableThreadLocal<Properties> context =
+      new InheritableThreadLocal<Properties>() {
+        protected Properties initialValue() {
+          Properties ctx = new Properties();
+          return ctx;
+        }
+      };
 
-    private ServerContext() {
-    }
+  private ServerContext() {}
 
-    /**
-     * Get server context for current thread
-     *
-     * @return Properties
-     */
-    public static Properties getCurrentInstance() {
-        return context.get();
-    }
+  /**
+   * Get server context for current thread
+   *
+   * @return Properties
+   */
+  public static Properties getCurrentInstance() {
+    return context.get();
+  }
 
-    /**
-     * Set server context for current thread
-     *
-     * @param ctx
-     */
-    public static void setCurrentInstance(Properties ctx) {
-        context.set(ctx);
-    }
+  /**
+   * Set server context for current thread
+   *
+   * @param ctx
+   */
+  public static void setCurrentInstance(Properties ctx) {
+    context.set(ctx);
+  }
 
-    /**
-     * dispose server context for current thread
-     */
-    public static void dispose() {
-        context.remove();
-    }
+  /** dispose server context for current thread */
+  public static void dispose() {
+    context.remove();
+  }
 }

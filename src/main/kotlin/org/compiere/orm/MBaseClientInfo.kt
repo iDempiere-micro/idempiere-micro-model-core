@@ -5,7 +5,7 @@ import kotliquery.queryOf
 import org.compiere.model.I_AD_ClientInfo
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
-import java.util.*
+import java.util.Properties
 
 /** Cache  */
 private val clientInfoCache = CCache<Int, MClientInfo>(I_AD_ClientInfo.Table_Name, 2)

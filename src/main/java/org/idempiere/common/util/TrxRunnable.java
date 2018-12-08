@@ -7,5 +7,5 @@ package org.idempiere.common.util;
  * @author Teo Sarca, http://www.arhipac.ro
  */
 public interface TrxRunnable {
-    void run(String trxName);
+  void run(String trxName);
 }

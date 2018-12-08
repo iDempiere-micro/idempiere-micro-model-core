@@ -189,7 +189,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
 
     protected fun load(row: Row): Boolean {
         for (index in 0 until p_info.columnCount) {
-            val columnName = columnNamePrefix ?: ""+p_info.getColumnName(index)
+            val columnName = columnNamePrefix ?: "" + p_info.getColumnName(index)
             val clazz = p_info.getColumnClass(index)
             val dt = p_info.getColumnDisplayType(index)
 
@@ -297,8 +297,8 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     }
 
     protected fun setAccountingColumns(acctTable: String): List<String> {
-        if (s_acctColumns.isEmpty() // 	cannot cache C_BP_*_Acct as there are 3
-            || acctTable.startsWith("C_BP_")
+        if (s_acctColumns.isEmpty() || // 	cannot cache C_BP_*_Acct as there are 3
+            acctTable.startsWith("C_BP_")
         ) {
             val sql = """
                 SELECT c.ColumnName
@@ -323,13 +323,13 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      */
     fun getUpdatedBy(): Int {
         return get_Value("UpdatedBy") as Int? ?: return 0
-    } //	getUpdatedBy
+    } // 	getUpdatedBy
 
     protected fun insertAccounting(acctTable: String, acctBaseTable: String, whereClause: String?): Boolean {
         val s_acctColumns = setAccountingColumns(acctTable)
         val tableName = p_info.tableName
 
-        //	Create SQL Statement - INSERT
+        // 	Create SQL Statement - INSERT
         val sb = StringBuilder("INSERT INTO ")
             .append(acctTable)
             .append(" (")
@@ -347,7 +347,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         )
         if (uuidColumnId > 0)
             sb.append(",").append(org.idempiere.orm.PO.getUUIDColumnName(acctTable))
-        //	..	SELECT
+        // 	..	SELECT
         sb.append(") SELECT ")
             .append(id)
             .append(", p.C_AcctSchema_ID, p.AD_Client_ID,0,'Y', SysDate,")
@@ -357,7 +357,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         for (i in s_acctColumns.indices) sb.append(",p.").append(s_acctColumns[i])
         // uuid column
         if (uuidColumnId > 0) sb.append(",generate_uuid()")
-        //	.. 	FROM
+        // 	.. 	FROM
         sb.append(" FROM ")
             .append(acctBaseTable)
             .append(" p WHERE p.AD_Client_ID=")
@@ -373,7 +373,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         //
         val no = executeUpdate(sb.toString(), "")
         if (no > 0) {
-            log.trace {"#$no"}
+            log.trace { "#$no" }
         } else {
             log.warn { "#$no - Table=$acctTable from $acctBaseTable" }
         }
