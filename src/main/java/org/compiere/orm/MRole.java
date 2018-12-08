@@ -3,31 +3,19 @@ package org.compiere.orm;
 import static org.compiere.util.SystemIDs.USER_SUPERUSER;
 import static org.compiere.util.SystemIDs.USER_SYSTEM;
 import static software.hsharp.core.util.DBKt.*;
-import static software.hsharp.core.util.DBKt.close;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Level;
 import org.compiere.model.I_AD_Role;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.util.CCache;
-import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.Env;
-import org.idempiere.common.util.KeyNamePair;
-import org.idempiere.common.util.Trace;
+import org.idempiere.common.util.*;
 import org.idempiere.icommon.model.IPO;
 
 /**

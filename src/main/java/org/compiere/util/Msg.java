@@ -38,7 +38,7 @@ public final class Msg {
   private CCache<String, CCache<String, String>> m_elementCache =
       new CCache<String, CCache<String, String>>(null, "msg_element", 2, 0, false);
 
-  /** ********************************************************************** Constructor */
+  /** ********************************************************************* Constructor */
   private Msg() {} // 	Mag
 
   /**

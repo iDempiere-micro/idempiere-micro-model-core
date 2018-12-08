@@ -1,25 +1,20 @@
 package org.compiere.orm;
 
+import static software.hsharp.core.util.DBKt.*;
+
+import java.lang.reflect.Proxy;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Properties;
+import java.util.logging.Level;
 import org.compiere.model.SetGetModel;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Util;
-
-import java.lang.reflect.Proxy;
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.logging.Level;
-
-import static software.hsharp.core.util.DBKt.*;
 
 public class SetGetUtil {
   /** Static logger */
@@ -89,7 +84,7 @@ public class SetGetUtil {
    * @see #updateColumns(SetGetModel[], String[], ResultSet)
    */
   public static void updateColumns(
-          SetGetModel[] models, String[] columnNames, String sql, Object[] params, String trxName) {
+      SetGetModel[] models, String[] columnNames, String sql, Object[] params, String trxName) {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
@@ -112,7 +107,7 @@ public class SetGetUtil {
   }
 
   public static void updateColumns(
-          SetGetModel model, String[] columnNames, String sql, String trxName) {
+      SetGetModel model, String[] columnNames, String sql, String trxName) {
     updateColumns(new SetGetModel[] {model}, columnNames, sql, null, trxName);
   }
 
@@ -274,12 +269,12 @@ public class SetGetUtil {
    * @see #updateColumns(SetGetModel, String[], String, String)
    */
   public static boolean copyValues(
-          SetGetModel to, String from_tableName, int from_id, String[] includeFields) {
+      SetGetModel to, String from_tableName, int from_id, String[] includeFields) {
     if (to == null
-            || from_tableName == null
-            || from_id <= 0
-            || includeFields == null
-            || includeFields.length == 0) {
+        || from_tableName == null
+        || from_id <= 0
+        || includeFields == null
+        || includeFields.length == 0) {
       return false;
     }
 
@@ -290,11 +285,11 @@ public class SetGetUtil {
     }
     sql.insert(0, "SELECT ");
     sql.append(" FROM ")
-            .append(from_tableName)
-            .append(" WHERE ")
-            .append(from_tableName)
-            .append("_ID=")
-            .append(from_id);
+        .append(from_tableName)
+        .append(" WHERE ")
+        .append(from_tableName)
+        .append("_ID=")
+        .append(from_id);
 
     updateColumns(to, includeFields, sql.toString(), null);
     return true;

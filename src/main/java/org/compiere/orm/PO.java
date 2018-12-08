@@ -1,13 +1,7 @@
 package org.compiere.orm;
 
-import kotliquery.Row;
-import org.compiere.model.I_C_ElementValue;
-import org.compiere.util.Msg;
-import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.*;
-import org.idempiere.icommon.model.IPO;
-import org.idempiere.orm.*;
+import static software.hsharp.core.orm.POKt.I_ZERO;
+import static software.hsharp.core.util.DBKt.*;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -16,9 +10,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
-
-import static software.hsharp.core.orm.POKt.I_ZERO;
-import static software.hsharp.core.util.DBKt.*;
+import kotliquery.Row;
+import org.compiere.model.I_C_ElementValue;
+import org.compiere.util.Msg;
+import org.idempiere.common.exceptions.AdempiereException;
+import org.idempiere.common.exceptions.DBException;
+import org.idempiere.common.util.*;
+import org.idempiere.icommon.model.IPO;
+import org.idempiere.orm.*;
 
 public abstract class PO extends org.idempiere.orm.PO {
   /** Attachment with entries */
@@ -807,12 +806,12 @@ public abstract class PO extends org.idempiere.orm.PO {
    */
   protected boolean insert_Accounting(String acctTable, String acctBaseTable, String whereClause) {
     if (s_acctColumns == null // 	cannot cache C_BP_*_Acct as there are 3
-            || acctTable.startsWith("C_BP_")) {
+        || acctTable.startsWith("C_BP_")) {
       s_acctColumns = new ArrayList<String>();
       String sql =
-              "SELECT c.ColumnName "
-                      + "FROM AD_Column c INNER JOIN AD_Table t ON (c.AD_Table_ID=t.AD_Table_ID) "
-                      + "WHERE t.TableName=? AND c.IsActive='Y' AND c.AD_Reference_ID=25 ORDER BY c.ColumnName";
+          "SELECT c.ColumnName "
+              + "FROM AD_Column c INNER JOIN AD_Table t ON (c.AD_Table_ID=t.AD_Table_ID) "
+              + "WHERE t.TableName=? AND c.IsActive='Y' AND c.AD_Reference_ID=25 ORDER BY c.ColumnName";
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
@@ -835,12 +834,12 @@ public abstract class PO extends org.idempiere.orm.PO {
 
     //	Create SQL Statement - INSERT
     StringBuilder sb =
-            new StringBuilder("INSERT INTO ")
-                    .append(acctTable)
-                    .append(" (")
-                    .append(get_TableName())
-                    .append(
-                            "_ID, C_AcctSchema_ID, AD_Client_ID,AD_Org_ID,IsActive, Created,CreatedBy,Updated,UpdatedBy ");
+        new StringBuilder("INSERT INTO ")
+            .append(acctTable)
+            .append(" (")
+            .append(get_TableName())
+            .append(
+                "_ID, C_AcctSchema_ID, AD_Client_ID,AD_Org_ID,IsActive, Created,CreatedBy,Updated,UpdatedBy ");
     for (int i = 0; i < s_acctColumns.size(); i++) sb.append(",").append(s_acctColumns.get(i));
 
     // check whether db have working generate_uuid function.
@@ -848,36 +847,36 @@ public abstract class PO extends org.idempiere.orm.PO {
 
     // uuid column
     int uuidColumnId =
-            getSQLValue(
-                    get_TrxName(),
-                    "SELECT col.AD_Column_ID FROM AD_Column col INNER JOIN AD_Table tbl ON col.AD_Table_ID = tbl.AD_Table_ID WHERE tbl.TableName=? AND col.ColumnName=?",
-                    acctTable,
-                    org.idempiere.orm.PO.getUUIDColumnName(acctTable));
+        getSQLValue(
+            get_TrxName(),
+            "SELECT col.AD_Column_ID FROM AD_Column col INNER JOIN AD_Table tbl ON col.AD_Table_ID = tbl.AD_Table_ID WHERE tbl.TableName=? AND col.ColumnName=?",
+            acctTable,
+            org.idempiere.orm.PO.getUUIDColumnName(acctTable));
     if (uuidColumnId > 0 && uuidFunction)
       sb.append(",").append(org.idempiere.orm.PO.getUUIDColumnName(acctTable));
     //	..	SELECT
     sb.append(") SELECT ")
-            .append(getId())
-            .append(", p.C_AcctSchema_ID, p.AD_Client_ID,0,'Y', SysDate,")
-            .append(getUpdatedBy())
-            .append(",SysDate,")
-            .append(getUpdatedBy());
+        .append(getId())
+        .append(", p.C_AcctSchema_ID, p.AD_Client_ID,0,'Y', SysDate,")
+        .append(getUpdatedBy())
+        .append(",SysDate,")
+        .append(getUpdatedBy());
     for (int i = 0; i < s_acctColumns.size(); i++) sb.append(",p.").append(s_acctColumns.get(i));
     // uuid column
     if (uuidColumnId > 0 && uuidFunction) sb.append(",generate_uuid()");
     //	.. 	FROM
     sb.append(" FROM ")
-            .append(acctBaseTable)
-            .append(" p WHERE p.AD_Client_ID=")
-            .append(getClientId());
+        .append(acctBaseTable)
+        .append(" p WHERE p.AD_Client_ID=")
+        .append(getClientId());
     if (whereClause != null && whereClause.length() > 0) sb.append(" AND ").append(whereClause);
     sb.append(" AND NOT EXISTS (SELECT * FROM ")
-            .append(acctTable)
-            .append(" e WHERE e.C_AcctSchema_ID=p.C_AcctSchema_ID AND e.")
-            .append(get_TableName())
-            .append("_ID=")
-            .append(getId())
-            .append(")");
+        .append(acctTable)
+        .append(" e WHERE e.C_AcctSchema_ID=p.C_AcctSchema_ID AND e.")
+        .append(get_TableName())
+        .append("_ID=")
+        .append(getId())
+        .append(")");
     //
     int no = executeUpdate(sb.toString(), get_TrxName());
     if (no > 0) {

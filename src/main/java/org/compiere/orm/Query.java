@@ -1,7 +1,6 @@
 package org.compiere.orm;
 
 import static software.hsharp.core.util.DBKt.*;
-import static software.hsharp.core.util.DBKt.close;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
