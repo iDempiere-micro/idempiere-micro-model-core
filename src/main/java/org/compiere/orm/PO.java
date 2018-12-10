@@ -63,6 +63,18 @@ public abstract class PO extends org.idempiere.orm.PO {
     to.setAD_Org_ID(AD_Org_ID);
   } //	copyValues
 
+  /**
+   * Copy old values of From to new values of To. Does not copy Keys
+   *
+   * @param from old, existing & unchanged PO
+   * @param to new, not saved PO
+   * @param AD_Client_ID client
+   * @param AD_Org_ID org
+   */
+  protected static void copyValues(PO from, PO to) {
+    Companion.copyValues(from, to);
+  } //	copyValues
+
   public static <T> T as(Class<T> clazz, Object o) {
     if (clazz.isInstance(o)) {
       return clazz.cast(o);

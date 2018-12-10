@@ -7,6 +7,7 @@ import kotliquery.sessionOf
 import org.compiere.dbPort.Convert
 import org.compiere.dbPort.Convert_PostgreSQL
 import org.idempiere.common.exceptions.DBException
+import org.idempiere.icommon.model.IPO
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -59,12 +60,19 @@ fun queryOf(statement: String, params: List<Any?>): Query {
 fun executeUpdate(sql: String, trxName: String): Int =
     convert.convert(sql).map { DB.current.run(queryOf(it, listOf()).asUpdate) }.sum()
 
-internal fun executeUpdate(
+fun executeUpdate(
     sql: String,
     params: List<Any?>,
     ignoreError: Boolean,
     trxName: String?
 ): Int = DB.current.run(queryOf(sql, params).asUpdate)
+
+fun executeUpdate(
+    sql: String,
+    params: Array<Any?>,
+    ignoreError: Boolean,
+    trxName: String?
+): Int = DB.current.run(queryOf(sql, params.toList()).asUpdate)
 
 fun executeUpdateEx(sql: String, trxName: String): Int =
     executeUpdateEx(sql, arrayOf(), trxName, 0)
@@ -113,9 +121,10 @@ internal fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
 }
 
 // CONVERTERS
-internal fun TO_DATE(time: Timestamp, dayOnly: Boolean): String = throw IllegalArgumentException(NYI)
+fun TO_DATE(time: Timestamp, dayOnly: Boolean): String = throw IllegalArgumentException(NYI)
+fun TO_DATE(time: Timestamp): String = throw IllegalArgumentException(NYI)
 
-internal fun TO_STRING(txt: String?, maxLength: Int): String = throw IllegalArgumentException(NYI)
+fun TO_STRING(txt: String?, maxLength: Int): String = throw IllegalArgumentException(NYI)
 fun TO_STRING(txt: String?): String = throw IllegalArgumentException(NYI)
 internal val convert: Convert = Convert_PostgreSQL()
 
@@ -130,7 +139,7 @@ internal fun isConnected(createNew: Boolean): Boolean = !DB.current.connection.u
 internal fun isConnected() = isConnected(false)
 
 // DUMMY
-internal fun close(rs: ResultSet?) {}
+fun close(rs: ResultSet?) {}
 
 internal fun close(st: Statement?) {}
 fun close(rs: ResultSet?, st: Statement?) {}
@@ -172,6 +181,15 @@ internal fun createSequence(
     start: Int,
     trxName: String
 ): Boolean = throw IllegalArgumentException(NYI)
+
+/**
+ * Lock PO for update
+ *
+ * @param po
+ * @param timeout
+ * @return true if lock is granted
+ */
+fun forUpdate(po: IPO, timeout: Int): Boolean = throw IllegalArgumentException(NYI)
 
 // WRAPPER
 
