@@ -7,6 +7,7 @@ import kotliquery.sessionOf
 import org.compiere.dbPort.Convert
 import org.compiere.dbPort.Convert_PostgreSQL
 import org.idempiere.common.exceptions.DBException
+import org.idempiere.icommon.model.IPO
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -121,6 +122,7 @@ internal fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
 
 // CONVERTERS
 fun TO_DATE(time: Timestamp, dayOnly: Boolean): String = throw IllegalArgumentException(NYI)
+fun TO_DATE(time: Timestamp): String = throw IllegalArgumentException(NYI)
 
 fun TO_STRING(txt: String?, maxLength: Int): String = throw IllegalArgumentException(NYI)
 fun TO_STRING(txt: String?): String = throw IllegalArgumentException(NYI)
@@ -179,6 +181,15 @@ internal fun createSequence(
     start: Int,
     trxName: String
 ): Boolean = throw IllegalArgumentException(NYI)
+
+/**
+ * Lock PO for update
+ *
+ * @param po
+ * @param timeout
+ * @return true if lock is granted
+ */
+fun forUpdate(po: IPO, timeout: Int): Boolean = throw IllegalArgumentException(NYI)
 
 // WRAPPER
 
