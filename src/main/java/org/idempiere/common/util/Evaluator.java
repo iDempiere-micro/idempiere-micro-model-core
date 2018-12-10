@@ -49,14 +49,14 @@ public class Evaluator {
    * format		:= <expression> [<logic> <expression>]
    * expression	:= @<context>@<exLogic><value>
    * logic		:= <|> | <&>
-   *  exLogic		:= <=> | <!> | <^> | <<> | <>>
-   *
+   * exLogic		:= <=> | <!> | <^> | <<> | <>>
+   * <p>
    * context		:= any global or window context
    * value		:= strings can be with ' or "
    * logic operators	:= AND or OR with the prevoius result from left to right
-   *
+   * <p>
    * Example	'@AD_Table@=Test | @Language@=GERGER
-   *  </code>
+   * </code>
    *
    * @param source class implementing get_ValueAsString(variable)
    * @param logic logic string
@@ -137,7 +137,7 @@ public class Evaluator {
       String defaultValue = "";
       int idx = first.indexOf(":"); // 	or clause
       if (idx >= 0) {
-        defaultValue = first.substring(idx + 1, first.length());
+        defaultValue = first.substring(idx + 1);
         first = first.substring(0, idx);
       }
       firstEval = source.get_ValueAsString(first); // 	replace with it's value
