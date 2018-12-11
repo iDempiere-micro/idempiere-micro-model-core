@@ -15,6 +15,7 @@ import java.sql.ResultSet
 import java.sql.Timestamp
 import java.sql.Statement
 import java.sql.SQLException
+import javax.sql.RowSet
 
 // CONSTANTS
 internal fun isGenerateUUIDSupported() = true
@@ -190,6 +191,16 @@ internal fun createSequence(
  * @return true if lock is granted
  */
 fun forUpdate(po: IPO, timeout: Int): Boolean = throw IllegalArgumentException(NYI)
+
+/**
+ * Get Row Set. When a Rowset is closed, it also closes the underlying connection. If the created
+ * RowSet is transfered by RMI, closing it makes no difference
+ *
+ * @param sql sql
+ * @param local local RowSet (own connection)
+ * @return row set or null
+ */
+fun getRowSet(sql: String ): RowSet = throw IllegalArgumentException(NYI)
 
 // WRAPPER
 
