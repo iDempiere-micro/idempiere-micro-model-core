@@ -1,12 +1,14 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Properties;
 import org.compiere.model.I_AD_Client;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Language;
+
+import java.io.File;
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.Properties;
 
 public class MClient extends X_AD_Client {
   /*
@@ -158,5 +160,18 @@ public class MClient extends X_AD_Client {
             CLIENT_ACCOUNTING_QUEUE, // default
             Env.getADClientID(Env.getCtx()));
     return ca.equalsIgnoreCase(CLIENT_ACCOUNTING_IMMEDIATE);
+  }
+
+  public boolean sendEMail(String to, String subject, String message, File attachment) {
+    return true;
+  }
+
+  public boolean sendEMail(int AD_User_ID, String subject, String message, File attachment) {
+    return true;
+  }
+
+  public boolean sendEMail(
+          String to, String subject, String message, File attachment, boolean html) {
+    return true;
   }
 }
