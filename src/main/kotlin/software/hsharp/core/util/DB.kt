@@ -9,12 +9,7 @@ import org.compiere.dbPort.Convert_PostgreSQL
 import org.idempiere.common.exceptions.DBException
 import org.idempiere.icommon.model.IPO
 import java.math.BigDecimal
-import java.sql.Connection
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.Timestamp
-import java.sql.Statement
-import java.sql.SQLException
+import java.sql.*
 import javax.sql.RowSet
 
 // CONSTANTS
@@ -89,6 +84,8 @@ fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String, timeOut: 
 
 fun executeUpdateEx(sql: String, objects: List<Any>, trxName: String, timeOut: Int): Int =
     DB.current.run(queryOf(sql, objects).asUpdate)
+
+fun executeUpdate(sql: String, param: Int, trxName: String): Int = executeUpdateEx(sql, listOf(), trxName, 0)
 
 // STATEMENT
 fun prepareStatement(
