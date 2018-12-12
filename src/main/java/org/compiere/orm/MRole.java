@@ -1,8 +1,11 @@
 package org.compiere.orm;
 
-import static org.compiere.util.SystemIDs.USER_SUPERUSER;
-import static org.compiere.util.SystemIDs.USER_SYSTEM;
-import static software.hsharp.core.util.DBKt.*;
+import kotliquery.Row;
+import org.compiere.model.I_AD_Role;
+import org.compiere.util.Msg;
+import org.idempiere.common.exceptions.AdempiereException;
+import org.idempiere.common.util.*;
+import org.idempiere.icommon.model.IPO;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -12,11 +15,10 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
-import org.compiere.model.I_AD_Role;
-import org.compiere.util.Msg;
-import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.util.*;
-import org.idempiere.icommon.model.IPO;
+
+import static org.compiere.util.SystemIDs.USER_SUPERUSER;
+import static org.compiere.util.SystemIDs.USER_SYSTEM;
+import static software.hsharp.core.util.DBKt.*;
 
 /**
  * Role Model. Includes AD_User runtime info for Personal Access The class is final, so that you
@@ -133,6 +135,9 @@ public class MRole extends X_AD_Role {
    */
   public MRole(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MRole
+  public MRole(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MRole
 
   /**

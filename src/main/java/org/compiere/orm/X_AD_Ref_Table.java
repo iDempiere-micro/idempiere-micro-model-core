@@ -124,7 +124,7 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
   public org.compiere.model.I_AD_Reference getAD_Reference() throws RuntimeException {
     return (org.compiere.model.I_AD_Reference)
         MTable.get(getCtx(), org.compiere.model.I_AD_Reference.Table_Name)
-            .getPO(getAD_Reference_ID(), get_TrxName());
+            .getPO(getReferenceId(), get_TrxName());
   }
 
   /**
@@ -132,7 +132,7 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
    *
    * @return System Reference and Validation
    */
-  public int getAD_Reference_ID() {
+  public int getReferenceId() {
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Reference_ID);
     if (ii == null) return 0;
     return ii;
@@ -154,7 +154,7 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
    * @return ID/ColumnName pair
    */
   public KeyNamePair getKeyNamePair() {
-    return new KeyNamePair(getId(), String.valueOf(getAD_Reference_ID()));
+    return new KeyNamePair(getId(), String.valueOf(getReferenceId()));
   }
 
   /**
