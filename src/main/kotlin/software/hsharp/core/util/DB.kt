@@ -52,6 +52,9 @@ fun queryOf(statement: String, params: List<Any?>): Query {
     return Query(statement, params = params)
 }
 
+fun getSQLValueBDEx(trxName: String?, sql: String, params: Array<Any?>): BigDecimal? =
+    throw IllegalArgumentException(NYI)
+
 // INSERT/UPDATE
 fun executeUpdate(sql: String, trxName: String): Int =
     convert.convert(sql).map { DB.current.run(queryOf(it, listOf()).asUpdate) }.sum()
