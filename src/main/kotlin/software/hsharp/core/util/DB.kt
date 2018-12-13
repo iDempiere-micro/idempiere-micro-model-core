@@ -15,7 +15,8 @@ import javax.sql.RowSet
 // CONSTANTS
 internal fun isGenerateUUIDSupported() = true
 
-internal fun isPostgreSQL() = true
+fun isPostgreSQL() = true
+fun isOracle() = false
 internal fun isPagingSupported() = true
 internal fun isQueryTimeoutSupported() = true
 internal const val SQLSTATEMENT_SEPARATOR = "; "
@@ -111,6 +112,8 @@ fun prepareStatement(
     trxName: String?
 ): PreparedStatement? = throw IllegalArgumentException(NYI)
 
+fun createStatement(): PreparedStatement? = throw IllegalArgumentException(NYI)
+
 internal fun setParameter(pstmt: PreparedStatement, index: Int, param: Any?) {
     if (param == null)
         pstmt.setObject(index, null)
@@ -157,7 +160,7 @@ internal fun isConnected() = isConnected(false)
 // DUMMY
 fun close(rs: ResultSet?) {}
 
-internal fun close(st: Statement?) {}
+fun close(st: Statement?) {}
 fun close(rs: ResultSet?, st: Statement?) {}
 
 // HELPERS
