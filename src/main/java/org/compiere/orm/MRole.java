@@ -257,7 +257,7 @@ public class MRole extends X_AD_Role {
     ResultSet rs = null;
     try {
       pstmt = prepareStatement(sql, null);
-      pstmt.setInt(1, Env.getADClientID(ctx));
+      pstmt.setInt(1, Env.getClientId(ctx));
       rs = pstmt.executeQuery();
       while (rs.next()) list.add(new MRole(ctx, rs, null));
     } catch (Exception e) {

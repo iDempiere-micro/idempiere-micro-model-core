@@ -73,26 +73,41 @@ fun executeUpdate(
     trxName: String?
 ): Int = DB.current.run(queryOf(sql, params.toList()).asUpdate)
 
-fun executeUpdateEx(sql: String, trxName: String): Int =
+fun executeUpdateEx(sql: String, trxName: String?): Int =
     executeUpdateEx(sql, arrayOf(), trxName, 0)
 
-fun executeUpdateEx(sql: String, trxName: String, timeOut: Int): Int =
+fun executeUpdateEx(sql: String, trxName: String?, timeOut: Int): Int =
     executeUpdateEx(sql, arrayOf(), trxName, timeOut)
 
-fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String): Int =
+fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String?): Int =
     executeUpdateEx(sql, objects, trxName, 0)
 
-fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String, timeOut: Int): Int =
+fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String?, timeOut: Int): Int =
     DB.current.run(queryOf(sql, objects.toList()).asUpdate)
 
-fun executeUpdateEx(sql: String, objects: List<Any>, trxName: String, timeOut: Int): Int =
+fun executeUpdateEx(sql: String, objects: List<Any>, trxName: String?, timeOut: Int): Int =
     DB.current.run(queryOf(sql, objects).asUpdate)
 
-fun executeUpdate(sql: String, param: Int, trxName: String): Int = executeUpdateEx(sql, listOf(), trxName, 0)
+fun executeUpdate(sql: String, param: Int, trxName: String?): Int = executeUpdateEx(sql, listOf(param), trxName, 0)
+fun executeUpdate(sql: String, ignoreError: Boolean, trxName: String?): Int {
+    return try {
+        executeUpdateEx(sql, listOf(), trxName, 0)
+    } catch (e: Exception) {
+        if (ignoreError) {
+            -1
+        }
+        throw e
+    }
+}
 
 // STATEMENT
 fun prepareStatement(
     sql: String?,
+    trxName: String?
+): PreparedStatement? = throw IllegalArgumentException(NYI)
+fun prepareStatement(
+    sql: String?,
+    a: Int, b: Int,
     trxName: String?
 ): PreparedStatement? = throw IllegalArgumentException(NYI)
 

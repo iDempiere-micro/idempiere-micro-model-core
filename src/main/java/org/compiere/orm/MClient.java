@@ -86,7 +86,7 @@ public class MClient extends X_AD_Client {
    * @param trxName transaction
    */
   public MClient(Properties ctx, String trxName) {
-    this(ctx, Env.getADClientID(ctx), trxName);
+    this(ctx, Env.getClientId(ctx), trxName);
   } //	MClient
 
   /**
@@ -96,7 +96,7 @@ public class MClient extends X_AD_Client {
    * @return client
    */
   public static MClient get(Properties ctx) {
-    return get(ctx, Env.getADClientID(ctx));
+    return get(ctx, Env.getClientId(ctx));
   } //	get
 
   /**
@@ -158,7 +158,7 @@ public class MClient extends X_AD_Client {
         MSysConfig.getValue(
             MSysConfig.CLIENT_ACCOUNTING,
             CLIENT_ACCOUNTING_QUEUE, // default
-            Env.getADClientID(Env.getCtx()));
+            Env.getClientId(Env.getCtx()));
     return ca.equalsIgnoreCase(CLIENT_ACCOUNTING_IMMEDIATE);
   }
 

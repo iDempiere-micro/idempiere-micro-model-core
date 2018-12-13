@@ -28,7 +28,7 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
 
     private fun getQueryParameters(): Array<Any?>? {
         val activeRecordsParameter = if (onlyActiveRecords) listOf(true) else listOf()
-        val clientIdParameter = if (onlyClient_ID) listOf(Env.getADClientID(ctx)) else listOf()
+        val clientIdParameter = if (onlyClient_ID) listOf(Env.getClientId(ctx)) else listOf()
         val params = parameters ?: arrayOf()
         val result = params
             .toList()

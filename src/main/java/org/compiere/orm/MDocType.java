@@ -109,7 +109,7 @@ public class MDocType extends X_C_DocType {
     final String whereClause = "AD_Client_ID=? AND DocBaseType=?";
     List<MDocType> list =
         new Query(ctx, I_C_DocType.Table_Name, whereClause, null)
-            .setParameters(Env.getADClientID(ctx), DocBaseType)
+            .setParameters(Env.getClientId(ctx), DocBaseType)
             .setOnlyActiveRecords(true)
             .setOrderBy("IsDefault DESC, C_DocType_ID")
             .list();

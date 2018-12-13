@@ -1,14 +1,14 @@
 package org.idempiere.common.util;
 
+import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
-import javax.swing.*;
 
 /**
  * System Environment and static variables.
@@ -719,9 +719,9 @@ public final class Env {
    * @param ctx context
    * @return login AD_Client_ID
    */
-  public static int getADClientID(Properties ctx) {
+  public static int getClientId(Properties ctx) {
     return Env.getContextAsInt(ctx, AD_CLIENT_ID);
-  } //	getADClientID
+  } //	getClientId
 
   /**
    * Get Login AD_Org_ID

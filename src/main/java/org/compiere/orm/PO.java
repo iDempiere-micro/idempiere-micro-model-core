@@ -1,7 +1,13 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.orm.POKt.I_ZERO;
-import static software.hsharp.core.util.DBKt.*;
+import kotliquery.Row;
+import org.compiere.model.I_C_ElementValue;
+import org.compiere.util.Msg;
+import org.idempiere.common.exceptions.AdempiereException;
+import org.idempiere.common.exceptions.DBException;
+import org.idempiere.common.util.*;
+import org.idempiere.icommon.model.IPO;
+import org.idempiere.orm.*;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -12,14 +18,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
-import kotliquery.Row;
-import org.compiere.model.I_C_ElementValue;
-import org.compiere.util.Msg;
-import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.*;
-import org.idempiere.icommon.model.IPO;
-import org.idempiere.orm.*;
+
+import static software.hsharp.core.orm.POKt.I_ZERO;
+import static software.hsharp.core.util.DBKt.*;
 
 public abstract class PO extends org.idempiere.orm.PO {
   /** Attachment with entries */
@@ -57,7 +58,7 @@ public abstract class PO extends org.idempiere.orm.PO {
    * @param AD_Client_ID client
    * @param AD_Org_ID org
    */
-  protected static void copyValues(PO from, PO to, int AD_Client_ID, int AD_Org_ID) {
+  public static void copyValues(PO from, PO to, int AD_Client_ID, int AD_Org_ID) {
     Companion.copyValues(from, to);
     to.setADClientID(AD_Client_ID);
     to.setAD_Org_ID(AD_Org_ID);
@@ -71,7 +72,7 @@ public abstract class PO extends org.idempiere.orm.PO {
    * @param AD_Client_ID client
    * @param AD_Org_ID org
    */
-  protected static void copyValues(PO from, PO to) {
+  public static void copyValues(PO from, PO to) {
     Companion.copyValues(from, to);
   } //	copyValues
 

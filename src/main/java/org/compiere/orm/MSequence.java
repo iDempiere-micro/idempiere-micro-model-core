@@ -1,6 +1,10 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.*;
+import org.compiere.model.I_AD_Sequence;
+import org.idempiere.common.exceptions.AdempiereException;
+import org.idempiere.common.exceptions.DBException;
+import org.idempiere.common.util.*;
+import org.idempiere.icommon.model.IPO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,11 +17,8 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
-import org.compiere.model.I_AD_Sequence;
-import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.*;
-import org.idempiere.icommon.model.IPO;
+
+import static software.hsharp.core.util.DBKt.*;
 
 /**
  * Sequence Model.
@@ -173,7 +174,7 @@ public class MSequence extends X_AD_Sequence {
     if (ctx == null) throw new IllegalArgumentException("Context missing");
     if (TableName == null || TableName.length() == 0)
       throw new IllegalArgumentException("TableName missing");
-    return getNextID(Env.getADClientID(ctx), TableName, trxName);
+    return getNextID(Env.getClientId(ctx), TableName, trxName);
   } //	getNextID
 
   /**
@@ -509,7 +510,7 @@ public class MSequence extends X_AD_Sequence {
     boolean adempiereSys = false;
     String sysProperty = Env.getCtx().getProperty("AdempiereSys", "N");
     adempiereSys = "y".equalsIgnoreCase(sysProperty) || "true".equalsIgnoreCase(sysProperty);
-    if (adempiereSys && Env.getADClientID(Env.getCtx()) > 11) adempiereSys = false;
+    if (adempiereSys && Env.getClientId(Env.getCtx()) > 11) adempiereSys = false;
     //
 
     int AD_Sequence_ID = seq.getAD_Sequence_ID();
@@ -807,7 +808,7 @@ public class MSequence extends X_AD_Sequence {
 
     MSequence seq = new MSequence(ctx, 0, trxName);
     if (tableID) seq.setClientOrg(0, 0);
-    else seq.setClientOrg(Env.getADClientID(Env.getCtx()), 0);
+    else seq.setClientOrg(Env.getClientId(Env.getCtx()), 0);
 
     if (tableID) {
       seq.setName(TableName);
@@ -861,7 +862,7 @@ public class MSequence extends X_AD_Sequence {
       pstmt = prepareStatement(sql, trxName);
       pstmt.setString(1, tableName.toUpperCase());
       pstmt.setString(2, (tableID ? "Y" : "N"));
-      if (!tableID) pstmt.setInt(3, Env.getADClientID(Env.getCtx()));
+      if (!tableID) pstmt.setInt(3, Env.getClientId(Env.getCtx()));
       rs = pstmt.executeQuery();
       if (rs.next()) retValue = new MSequence(ctx, rs, trxName);
       if (rs.next()) s_log.log(Level.SEVERE, "More then one sequence for " + tableName);

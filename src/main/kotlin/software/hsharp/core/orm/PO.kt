@@ -440,3 +440,8 @@ fun getAllIDs(tableName: String, whereClause: String?): IntArray {
     val loadQuery = software.hsharp.core.util.queryOf(sql.toString(), listOf()).map { row -> row.int(1) }.asList
     return DB.current.run(loadQuery).toIntArray()
 }
+
+fun getIDsEx(trxName: String?, sql: String, vararg params: Any): IntArray {
+    val loadQuery = software.hsharp.core.util.queryOf(sql.toString(), listOf(*params)).map { row -> row.int(1) }.asList
+    return DB.current.run(loadQuery).toIntArray()
+}

@@ -597,7 +597,7 @@ public class Query extends BaseQuery {
     }
     boolean onlyClient_ID = super.getOnlyClient_ID();
     if (onlyClient_ID) {
-      int AD_Client_ID = Env.getADClientID(this.getCtx());
+      int AD_Client_ID = Env.getClientId(this.getCtx());
       setParameter(pstmt, i++, AD_Client_ID);
       if (log.isLoggable(Level.FINEST)) log.finest("Parameter AD_Client_ID = " + AD_Client_ID);
     }
