@@ -1,9 +1,11 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Sequence;
 import org.idempiere.orm.I_Persistent;
+
+import java.sql.ResultSet;
+import java.util.Properties;
 
 /**
  * Generated Model for AD_Sequence
@@ -24,6 +26,9 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   /** Load Constructor */
   public X_AD_Sequence(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  }
+  public X_AD_Sequence(Properties ctx, Row row) {
+    super(ctx, row);
   }
 
   /**

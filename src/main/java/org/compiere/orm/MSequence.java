@@ -1,10 +1,12 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.I_AD_Sequence;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.*;
 import org.idempiere.icommon.model.IPO;
+import software.hsharp.core.orm.MBaseSequence;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +29,7 @@ import static software.hsharp.core.util.DBKt.*;
  * @version $Id: MSequence.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
  * @see org.compiere.process.SequenceCheck
  */
-public class MSequence extends X_AD_Sequence {
+public class MSequence extends MBaseSequence {
   /** Start Number */
   public static final int INIT_NO = 1000000; // 	1M
   /** Start System Number */
@@ -121,6 +123,10 @@ public class MSequence extends X_AD_Sequence {
   public MSequence(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   } //	MSequence
+
+  public MSequence(Properties ctx, Row row) {
+    super(ctx, row);
+  }
 
   /**
    * New Document Sequence Constructor

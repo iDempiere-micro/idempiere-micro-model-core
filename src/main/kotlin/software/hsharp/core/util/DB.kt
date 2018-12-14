@@ -6,11 +6,17 @@ import kotliquery.Session
 import kotliquery.sessionOf
 import org.compiere.dbPort.Convert
 import org.compiere.dbPort.Convert_PostgreSQL
+import org.compiere.orm.PO
 import org.idempiere.common.exceptions.DBException
 import org.idempiere.icommon.model.IPO
 import java.math.BigDecimal
 import java.sql.*
 import javax.sql.RowSet
+
+fun <T> String.asResource(work: (String) -> T): T {
+    val content = PO::class.java.getResource(this).readText()
+    return work(content)
+}
 
 // CONSTANTS
 internal fun isGenerateUUIDSupported() = true
