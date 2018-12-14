@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.I_AD_Client;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.Env;
@@ -77,6 +78,9 @@ public class MClient extends X_AD_Client {
    */
   public MClient(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MClient
+  public MClient(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MClient
 
   /**
