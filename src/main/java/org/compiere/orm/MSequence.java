@@ -860,7 +860,7 @@ public class MSequence extends MBaseSequence {
     }
 
     String sql = "SELECT * FROM AD_Sequence " + "WHERE UPPER(Name)=?" + " AND IsTableID=?";
-    if (!tableID) sql = sql + " AND AD_Client_ID=?";
+    if (!tableID) sql = sql + " AND clientId=?";
     MSequence retValue = null;
     PreparedStatement pstmt = null;
     ResultSet rs = null;
@@ -897,7 +897,7 @@ public class MSequence extends MBaseSequence {
       Properties ctx, int WindowNo, String TableName, boolean onlyDocType, String trxName) {
     if (ctx == null || TableName == null || TableName.length() == 0)
       throw new IllegalArgumentException("Required parameter missing");
-    int AD_Client_ID = Env.getContextAsInt(ctx, WindowNo, "AD_Client_ID");
+    int AD_Client_ID = Env.getContextAsInt(ctx, WindowNo, "clientId");
 
     //	Get C_DocType_ID from context - NO Defaults -
     int C_DocType_ID = Env.getContextAsInt(ctx, WindowNo + "|C_DocTypeTarget_ID");

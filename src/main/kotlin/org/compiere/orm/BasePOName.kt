@@ -4,7 +4,7 @@ import kotliquery.Row
 import org.compiere.model.HasName
 import org.idempiere.common.util.KeyNamePair
 import java.sql.ResultSet
-import java.util.Properties
+import java.util.*
 
 abstract class BasePOName : PO {
     constructor(ctx: Properties, ID: Int, trxName: String?) : super(ctx, ID, trxName)
@@ -12,25 +12,14 @@ abstract class BasePOName : PO {
     constructor (ctx: Properties, rs: ResultSet, trxName: String?, a: String?) : super(ctx, rs, trxName, a)
     constructor(ctx: Properties, r: Row) : super(ctx, r)
 
-    /** Set Name.
-     * @param Name
-     * Alphanumeric identifier of the entity
-     */
-    fun setName(Name: String) {
-        set_Value(HasName.COLUMNNAME_Name, Name)
-    }
-
-    /** Get Name.
-     * @return Alphanumeric identifier of the entity
-     */
-    open fun getName(): String {
-        return get_Value(HasName.COLUMNNAME_Name) as String
-    }
+    open var name: String
+        get() = get_Value(HasName.COLUMNNAME_Name) as String
+        set(Name) { set_Value(HasName.COLUMNNAME_Name, Name) }
 
     /** Get Record ID/ColumnName
      * @return ID/ColumnName pair
      */
     fun getKeyNamePair(): KeyNamePair {
-        return KeyNamePair(id, getName())
+        return KeyNamePair(id, name)
     }
 }

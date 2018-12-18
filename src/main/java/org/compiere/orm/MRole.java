@@ -6,8 +6,9 @@ import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.util.*;
 import org.idempiere.icommon.model.IPO;
+import software.hsharp.core.orm.MBaseRole;
+import software.hsharp.core.orm.MBaseRoleKt;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +32,7 @@ import static software.hsharp.core.util.DBKt.*;
  * @contributor KittiU - FR [ 3062553 ] - Duplicated action in DocAction list for Multiple Role
  *     Users
  */
-public class MRole extends X_AD_Role {
+public class MRole extends MBaseRole {
   /** Access SQL Read Write */
   public static final boolean SQL_RW = true;
   /** Access SQL Read Only */
@@ -251,25 +252,7 @@ public class MRole extends X_AD_Role {
    * @return roles of client
    */
   public static MRole[] getOfClient(Properties ctx) {
-    String sql = "SELECT * FROM AD_Role WHERE AD_Client_ID=?";
-    ArrayList<MRole> list = new ArrayList<MRole>();
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = prepareStatement(sql, null);
-      pstmt.setInt(1, Env.getClientId(ctx));
-      rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new MRole(ctx, rs, null));
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    MRole[] retValue = new MRole[list.size()];
-    list.toArray(retValue);
-    return retValue;
+    return MBaseRoleKt.getOfClient(ctx);
   } //	getOfClient
 
   /**
@@ -329,7 +312,7 @@ public class MRole extends X_AD_Role {
           found = oa1.equals(oa2);
           if (found && override) {
             // stronger permissions first
-            if (!oa2.readOnly) oa1.readOnly = false;
+            if (!oa2.getReadOnly()) oa1.setReadOnly(false);
           }
         } else if (o1 instanceof MTableAccess) {
           final MTableAccess ta1 = (MTableAccess) o1;
@@ -531,7 +514,7 @@ public class MRole extends X_AD_Role {
     String sqlWindow =
         "INSERT INTO AD_Window_Access "
             + "(AD_Window_ID, AD_Role_ID,"
-            + " AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,Updated,UpdatedBy,IsReadWrite) "
+            + " clientId,orgId,IsActive,Created,CreatedBy,Updated,UpdatedBy,IsReadWrite) "
             + "SELECT DISTINCT w.AD_Window_ID, "
             + roleClientOrgUser
             + "FROM AD_Window w"
@@ -549,7 +532,7 @@ public class MRole extends X_AD_Role {
     String sqlProcess =
         "INSERT INTO AD_Process_Access "
             + "(AD_Process_ID, AD_Role_ID,"
-            + " AD_Client_ID, AD_Org_ID, IsActive, Created, CreatedBy, Updated, UpdatedBy, IsReadWrite) "
+            + " clientId, orgId, IsActive, Created, CreatedBy, Updated, UpdatedBy, IsReadWrite) "
             + "SELECT DISTINCT p.AD_Process_ID, "
             + roleClientOrgUser
             + "FROM AD_Process p LEFT JOIN AD_Process_Access pa ON "
@@ -561,7 +544,7 @@ public class MRole extends X_AD_Role {
     String sqlForm =
         "INSERT INTO AD_Form_Access "
             + "(AD_Form_ID, AD_Role_ID,"
-            + " AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,Updated,UpdatedBy,IsReadWrite) "
+            + " clientId,orgId,IsActive,Created,CreatedBy,Updated,UpdatedBy,IsReadWrite) "
             + "SELECT f.AD_Form_ID, "
             + roleClientOrgUser
             + "FROM AD_Form f LEFT JOIN AD_Form_Access fa ON "
@@ -573,20 +556,20 @@ public class MRole extends X_AD_Role {
     String sqlWorkflow =
         "INSERT INTO AD_WorkFlow_Access "
             + "(AD_WorkFlow_ID, AD_Role_ID,"
-            + " AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,Updated,UpdatedBy,IsReadWrite) "
+            + " clientId,orgId,IsActive,Created,CreatedBy,Updated,UpdatedBy,IsReadWrite) "
             + "SELECT w.AD_WorkFlow_ID, "
             + roleClientOrgUser
             + "FROM AD_WorkFlow w LEFT JOIN AD_WorkFlow_Access wa ON "
             + "(wa.AD_Role_ID="
             + getAD_Role_ID()
             + " AND w.AD_WorkFlow_ID = wa.AD_WorkFlow_ID) "
-            + "WHERE w.AD_Client_ID IN (0,"
+            + "WHERE w.clientId IN (0,"
             + getClientId()
             + ") AND wa.AD_WorkFlow_ID IS NULL AND AccessLevel IN ";
 
     String sqlDocAction =
         "INSERT INTO AD_Document_Action_Access "
-            + "(AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,Updated,UpdatedBy,"
+            + "(clientId,orgId,IsActive,Created,CreatedBy,Updated,UpdatedBy,"
             + "C_DocType_ID , AD_Ref_List_ID, AD_Role_ID) "
             + "(SELECT "
             + getClientId()
@@ -596,9 +579,9 @@ public class MRole extends X_AD_Role {
             + getUpdatedBy()
             + ", doctype.C_DocType_ID, action.AD_Ref_List_ID, rol.AD_Role_ID "
             + "FROM AD_Client client "
-            + "INNER JOIN C_DocType doctype ON (doctype.AD_Client_ID=client.AD_Client_ID) "
+            + "INNER JOIN C_DocType doctype ON (doctype.clientId=client.clientId) "
             + "INNER JOIN AD_Ref_List action ON (action.AD_Reference_ID=135) "
-            + "INNER JOIN AD_Role rol ON (rol.AD_Client_ID=client.AD_Client_ID "
+            + "INNER JOIN AD_Role rol ON (rol.clientId=client.clientId "
             + "AND rol.AD_Role_ID="
             + getAD_Role_ID()
             + ") LEFT JOIN AD_Document_Action_Access da ON "
@@ -610,7 +593,7 @@ public class MRole extends X_AD_Role {
     String sqlInfo =
         "INSERT INTO AD_InfoWindow_Access "
             + "(AD_InfoWindow_ID, AD_Role_ID,"
-            + " AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,Updated,UpdatedBy) "
+            + " clientId,orgId,IsActive,Created,CreatedBy,Updated,UpdatedBy) "
             + "SELECT i.AD_InfoWindow_ID,"
             + getAD_Role_ID()
             + ","
@@ -625,7 +608,7 @@ public class MRole extends X_AD_Role {
             + "(ia.AD_Role_ID="
             + getAD_Role_ID()
             + " AND i.AD_InfoWindow_ID = ia.AD_InfoWindow_ID) "
-            + "WHERE i.AD_Client_ID IN (0,"
+            + "WHERE i.clientId IN (0,"
             + getClientId()
             + ") AND ia.AD_InfoWindow_ID IS NULL";
 
@@ -846,72 +829,6 @@ public class MRole extends X_AD_Role {
   } //	loadOrgAccessRole
 
   /**
-   * Load Org Access Role
-   *
-   * @param list list
-   */
-  private void loadOrgAccessRole(ArrayList<OrgAccess> list) {
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    String sql = "SELECT * FROM AD_Role_OrgAccess " + "WHERE AD_Role_ID=? AND IsActive='Y'";
-    try {
-      pstmt = prepareStatement(sql, get_TrxName());
-      pstmt.setInt(1, getAD_Role_ID());
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        MRoleOrgAccess oa = new MRoleOrgAccess(getCtx(), rs, get_TrxName());
-        loadOrgAccessAdd(list, new OrgAccess(oa.getClientId(), oa.getOrgId(), oa.isReadOnly()));
-      }
-    } catch (Exception e) {
-      log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-    }
-  } //	loadOrgAccessRole
-
-  /**
-   * Load Org Access Add Tree to List
-   *
-   * @param list list
-   * @param oa org access
-   * @see Login
-   */
-  private void loadOrgAccessAdd(ArrayList<OrgAccess> list, OrgAccess oa) {
-    if (list.contains(oa)) return;
-    list.add(oa);
-    //	Do we look for trees?
-    if (getAD_Tree_Org_ID() == 0) return;
-    MOrg org = MOrg.get(getCtx(), oa.AD_Org_ID);
-    if (!org.isSummary()) return;
-    //	Summary Org - Get Dependents
-    MTree_Base tree = MTree_Base.get(getCtx(), getAD_Tree_Org_ID(), get_TrxName());
-    String sql =
-        "SELECT AD_Client_ID, AD_Org_ID FROM AD_Org "
-            + "WHERE IsActive='Y' AND AD_Org_ID IN (SELECT Node_ID FROM "
-            + tree.getNodeTableName()
-            + " WHERE AD_Tree_ID=? AND Parent_ID=? AND IsActive='Y')";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = prepareStatement(sql, get_TrxName());
-      pstmt.setInt(1, tree.getAD_Tree_ID());
-      pstmt.setInt(2, org.getOrgId());
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        int AD_Client_ID = rs.getInt(1);
-        int AD_Org_ID = rs.getInt(2);
-        loadOrgAccessAdd(list, new OrgAccess(AD_Client_ID, AD_Org_ID, oa.readOnly));
-      }
-    } catch (Exception e) {
-      log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-  } //	loadOrgAccessAdd
-
-  /**
    * Load Table Access
    *
    * @param reload reload
@@ -1061,13 +978,13 @@ public class MRole extends X_AD_Role {
    * Clause Value
    *
    * @param rw read write
-   * @return "AD_Client_ID=0" or "AD_Client_ID IN(0,1)"
+   * @return "clientId=0" or "clientId IN(0,1)"
    */
   public String getClientWhere(boolean rw) {
     //	All Orgs - use Client of Role
     if (isAccessAllOrgs()) {
-      if (rw || getClientId() == 0) return "AD_Client_ID=" + getClientId();
-      return "AD_Client_ID IN (0," + getClientId() + ")";
+      if (rw || getClientId() == 0) return "clientId=" + getClientId();
+      return "clientId IN (0," + getClientId() + ")";
     }
 
     //	Get Client from Org List
@@ -1077,7 +994,7 @@ public class MRole extends X_AD_Role {
     if (!rw) set.add("0");
     //	Positive List
     for (int i = 0; i < m_orgAccess.length; i++)
-      set.add(String.valueOf(m_orgAccess[i].AD_Client_ID));
+      set.add(String.valueOf(m_orgAccess[i].getClientId()));
     //
     StringBuilder sb = new StringBuilder();
     Iterator<String> it = set.iterator();
@@ -1090,13 +1007,13 @@ public class MRole extends X_AD_Role {
       sb.append(it.next());
     }
     if (oneOnly) {
-      if (sb.length() > 0) return "AD_Client_ID=" + sb.toString();
+      if (sb.length() > 0) return "clientId=" + sb.toString();
       else {
         log.log(Level.SEVERE, "No Access Org records");
-        return "AD_Client_ID=-1"; //	No Access Record
+        return "clientId=-1"; //	No Access Record
       }
     }
-    return "AD_Client_ID IN(" + sb.toString() + ")";
+    return "clientId IN(" + sb.toString() + ")";
   } //	getClientWhereValue
 
   /**
@@ -1112,16 +1029,16 @@ public class MRole extends X_AD_Role {
     //
     // Check Access All Orgs:
     if (isAccessAllOrgs()) {
-      // User has access to given AD_Client_ID if the role is defined on that AD_Client_ID
+      // User has access to given clientId if the role is defined on that clientId
       return getClientId() == AD_Client_ID;
     }
     //
     loadOrgAccess(false);
     //	Positive List
     for (int i = 0; i < m_orgAccess.length; i++) {
-      if (m_orgAccess[i].AD_Client_ID == AD_Client_ID) {
+      if (m_orgAccess[i].getClientId() == AD_Client_ID) {
         if (!rw) return true;
-        if (!m_orgAccess[i].readOnly) // 	rw
+        if (!m_orgAccess[i].getReadOnly()) // 	rw
         return true;
       }
     }
@@ -1132,7 +1049,7 @@ public class MRole extends X_AD_Role {
    * Get Org Where Clause Value
    *
    * @param rw read write
-   * @return "AD_Org_ID=0" or "AD_Org_ID IN(0,1)" or null (if access all org)
+   * @return "orgId=0" or "orgId IN(0,1)" or null (if access all org)
    */
   public String getOrgWhere(boolean rw) {
     if (isAccessAllOrgs()) return null;
@@ -1142,9 +1059,9 @@ public class MRole extends X_AD_Role {
     if (!rw) set.add("0");
     //	Positive List
     for (int i = 0; i < m_orgAccess.length; i++) {
-      if (!rw) set.add(String.valueOf(m_orgAccess[i].AD_Org_ID));
-      else if (!m_orgAccess[i].readOnly) // 	rw
-      set.add(String.valueOf(m_orgAccess[i].AD_Org_ID));
+      if (!rw) set.add(String.valueOf(m_orgAccess[i].getOrgId()));
+      else if (!m_orgAccess[i].getReadOnly()) // 	rw
+      set.add(String.valueOf(m_orgAccess[i].getOrgId()));
     }
     //
     StringBuilder sb = new StringBuilder();
@@ -1158,13 +1075,13 @@ public class MRole extends X_AD_Role {
       sb.append(it.next());
     }
     if (oneOnly) {
-      if (sb.length() > 0) return "AD_Org_ID=" + sb.toString();
+      if (sb.length() > 0) return "orgId=" + sb.toString();
       else {
         log.log(Level.SEVERE, "No Access Org records");
-        return "AD_Org_ID=-1"; //	No Access Record
+        return "orgId=-1"; //	No Access Record
       }
     }
-    return "AD_Org_ID IN(" + sb.toString() + ")";
+    return "orgId IN(" + sb.toString() + ")";
   } //	getOrgWhereValue
 
   /**
@@ -1182,10 +1099,10 @@ public class MRole extends X_AD_Role {
 
     //	Positive List
     for (int i = 0; i < m_orgAccess.length; i++) {
-      if (m_orgAccess[i].AD_Org_ID == AD_Org_ID) {
+      if (m_orgAccess[i].getOrgId() == AD_Org_ID) {
         if (!rw) return true;
         // 	rw
-        return !m_orgAccess[i].readOnly;
+        return !m_orgAccess[i].getReadOnly();
       }
     }
     return false;
@@ -1526,7 +1443,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT w.AD_Window_ID "
                 + "                FROM ASP_Window w, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE w.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND w.IsActive = 'Y' "
@@ -1537,7 +1454,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Window_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Window_ID IS NOT NULL "
@@ -1549,7 +1466,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Window_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Window_ID IS NOT NULL "
@@ -1612,7 +1529,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT p.AD_Process_ID "
                 + "                FROM ASP_Process p, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE p.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND p.IsActive = 'Y' "
@@ -1623,7 +1540,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Process_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Process_ID IS NOT NULL "
@@ -1634,7 +1551,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Process_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Process_ID IS NOT NULL "
@@ -1692,7 +1609,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT t.AD_Task_ID "
                 + "                FROM ASP_Task t, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE t.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND t.IsActive = 'Y' "
@@ -1703,7 +1620,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Task_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Task_ID IS NOT NULL "
@@ -1713,7 +1630,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Task_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Task_ID IS NOT NULL "
@@ -1769,7 +1686,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT f.AD_Form_ID "
                 + "                FROM ASP_Form f, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE f.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND f.IsActive = 'Y' "
@@ -1780,7 +1697,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Form_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Form_ID IS NOT NULL "
@@ -1790,7 +1707,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Form_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Form_ID IS NOT NULL "
@@ -1846,7 +1763,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT w.AD_Workflow_ID "
                 + "                FROM ASP_Workflow w, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE w.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND w.IsActive = 'Y' "
@@ -1857,7 +1774,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Workflow_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Workflow_ID IS NOT NULL "
@@ -1867,7 +1784,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Workflow_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Workflow_ID IS NOT NULL "
@@ -2182,9 +2099,9 @@ public class MRole extends X_AD_Role {
     if (!retValue && createError) {
       log.saveWarning(
           "AccessTableNoUpdate",
-          "AD_Client_ID="
+          "clientId="
               + AD_Client_ID
-              + ", AD_Org_ID="
+              + ", orgId="
               + AD_Org_ID
               + ", UserLevel="
               + userLevel
@@ -2427,7 +2344,7 @@ public class MRole extends X_AD_Role {
               "SELECT DISTINCT rl.Value, a.IsActive"
                   + " FROM AD_Document_Action_Access a"
                   + " INNER JOIN AD_Ref_List rl ON (rl.AD_Reference_ID=135 and rl.AD_Ref_List_ID=a.AD_Ref_List_ID)"
-                  + " WHERE a.AD_Client_ID=? AND a.C_DocType_ID=?" // #1,2
+                  + " WHERE a.clientId=? AND a.C_DocType_ID=?" // #1,2
                   + " AND a.AD_Role_ID=?"
                   + " AND rl.Value IN ("
                   + sql_values
@@ -2759,7 +2676,7 @@ public class MRole extends X_AD_Role {
       		+ "              SELECT f.AD_InfoWindow_ID "
       		+ "                FROM ASP_InfoWindow f, ASP_Level l, ASP_ClientLevel cl "
       		+ "               WHERE f.ASP_Level_ID = l.ASP_Level_ID "
-      		+ "                 AND cl.AD_Client_ID = " + client.getClientId()
+      		+ "                 AND cl.clientId = " + client.getClientId()
       		+ "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
       		+ "                 AND f.IsActive = 'Y' "
       		+ "                 AND l.IsActive = 'Y' "
@@ -2769,7 +2686,7 @@ public class MRole extends X_AD_Role {
       		// + show ASP exceptions for client
       		+ "              SELECT AD_InfoWindow_ID "
       		+ "                FROM ASP_ClientException ce "
-      		+ "               WHERE ce.AD_Client_ID = " + client.getClientId()
+      		+ "               WHERE ce.clientId = " + client.getClientId()
       		+ "                 AND ce.IsActive = 'Y' "
       		+ "                 AND ce.AD_InfoWindow_ID IS NOT NULL "
       		+ "                 AND ce.ASP_Status = 'S') " // Show
@@ -2778,7 +2695,7 @@ public class MRole extends X_AD_Role {
       		// minus hide ASP exceptions for client
       		+ "          SELECT AD_InfoWindow_ID "
       		+ "            FROM ASP_ClientException ce "
-      		+ "           WHERE ce.AD_Client_ID = " + client.getClientId()
+      		+ "           WHERE ce.clientId = " + client.getClientId()
       		+ "             AND ce.IsActive = 'Y' "
       		+ "             AND ce.AD_InfoWindow_ID IS NOT NULL "
       		+ "             AND ce.ASP_Status = 'H')"; // Hide
@@ -2817,73 +2734,4 @@ public class MRole extends X_AD_Role {
     super.setClientOrg(a);
   }
 
-  /** Org Access Summary */
-  class OrgAccess implements Serializable {
-    /** */
-    private static final long serialVersionUID = -4880665261978385315L;
-    /** Client */
-    public int AD_Client_ID = 0;
-    /** Organization */
-    public int AD_Org_ID = 0;
-    /** Read Only */
-    public boolean readOnly = true;
-
-    /**
-     * Org Access constructor
-     *
-     * @param ad_Client_ID client
-     * @param ad_Org_ID org
-     * @param readonly r/o
-     */
-    public OrgAccess(int ad_Client_ID, int ad_Org_ID, boolean readonly) {
-      this.AD_Client_ID = ad_Client_ID;
-      this.AD_Org_ID = ad_Org_ID;
-      this.readOnly = readonly;
-    }
-
-    /**
-     * Equals
-     *
-     * @param obj object to compare
-     * @return true if equals
-     */
-    public boolean equals(Object obj) {
-      if (obj != null && obj instanceof OrgAccess) {
-        OrgAccess comp = (OrgAccess) obj;
-        return comp.AD_Client_ID == AD_Client_ID && comp.AD_Org_ID == AD_Org_ID;
-      }
-      return false;
-    } //	equals
-
-    /**
-     * Hash Code
-     *
-     * @return hash Code
-     */
-    public int hashCode() {
-      return (AD_Client_ID * 7) + AD_Org_ID;
-    } //	hashCode
-
-    /**
-     * Extended String Representation
-     *
-     * @return extended info
-     */
-    public String toString() {
-      String clientName = "System";
-      if (AD_Client_ID != 0) clientName = MClient.get(getCtx(), AD_Client_ID).getName();
-      String orgName = "*";
-      if (AD_Org_ID != 0) orgName = MOrg.get(getCtx(), AD_Org_ID).getName();
-      StringBuilder sb = new StringBuilder();
-      sb.append(Msg.translate(getCtx(), "AD_Client_ID"))
-          .append("=")
-          .append(clientName)
-          .append(" - ")
-          .append(Msg.translate(getCtx(), "AD_Org_ID"))
-          .append("=")
-          .append(orgName);
-      if (readOnly) sb.append(" r/o");
-      return sb.toString();
-    } //	toString
-  } //	OrgAccess
 } //	MRole

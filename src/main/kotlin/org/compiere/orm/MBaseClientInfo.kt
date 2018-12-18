@@ -24,7 +24,7 @@ fun get(
     val cached = clientInfoCache[AD_Client_ID]
     if (retype(cached) != null) return cached
     //
-    val sql = "SELECT * FROM AD_ClientInfo WHERE AD_Client_ID=?"
+    val sql = "SELECT * FROM AD_ClientInfo WHERE clientId=?"
     val loadQuery = queryOf(sql, AD_Client_ID).map { row -> factory(row) }.asSingle
     val loaded = DB.current.run(loadQuery)
     if (trxName == null) clientInfoCache[AD_Client_ID] = loaded

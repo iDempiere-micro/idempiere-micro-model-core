@@ -214,7 +214,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             + tableName
             + "_ID FROM "
             + tableName
-            + " WHERE IsSummary='Y' AND AD_Client_ID=? AND Value=?";
+            + " WHERE IsSummary='Y' AND clientId=? AND Value=?";
     int pos = value.length() - 1;
     while (pos > 0) {
       String testParentValue = value.substring(0, pos);
@@ -991,8 +991,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
       else if (colName.equals(p_info.getTableName() + "_ID")) //  KeyColumn
       newValues[i] = I_ZERO;
       else if (colName.equals("IsActive")) newValues[i] = Boolean.TRUE;
-      else if (colName.equals("AD_Client_ID")) newValues[i] = Env.getClientId(getCtx());
-      else if (colName.equals("AD_Org_ID")) newValues[i] = Env.getOrgId(getCtx());
+      else if (colName.equals("clientId")) newValues[i] = Env.getClientId(getCtx());
+      else if (colName.equals("orgId")) newValues[i] = Env.getOrgId(getCtx());
       else if (colName.equals("Processed")) newValues[i] = Boolean.FALSE;
       else if (colName.equals("Processing")) newValues[i] = Boolean.FALSE;
       else if (colName.equals("Posted")) newValues[i] = Boolean.FALSE;
@@ -1023,10 +1023,10 @@ public abstract class PO extends software.hsharp.core.orm.PO
   /**
    * Get AD_Org
    *
-   * @return AD_Org_ID
+   * @return orgId
    */
   public int getOrgId() {
-    Integer ii = (Integer) get_Value("AD_Org_ID");
+    Integer ii = (Integer) get_Value("orgId");
     if (ii == null) return 0;
     return ii;
   } //	getOrgId
@@ -1337,7 +1337,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
   protected int retrieveIdOfElementValue(
       String value, int clientID, int elementID, String trxName) {
     String sql =
-        "SELECT C_ElementValue_ID FROM C_ElementValue WHERE IsSummary='Y' AND AD_Client_ID=? AND C_Element_ID=? AND Value=?";
+        "SELECT C_ElementValue_ID FROM C_ElementValue WHERE IsSummary='Y' AND clientId=? AND C_Element_ID=? AND Value=?";
     int pos = value.length() - 1;
     while (pos > 0) {
       String testParentValue = value.substring(0, pos);
@@ -1703,7 +1703,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
   }
 
   protected void checkValidContext() {
-    if (getCtx().isEmpty() && getCtx().getProperty("#AD_Client_ID") == null)
+    if (getCtx().isEmpty() && getCtx().getProperty("#clientId") == null)
       throw new AdempiereException("Context lost");
   }
 
@@ -1895,8 +1895,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
    * @param AD_Org_ID org
    */
   public void setAD_Org_ID(int AD_Org_ID) {
-    set_ValueNoCheck("AD_Org_ID", AD_Org_ID);
-  } //	setAD_Org_ID
+    set_ValueNoCheck("orgId", AD_Org_ID);
+  } //	setOrgId
 
   /**
    * Set Value w/o check (update, r/o, ..). Used when Column is R/O Required for key and parent
@@ -1946,7 +1946,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
     //	Organization Check
     if (getOrgId() == 0 && (getAccessLevel() == ACCESSLEVEL_ORG)) {
-      log.saveError("FillMandatory", Msg.getElement(getCtx(), "AD_Org_ID"));
+      log.saveError("FillMandatory", Msg.getElement(getCtx(), "orgId"));
       return false;
     }
     //	Should be Org 0
@@ -1994,7 +1994,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     //	Before Save
     try {
       // If not a localTrx we need to set a savepoint for rollback
-      if (localTrx == null) savepoint = trx.setSavepoint(null);
+      // DAP if (localTrx == null) savepoint = trx.setSavepoint(null);
 
       if (!beforeSave(newRecord)) {
         log.warning("beforeSave failed - " + toString());

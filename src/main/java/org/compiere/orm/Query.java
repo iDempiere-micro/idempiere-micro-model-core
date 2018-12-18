@@ -487,7 +487,7 @@ public class Query extends BaseQuery {
     {
       if (whereBuffer.length() > 0) whereBuffer.append(" AND ");
       if (!joinClauseList.isEmpty()) whereBuffer.append(table.getTableName()).append(".");
-      whereBuffer.append("AD_Client_ID=?");
+      whereBuffer.append("clientId=?");
     }
     if (this.onlySelection_ID > 0) {
       String[] keys = table.getKeyColumns();
@@ -599,7 +599,7 @@ public class Query extends BaseQuery {
     if (onlyClient_ID) {
       int AD_Client_ID = Env.getClientId(this.getCtx());
       setParameter(pstmt, i++, AD_Client_ID);
-      if (log.isLoggable(Level.FINEST)) log.finest("Parameter AD_Client_ID = " + AD_Client_ID);
+      if (log.isLoggable(Level.FINEST)) log.finest("Parameter clientId = " + AD_Client_ID);
     }
     if (this.onlySelection_ID > 0) {
       setParameter(pstmt, i++, this.onlySelection_ID);

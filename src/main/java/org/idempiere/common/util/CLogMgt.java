@@ -461,11 +461,11 @@ public class CLogMgt {
         .append(Env.getContext(Env.getCtx(), "#AD_Role_Name"))
         .append(NL);
     //
-    sb.append(getMsg("AD_Client_ID"))
+    sb.append(getMsg("clientId"))
         .append(eq)
         .append(Env.getContext(Env.getCtx(), "#AD_Client_Name"))
         .append(NL);
-    sb.append(getMsg("AD_Org_ID"))
+    sb.append(getMsg("orgId"))
         .append(eq)
         .append(Env.getContext(Env.getCtx(), "#AD_Org_Name"))
         .append(NL);

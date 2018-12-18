@@ -70,7 +70,7 @@ public class MOrg extends X_AD_Org {
    */
   public static MOrg[] getOfClient(PO po) {
     List<MOrg> list =
-        new Query(po.getCtx(), I_AD_Org.Table_Name, "AD_Client_ID=?", null)
+        new Query(po.getCtx(), I_AD_Org.Table_Name, "clientId=?", null)
             .setOrderBy(I_AD_Org.COLUMNNAME_Value)
             .setOnlyActiveRecords(true)
             .setParameters(po.getClientId())

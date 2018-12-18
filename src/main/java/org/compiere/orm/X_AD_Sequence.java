@@ -293,7 +293,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   /**
    * Get Org Column.
    *
-   * @return Fully qualified Organization column (AD_Org_ID)
+   * @return Fully qualified Organization column (orgId)
    */
   public String getOrgColumn() {
     return (String) get_Value(COLUMNNAME_OrgColumn);
@@ -302,7 +302,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   /**
    * Set Org Column.
    *
-   * @param OrgColumn Fully qualified Organization column (AD_Org_ID)
+   * @param OrgColumn Fully qualified Organization column (orgId)
    */
   public void setOrgColumn(String OrgColumn) {
     set_Value(COLUMNNAME_OrgColumn, OrgColumn);

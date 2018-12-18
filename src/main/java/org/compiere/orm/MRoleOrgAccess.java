@@ -1,15 +1,17 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.close;
-import static software.hsharp.core.util.DBKt.prepareStatement;
+import kotliquery.Row;
+import org.compiere.util.Msg;
+import org.idempiere.common.util.CLogger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.compiere.util.Msg;
-import org.idempiere.common.util.CLogger;
+
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
 
 /**
  * Role Org Access Model
@@ -35,6 +37,9 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    */
   public MRoleOrgAccess(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MRoleOrgAccess
+  public MRoleOrgAccess(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MRoleOrgAccess
 
   /**
@@ -93,7 +98,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @return array of Role Org Access
    */
   public static MRoleOrgAccess[] getOfClient(Properties ctx, int AD_Client_ID) {
-    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE AD_Client_ID=?", AD_Client_ID);
+    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE clientId=?", AD_Client_ID);
   } //	getOfClient
 
   /**
@@ -104,7 +109,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @return array of Role Org Access
    */
   public static MRoleOrgAccess[] getOfOrg(Properties ctx, int AD_Org_ID) {
-    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE AD_Org_ID=?", AD_Org_ID);
+    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE orgId=?", AD_Org_ID);
   } //	getOfOrg
 
   /**
@@ -164,9 +169,9 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     StringBuilder sb = new StringBuilder("MRoleOrgAccess[");
     sb.append("AD_Role_ID=")
         .append(getAD_Role_ID())
-        .append(",AD_Client_ID=")
+        .append(",clientId=")
         .append(getClientId())
-        .append(",AD_Org_ID=")
+        .append(",orgId=")
         .append(getOrgId())
         .append(",RO=")
         .append(isReadOnly());
@@ -183,11 +188,11 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    */
   public String toStringX(Properties ctx) {
     StringBuilder sb = new StringBuilder();
-    sb.append(Msg.translate(ctx, "AD_Client_ID"))
+    sb.append(Msg.translate(ctx, "clientId"))
         .append("=")
         .append(getClientName())
         .append(" - ")
-        .append(Msg.translate(ctx, "AD_Org_ID"))
+        .append(Msg.translate(ctx, "orgId"))
         .append("=")
         .append(getOrgName());
     return sb.toString();
@@ -202,8 +207,8 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     if (m_clientName == null) {
       String sql =
           "SELECT c.Name, o.Name "
-              + "FROM AD_Client c INNER JOIN AD_Org o ON (c.AD_Client_ID=o.AD_Client_ID) "
-              + "WHERE o.AD_Org_ID=?";
+              + "FROM AD_Client c INNER JOIN AD_Org o ON (c.clientId=o.clientId) "
+              + "WHERE o.orgId=?";
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {

@@ -15,13 +15,14 @@ fun checkClientSequences(ctx: Properties, clientId: Int): Boolean {
         WHERE ColumnName = 'DocumentNo' OR ColumnName = 'Value')
         AND 'DocumentNo_' || TableName NOT IN
         (SELECT Name FROM AD_Sequence s
-        WHERE s.AD_Client_ID=?)
+        WHERE s.clientId=?)
     """.trimIndent()
     val processTable: (row: Row) -> Boolean = {
         val tableName = it.string(1)
         val seq = MSequence(ctx, clientId, tableName, null)
         seq.save()
     }
-    val loadQuery = queryOf(sql, listOf()).map(processTable).asList
-    return DB.current.run(loadQuery).min() ?: false
+    val loadQuery = queryOf(sql, listOf(clientId)).map(processTable).asList
+    val result = DB.current.run(loadQuery)
+    return result.min() ?: false
 }

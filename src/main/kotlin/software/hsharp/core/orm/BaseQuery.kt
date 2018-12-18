@@ -8,7 +8,7 @@ import org.idempiere.common.exceptions.DBException
 import org.idempiere.common.util.Env
 import org.idempiere.icommon.model.IPO
 import software.hsharp.core.util.DB
-import java.util.Properties
+import java.util.*
 
 abstract class BaseQuery(val ctx: Properties, val table: MTable) {
     protected abstract fun buildSQL(selectClause: StringBuilder?, useOrderByClause: Boolean): String
@@ -73,12 +73,12 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
         return this as Query
     }
 
-    /** Set Client_ID true for WhereClause routine to include AD_Client_ID  */
+    /** Set Client_ID true for WhereClause routine to include clientId  */
     fun setClient_ID(): Query {
         return setClient_ID(true)
     }
 
-    /** Set include or not include AD_Client_ID in where clause  */
+    /** Set include or not include clientId in where clause  */
     fun setClient_ID(isIncludeClient: Boolean): Query {
         this.onlyClient_ID = isIncludeClient
         return this as Query
@@ -118,7 +118,7 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
     fun <T : PO> first(): T? {
         val result = doFindFirst<T>()
         if (result.count() > 1) throw DBException("QueryMoreThanOneRecordsFound")
-        return result.first()
+        return result.firstOrNull()
     }
 
     /**

@@ -28,9 +28,9 @@ public final class Env {
 
   public static final String AD_USER_ID = "#AD_User_ID";
 
-  public static final String AD_ORG_ID = "#AD_Org_ID";
+  public static final String AD_ORG_ID = "#orgId";
 
-  public static final String AD_CLIENT_ID = "#AD_Client_ID";
+  public static final String AD_CLIENT_ID = "#clientId";
 
   public static final String AD_ORG_NAME = "#AD_Org_Name";
 
@@ -714,20 +714,20 @@ public final class Env {
   /** ************************************************************************ Language issues */
 
   /**
-   * Get Login AD_Client_ID
+   * Get Login clientId
    *
    * @param ctx context
-   * @return login AD_Client_ID
+   * @return login clientId
    */
   public static int getClientId(Properties ctx) {
     return Env.getContextAsInt(ctx, AD_CLIENT_ID);
   } //	getClientId
 
   /**
-   * Get Login AD_Org_ID
+   * Get Login orgId
    *
    * @param ctx context
-   * @return login AD_Org_ID
+   * @return login orgId
    */
   public static int getOrgId(Properties ctx) {
     return Env.getContextAsInt(ctx, AD_ORG_ID);

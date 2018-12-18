@@ -20,7 +20,7 @@ fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
 }
 
 open class MBaseSequence : X_AD_Sequence {
-    constructor(ctx: Properties, Id: Int, trxName: String) : super(ctx, Id, trxName)
+    constructor(ctx: Properties, Id: Int, trxName: String?) : super(ctx, Id, trxName)
     constructor(ctx: Properties, rs: ResultSet, trxName: String) : super(ctx, rs, trxName)
     constructor(ctx: Properties, row: Row) : super(ctx, row)
 }

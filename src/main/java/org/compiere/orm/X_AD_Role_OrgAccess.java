@@ -1,9 +1,11 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Role_OrgAccess;
 import org.idempiere.orm.I_Persistent;
+
+import java.sql.ResultSet;
+import java.util.Properties;
 
 /**
  * Generated Model for AD_Role_OrgAccess
@@ -26,6 +28,10 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
   public X_AD_Role_OrgAccess(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+
+  public X_AD_Role_OrgAccess(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MRoleOrgAccess
 
   /**
    * AccessLevel

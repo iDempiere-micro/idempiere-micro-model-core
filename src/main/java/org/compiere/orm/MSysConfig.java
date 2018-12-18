@@ -558,7 +558,7 @@ public class MSysConfig extends MBaseSysConfig {
       // Get the configuration level from the System Record
       String configLevel = null;
       String sql =
-          "SELECT ConfigurationLevel FROM AD_SysConfig WHERE Name=? AND AD_Client_ID = 0 AND AD_Org_ID = 0";
+          "SELECT ConfigurationLevel FROM AD_SysConfig WHERE Name=? AND clientId = 0 AND orgId = 0";
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
@@ -580,7 +580,7 @@ public class MSysConfig extends MBaseSysConfig {
         if (getOrgId() != 0) {
           // Get the configuration level from the System Record
           sql =
-              "SELECT ConfigurationLevel FROM AD_SysConfig WHERE Name=? AND AD_Client_ID = ? AND AD_Org_ID = 0";
+              "SELECT ConfigurationLevel FROM AD_SysConfig WHERE Name=? AND clientId = ? AND orgId = 0";
           try {
             pstmt = prepareStatement(sql, null);
             pstmt.setString(1, getName());

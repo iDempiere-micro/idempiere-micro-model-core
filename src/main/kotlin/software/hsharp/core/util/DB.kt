@@ -63,7 +63,7 @@ fun getSQLValueBDEx(trxName: String?, sql: String, params: Array<Any?>): BigDeci
     throw IllegalArgumentException(NYI)
 
 // INSERT/UPDATE
-fun executeUpdate(sql: String, trxName: String): Int =
+fun executeUpdate(sql: String, trxName: String?): Int =
     convert.convert(sql).map { DB.current.run(queryOf(it, listOf()).asUpdate) }.sum()
 
 fun executeUpdate(
@@ -234,7 +234,9 @@ class DB private constructor(private val session: Session?) {
 
         private val context = object : InheritableThreadLocal<Session>() {
             override fun initialValue(): Session {
-                return sessionOf(ds)
+                val result = sessionOf(ds)
+                result.connection.underlying.autoCommit = false
+                return result
             }
         }
 
@@ -244,6 +246,7 @@ class DB private constructor(private val session: Session?) {
                 if (result.connection.underlying.isClosed) {
                     val newResult = sessionOf(ds)
                     context.set(newResult)
+                    newResult.connection.underlying.autoCommit = false
                     return newResult
                 }
                 return result

@@ -1,6 +1,7 @@
 package org.idempiere.common.util;
 
-import static software.hsharp.core.util.DBKt.createConnection;
+import org.idempiere.common.exceptions.AdempiereException;
+import org.idempiere.common.exceptions.DBException;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -12,8 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.exceptions.DBException;
+
+import static software.hsharp.core.util.DBKt.createConnection;
 
 /**
  * Transaction Management. - Create new Transaction by Trx.get(name); - ..transactions.. - commit();
@@ -374,8 +375,8 @@ public class Trx {
   public synchronized boolean commit(boolean throwException) throws SQLException {
     // local
     try {
-      if (m_connection != null && !m_connection.isClosed()) {
-        m_connection.commit();
+      if (m_connection != null) {
+        if (!m_connection.isClosed()) m_connection.commit();
         if (log.isLoggable(Level.INFO)) log.info("**** " + m_trxName);
         m_active = false;
         fireAfterCommitEvent(true);
@@ -461,11 +462,11 @@ public class Trx {
       m_connection.setAutoCommit(true);
     } catch (SQLException e) {
     } finally {
-      try {
-        m_connection.close();
+      /*try {
+        m_connection.close(); DAP
       } catch (SQLException e) {
         log.log(Level.SEVERE, m_trxName, e);
-      }
+      }*/
     }
     m_connection = null;
     trace = null;
@@ -509,7 +510,7 @@ public class Trx {
     if (m_connection == null) {
       getConnection();
     }
-    if (m_connection != null) {
+    if (m_connection != null && !m_connection.isClosed()) {
       m_connection.releaseSavepoint(savepoint);
     }
   }

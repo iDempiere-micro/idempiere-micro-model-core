@@ -178,12 +178,12 @@ public class MColumn extends X_AD_Column {
   /**
    * Is Standard Column
    *
-   * @return true for AD_Client_ID, etc.
+   * @return true for clientId, etc.
    */
   public boolean isStandardColumn() {
     String columnName = getColumnName();
-    return columnName.equals("AD_Client_ID")
-        || columnName.equals("AD_Org_ID")
+    return columnName.equals("clientId")
+        || columnName.equals("orgId")
         || columnName.equals("IsActive")
         || columnName.equals("Processing")
         || columnName.equals("Created")

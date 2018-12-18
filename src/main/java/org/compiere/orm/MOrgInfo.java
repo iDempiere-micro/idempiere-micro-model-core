@@ -69,7 +69,7 @@ public class MOrgInfo extends X_AD_OrgInfo {
       return retValue;
     }
     retValue =
-        new Query(ctx, I_AD_OrgInfo.Table_Name, "AD_Org_ID=?", trxName)
+        new Query(ctx, I_AD_OrgInfo.Table_Name, "orgId=?", trxName)
             .setParameters(AD_Org_ID)
             .firstOnly();
     if (retValue != null) {
