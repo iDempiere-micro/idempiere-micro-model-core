@@ -9,6 +9,7 @@ import software.hsharp.core.util.queryOf
 import java.io.Serializable
 import java.sql.ResultSet
 import java.util.*
+import java.util.logging.Level
 
 fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
     val sql = "SELECT * FROM AD_Role WHERE AD_Client_ID=?"
@@ -17,6 +18,9 @@ fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
 } //	getOfClient
 
 open class MBaseRole : X_AD_Role {
+    /** List of Table Access  */
+    protected val m_tableAccess: MutableList<MTableAccess> = mutableListOf()
+
     constructor(ctx: Properties, Id: Int, trxName: String?) : super(ctx, Id, trxName)
     constructor(ctx: Properties, rs: ResultSet, trxName: String) : super(ctx, rs, trxName)
     constructor(ctx: Properties, row: Row) : super(ctx, row)
@@ -136,4 +140,96 @@ open class MBaseRole : X_AD_Role {
         val loadQuery = queryOf(sql, listOf(aD_Role_ID)).map { load(it) }.asList
         val result = DB.current.run(loadQuery).min() ?: false
     } //	loadOrgAccessRole
+
+    /**
+     * Load Table Access
+     *
+     * @param reload reload
+     */
+    protected fun loadTableAccess(reload: Boolean): Array<MTableAccess> {
+        if (m_tableAccess.isNotEmpty() && !reload) return m_tableAccess.toTypedArray()
+        val sql = "SELECT * FROM AD_Table_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
+        val loadQuery = queryOf(sql, listOf(aD_Role_ID)).map { MTableAccess(ctx, it) }.asList
+        val result = DB.current.run(loadQuery)
+        m_tableAccess.clear()
+        m_tableAccess.addAll(result)
+
+        if (log.isLoggable(Level.FINE)) log.fine("#" + m_tableAccess.size)
+        return result.toTypedArray()
+    } //	loadTableAccess
+
+    protected fun setTableAccess(tableAccesses: Array<MTableAccess>) {
+        m_tableAccess.clear()
+        m_tableAccess.addAll(tableAccesses)
+    }
+
+    /** Table Data Access Level  */
+    protected val m_tableAccessLevel = mutableMapOf<Int, String>()
+    /** Table Name  */
+    protected val m_tableName = mutableMapOf<String, Int>()
+    /** View Name  */
+    protected val m_viewName: MutableSet<String> = mutableSetOf()
+    /** ID Column Name *  */
+    protected var m_tableIdName = mutableMapOf<String, String>()
+
+    /**
+     * Load Table Access and Name
+     *
+     * @param reload reload
+     */
+    protected fun loadTableInfo(reload: Boolean) {
+        if (m_tableAccessLevel.isNotEmpty() && m_tableName.isNotEmpty() && !reload) return
+        m_tableAccessLevel.clear()
+        m_tableName.clear()
+        m_viewName.clear()
+        m_tableIdName.clear()
+
+        fun load(row: Row): Boolean {
+            val ii = row.int(1)
+            m_tableAccessLevel.put(ii, row.string(2))
+            val tableName = row.string(3)
+            m_tableName.put(tableName, ii)
+            val isView = row.string(4)
+            if ("Y" == isView) {
+                m_viewName.add(tableName.toUpperCase())
+            }
+            val idColumn = row.stringOrNull(5)
+            if (idColumn != null && idColumn.trim { it <= ' ' }.isNotEmpty()) {
+                m_tableIdName.put(tableName.toUpperCase(), idColumn)
+            }
+            return true
+        }
+
+        val sql = ("SELECT AD_Table_ID, AccessLevel, TableName, IsView, "
+                + "(SELECT ColumnName FROM AD_COLUMN WHERE AD_COLUMN.AD_TABLE_ID = AD_TABLE.AD_TABLE_ID AND AD_COLUMN.COLUMNNAME = AD_TABLE.TABLENAME || '_ID') "
+                + "FROM AD_Table WHERE IsActive='Y'")
+        val loadQuery = queryOf(sql, listOf()).map { load(it) }.asList
+        DB.current.run(loadQuery)
+
+        if (log.isLoggable(Level.FINE)) log.fine("#" + m_tableAccessLevel.size)
+    } //	loadTableAccessLevel
+
+    /** List of Column Access  MColumnAccess[] m_columnAccess */
+    private val m_columnAccess: MutableList<MColumnAccess> = mutableListOf()
+
+    protected fun setColumnAccess(columnAccesses: Array<MColumnAccess>) {
+        m_columnAccess.clear()
+        m_columnAccess.addAll(columnAccesses)
+    }
+
+    /**
+     * Load Column Access
+     *
+     * @param reload reload
+     */
+    protected fun loadColumnAccess(reload: Boolean) : Array<MColumnAccess> {
+        if (m_columnAccess.isNotEmpty() && !reload) return m_columnAccess.toTypedArray()
+        val sql = "SELECT * FROM AD_Column_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
+        val loadQuery = queryOf(sql, listOf(aD_Role_ID)).map { MColumnAccess(ctx, it) }.asList
+        val result = DB.current.run(loadQuery)
+        m_columnAccess.clear()
+        m_columnAccess.addAll(result)
+        if (log.isLoggable(Level.FINE)) log.fine("#" + m_columnAccess.size)
+        return result.toTypedArray()
+    } //	loadColumnAccess
 }

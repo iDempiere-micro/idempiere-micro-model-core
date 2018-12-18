@@ -8,6 +8,7 @@ import org.idempiere.common.exceptions.DBException
 import org.idempiere.common.util.Env
 import org.idempiere.icommon.model.IPO
 import software.hsharp.core.util.DB
+import software.hsharp.core.util.convert
 import java.util.*
 
 abstract class BaseQuery(val ctx: Properties, val table: MTable) {
@@ -129,7 +130,7 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
      */
     @Throws(DBException::class)
     fun <T : IPO> list(): List<T> {
-        val sql = buildSQL(null, true)
+        val sql = convert.convertAll( buildSQL(null, true) )
         val params = getQueryParameters()
         val sqlQuery =
             @Suppress("UNCHECKED_CAST")

@@ -1,6 +1,9 @@
 package org.compiere.dbPort;
 
-import static org.compiere.dbPort.BaseConvertKt.getLogger;
+import mu.KLogger;
+import org.compiere.orm.MSysConfig;
+import org.compiere.util.DisplayType;
+import org.idempiere.common.util.Env;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -12,10 +15,8 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import mu.KLogger;
-import org.compiere.orm.MSysConfig;
-import org.compiere.util.DisplayType;
-import org.idempiere.common.util.Env;
+
+import static org.compiere.dbPort.BaseConvertKt.getLogger;
 
 /**
  * Convert SQL to Target DB
@@ -273,7 +274,7 @@ public abstract class Convert {
     StringBuilder sb = new StringBuilder(sqlStatements.length() + 10);
     for (int i = 0; i < sql.length; i++) {
       //  line.separator
-      sb.append(sql[i]).append("\n/\n");
+      sb.append(sql[i]).append("\n;\n");
       if (m_verbose) log.info("Statement " + i + ": " + sql[i]);
     }
     return sb.toString();

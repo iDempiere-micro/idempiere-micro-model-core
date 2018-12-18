@@ -847,6 +847,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
    * @return true if loaded
    */
   protected boolean load(HashMap<String, String> hmIn) {
+    if (hmIn == null) return load((String)null);
+
     int size = get_ColumnCount();
     boolean success = true;
     int index = 0;

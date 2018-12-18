@@ -90,10 +90,10 @@ fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String?): Int =
     executeUpdateEx(sql, objects, trxName, 0)
 
 fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String?, timeOut: Int): Int =
-    DB.current.run(queryOf(sql, objects.toList()).asUpdate)
+    DB.current.run(queryOf(convert.convertAll(sql), objects.toList()).asUpdate)
 
 fun executeUpdateEx(sql: String, objects: List<Any>, trxName: String?, timeOut: Int): Int =
-    DB.current.run(queryOf(sql, objects).asUpdate)
+    DB.current.run(queryOf(convert.convertAll(sql), objects).asUpdate)
 
 fun executeUpdate(sql: String, param: Int, trxName: String?): Int = executeUpdateEx(sql, listOf(param), trxName, 0)
 fun executeUpdate(sql: String, ignoreError: Boolean, trxName: String?): Int {
@@ -111,7 +111,9 @@ fun executeUpdate(sql: String, ignoreError: Boolean, trxName: String?): Int {
 fun prepareStatement(
     sql: String?,
     trxName: String?
-): PreparedStatement? = throw IllegalArgumentException(NYI)
+): PreparedStatement? {
+    return DB.current.connection.underlying.prepareStatement(sql)
+}
 fun prepareStatement(
     sql: String?,
     a: Int, b: Int,
@@ -247,7 +249,8 @@ class DB private constructor(private val session: Session?) {
                 if (result.connection.underlying.isClosed) {
                     val newResult = sessionOf(ds)
                     context.set(newResult)
-                    newResult.connection.underlying.autoCommit = false
+                    val cnn = newResult.connection.underlying
+                    cnn.autoCommit = false
                     return newResult
                 }
                 return result

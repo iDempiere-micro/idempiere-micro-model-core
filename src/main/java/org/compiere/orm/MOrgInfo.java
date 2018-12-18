@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.I_AD_OrgInfo;
 import org.idempiere.common.util.CCache;
 
@@ -30,6 +31,9 @@ public class MOrgInfo extends X_AD_OrgInfo {
    */
   public MOrgInfo(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MOrgInfo
+  public MOrgInfo(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MOrgInfo
 
   /**

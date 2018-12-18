@@ -1,10 +1,12 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Column_Access;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
+
+import java.sql.ResultSet;
+import java.util.Properties;
 
 /**
  * Generated Model for AD_Column_Access
@@ -30,6 +32,9 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
   public X_AD_Column_Access(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+  public X_AD_Column_Access(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MColumnAccess
 
   /**
    * AccessLevel

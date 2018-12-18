@@ -1,13 +1,15 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.close;
-import static software.hsharp.core.util.DBKt.prepareStatement;
+import kotliquery.Row;
+import org.compiere.util.Msg;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.compiere.util.Msg;
+
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
 
 /**
  * Column Access Model
@@ -44,6 +46,9 @@ public class MColumnAccess extends X_AD_Column_Access {
    */
   public MColumnAccess(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MColumnAccess
+  public MColumnAccess(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MColumnAccess
 
   /**
