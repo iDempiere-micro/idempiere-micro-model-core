@@ -15,7 +15,7 @@ fun checkClientSequences(ctx: Properties, clientId: Int): Boolean {
         WHERE ColumnName = 'DocumentNo' OR ColumnName = 'Value')
         AND 'DocumentNo_' || TableName NOT IN
         (SELECT Name FROM AD_Sequence s
-        WHERE s.clientId=?)
+        WHERE s.AD_Client_ID=?)
     """.trimIndent()
     val processTable: (row: Row) -> Boolean = {
         val tableName = it.string(1)

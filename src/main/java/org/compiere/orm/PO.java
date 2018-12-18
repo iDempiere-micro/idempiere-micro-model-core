@@ -115,7 +115,7 @@ public abstract class PO extends org.idempiere.orm.PO {
    * @param AD_Client_ID client
    */
   public void setADClientID(int AD_Client_ID) {
-    set_ValueNoCheck("clientId", new Integer(AD_Client_ID));
+    set_ValueNoCheck("AD_Client_ID", new Integer(AD_Client_ID));
   } //	setADClientID
 
   /**
@@ -240,13 +240,13 @@ public abstract class PO extends org.idempiere.orm.PO {
         new StringBuilder("INSERT INTO ")
             .append(tableName)
             .append(
-                " (clientId,orgId, IsActive,Created,CreatedBy,Updated,UpdatedBy, "
+                " (AD_Client_ID,AD_Org_ID, IsActive,Created,CreatedBy,Updated,UpdatedBy, "
                     + "AD_Tree_ID, Node_ID, Parent_ID, SeqNo");
     if (uuidColumnId > 0 && uuidFunction)
       sb.append(", ").append(org.idempiere.orm.PO.getUUIDColumnName(tableName)).append(") ");
     else sb.append(") ");
     sb.append(
-            "SELECT t.clientId, 0, 'Y', SysDate, "
+            "SELECT t.AD_Client_ID, 0, 'Y', SysDate, "
                 + getUpdatedBy()
                 + ", SysDate, "
                 + getUpdatedBy()
@@ -256,7 +256,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         .append(", 0, 999");
     if (uuidColumnId > 0 && uuidFunction) sb.append(", Generate_UUID() ");
     else sb.append(" ");
-    sb.append("FROM AD_Tree t " + "WHERE t.clientId=")
+    sb.append("FROM AD_Tree t " + "WHERE t.AD_Client_ID=")
         .append(getClientId())
         .append(" AND t.IsActive='Y'");
     //	Account Element Value handling

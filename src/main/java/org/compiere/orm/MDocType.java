@@ -106,7 +106,7 @@ public class MDocType extends X_C_DocType {
    * @return array of doc types
    */
   public static MDocType[] getOfDocBaseType(Properties ctx, String DocBaseType) {
-    final String whereClause = "clientId=? AND DocBaseType=?";
+    final String whereClause = "AD_Client_ID=? AND DocBaseType=?";
     List<MDocType> list =
         new Query(ctx, I_C_DocType.Table_Name, whereClause, null)
             .setParameters(Env.getClientId(ctx), DocBaseType)
@@ -151,7 +151,7 @@ public class MDocType extends X_C_DocType {
   public void setGL_Category_ID() {
     final String sql =
         "SELECT GL_Category_ID FROM GL_Category"
-            + " WHERE clientId=?"
+            + " WHERE AD_Client_ID=?"
             + " ORDER BY IsDefault DESC, GL_Category_ID";
     int GL_Category_ID = getSQLValue(get_TrxName(), sql, getClientId());
     setGL_Category_ID(GL_Category_ID);
@@ -232,7 +232,7 @@ public class MDocType extends X_C_DocType {
    */
   protected boolean beforeSave(boolean newRecord) {
     /*if (getOrgId() != 0)
-    setOrgId(0);*/
+    setAD_Org_ID(0);*/
     return true;
   } //	beforeSave
 
@@ -248,7 +248,7 @@ public class MDocType extends X_C_DocType {
       //	Add doctype/docaction access to all roles of client
       StringBuilder sqlDocAction =
           new StringBuilder("INSERT INTO AD_Document_Action_Access ")
-              .append("(clientId,orgId,IsActive,Created,CreatedBy,Updated,UpdatedBy,")
+              .append("(AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,Updated,UpdatedBy,")
               .append("C_DocType_ID , AD_Ref_List_ID, AD_Role_ID) ")
               .append("(SELECT ")
               .append(getClientId())
@@ -258,10 +258,10 @@ public class MDocType extends X_C_DocType {
               .append(getUpdatedBy())
               .append(", doctype.C_DocType_ID, action.AD_Ref_List_ID, rol.AD_Role_ID ")
               .append("FROM AD_Client client ")
-              .append("INNER JOIN C_DocType doctype ON (doctype.clientId=client.clientId) ")
+              .append("INNER JOIN C_DocType doctype ON (doctype.AD_Client_ID=client.AD_Client_ID) ")
               .append("INNER JOIN AD_Ref_List action ON (action.AD_Reference_ID=135) ")
-              .append("INNER JOIN AD_Role rol ON (rol.clientId=client.clientId) ")
-              .append("WHERE client.clientId=")
+              .append("INNER JOIN AD_Role rol ON (rol.AD_Client_ID=client.AD_Client_ID) ")
+              .append("WHERE client.AD_Client_ID=")
               .append(getClientId())
               .append(" AND doctype.C_DocType_ID=")
               .append(getId())

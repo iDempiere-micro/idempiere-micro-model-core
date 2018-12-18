@@ -248,7 +248,7 @@ public class MTree_Base extends X_AD_Tree {
     if ("C_BPartner".equals(tableName))
       return "C_BPartner t INNER JOIN C_BP_Group x ON (t.C_BP_Group_ID=x.C_BP_Group_ID)";
     if ("AD_Org".equals(tableName))
-      return "AD_Org t INNER JOIN AD_OrgInfo i ON (t.orgId=i.orgId) "
+      return "AD_Org t INNER JOIN AD_OrgInfo i ON (t.AD_Org_ID=i.AD_Org_ID) "
           + "LEFT OUTER JOIN AD_OrgType x ON (i.AD_OrgType_ID=x.AD_OrgType_ID)";
     if ("C_Campaign".equals(tableName))
       return "C_Campaign t LEFT OUTER JOIN C_Channel x ON (t.C_Channel_ID=x.C_Channel_ID)";

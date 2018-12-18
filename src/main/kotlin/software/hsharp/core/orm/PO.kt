@@ -104,7 +104,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     } // 	decrypt
 
     override val clientId: Int
-        get() = get_Value("clientId") as Int? ?: 0
+        get() = get_Value("AD_Client_ID") as Int? ?: 0
 
     /**
      * ************************************************************************
@@ -382,7 +382,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             .append(" (")
             .append(tableName)
             .append(
-                "_ID, C_AcctSchema_ID, clientId,orgId,IsActive, Created,CreatedBy,Updated,UpdatedBy "
+                "_ID, C_AcctSchema_ID, AD_Client_ID,AD_Org_ID,IsActive, Created,CreatedBy,Updated,UpdatedBy "
             )
         for (i in s_acctColumns.indices) sb.append(",").append(s_acctColumns[i])
 
@@ -397,7 +397,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         // 	..	SELECT
         sb.append(") SELECT ")
             .append(id)
-            .append(", p.C_AcctSchema_ID, p.clientId,0,'Y', SysDate,")
+            .append(", p.C_AcctSchema_ID, p.AD_Client_ID,0,'Y', SysDate,")
             .append(getUpdatedBy())
             .append(",SysDate,")
             .append(getUpdatedBy())
@@ -407,7 +407,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         // 	.. 	FROM
         sb.append(" FROM ")
             .append(acctBaseTable)
-            .append(" p WHERE p.clientId=")
+            .append(" p WHERE p.AD_Client_ID=")
             .append(clientId)
         if (whereClause != null && whereClause.length > 0) sb.append(" AND ").append(whereClause)
         sb.append(" AND NOT EXISTS (SELECT * FROM ")
@@ -418,10 +418,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             .append(id)
             .append(")")
         //
-        val sql = sb.toString()
-        log.debug { "insert accounting: $sql" }
-
-        val no = executeUpdate(sql, "")
+        val no = executeUpdate(sb.toString(), "")
         if (no > 0) {
             log.trace { "#$no" }
         } else {

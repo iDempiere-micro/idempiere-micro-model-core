@@ -65,7 +65,7 @@ public class MSystem extends X_AD_System {
         "SELECT COUNT(DISTINCT (u.AD_User_ID)) AS iu "
             + "FROM AD_User u"
             + " INNER JOIN AD_User_Roles ur ON (u.AD_User_ID=ur.AD_User_ID) "
-            + "WHERE u.clientId<>11" //	no Demo
+            + "WHERE u.AD_Client_ID<>11" //	no Demo
             + " AND u.AD_User_ID NOT IN (0,100)"; //	no System/SuperUser
     int internalUsers = getSQLValue(null, sql);
     setSupportUnits(internalUsers);

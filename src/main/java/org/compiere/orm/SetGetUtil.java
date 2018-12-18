@@ -135,7 +135,7 @@ public class SetGetUtil {
 
   /**
    * Copy from the fields to. The second object is not required to be in the same table. The
-   * following fields are not copied: clientId, orgId, Created% Updated% IsActive. If
+   * following fields are not copied: AD_Client_ID, AD_Org_ID, Created% Updated% IsActive. If
    * excludeFields includeFields and are null, then it will copy all the fields (which can be
    * copied). @ param to destination object @ param object from source @ param includeFields name
    * fields to be excluded; null will be interpreted as String [0]; excludeFields includeFields and
@@ -204,8 +204,8 @@ public class SetGetUtil {
           || "Updated".equals(colName)
           || "UpdatedBy".equals(colName)
           || "IsActive".equals(colName)
-          || "clientId".equals(colName)
-          || "orgId".equals(colName)) {
+          || "AD_Client_ID".equals(colName)
+          || "AD_Org_ID".equals(colName)) {
         isExcluded = true;
       }
       //
@@ -450,8 +450,8 @@ public class SetGetUtil {
     sql.append(" WHERE IsActive=?");
     params.add(true);
     // Client Security Check
-    sql.append(" AND clientId IN (0,?)");
-    params.add(SetGetUtil.get_AttrValueAsInt(model, "clientId"));
+    sql.append(" AND AD_Client_ID IN (0,?)");
+    params.add(SetGetUtil.get_AttrValueAsInt(model, "AD_Client_ID"));
     // Ignore this record
     sql.append(" AND ").append(idColumnName).append("<>?");
     params.add(get_AttrValueAsInt(model, idColumnName));
