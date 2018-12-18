@@ -1,8 +1,9 @@
 package org.compiere.orm;
 
+import org.idempiere.common.util.CLogger;
+
 import java.sql.ResultSet;
 import java.util.Properties;
-import org.idempiere.common.util.CLogger;
 
 /**
  * (Disk) Tree Node Model Menu
@@ -35,7 +36,7 @@ public class MTree_NodeMM extends X_AD_TreeNodeMM {
    * @param Node_ID node
    */
   public MTree_NodeMM(MTree_Base tree, int Node_ID) {
-    super(tree.getCtx(), 0, tree.get_TrxName());
+    super(tree.getCtx(), 0, null);
     setClientOrg(tree);
     setAD_Tree_ID(tree.getAD_Tree_ID());
     setNode_ID(Node_ID);

@@ -117,7 +117,7 @@ public class MColumnAccess extends X_AD_Column_Access {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Column_ID());
         rs = pstmt.executeQuery();
         if (rs.next()) {

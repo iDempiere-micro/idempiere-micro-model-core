@@ -75,7 +75,7 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
   public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
         MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
-            .getPO(getAD_Role_ID(), get_TrxName());
+            .getPO(getAD_Role_ID(), null);
   }
 
   /**
@@ -120,7 +120,7 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
   public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), get_TrxName());
+            .getPO(getAD_Table_ID(), null);
   }
 
   /**

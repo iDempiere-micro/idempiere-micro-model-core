@@ -85,7 +85,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     val p_info: POInfo = initPO(ctx)
 
     protected fun initPO(ctx: Properties): POInfo {
-        return POInfo.getPOInfo(ctx, this.tableId, _TrxName)
+        return POInfo.getPOInfo(ctx, this.tableId, null)
     }
 
     /** Accounting Columns  */

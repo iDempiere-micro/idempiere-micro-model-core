@@ -156,7 +156,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
   public org.compiere.model.I_C_DocType getC_DocTypeDifference() throws RuntimeException {
     return (org.compiere.model.I_C_DocType)
         MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
-            .getPO(getC_DocTypeDifference_ID(), get_TrxName());
+            .getPO(getC_DocTypeDifference_ID(), null);
   }
 
   /**
@@ -204,7 +204,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
   public org.compiere.model.I_C_DocType getC_DocTypeInvoice() throws RuntimeException {
     return (org.compiere.model.I_C_DocType)
         MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
-            .getPO(getC_DocTypeInvoice_ID(), get_TrxName());
+            .getPO(getC_DocTypeInvoice_ID(), null);
   }
 
   /**
@@ -231,7 +231,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
   public org.compiere.model.I_C_DocType getC_DocTypeProforma() throws RuntimeException {
     return (org.compiere.model.I_C_DocType)
         MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
-            .getPO(getC_DocTypeProforma_ID(), get_TrxName());
+            .getPO(getC_DocTypeProforma_ID(), null);
   }
 
   /**
@@ -259,7 +259,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
   public org.compiere.model.I_C_DocType getC_DocTypeShipment() throws RuntimeException {
     return (org.compiere.model.I_C_DocType)
         MTable.get(getCtx(), org.compiere.model.I_C_DocType.Table_Name)
-            .getPO(getC_DocTypeShipment_ID(), get_TrxName());
+            .getPO(getC_DocTypeShipment_ID(), null);
   }
 
   /**
@@ -304,7 +304,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
   public org.compiere.model.I_AD_Sequence getDefiniteSequence() throws RuntimeException {
     return (org.compiere.model.I_AD_Sequence)
         MTable.get(getCtx(), org.compiere.model.I_AD_Sequence.Table_Name)
-            .getPO(getDefiniteSequence_ID(), get_TrxName());
+            .getPO(getDefiniteSequence_ID(), null);
   }
 
   /**
@@ -368,7 +368,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
   public org.compiere.model.I_AD_Sequence getDocNoSequence() throws RuntimeException {
     return (org.compiere.model.I_AD_Sequence)
         MTable.get(getCtx(), org.compiere.model.I_AD_Sequence.Table_Name)
-            .getPO(getDocNoSequence_ID(), get_TrxName());
+            .getPO(getDocNoSequence_ID(), null);
   }
 
   /**

@@ -1,12 +1,13 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.getSQLValueStringEx;
-
-import java.sql.ResultSet;
-import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Tree;
 import org.idempiere.common.util.CCache;
+
+import java.sql.ResultSet;
+import java.util.Properties;
+
+import static software.hsharp.core.util.DBKt.getSQLValueStringEx;
 
 /**
  * Base Tree Model. (see also MTree in project base)
@@ -62,7 +63,7 @@ public class MTree_Base extends X_AD_Tree {
    * @param treeType
    */
   public MTree_Base(MClient client, String name, String treeType) {
-    this(client.getCtx(), 0, client.get_TrxName());
+    this(client.getCtx(), 0, null);
     setClientOrg(client);
     setName(name);
     setTreeType(treeType);

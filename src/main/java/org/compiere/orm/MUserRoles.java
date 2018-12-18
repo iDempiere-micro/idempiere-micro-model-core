@@ -116,7 +116,7 @@ public class MUserRoles extends X_AD_User_Roles {
   protected boolean beforeSave(boolean newRecord) {
     // IDEMPIERE-1410
     if (!MRole.getDefault().isAccessAdvanced()) {
-      MRole role = new MRole(getCtx(), getAD_Role_ID(), get_TrxName());
+      MRole role = new MRole(getCtx(), getAD_Role_ID(), null);
       if (role.isAccessAdvanced()) {
         log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
         return false;
@@ -124,7 +124,7 @@ public class MUserRoles extends X_AD_User_Roles {
       if (!newRecord && is_ValueChanged(I_AD_User_Roles.COLUMNNAME_AD_Role_ID)) {
         MRole oldrole =
             new MRole(
-                getCtx(), get_ValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID), get_TrxName());
+                getCtx(), get_ValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID), null);
         if (oldrole.isAccessAdvanced()) {
           log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
           return false;
@@ -139,7 +139,7 @@ public class MUserRoles extends X_AD_User_Roles {
   protected boolean beforeDelete() {
     // IDEMPIERE-1410
     if (!MRole.getDefault().isAccessAdvanced()) {
-      MRole role = new MRole(getCtx(), getAD_Role_ID(), get_TrxName());
+      MRole role = new MRole(getCtx(), getAD_Role_ID(), null);
       if (role.isAccessAdvanced()) {
         log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
         return false;

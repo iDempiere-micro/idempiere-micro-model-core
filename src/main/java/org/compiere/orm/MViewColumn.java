@@ -36,7 +36,7 @@ public class MViewColumn extends X_AD_ViewColumn {
    * @param parent parent
    */
   public MViewColumn(MViewComponent parent) {
-    this(parent.getCtx(), 0, parent.get_TrxName());
+    this(parent.getCtx(), 0, null);
     setClientOrg(parent);
     setAD_ViewComponent_ID(parent.getAD_ViewComponent_ID());
   }

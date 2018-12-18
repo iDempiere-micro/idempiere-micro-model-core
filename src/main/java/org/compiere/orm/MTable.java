@@ -445,9 +445,9 @@ public class MTable extends MBaseTable {
   protected boolean afterSave(boolean newRecord, boolean success) {
     if (!success) return success;
     //	Sync Table ID
-    MSequence seq = MSequence.get(getCtx(), getTableName(), get_TrxName());
+    MSequence seq = MSequence.get(getCtx(), getTableName(), null);
     if (seq == null || seq.getId() == 0)
-      MSequence.createTableSequence(getCtx(), getTableName(), get_TrxName());
+      MSequence.createTableSequence(getCtx(), getTableName(), null);
     else if (!seq.getName().equals(getTableName())) {
       seq.setName(getTableName());
       seq.saveEx();
@@ -538,7 +538,7 @@ public class MTable extends MBaseTable {
             getCtx(),
             MViewComponent.Table_Name,
             MViewComponent.COLUMNNAME_AD_Table_ID + "=?",
-            get_TrxName());
+            null);
     query.setParameters(getAD_Table_ID());
     query.setOrderBy(MViewComponent.COLUMNNAME_SeqNo);
     query.setOnlyActiveRecords(true);

@@ -153,7 +153,7 @@ public class MDocType extends X_C_DocType {
         "SELECT GL_Category_ID FROM GL_Category"
             + " WHERE AD_Client_ID=?"
             + " ORDER BY IsDefault DESC, GL_Category_ID";
-    int GL_Category_ID = getSQLValue(get_TrxName(), sql, getClientId());
+    int GL_Category_ID = getSQLValue(null, sql, getClientId());
     setGL_Category_ID(GL_Category_ID);
   } //	setGL_Category_ID
 
@@ -268,7 +268,7 @@ public class MDocType extends X_C_DocType {
               .append(" AND rol.IsManual='N'")
               .append(")");
 
-      int docact = executeUpdate(sqlDocAction.toString(), get_TrxName());
+      int docact = executeUpdate(sqlDocAction.toString(), null);
       if (log.isLoggable(Level.FINE)) log.fine("AD_Document_Action_Access=" + docact);
     }
     return success;
@@ -284,7 +284,7 @@ public class MDocType extends X_C_DocType {
     StringBuilder msgdb =
         new StringBuilder("DELETE FROM AD_Document_Action_Access WHERE C_DocType_ID=")
             .append(getId());
-    int docactDel = executeUpdate(msgdb.toString(), get_TrxName());
+    int docactDel = executeUpdate(msgdb.toString(), null);
     if (log.isLoggable(Level.FINE))
       log.fine("Delete AD_Document_Action_Access=" + docactDel + " for C_DocType_ID: " + getId());
     return docactDel >= 0;

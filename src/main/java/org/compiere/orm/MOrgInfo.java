@@ -1,9 +1,10 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.Properties;
 import org.compiere.model.I_AD_OrgInfo;
 import org.idempiere.common.util.CCache;
+
+import java.sql.ResultSet;
+import java.util.Properties;
 
 /**
  * Organization Info Model
@@ -37,7 +38,7 @@ public class MOrgInfo extends X_AD_OrgInfo {
    * @param org org
    */
   public MOrgInfo(MOrg org) {
-    super(org.getCtx(), 0, org.get_TrxName());
+    super(org.getCtx(), 0, null);
     setClientOrg(org);
     setDUNS("?");
     setTaxID("?");

@@ -11,7 +11,7 @@ import java.sql.ResultSet
 import java.util.*
 
 fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
-    val sql = "SELECT * FROM AD_Role WHERE clientId=?"
+    val sql = "SELECT * FROM AD_Role WHERE AD_Client_ID=?"
     val loadQuery = queryOf(sql, listOf(Env.getClientId(ctx))).map { MRole(ctx, it) }.asList
     return DB.current.run(loadQuery).toTypedArray()
 } //	getOfClient
@@ -106,7 +106,7 @@ open class MBaseRole : X_AD_Role {
         val org = MOrg.get(ctx, oa.orgId)
         if (!org.isSummary) return
         //	Summary Org - Get Dependents
-        val tree = MTree_Base.get(ctx, aD_Tree_Org_ID, _TrxName)
+        val tree = MTree_Base.get(ctx, aD_Tree_Org_ID, null)
         val sql = ("SELECT clientId, orgId FROM AD_Org "
                 + "WHERE IsActive='Y' AND orgId IN (SELECT Node_ID FROM "
                 + tree.nodeTableName

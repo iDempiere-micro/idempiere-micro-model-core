@@ -451,11 +451,11 @@ public class MRole extends MBaseRole {
     if (!success) return success;
     if (newRecord && success) {
       //	Add Role to SuperUser
-      MUserRoles su = new MUserRoles(getCtx(), SUPERUSER_USER_ID, getAD_Role_ID(), get_TrxName());
+      MUserRoles su = new MUserRoles(getCtx(), SUPERUSER_USER_ID, getAD_Role_ID(), null);
       su.saveEx();
       //	Add Role to User
       if (getCreatedBy() != SUPERUSER_USER_ID) {
-        MUserRoles ur = new MUserRoles(getCtx(), getCreatedBy(), getAD_Role_ID(), get_TrxName());
+        MUserRoles ur = new MUserRoles(getCtx(), getCreatedBy(), getAD_Role_ID(), null);
         ur.saveEx();
       }
       updateAccessRecords();
@@ -634,12 +634,12 @@ public class MRole extends MBaseRole {
 
     if (reset) deleteAccessRecords();
 
-    int win = executeUpdateEx(sqlWindow + roleAccessLevelWin, get_TrxName());
-    int proc = executeUpdateEx(sqlProcess + roleAccessLevel, get_TrxName());
-    int form = executeUpdateEx(sqlForm + roleAccessLevel, get_TrxName());
-    int wf = executeUpdateEx(sqlWorkflow + roleAccessLevel, get_TrxName());
-    int docact = executeUpdateEx(sqlDocAction, get_TrxName());
-    int info = executeUpdateEx(sqlInfo, get_TrxName());
+    int win = executeUpdateEx(sqlWindow + roleAccessLevelWin, null);
+    int proc = executeUpdateEx(sqlProcess + roleAccessLevel, null);
+    int form = executeUpdateEx(sqlForm + roleAccessLevel, null);
+    int wf = executeUpdateEx(sqlWorkflow + roleAccessLevel, null);
+    int docact = executeUpdateEx(sqlDocAction, null);
+    int info = executeUpdateEx(sqlInfo, null);
 
     loadAccess(true);
     return "@AD_Window_ID@ #"
@@ -660,13 +660,13 @@ public class MRole extends MBaseRole {
   private void deleteAccessRecords() {
     String whereDel = " WHERE AD_Role_ID=" + getAD_Role_ID();
     //
-    int winDel = executeUpdateEx("DELETE FROM AD_Window_Access" + whereDel, get_TrxName());
-    int procDel = executeUpdateEx("DELETE FROM AD_Process_Access" + whereDel, get_TrxName());
-    int formDel = executeUpdateEx("DELETE FROM AD_Form_Access" + whereDel, get_TrxName());
-    int wfDel = executeUpdateEx("DELETE FROM AD_WorkFlow_Access" + whereDel, get_TrxName());
+    int winDel = executeUpdateEx("DELETE FROM AD_Window_Access" + whereDel, null);
+    int procDel = executeUpdateEx("DELETE FROM AD_Process_Access" + whereDel, null);
+    int formDel = executeUpdateEx("DELETE FROM AD_Form_Access" + whereDel, null);
+    int wfDel = executeUpdateEx("DELETE FROM AD_WorkFlow_Access" + whereDel, null);
     int docactDel =
-        executeUpdateEx("DELETE FROM AD_Document_Action_Access" + whereDel, get_TrxName());
-    int infoDel = executeUpdateEx("DELETE FROM AD_InfoWindow_Access" + whereDel, get_TrxName());
+        executeUpdateEx("DELETE FROM AD_Document_Action_Access" + whereDel, null);
+    int infoDel = executeUpdateEx("DELETE FROM AD_InfoWindow_Access" + whereDel, null);
 
     if (log.isLoggable(Level.FINE))
       log.fine(
@@ -814,11 +814,11 @@ public class MRole extends MBaseRole {
     ResultSet rs = null;
     String sql = "SELECT * FROM AD_User_OrgAccess " + "WHERE AD_User_ID=? AND IsActive='Y'";
     try {
-      pstmt = prepareStatement(sql, get_TrxName());
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, getAD_User_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
-        MUserOrgAccess oa = new MUserOrgAccess(getCtx(), rs, get_TrxName());
+        MUserOrgAccess oa = new MUserOrgAccess(getCtx(), rs, null);
         loadOrgAccessAdd(list, new OrgAccess(oa.getClientId(), oa.getOrgId(), oa.isReadOnly()));
       }
     } catch (Exception e) {
@@ -840,10 +840,10 @@ public class MRole extends MBaseRole {
     ResultSet rs = null;
     String sql = "SELECT * FROM AD_Table_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'";
     try {
-      pstmt = prepareStatement(sql, get_TrxName());
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, getAD_Role_ID());
       rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new MTableAccess(getCtx(), rs, get_TrxName()));
+      while (rs.next()) list.add(new MTableAccess(getCtx(), rs, null));
     } catch (Exception e) {
       log.log(Level.SEVERE, sql, e);
     } finally {
@@ -872,7 +872,7 @@ public class MRole extends MBaseRole {
             + "(SELECT ColumnName FROM AD_COLUMN WHERE AD_COLUMN.AD_TABLE_ID = AD_TABLE.AD_TABLE_ID AND AD_COLUMN.COLUMNNAME = AD_TABLE.TABLENAME || '_ID') "
             + "FROM AD_Table WHERE IsActive='Y'";
     try {
-      pstmt = prepareStatement(sql, get_TrxName());
+      pstmt = prepareStatement(sql, null);
       rs = pstmt.executeQuery();
       while (rs.next()) {
         Integer ii = new Integer(rs.getInt(1));
@@ -923,10 +923,10 @@ public class MRole extends MBaseRole {
     ResultSet rs = null;
     String sql = "SELECT * FROM AD_Column_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'";
     try {
-      pstmt = prepareStatement(sql, get_TrxName());
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, getAD_Role_ID());
       rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new MColumnAccess(getCtx(), rs, get_TrxName()));
+      while (rs.next()) list.add(new MColumnAccess(getCtx(), rs, null));
     } catch (Exception e) {
       log.log(Level.SEVERE, sql, e);
     } finally {
@@ -952,11 +952,11 @@ public class MRole extends MBaseRole {
         "SELECT * FROM AD_Record_Access "
             + "WHERE AD_Role_ID=? AND IsActive='Y' ORDER BY AD_Table_ID";
     try {
-      pstmt = prepareStatement(sql, get_TrxName());
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, getAD_Role_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
-        MRecordAccess ra = new MRecordAccess(getCtx(), rs, get_TrxName());
+        MRecordAccess ra = new MRecordAccess(getCtx(), rs, null);
         list.add(ra);
         if (ra.isDependentEntities()) dependent.add(ra);
       }
@@ -1480,7 +1480,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1564,7 +1564,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1642,7 +1642,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1719,7 +1719,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1796,7 +1796,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -2305,7 +2305,7 @@ public class MRole extends MBaseRole {
         int idxpar = 1;
         if (role.getClientId() == 0 && role.isMasterRole()) {
           // master role on system - check options based on docbasetype and docsubtypeso
-          MDocType doc = new MDocType(getCtx(), docTypeId, get_TrxName());
+          MDocType doc = new MDocType(getCtx(), docTypeId, null);
 
           sql =
               "SELECT DISTINCT rl.Value, a.IsActive"
@@ -2329,7 +2329,7 @@ public class MRole extends MBaseRole {
                   + sql_values
                   + ")";
 
-          pstmt = prepareStatement(sql, get_TrxName());
+          pstmt = prepareStatement(sql, null);
           pstmt.setInt(idxpar++, role.getAD_Role_ID());
           pstmt.setString(idxpar++, doc.getDocBaseType());
           if (MDocType.DOCBASETYPE_SalesOrder.equals(doc.getDocBaseType()))
@@ -2349,7 +2349,7 @@ public class MRole extends MBaseRole {
                   + " AND rl.Value IN ("
                   + sql_values
                   + ")";
-          pstmt = prepareStatement(sql, get_TrxName());
+          pstmt = prepareStatement(sql, null);
           pstmt.setInt(idxpar++, clientId);
           pstmt.setInt(idxpar++, docTypeId);
           pstmt.setInt(idxpar++, role.getAD_Role_ID());
@@ -2506,7 +2506,7 @@ public class MRole extends MBaseRole {
     //
     final String whereClause = X_AD_Role_Included.COLUMNNAME_AD_Role_ID + "=?";
     List<X_AD_Role_Included> list =
-        new Query(getCtx(), X_AD_Role_Included.Table_Name, whereClause, get_TrxName())
+        new Query(getCtx(), X_AD_Role_Included.Table_Name, whereClause, null)
             .setParameters(getAD_Role_ID())
             .setOnlyActiveRecords(true)
             .setOrderBy(
@@ -2548,7 +2548,7 @@ public class MRole extends MBaseRole {
             + " AND us.Substitute_ID=?)";
 
     List<MRole> list =
-        new Query(getCtx(), I_AD_Role.Table_Name, whereClause, get_TrxName())
+        new Query(getCtx(), I_AD_Role.Table_Name, whereClause, null)
             .setParameters(AD_User_ID)
             .setClient_ID()
             .setOrderBy(I_AD_Role.COLUMNNAME_AD_Role_ID)
@@ -2707,7 +2707,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {

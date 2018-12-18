@@ -107,7 +107,7 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   public org.compiere.model.I_AD_ViewComponent getAD_ViewComponent() throws RuntimeException {
     return (org.compiere.model.I_AD_ViewComponent)
         MTable.get(getCtx(), org.compiere.model.I_AD_ViewComponent.Table_Name)
-            .getPO(getAD_ViewComponent_ID(), get_TrxName());
+            .getPO(getAD_ViewComponent_ID(), null);
   }
 
   /**

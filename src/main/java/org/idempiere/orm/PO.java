@@ -27,7 +27,6 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Savepoint;
 import java.sql.Timestamp;
 import java.text.Collator;
 import java.util.*;
@@ -167,9 +166,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
    *  You load
    * 		- an existing single key record with 	new PO (ctx, Record_ID)
    * 			or									new PO (ctx, Record_ID, trxName)
-   * 			or									new PO (ctx, rs, get_TrxName())
+   * 			or									new PO (ctx, rs, null)
    * 		- a new single key record with			new PO (ctx, 0)
-   * 		- an existing multi key record with		new PO (ctx, rs, get_TrxName())
+   * 		- an existing multi key record with		new PO (ctx, rs, null)
    * 		- a new multi key record with			new PO (ctx, null)
    *  The ID for new single key records is created automatically,
    *  you need to set the IDs for multi-key records explicitly.
@@ -1129,7 +1128,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 .append(getM_keyColumns()[0])
                 .append("=?")
                 .append(" AND AD_Language=?");
-        retValue = getSQLValueString(get_TrxName(), sql.toString(), ID, AD_Language);
+        retValue = getSQLValueString(null, sql.toString(), ID, AD_Language);
       }
     }
     //
@@ -1416,15 +1415,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
   } //	unlock
 
   /**
-   * Get Trx
-   *
-   * @return transaction
-   */
-  public String get_TrxName() {
-    return m_trxName;
-  } //	getTrx
-
-  /**
    * Set Trx
    *
    * @param trxName transaction
@@ -1499,7 +1489,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     boolean retValue = true;
     for (int i = 0; i < m_lobInfo.size(); i++) {
       PO_LOB lob = m_lobInfo.get(i);
-      if (!lob.save(get_TrxName())) {
+      if (!lob.save(null)) {
         retValue = false;
         break;
       }
@@ -1966,117 +1956,25 @@ public abstract class PO extends software.hsharp.core.orm.PO
       }
     }
 
-    Trx localTrx = null;
-    Trx trx = null;
-    Savepoint savepoint = null;
-    if (m_trxName == null) {
-      StringBuilder l_trxname = new StringBuilder(LOCAL_TRX_PREFIX).append(get_TableName());
-      if (l_trxname.length() > 23) l_trxname.setLength(23);
-      m_trxName = Trx.createTrxName(l_trxname.toString());
-      localTrx = Trx.get(m_trxName, true);
-      localTrx.setDisplayName(getClass().getName() + "_save");
-      localTrx.getConnection();
+    if (!beforeSave(newRecord)) {
+      log.warning("beforeSave failed - " + toString());
+      throw new Error("beforeSave failed - " + toString());
+    }
+
+    //	Save
+    if (newRecord) {
+      boolean b = saveNew();
+      if (b) {
+        return b;
+      } else {
+        throw new Error("saveNew failed - " + toString());
+      }
     } else {
-      trx = Trx.get(m_trxName, false);
-      if (trx == null) {
-        // Using a trx that was previously closed or never opened
-        // Creating and starting the transaction right here, but please note
-        // that this is not a good practice
-        trx = Trx.get(m_trxName, true);
-        log.severe(
-            "Transaction closed or never opened ("
-                + m_trxName
-                + ") => starting now --> "
-                + toString());
-      }
-    }
-
-    //	Before Save
-    try {
-      // If not a localTrx we need to set a savepoint for rollback
-      if (localTrx == null) savepoint = trx.setSavepoint(null);
-
-      if (!beforeSave(newRecord)) {
-        log.warning("beforeSave failed - " + toString());
-        if (localTrx != null) {
-          localTrx.rollback();
-          localTrx.close();
-          m_trxName = null;
-        } else {
-          trx.rollback(savepoint);
-          savepoint = null;
-        }
-        return false;
-      }
-    } catch (Exception e) {
-      log.log(Level.WARNING, "beforeSave - " + toString(), e);
-      String msg = org.idempiere.common.exceptions.DBException.getDefaultDBExceptionMessage(e);
-      log.saveError(msg != null ? msg : "Error", e, false);
-      if (localTrx != null) {
-        localTrx.rollback();
-        localTrx.close();
-        m_trxName = null;
-      } else if (savepoint != null) {
-        try {
-          trx.rollback(savepoint);
-        } catch (SQLException e1) {
-        }
-        savepoint = null;
-      }
-      return false;
-    }
-
-    try {
-      //	Save
-      if (newRecord) {
-        boolean b = saveNew();
-        if (b) {
-          if (localTrx != null) return localTrx.commit();
-          else return b;
-        } else {
-          if (localTrx != null) localTrx.rollback();
-          else trx.rollback(savepoint);
-          return b;
-        }
+      boolean b = saveUpdate();
+      if (b) {
+        return b;
       } else {
-        boolean b = saveUpdate();
-        if (b) {
-          if (localTrx != null) return localTrx.commit();
-          else return b;
-        } else {
-          if (localTrx != null) localTrx.rollback();
-          else trx.rollback(savepoint);
-          return b;
-        }
-      }
-    } catch (Exception e) {
-      log.log(Level.WARNING, "afterSave - " + toString(), e);
-      String msg = DBException.getDefaultDBExceptionMessage(e);
-      log.saveError(msg != null ? msg : "Error", e);
-      if (localTrx != null) {
-        localTrx.rollback();
-      } else if (savepoint != null) {
-        try {
-          trx.rollback(savepoint);
-        } catch (SQLException e1) {
-        }
-        savepoint = null;
-      }
-      return false;
-    } finally {
-      if (localTrx != null) {
-        localTrx.close();
-        m_trxName = null;
-      } else {
-        if (savepoint != null) {
-          try {
-            trx.releaseSavepoint(savepoint);
-          } catch (SQLException e) {
-            e.printStackTrace();
-          }
-        }
-        savepoint = null;
-        trx = null;
+        throw new Error("saveUpdate failed - " + toString());
       }
     }
   }

@@ -71,7 +71,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_StorageProvider getAD_StorageProvider() throws RuntimeException {
     return (org.compiere.model.I_AD_StorageProvider)
         MTable.get(getCtx(), org.compiere.model.I_AD_StorageProvider.Table_Name)
-            .getPO(getAD_StorageProvider_ID(), get_TrxName());
+            .getPO(getAD_StorageProvider_ID(), null);
   }
 
   /**
@@ -98,7 +98,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_Tree getAD_Tree_Activity() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_Activity_ID(), get_TrxName());
+            .getPO(getAD_Tree_Activity_ID(), null);
   }
 
   /**
@@ -125,7 +125,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_Tree getAD_Tree_BPartner() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_BPartner_ID(), get_TrxName());
+            .getPO(getAD_Tree_BPartner_ID(), null);
   }
 
   /**
@@ -152,7 +152,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_Tree getAD_Tree_Campaign() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_Campaign_ID(), get_TrxName());
+            .getPO(getAD_Tree_Campaign_ID(), null);
   }
 
   /**
@@ -179,7 +179,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_Tree getAD_Tree_Menu() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_Menu_ID(), get_TrxName());
+            .getPO(getAD_Tree_Menu_ID(), null);
   }
 
   /**
@@ -206,7 +206,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_Tree getAD_Tree_Org() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_Org_ID(), get_TrxName());
+            .getPO(getAD_Tree_Org_ID(), null);
   }
 
   /**
@@ -233,7 +233,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_Tree getAD_Tree_Product() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_Product_ID(), get_TrxName());
+            .getPO(getAD_Tree_Product_ID(), null);
   }
 
   /**
@@ -260,7 +260,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_Tree getAD_Tree_Project() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_Project_ID(), get_TrxName());
+            .getPO(getAD_Tree_Project_ID(), null);
   }
 
   /**
@@ -287,7 +287,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_Tree getAD_Tree_SalesRegion() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_SalesRegion_ID(), get_TrxName());
+            .getPO(getAD_Tree_SalesRegion_ID(), null);
   }
 
   /**
@@ -674,7 +674,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   public org.compiere.model.I_AD_StorageProvider getStorageArchive() throws RuntimeException {
     return (org.compiere.model.I_AD_StorageProvider)
         MTable.get(getCtx(), org.compiere.model.I_AD_StorageProvider.Table_Name)
-            .getPO(getStorageArchive_ID(), get_TrxName());
+            .getPO(getStorageArchive_ID(), null);
   }
 
   /**

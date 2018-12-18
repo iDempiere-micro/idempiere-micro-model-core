@@ -40,16 +40,16 @@ fun getSQLValue(trxName: String?, sql: String, vararg params: Any): Int = getSQL
 fun getSQLValueEx(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
 fun getSQLValueEx(trxName: String?, sql: String): Int = getSQLValueEx(trxName, sql, listOf())
 
-fun getSQLValueBD(trxName: String, sql: String, vararg params: Any): BigDecimal =
+fun getSQLValueBD(trxName: String?, sql: String, vararg params: Any): BigDecimal =
     throw IllegalArgumentException(NYI)
 
-internal fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? =
+fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? =
     throw IllegalArgumentException(NYI)
 
 internal fun getSQLValueTSEx(trxName: String, sql: String, vararg params: Any): Timestamp? =
     throw IllegalArgumentException(NYI)
 
-fun getSQLValueString(trxName: String, sql: String, vararg params: Any): String? =
+fun getSQLValueString(trxName: String?, sql: String, vararg params: Any): String? =
     throw IllegalArgumentException(NYI)
 
 internal fun getSQLValueStringEx(trxName: String, sql: String, vararg params: Any): String? =
@@ -235,7 +235,8 @@ class DB private constructor(private val session: Session?) {
         private val context = object : InheritableThreadLocal<Session>() {
             override fun initialValue(): Session {
                 val result = sessionOf(ds)
-                result.connection.underlying.autoCommit = false
+                val cnn = result.connection.underlying
+                cnn.autoCommit  = false
                 return result
             }
         }

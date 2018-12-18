@@ -556,7 +556,6 @@ public class MSequence extends MBaseSequence {
       selectSQL = selectSQL + " FOR UPDATE OF s";
     }
     Connection conn = null;
-    Trx trx = trxName == null ? null : Trx.get(trxName, true);
     //
 
     String calendarYearMonth = NoYearNorMonth;
@@ -566,8 +565,7 @@ public class MSequence extends MBaseSequence {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      if (trx != null) conn = trx.getConnection();
-      else conn = getConnectionID();
+      conn = getConnectionID();
       //	Error
       if (conn == null) return null;
 
@@ -655,10 +653,6 @@ public class MSequence extends MBaseSequence {
           next = -2;
         }
       }
-      //	Commit
-      if (trx == null) {
-        conn.commit();
-      }
     } catch (Exception e) {
       s_log.log(Level.SEVERE, "(DocType) [" + trxName + "]", e);
       if (DBException.isTimeout(e)) throw new AdempiereException("GenerateDocumentNoTimeOut", e);
@@ -669,7 +663,7 @@ public class MSequence extends MBaseSequence {
       rs = null;
       //	Finish
       try {
-        if (trx == null && conn != null) {
+        if (conn != null) {
           conn.close();
           conn = null;
         }
@@ -706,7 +700,6 @@ public class MSequence extends MBaseSequence {
               + " - Sequence="
               + AD_Sequence_ID
               + " ["
-              + trx
               + "]");
     return documentNo;
   }
@@ -1021,7 +1014,7 @@ public class MSequence extends MBaseSequence {
   @Override
   public int getCurrentNext() {
     if (MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false) && isTableID()) {
-      return MSequence.getNextID(getClientId(), getName(), get_TrxName());
+      return MSequence.getNextID(getClientId(), getName(), null);
     } else {
       return super.getCurrentNext();
     }
@@ -1031,7 +1024,7 @@ public class MSequence extends MBaseSequence {
   public void setCurrentNext(int CurrentNext) {
     if (MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false) && isTableID()) {
       while (true) {
-        int id = MSequence.getNextID(getClientId(), getName(), get_TrxName());
+        int id = MSequence.getNextID(getClientId(), getName(), null);
         if (id < 0 || id >= (CurrentNext - 1)) break;
       }
     } else {

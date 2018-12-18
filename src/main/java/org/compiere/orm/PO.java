@@ -11,8 +11,6 @@ import org.idempiere.orm.*;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Savepoint;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Properties;
@@ -69,8 +67,6 @@ public abstract class PO extends org.idempiere.orm.PO {
    *
    * @param from old, existing & unchanged PO
    * @param to new, not saved PO
-   * @param AD_Client_ID client
-   * @param AD_Org_ID org
    */
   public static void copyValues(PO from, PO to) {
     Companion.copyValues(from, to);
@@ -231,7 +227,7 @@ public abstract class PO extends org.idempiere.orm.PO {
     // uuid column
     int uuidColumnId =
         getSQLValue(
-            get_TrxName(),
+            null,
             "SELECT col.AD_Column_ID FROM AD_Column col INNER JOIN AD_Table tbl ON col.AD_Table_ID = tbl.AD_Table_ID WHERE tbl.TableName=? AND col.ColumnName=?",
             tableName,
             org.idempiere.orm.PO.getUUIDColumnName(tableName));
@@ -276,7 +272,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                 + "WHERE e.AD_Tree_ID=t.AD_Tree_ID AND Node_ID=")
         .append(getId())
         .append(")");
-    int no = executeUpdate(sb.toString(), get_TrxName());
+    int no = executeUpdate(sb.toString(), null);
     if (no > 0) {
       if (log.isLoggable(Level.FINE)) log.fine("#" + no + " - TreeType=" + treeType);
     } else {
@@ -340,7 +336,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             + "_ID) WHERE tn.Parent_ID=? AND tn.AD_Tree_ID=? AND n.Value<?";
 
     List<X_AD_Tree> trees =
-        new Query(getCtx(), MTree_Base.Table_Name, whereTree, get_TrxName())
+        new Query(getCtx(), MTree_Base.Table_Name, whereTree, null)
             .setClient_ID()
             .setOnlyActiveRecords(true)
             .setParameters(parameters)
@@ -355,22 +351,22 @@ public abstract class PO extends org.idempiere.orm.PO {
                   value,
                   getClientId(),
                   ((I_C_ElementValue) this).getC_Element().getC_Element_ID(),
-                  get_TrxName());
+                  null);
         } else {
           newParentID =
-              retrieveIdOfParentValue(value, sourceTableName, getClientId(), get_TrxName());
+              retrieveIdOfParentValue(value, sourceTableName, getClientId(), null);
         }
         int seqNo =
-            getSQLValueEx(get_TrxName(), selMinSeqNo, newParentID, tree.getAD_Tree_ID(), value);
+            getSQLValueEx(null, selMinSeqNo, newParentID, tree.getAD_Tree_ID(), value);
         if (seqNo == -1)
           seqNo =
-              getSQLValueEx(get_TrxName(), selMaxSeqNo, newParentID, tree.getAD_Tree_ID(), value);
+              getSQLValueEx(null, selMaxSeqNo, newParentID, tree.getAD_Tree_ID(), value);
         executeUpdateEx(
-            updateSeqNo, new Object[] {newParentID, seqNo, tree.getAD_Tree_ID()}, get_TrxName());
+            updateSeqNo, new Object[] {newParentID, seqNo, tree.getAD_Tree_ID()}, null);
         executeUpdateEx(
             update,
             new Object[] {seqNo, newParentID, getId(), tree.getAD_Tree_ID()},
-            get_TrxName());
+            null);
       }
     }
   } //	update_Tree
@@ -393,7 +389,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             .append(" WHERE Parent_ID=? AND t.TreeType=?");
     if (MTree_Base.TREETYPE_CustomTable.equals(treeType))
       countSql.append(" AND t.AD_Table_ID=").append(getTableId());
-    int cnt = getSQLValueEx(get_TrxName(), countSql.toString(), id, treeType);
+    int cnt = getSQLValueEx(null, countSql.toString(), id, treeType);
     if (cnt > 0)
       throw new AdempiereException(Msg.getMsg(Env.getCtx(), "NoParentDelete", new Object[] {cnt}));
 
@@ -410,7 +406,7 @@ public abstract class PO extends org.idempiere.orm.PO {
     if (MTree_Base.TREETYPE_CustomTable.equals(treeType))
       sb.append(" AND t.AD_Table_ID=").append(getTableId());
     sb.append(")");
-    int no = executeUpdate(sb.toString(), get_TrxName());
+    int no = executeUpdate(sb.toString(), null);
     if (no > 0) {
       if (log.isLoggable(Level.FINE)) log.fine("#" + no + " - TreeType=" + treeType);
     } else {
@@ -467,71 +463,16 @@ public abstract class PO extends org.idempiere.orm.PO {
       return false;
     }
 
-    Trx localTrx = null;
-    Trx trx = null;
-    Savepoint savepoint = null;
     boolean success = false;
-    try {
-
-      String localTrxName = m_trxName;
-      if (localTrxName == null) {
-        localTrxName = Trx.createTrxName("POdel");
-        localTrx = Trx.get(localTrxName, true);
-        localTrx.setDisplayName(getClass().getName() + "_delete");
-        localTrx.getConnection();
-        m_trxName = localTrxName;
-      } else {
-        trx = Trx.get(m_trxName, false);
-        if (trx == null) {
-          // Using a trx that was previously closed or never opened
-          // Creating and starting the transaction right here, but please note
-          // that this is not a good practice
-          trx = Trx.get(m_trxName, true);
-          log.severe(
-              "Transaction closed or never opened ("
-                  + m_trxName
-                  + ") => starting now --> "
-                  + toString());
-        }
-      }
-
-      try {
-        // If not a localTrx we need to set a savepoint for rollback
-        if (localTrx == null) savepoint = trx.setSavepoint(null);
 
         if (!beforeDelete()) {
           log.warning("beforeDelete failed");
-          if (localTrx != null) {
-            localTrx.rollback();
-          } else if (savepoint != null) {
-            try {
-              trx.rollback(savepoint);
-            } catch (SQLException e) {
-            }
-            savepoint = null;
-          }
-          return false;
+          throw new Error("beforeDelete failed");
         }
-      } catch (Exception e) {
-        log.log(Level.WARNING, "beforeDelete", e);
-        String msg = DBException.getDefaultDBExceptionMessage(e);
-        log.saveError(msg != null ? msg : "Error", e, false);
-        if (localTrx != null) {
-          localTrx.rollback();
-        } else if (savepoint != null) {
-          try {
-            trx.rollback(savepoint);
-          } catch (SQLException e1) {
-          }
-          savepoint = null;
-        }
-        return false;
-      }
       setReplication(false); // @Trifon
 
       try {
         //
-        deleteTranslations(localTrxName);
         if (get_ColumnIndex("IsSummary") >= 0) {
           delete_Tree(MTree_Base.TREETYPE_CustomTable);
         }
@@ -544,8 +485,8 @@ public abstract class PO extends org.idempiere.orm.PO {
                 .append(get_WhereClause(true));
         int no = 0;
         if (isUseTimeoutForUpdate())
-          no = executeUpdateEx(sql.toString(), localTrxName, QUERY_TIME_OUT);
-        else no = executeUpdate(sql.toString(), localTrxName);
+          no = executeUpdateEx(sql.toString(), null, QUERY_TIME_OUT);
+        else no = executeUpdate(sql.toString(), null);
         success = no == 1;
       } catch (Exception e) {
         String msg = DBException.getDefaultDBExceptionMessage(e);
@@ -558,15 +499,7 @@ public abstract class PO extends org.idempiere.orm.PO {
       //
       if (!success) {
         log.warning("Not deleted");
-        if (localTrx != null) {
-          localTrx.rollback();
-        } else if (savepoint != null) {
-          try {
-            trx.rollback(savepoint);
-          } catch (SQLException e) {
-          }
-          savepoint = null;
-        }
+        throw new Error("Not deleted");
       } else {
         if (success) {
 
@@ -586,27 +519,8 @@ public abstract class PO extends org.idempiere.orm.PO {
       }
 
       if (!success) {
-        if (localTrx != null) {
-          localTrx.rollback();
-        } else if (savepoint != null) {
-          try {
-            trx.rollback(savepoint);
-          } catch (SQLException e) {
-          }
-          savepoint = null;
-        }
-      } else {
-        if (localTrx != null) {
-          try {
-            localTrx.commit(true);
-          } catch (SQLException e) {
-            String msg = DBException.getDefaultDBExceptionMessage(e);
-            log.saveError(msg != null ? msg : "Error", e);
-            success = false;
-          }
-        }
+        throw new Error("not success");
       }
-
       //	Reset
       if (success) {
         // osgi event handler
@@ -618,22 +532,6 @@ public abstract class PO extends org.idempiere.orm.PO {
         clearNewValues();
         CacheMgt.get().reset(p_info.getTableName());
       }
-    } finally {
-      if (localTrx != null) {
-        localTrx.close();
-        m_trxName = null;
-      } else {
-        if (savepoint != null) {
-          try {
-            trx.releaseSavepoint(savepoint);
-          } catch (SQLException e) {
-            e.printStackTrace();
-          }
-        }
-        savepoint = null;
-        trx = null;
-      }
-    }
     return success;
   } //	delete
 

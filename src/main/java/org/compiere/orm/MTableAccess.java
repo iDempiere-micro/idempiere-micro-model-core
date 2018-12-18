@@ -100,7 +100,7 @@ public class MTableAccess extends X_AD_Table_Access {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Table_ID());
         rs = pstmt.executeQuery();
         if (rs.next()) m_tableName = rs.getString(1);

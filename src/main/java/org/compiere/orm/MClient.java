@@ -8,6 +8,7 @@ import org.idempiere.common.util.Language;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -54,7 +55,7 @@ public class MClient extends X_AD_Client {
         setAutoArchive(AUTOARCHIVE_None);
         setMMPolicy(MMPOLICY_FiFo); // F
         setIsPostImmediate(false);
-      } else load(get_TrxName());
+      } else load((HashMap)null);
     }
   } //	MClient
 
@@ -153,7 +154,7 @@ public class MClient extends X_AD_Client {
    * @return Client Info
    */
   public MClientInfo getInfo() {
-    if (m_info == null) m_info = MClientInfo.get(getCtx(), getClientId(), get_TrxName());
+    if (m_info == null) m_info = MClientInfo.get(getCtx(), getClientId(), null);
     return m_info;
   } //	getMClientInfo
 

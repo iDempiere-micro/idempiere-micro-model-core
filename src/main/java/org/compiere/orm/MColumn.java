@@ -1,15 +1,5 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.*;
-
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Column;
 import org.compiere.model.I_AD_Table;
@@ -21,6 +11,17 @@ import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Util;
 import org.idempiere.orm.PO;
+
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Properties;
+
+import static software.hsharp.core.util.DBKt.*;
 
 /**
  * Persistent Column Model
@@ -86,7 +87,7 @@ public class MColumn extends X_AD_Column {
    * @param parent table
    */
   public MColumn(MTable parent) {
-    this(parent.getCtx(), 0, parent.get_TrxName());
+    this(parent.getCtx(), 0, null);
     setClientOrg(parent);
     setAD_Table_ID(parent.getAD_Table_ID());
     setEntityType(parent.getEntityType());
@@ -279,7 +280,7 @@ public class MColumn extends X_AD_Column {
     if (isIdentifier()) {
       int cnt =
           getSQLValue(
-              get_TrxName(),
+              null,
               "SELECT COUNT(*) FROM AD_Column "
                   + "WHERE AD_Table_ID=?"
                   + " AND AD_Column_ID!=?"
@@ -327,7 +328,7 @@ public class MColumn extends X_AD_Column {
 
     //	Sync Terminology
     if ((newRecord || is_ValueChanged("AD_Element_ID")) && getAD_Element_ID() != 0) {
-      M_Element element = new M_Element(getCtx(), getAD_Element_ID(), get_TrxName());
+      M_Element element = new M_Element(getCtx(), getAD_Element_ID(), null);
       setColumnName(element.getColumnName());
       setName(element.getName());
       setDescription(element.getDescription());
@@ -393,7 +394,7 @@ public class MColumn extends X_AD_Column {
     			.append(", Help=").append(TO_STRING(getHelp()))
     			.append(" WHERE AD_Column_ID=").append(getId())
     			.append(" AND IsCentrallyMaintained='Y'");
-    		int no =executeUpdate(sql.toString(), get_TrxName());
+    		int no =executeUpdate(sql.toString(), null);
     		if (log.isLoggable(Level.FINE)) log.fine("afterSave - Fields updated #" + no);
     	}
     }
@@ -643,15 +644,15 @@ public class MColumn extends X_AD_Column {
         || (DisplayType.Search == refid && getAD_Reference_Value_ID() == 0)) {
       foreignTable = getColumnName().substring(0, getColumnName().length() - 3);
     } else if (DisplayType.Table == refid || DisplayType.Search == refid) {
-      X_AD_Reference ref = new X_AD_Reference(getCtx(), getAD_Reference_Value_ID(), get_TrxName());
+      X_AD_Reference ref = new X_AD_Reference(getCtx(), getAD_Reference_Value_ID(), null);
       if (X_AD_Reference.VALIDATIONTYPE_TableValidation.equals(ref.getValidationType())) {
         int cnt =
             getSQLValueEx(
-                get_TrxName(),
+                null,
                 "SELECT COUNT(*) FROM AD_Ref_Table WHERE AD_Reference_ID=?",
                 getAD_Reference_Value_ID());
         if (cnt == 1) {
-          MRefTable rt = new MRefTable(getCtx(), getAD_Reference_Value_ID(), get_TrxName());
+          MRefTable rt = new MRefTable(getCtx(), getAD_Reference_Value_ID(), null);
           if (rt != null) foreignTable = rt.getAD_Table().getTableName();
         }
       }
@@ -680,7 +681,7 @@ public class MColumn extends X_AD_Column {
 
   @Override
   public I_AD_Table getAD_Table() throws RuntimeException {
-    MTable table = MTable.get(getCtx(), getAD_Table_ID(), get_TrxName());
+    MTable table = MTable.get(getCtx(), getAD_Table_ID(), null);
     return table;
   }
 
@@ -697,7 +698,7 @@ public class MColumn extends X_AD_Column {
             + "       JOIN AD_Field f ON ( f.AD_Tab_ID = t.AD_Tab_ID ) "
             + "WHERE  f.AD_Column_ID = ? "
             + "       AND ( t.IsAdvancedTab = 'Y' OR f.IsAdvancedField = 'Y' )";
-    int cnt = getSQLValueEx(get_TrxName(), sql, getColumnId());
+    int cnt = getSQLValueEx(null, sql, getColumnId());
     return cnt > 0;
   }
 } //	MColumn

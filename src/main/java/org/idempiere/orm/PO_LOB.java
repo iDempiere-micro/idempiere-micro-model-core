@@ -1,15 +1,14 @@
 package org.idempiere.orm;
 
-import static software.hsharp.core.util.DBKt.*;
+import org.compiere.util.DisplayType;
+import org.idempiere.common.util.CLogger;
 
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.logging.Level;
-import org.compiere.util.DisplayType;
-import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.Trx;
+
+import static software.hsharp.core.util.DBKt.*;
 
 /**
  * Persistent Object LOB. Allows to store LOB remotely Currently Oracle specific!
@@ -99,11 +98,8 @@ public class PO_LOB implements Serializable {
 
     if (log.isLoggable(Level.FINE)) log.fine("[" + trxName + "] - Local - " + m_value);
     //	Connection
-    Trx trx = null;
-    if (trxName != null) trx = Trx.get(trxName, false);
     Connection con = null;
     //	Create Connection
-    if (trx != null) con = trx.getConnection();
     if (con == null) con = createConnection(false, Connection.TRANSACTION_READ_COMMITTED);
     if (con == null) {
       log.log(Level.SEVERE, "Could not get Connection");
@@ -129,46 +125,10 @@ public class PO_LOB implements Serializable {
       pstmt = null;
     }
 
-    //	Success - commit local trx
-    if (success) {
-      if (trx != null) {
-        trx = null;
-        con = null;
-      } else {
-        try {
-          con.commit();
-        } catch (Exception e) {
-          log.log(Level.SEVERE, "[" + trxName + "] - commit ", e);
-          success = false;
-        } finally {
-          try {
-            con.close();
-          } catch (SQLException e) {
-          }
-          con = null;
-        }
-      }
-    }
     //	Error - roll back
     if (!success) {
       log.severe("[" + trxName + "] - rollback");
-      if (trx != null) {
-        trx.rollback();
-        trx = null;
-        con = null;
-      } else {
-        try {
-          con.rollback();
-        } catch (Exception ee) {
-          log.log(Level.SEVERE, "[" + trxName + "] - rollback", ee);
-        } finally {
-          try {
-            con.close();
-          } catch (SQLException e) {
-          }
-          con = null;
-        }
-      }
+      throw new Error("Rollback");
     }
 
     return success;
