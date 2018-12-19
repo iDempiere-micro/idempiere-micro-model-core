@@ -207,7 +207,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
   /** Returns the summary node with the corresponding value */
   public static int retrieveIdOfParentValue(
-      String value, String tableName, int clientID, String trxName) {
+      String value, String tableName, int AD_Client_ID, String trxName) {
     String sql =
         "SELECT "
             + tableName
@@ -217,7 +217,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     int pos = value.length() - 1;
     while (pos > 0) {
       String testParentValue = value.substring(0, pos);
-      int parentID = getSQLValueEx(trxName, sql, clientID, testParentValue);
+      int parentID = getSQLValueEx(trxName, sql, AD_Client_ID, testParentValue);
       if (parentID > 0) return parentID;
       pos--;
     }
@@ -1336,13 +1336,13 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
   /** Returns the summary node from C_ElementValue with the corresponding value */
   protected int retrieveIdOfElementValue(
-      String value, int clientID, int elementID, String trxName) {
+      String value, int AD_Client_ID, int elementID, String trxName) {
     String sql =
         "SELECT C_ElementValue_ID FROM C_ElementValue WHERE IsSummary='Y' AND AD_Client_ID=? AND C_Element_ID=? AND Value=?";
     int pos = value.length() - 1;
     while (pos > 0) {
       String testParentValue = value.substring(0, pos);
-      int parentID = getSQLValueEx(trxName, sql, clientID, elementID, testParentValue);
+      int parentID = getSQLValueEx(trxName, sql, AD_Client_ID, elementID, testParentValue);
       if (parentID > 0) return parentID;
       pos--;
     }

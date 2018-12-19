@@ -873,13 +873,13 @@ public class MRole extends MBaseRole {
      * Clause Value
      *
      * @param rw read write
-     * @return "clientId=0" or "clientId IN(0,1)"
+     * @return "AD_Client_ID=0" or "AD_Client_ID IN(0,1)"
      */
     public String getClientWhere(boolean rw) {
         //	All Orgs - use Client of Role
         if (isAccessAllOrgs()) {
-            if (rw || getClientId() == 0) return "clientId=" + getClientId();
-            return "clientId IN (0," + getClientId() + ")";
+            if (rw || getClientId() == 0) return "AD_Client_ID=" + getClientId();
+            return "AD_Client_ID IN (0," + getClientId() + ")";
         }
 
         //	Get Client from Org List
@@ -902,13 +902,13 @@ public class MRole extends MBaseRole {
             sb.append(it.next());
         }
         if (oneOnly) {
-            if (sb.length() > 0) return "clientId=" + sb.toString();
+            if (sb.length() > 0) return "AD_Client_ID=" + sb.toString();
             else {
                 log.log(Level.SEVERE, "No Access Org records");
-                return "clientId=-1"; //	No Access Record
+                return "AD_Client_ID=-1"; //	No Access Record
             }
         }
-        return "clientId IN(" + sb.toString() + ")";
+        return "AD_Client_ID IN(" + sb.toString() + ")";
     } //	getClientWhereValue
 
     /**
@@ -944,7 +944,7 @@ public class MRole extends MBaseRole {
      * Get Org Where Clause Value
      *
      * @param rw read write
-     * @return "orgId=0" or "orgId IN(0,1)" or null (if access all org)
+     * @return "AD_Org_ID=0" or "AD_Org_ID IN(0,1)" or null (if access all org)
      */
     public String getOrgWhere(boolean rw) {
         if (isAccessAllOrgs()) return null;
@@ -970,13 +970,13 @@ public class MRole extends MBaseRole {
             sb.append(it.next());
         }
         if (oneOnly) {
-            if (sb.length() > 0) return "orgId=" + sb.toString();
+            if (sb.length() > 0) return "AD_Org_ID=" + sb.toString();
             else {
                 log.log(Level.SEVERE, "No Access Org records");
-                return "orgId=-1"; //	No Access Record
+                return "AD_Org_ID=-1"; //	No Access Record
             }
         }
-        return "orgId IN(" + sb.toString() + ")";
+        return "AD_Org_ID IN(" + sb.toString() + ")";
     } //	getOrgWhereValue
 
     /**
@@ -1997,9 +1997,9 @@ public class MRole extends MBaseRole {
         if (!retValue && createError) {
             log.saveWarning(
                     "AccessTableNoUpdate",
-                    "clientId="
+                    "AD_Client_ID="
                             + AD_Client_ID
-                            + ", orgId="
+                            + ", AD_Org_ID="
                             + AD_Org_ID
                             + ", UserLevel="
                             + userLevel
@@ -2242,7 +2242,7 @@ public class MRole extends MBaseRole {
                             "SELECT DISTINCT rl.Value, a.IsActive"
                                     + " FROM AD_Document_Action_Access a"
                                     + " INNER JOIN AD_Ref_List rl ON (rl.AD_Reference_ID=135 and rl.AD_Ref_List_ID=a.AD_Ref_List_ID)"
-                                    + " WHERE a.clientId=? AND a.C_DocType_ID=?" // #1,2
+                                    + " WHERE a.AD_Client_ID=? AND a.C_DocType_ID=?" // #1,2
                                     + " AND a.AD_Role_ID=?"
                                     + " AND rl.Value IN ("
                                     + sql_values

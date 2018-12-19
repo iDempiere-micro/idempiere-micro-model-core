@@ -82,11 +82,11 @@ open class MBaseRole : X_AD_Role {
             var orgName = "*"
             if (orgId != 0) orgName = MOrg.get(ctx, orgId).name
             val sb = StringBuilder()
-            sb.append(Msg.translate(ctx, "clientId"))
+            sb.append(Msg.translate(ctx, "AD_Client_ID"))
                 .append("=")
                 .append(clientName)
                 .append(" - ")
-                .append(Msg.translate(ctx, "orgId"))
+                .append(Msg.translate(ctx, "AD_Org_ID"))
                 .append("=")
                 .append(orgName)
             if (readOnly) sb.append(" r/o")
@@ -111,7 +111,7 @@ open class MBaseRole : X_AD_Role {
         if (!org.isSummary) return
         //	Summary Org - Get Dependents
         val tree = MTree_Base.get(ctx, aD_Tree_Org_ID, null)
-        val sql = ("SELECT clientId, orgId FROM AD_Org "
+        val sql = ("SELECT AD_Client_ID, orgId FROM AD_Org "
                 + "WHERE IsActive='Y' AND orgId IN (SELECT Node_ID FROM "
                 + tree.nodeTableName
                 + " WHERE AD_Tree_ID=? AND Parent_ID=? AND IsActive='Y')")

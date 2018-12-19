@@ -3,10 +3,11 @@ package software.hsharp.core.orm
 import kotliquery.Row
 import kotliquery.queryOf
 import org.compiere.model.I_AD_Table
+import org.idempiere.common.exceptions.AdempiereException
 import org.idempiere.common.util.Env
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
-import java.util.Properties
+import java.util.*
 
 data class POInfoDetail(
     val tableName: String,
@@ -119,6 +120,7 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
             columnNameMap[column.ColumnName.toUpperCase()] = index; columnIdMap[column.AD_Column_ID] = index
         }
         val hasKeyColumn = result.filter { it.first.hasKeyColumn }.isNotEmpty()
+        if (result.isEmpty()) throw AdempiereException("No info, check that you have correct TableId $tableId")
         return Pair(
             result.first().first.copy(
                 columnNameMap = columnNameMap,

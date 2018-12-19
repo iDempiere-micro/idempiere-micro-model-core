@@ -1,12 +1,13 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.getSQLValueTSEx;
+import org.idempiere.common.util.Language;
 
 import java.sql.Timestamp;
 import java.util.BitSet;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import org.idempiere.common.util.Language;
+
+import static software.hsharp.core.util.DBKt.getSQLValueTSEx;
 
 public class TimeUtil {
   /** Truncate Day - D */
@@ -712,12 +713,12 @@ public class TimeUtil {
 
   /** Returns start date + nbDays which cannot be saturday or sunday or non business days */
   public static Timestamp addOnlyBusinessDays(
-      Timestamp startDate, int nbDays, int clientID, String trxName) {
+      Timestamp startDate, int nbDays, int clientId, String trxName) {
     Timestamp retValue = startDate;
     while (nbDays > 0) {
       retValue = TimeUtil.addDays(retValue, 1);
       StringBuilder sql = new StringBuilder("SELECT nextBusinessDay(?,?) FROM DUAL");
-      retValue = getSQLValueTSEx(trxName, sql.toString(), retValue, clientID);
+      retValue = getSQLValueTSEx(trxName, sql.toString(), retValue, clientId);
       nbDays--;
     }
     return retValue;

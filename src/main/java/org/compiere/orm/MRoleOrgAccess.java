@@ -98,7 +98,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @return array of Role Org Access
    */
   public static MRoleOrgAccess[] getOfClient(Properties ctx, int AD_Client_ID) {
-    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE clientId=?", AD_Client_ID);
+    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE AD_Client_ID=?", AD_Client_ID);
   } //	getOfClient
 
   /**
@@ -109,7 +109,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @return array of Role Org Access
    */
   public static MRoleOrgAccess[] getOfOrg(Properties ctx, int AD_Org_ID) {
-    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE orgId=?", AD_Org_ID);
+    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE AD_Org_ID=?", AD_Org_ID);
   } //	getOfOrg
 
   /**
@@ -169,9 +169,9 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     StringBuilder sb = new StringBuilder("MRoleOrgAccess[");
     sb.append("AD_Role_ID=")
         .append(getAD_Role_ID())
-        .append(",clientId=")
+        .append(",AD_Client_ID=")
         .append(getClientId())
-        .append(",orgId=")
+        .append(",AD_Org_ID=")
         .append(getOrgId())
         .append(",RO=")
         .append(isReadOnly());
@@ -188,11 +188,11 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    */
   public String toStringX(Properties ctx) {
     StringBuilder sb = new StringBuilder();
-    sb.append(Msg.translate(ctx, "clientId"))
+    sb.append(Msg.translate(ctx, "AD_Client_ID"))
         .append("=")
         .append(getClientName())
         .append(" - ")
-        .append(Msg.translate(ctx, "orgId"))
+        .append(Msg.translate(ctx, "AD_Org_ID"))
         .append("=")
         .append(getOrgName());
     return sb.toString();
@@ -207,8 +207,8 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     if (m_clientName == null) {
       String sql =
           "SELECT c.Name, o.Name "
-              + "FROM AD_Client c INNER JOIN AD_Org o ON (c.clientId=o.clientId) "
-              + "WHERE o.orgId=?";
+              + "FROM AD_Client c INNER JOIN AD_Org o ON (c.AD_Client_ID=o.AD_Client_ID) "
+              + "WHERE o.AD_Org_ID=?";
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {

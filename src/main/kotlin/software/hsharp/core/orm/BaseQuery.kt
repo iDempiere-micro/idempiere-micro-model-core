@@ -106,7 +106,7 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
     fun <T : PO> firstOnly(): T? {
         val result = doFindFirst<T>()
         if (result.count() > 1) throw DBException("QueryMoreThanOneRecordsFound")
-        return result.first()
+        return result.firstOrNull()
     }
 
     /**
