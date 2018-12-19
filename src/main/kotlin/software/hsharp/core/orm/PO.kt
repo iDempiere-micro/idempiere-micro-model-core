@@ -431,6 +431,38 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     init {
         if (row != null) load(row)
     }
+
+    /**
+     * Get Value as int
+     *
+     * @param index index
+     * @return int value or 0
+     */
+    fun get_ValueAsInt(index: Int): Int {
+        val value = get_Value(index) ?: return 0
+        if (value is Int) return value
+        try {
+            return Integer.parseInt(value.toString())
+        } catch (ex: NumberFormatException) {
+            log.warn(p_info.getColumnName(index) + " - " + ex.message)
+            return 0
+        }
+
+    } //  get_ValueAsInt
+
+    /**
+     * Get Integer Value
+     *
+     * @param columnName
+     * @return int value
+     */
+    fun get_ValueAsInt(columnName: String): Int {
+        val idx = get_ColumnIndex(columnName)
+        return if (idx < 0) {
+            0
+        } else get_ValueAsInt(idx)
+    }
+
 }
 
 fun getAllIDs(tableName: String, whereClause: String?): IntArray {

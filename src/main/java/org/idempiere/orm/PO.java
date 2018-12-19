@@ -394,25 +394,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
   } //  get_Value
 
   /**
-   * Get Value as int
-   *
-   * @param index index
-   * @return int value or 0
-   */
-  public int get_ValueAsInt(int index) {
-    Object value = get_Value(index);
-    if (value == null) return 0;
-    if (value instanceof Integer) return (Integer) value;
-    try {
-      return Integer.parseInt(value.toString());
-    } catch (NumberFormatException ex) {
-      POInfo p_info = super.getP_info();
-      log.warning(p_info.getColumnName(index) + " - " + ex.getMessage());
-      return 0;
-    }
-  } //  get_ValueAsInt
-
-  /**
    * Get Value
    *
    * @param columnName column name
@@ -1607,20 +1588,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
   public void setReplication(boolean isFromReplication) {
     m_isReplication = isFromReplication;
-  }
-
-  /**
-   * Get Integer Value
-   *
-   * @param columnName
-   * @return int value
-   */
-  public int get_ValueAsInt(String columnName) {
-    int idx = get_ColumnIndex(columnName);
-    if (idx < 0) {
-      return 0;
-    }
-    return get_ValueAsInt(idx);
   }
 
   /**

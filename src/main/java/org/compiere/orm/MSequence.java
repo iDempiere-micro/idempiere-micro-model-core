@@ -11,7 +11,6 @@ import org.idempiere.common.util.Util;
 import org.idempiere.icommon.model.IPO;
 import software.hsharp.core.orm.MBaseSequence;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
@@ -22,6 +21,7 @@ import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import static software.hsharp.core.orm.MBaseSequenceKt.doGetDocumentNoFromSeq;
 import static software.hsharp.core.orm.MBaseSequenceKt.doGetNextIDImpl;
 import static software.hsharp.core.util.DBKt.*;
 
@@ -45,7 +45,6 @@ public class MSequence extends MBaseSequence {
   private static final Level LOGLEVEL = Level.ALL;
 
   private static final int QUERY_TIME_OUT = 30;
-  private static final String NoYearNorMonth = "-";
   /** Sequence for Table Document No's */
   private static final String PREFIX_DOCSEQ = "DocumentNo_";
   /** Static Logger */
@@ -391,196 +390,7 @@ public class MSequence extends MBaseSequence {
   }
 
   public static String getDocumentNoFromSeq(MSequence seq, String trxName, PO po) {
-    //	Check AdempiereSys
-    boolean adempiereSys = false;
-    String sysProperty = Env.getCtx().getProperty("AdempiereSys", "N");
-    adempiereSys = "y".equalsIgnoreCase(sysProperty) || "true".equalsIgnoreCase(sysProperty);
-    if (adempiereSys && Env.getClientId(Env.getCtx()) > 11) adempiereSys = false;
-    //
-
-    int AD_Sequence_ID = seq.getAD_Sequence_ID();
-    boolean isStartNewYear = seq.isStartNewYear();
-    boolean isStartNewMonth = seq.isStartNewMonth();
-    String dateColumn = seq.getDateColumn();
-    boolean isUseOrgLevel = seq.isOrgLevelSequence();
-    String orgColumn = seq.getOrgColumn();
-    int startNo = seq.getStartNo();
-    int incrementNo = seq.getIncrementNo();
-    String prefix = seq.getPrefix();
-    String suffix = seq.getSuffix();
-    String decimalPattern = seq.getDecimalPattern();
-
-    String selectSQL = null;
-    if (isStartNewYear || isUseOrgLevel) {
-      selectSQL =
-          "SELECT y.CurrentNext, s.CurrentNextSys "
-              + "FROM AD_Sequence_No y, AD_Sequence s "
-              + "WHERE y.AD_Sequence_ID = s.AD_Sequence_ID "
-              + "AND s.AD_Sequence_ID = ? "
-              + "AND y.CalendarYearMonth = ? "
-              + "AND y.AD_Org_ID = ? "
-              + "AND s.IsActive='Y' AND s.IsTableID='N' AND s.IsAutoSequence='Y' "
-              + "ORDER BY s.AD_Client_ID DESC";
-    } else {
-      selectSQL =
-          "SELECT s.CurrentNext, s.CurrentNextSys "
-              + "FROM AD_Sequence s "
-              + "WHERE s.AD_Sequence_ID = ? "
-              + "AND s.IsActive='Y' AND s.IsTableID='N' AND s.IsAutoSequence='Y' "
-              + "ORDER BY s.AD_Client_ID DESC";
-    }
-    if ((isStartNewYear || isUseOrgLevel) && !adempiereSys) {
-      selectSQL = selectSQL + " FOR UPDATE OF y";
-    } else {
-      selectSQL = selectSQL + " FOR UPDATE OF s";
-    }
-    Connection conn = null;
-    //
-
-    String calendarYearMonth = NoYearNorMonth;
-    int docOrg_ID = 0;
-    int next = -1;
-
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      conn = getConnectionID();
-      //	Error
-      if (conn == null) return null;
-
-      if (isStartNewYear) {
-        SimpleDateFormat sdf = null;
-        if (isStartNewMonth) sdf = new SimpleDateFormat("yyyyMM");
-        else sdf = new SimpleDateFormat("yyyy");
-
-        if (po != null && dateColumn != null && dateColumn.length() > 0) {
-          Date docDate = (Date) po.get_Value(dateColumn);
-          calendarYearMonth = sdf.format(docDate);
-        } else {
-          calendarYearMonth = sdf.format(new Date());
-        }
-      }
-
-      if (isUseOrgLevel) {
-        if (po != null && orgColumn != null && orgColumn.length() > 0) {
-          docOrg_ID = po.get_ValueAsInt(orgColumn);
-        }
-      }
-
-      pstmt =
-          conn.prepareStatement(selectSQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
-      int index = 1;
-      pstmt.setInt(index++, AD_Sequence_ID);
-      if (isUseOrgLevel || isStartNewYear) {
-        pstmt.setString(index++, calendarYearMonth);
-        pstmt.setInt(index++, docOrg_ID);
-      }
-
-      //
-      if (isQueryTimeoutSupported()) {
-        pstmt.setQueryTimeout(QUERY_TIME_OUT);
-      }
-      rs = pstmt.executeQuery();
-      //	s_log.fine("AC=" + conn.getAutoCommit() + " -Iso=" + conn.getTransactionIsolation()
-      //		+ " - Type=" + pstmt.getResultSetType() + " - Concur=" + pstmt.getResultSetConcurrency());
-      if (rs.next()) {
-        if (s_log.isLoggable(Level.FINE)) s_log.fine("AD_Sequence_ID=" + AD_Sequence_ID);
-
-        PreparedStatement updateSQL = null;
-        try {
-          if (adempiereSys) {
-            String updateCmd =
-                "UPDATE AD_Sequence SET CurrentNextSys = CurrentNextSys + ? WHERE AD_Sequence_ID = ?";
-            updateSQL = conn.prepareStatement(updateCmd);
-            next = rs.getInt(2);
-          } else {
-            String sql;
-            if (isStartNewYear || isUseOrgLevel)
-              sql =
-                  "UPDATE AD_Sequence_No SET CurrentNext = CurrentNext + ? WHERE AD_Sequence_ID=? AND CalendarYearMonth=? AND AD_Org_ID=?";
-            else
-              sql = "UPDATE AD_Sequence SET CurrentNext = CurrentNext + ? WHERE AD_Sequence_ID=?";
-            updateSQL = conn.prepareStatement(sql);
-            next = rs.getInt(1);
-          }
-          updateSQL.setInt(1, incrementNo);
-          updateSQL.setInt(2, AD_Sequence_ID);
-          if (isStartNewYear || isUseOrgLevel) {
-            updateSQL.setString(3, calendarYearMonth);
-            updateSQL.setInt(4, docOrg_ID);
-          }
-          updateSQL.executeUpdate();
-        } finally {
-          close(updateSQL);
-          updateSQL = null;
-        }
-      } else { // did not find sequence no
-        if (isUseOrgLevel
-            || isStartNewYear) { // create sequence (CurrentNo = StartNo + IncrementNo) for this
-          // year/month/org and return first number (=StartNo)
-          next = startNo;
-
-          X_AD_Sequence_No seqno = new X_AD_Sequence_No(Env.getCtx(), 0, trxName);
-          seqno.setAD_Sequence_ID(AD_Sequence_ID);
-          seqno.setAD_Org_ID(docOrg_ID);
-          seqno.setCalendarYearMonth(calendarYearMonth);
-          seqno.setCurrentNext(startNo + incrementNo);
-          seqno.saveEx();
-        } else // standard
-        {
-          s_log.warning("(Sequence)- no record found - " + seq);
-          next = -2;
-        }
-      }
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, "(DocType) [" + trxName + "]", e);
-      if (DBException.isTimeout(e)) throw new AdempiereException("GenerateDocumentNoTimeOut", e);
-      else throw new AdempiereException("GenerateDocumentNoError", e);
-    } finally {
-      close(rs, pstmt);
-      pstmt = null;
-      rs = null;
-      //	Finish
-      try {
-        if (conn != null) {
-          conn.close();
-          conn = null;
-        }
-      } catch (Exception e) {
-        s_log.log(Level.SEVERE, "(DocType) - finish", e);
-      }
-    }
-    //	Error
-    if (next < 0) return null;
-
-    //	create DocumentNo
-    StringBuilder doc = new StringBuilder();
-    if (prefix != null && prefix.length() > 0) {
-      String prefixValue = parseVariable(prefix, po, trxName, false);
-      if (!Util.isEmpty(prefixValue)) doc.append(prefixValue);
-    }
-
-    if (decimalPattern != null && decimalPattern.length() > 0)
-      doc.append(new DecimalFormat(decimalPattern).format(next));
-    else doc.append(next);
-
-    if (suffix != null && suffix.length() > 0) {
-      String suffixValue = parseVariable(suffix, po, trxName, false);
-      if (!Util.isEmpty(suffixValue)) doc.append(suffixValue);
-    }
-
-    String documentNo = doc.toString();
-    if (s_log.isLoggable(Level.FINER))
-      s_log.finer(
-          documentNo
-              + " ("
-              + incrementNo
-              + ")"
-              + " - Sequence="
-              + AD_Sequence_ID
-              + " ["
-              + "]");
-    return documentNo;
+    return doGetDocumentNoFromSeq(seq, po);
   }
 
   /**

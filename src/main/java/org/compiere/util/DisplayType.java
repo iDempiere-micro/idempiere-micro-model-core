@@ -1,5 +1,12 @@
 package org.compiere.util;
 
+import org.idempiere.common.base.IServiceLocator;
+import org.idempiere.common.base.IServicesHolder;
+import org.idempiere.common.base.Service;
+import org.idempiere.common.util.CLogger;
+import org.idempiere.common.util.Env;
+import org.idempiere.common.util.Language;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -8,12 +15,6 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
-import org.idempiere.common.base.IServiceLocator;
-import org.idempiere.common.base.IServicesHolder;
-import org.idempiere.common.base.Service;
-import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.Env;
-import org.idempiere.common.util.Language;
 
 /**
  * System Display Types.
@@ -472,11 +473,14 @@ public final class DisplayType {
     if (displayType == DateTime) return myLanguage.getDateTimeFormat();
     else if (displayType == Time) return myLanguage.getTimeFormat();
     else {
-      List<IDisplayTypeFactory> factoryList =
-          Service.Companion.locator().list(IDisplayTypeFactory.class).getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        SimpleDateFormat osgiFormat = factory.getDateFormat(displayType, myLanguage, pattern);
-        if (osgiFormat != null) return osgiFormat;
+      IServiceLocator locator = Service.Companion.locator();
+      if (locator != null) {
+        List<IDisplayTypeFactory> factoryList =
+                locator.list(IDisplayTypeFactory.class).getServices();
+        for (IDisplayTypeFactory factory : factoryList) {
+          SimpleDateFormat osgiFormat = factory.getDateFormat(displayType, myLanguage, pattern);
+          if (osgiFormat != null) return osgiFormat;
+        }
       }
     }
 
