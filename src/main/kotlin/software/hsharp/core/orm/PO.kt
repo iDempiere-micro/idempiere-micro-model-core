@@ -316,7 +316,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
                 if (keyColumn.endsWith("_ID")) {
                     val ii: Int? =
                         try {
-                            get_Value(keyColumn) as Int
+                            get_Value(keyColumn) as Int?
                         } catch (e: Exception) {
                             log.error(e) { "" }
                             null

@@ -4,14 +4,16 @@ import kotliquery.Row;
 import org.compiere.model.I_AD_Sequence;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.*;
+import org.idempiere.common.util.CLogMgt;
+import org.idempiere.common.util.CLogger;
+import org.idempiere.common.util.Env;
+import org.idempiere.common.util.Util;
 import org.idempiere.icommon.model.IPO;
 import software.hsharp.core.orm.MBaseSequence;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +22,7 @@ import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import static software.hsharp.core.orm.MBaseSequenceKt.doGetNextIDImpl;
 import static software.hsharp.core.util.DBKt.*;
 
 /**
@@ -226,131 +229,7 @@ public class MSequence extends MBaseSequence {
    * @deprecated please usegetNextID (int, String, String)
    */
   private static int getNextIDImpl(int AD_Client_ID, String TableName, String trxName) {
-    if (TableName == null || TableName.length() == 0)
-      throw new IllegalArgumentException("TableName missing");
-
-    int retValue = -1;
-
-    //	Check AdempiereSys
-    boolean adempiereSys = false;
-    String sysProperty = Env.getCtx().getProperty("AdempiereSys", "N");
-    adempiereSys = "y".equalsIgnoreCase(sysProperty) || "true".equalsIgnoreCase(sysProperty);
-
-    if (adempiereSys && AD_Client_ID > 11) adempiereSys = false;
-    //
-    if (CLogMgt.isLevel(LOGLEVEL))
-      s_log.log(LOGLEVEL, TableName + " - AdempiereSys=" + adempiereSys + " [" + trxName + "]");
-    // begin vpj-cd e-evolution 09/02/2005 PostgreSQL
-    String selectSQL = null;
-    selectSQL =
-        "SELECT CurrentNext, CurrentNextSys, IncrementNo, AD_Sequence_ID "
-            + "FROM AD_Sequence "
-            + "WHERE Name=?"
-            + " AND IsActive='Y' AND IsTableID='Y' AND IsAutoSequence='Y' "
-            + " FOR UPDATE OF AD_Sequence ";
-
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    for (int i = 0; i < 3; i++) {
-      try {
-        conn = getConnectionID();
-        //	Error
-        if (conn == null) return -1;
-
-        pstmt =
-            conn.prepareStatement(
-                selectSQL, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
-        pstmt.setString(1, TableName);
-        //
-        if (isQueryTimeoutSupported()) {
-          pstmt.setQueryTimeout(QUERY_TIME_OUT);
-        }
-        rs = pstmt.executeQuery();
-        if (s_log.isLoggable(Level.FINEST))
-          s_log.finest(
-              "AC="
-                  + conn.getAutoCommit()
-                  + ", RO="
-                  + conn.isReadOnly()
-                  + " - Isolation="
-                  + conn.getTransactionIsolation()
-                  + "("
-                  + Connection.TRANSACTION_READ_COMMITTED
-                  + ") - RSType="
-                  + pstmt.getResultSetType()
-                  + "("
-                  + ResultSet.TYPE_SCROLL_SENSITIVE
-                  + "), RSConcur="
-                  + pstmt.getResultSetConcurrency()
-                  + "("
-                  + ResultSet.CONCUR_UPDATABLE
-                  + ")");
-        if (rs.next()) {
-
-          // Get the table
-          MTable table = MTable.get(Env.getCtx(), TableName);
-
-          int AD_Sequence_ID = rs.getInt(4);
-
-          boolean queryProjectServer = false;
-          if (table.getColumn("EntityType") != null) queryProjectServer = true;
-          if (!queryProjectServer && MSequence.Table_Name.equalsIgnoreCase(TableName))
-            queryProjectServer = true;
-
-          PreparedStatement updateSQL = null;
-          try {
-            int incrementNo = rs.getInt(3);
-            if (adempiereSys) {
-              String updateCmd =
-                  "UPDATE AD_Sequence SET CurrentNextSys=CurrentNextSys+? WHERE AD_Sequence_ID=?";
-              updateSQL = conn.prepareStatement(updateCmd);
-              retValue = rs.getInt(2);
-            } else {
-              String updateCmd =
-                  "UPDATE AD_Sequence SET CurrentNext=CurrentNext+? WHERE AD_Sequence_ID=?";
-              updateSQL = conn.prepareStatement(updateCmd);
-              retValue = rs.getInt(1);
-            }
-            updateSQL.setInt(1, incrementNo);
-            updateSQL.setInt(2, AD_Sequence_ID);
-            updateSQL.executeUpdate();
-          } finally {
-            close(updateSQL);
-            updateSQL = null;
-          }
-
-          // if (trx == null)
-          conn.commit();
-        } else s_log.severe("No record found - " + TableName);
-
-        //
-        break; //	EXIT
-      } catch (Exception e) {
-        s_log.log(Level.SEVERE, TableName + " - " + e.getMessage(), e);
-        try {
-          if (conn != null) conn.rollback();
-        } catch (SQLException e1) {
-        }
-      } finally {
-        close(rs, pstmt);
-        pstmt = null;
-        rs = null;
-
-        if (conn != null) {
-          try {
-            conn.close();
-          } catch (SQLException e) {
-          }
-          conn = null;
-        }
-      }
-      Thread.yield(); // 	give it time
-    }
-
-    // if (s_log.isLoggable(Level.FINEST)) s_log.finest (retValue + " - Table=" + TableName + " [" +
-    // trx + "]");
-    return retValue;
+    return doGetNextIDImpl(AD_Client_ID, TableName);
   } //	getNextID
 
   /**

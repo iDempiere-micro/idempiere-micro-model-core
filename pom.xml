@@ -99,9 +99,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.iDempiere-micro</groupId>
+            <groupId>org.idempiere</groupId>
             <artifactId>idempiere-micro-test-support</artifactId>
-            <version>0.0.3</version>
+            <version>1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -198,6 +198,9 @@
     </build>
     <repositories>
         <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>

@@ -267,6 +267,11 @@ public class CLogger extends Logger implements Serializable {
     return true;
   } //  saveInfo
 
+  public void severe(String msg) {
+    if (throwOnError) throw new Error(msg);
+    super.severe(msg);
+  }
+
   /**
    * String Representation
    *

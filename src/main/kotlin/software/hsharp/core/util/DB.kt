@@ -1,16 +1,21 @@
 package software.hsharp.core.util
 
-import kotliquery.HikariCP
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import kotliquery.Query
-import kotliquery.Session
+import kotliquery.TransactionalSession
 import kotliquery.sessionOf
+import kotliquery.using
 import org.compiere.dbPort.Convert
 import org.compiere.dbPort.Convert_PostgreSQL
 import org.compiere.orm.PO
+import org.idempiere.common.exceptions.AdempiereException
 import org.idempiere.common.exceptions.DBException
 import org.idempiere.icommon.model.IPO
 import java.math.BigDecimal
 import java.sql.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 import javax.sql.RowSet
 
 fun <T> String.asResource(work: (String) -> T): T {
@@ -151,17 +156,41 @@ internal fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
 fun TO_DATE(time: Timestamp, dayOnly: Boolean): String = throw IllegalArgumentException(NYI)
 fun TO_DATE(time: Timestamp): String = throw IllegalArgumentException(NYI)
 
-fun TO_STRING(txt: String?, maxLength: Int): String = throw IllegalArgumentException(NYI)
-fun TO_STRING(txt: String?): String = throw IllegalArgumentException(NYI)
+/** Quote  */
+private const val QUOTE = '\''
+
+fun TO_STRING(txt: String?, maxLength: Int): String {
+    if (txt == null || txt.isEmpty()) return "NULL"
+
+    //  Length
+    val text =
+        if (maxLength != 0 && txt.length > maxLength) txt.substring(0, maxLength) else txt
+
+    //  copy characters		(we need to look through anyway)
+    val out = StringBuilder()
+    out.append(QUOTE) // 	'
+    for (i in 0 until text.length) {
+        val c = text[i]
+        if (c == QUOTE)
+            out.append("''")
+        else
+            out.append(c)
+    }
+    out.append(QUOTE) // 	'
+    //
+    return out.toString()
+
+}
+fun TO_STRING(txt: String?): String = TO_STRING(txt, 0)
 internal val convert: Convert = Convert_PostgreSQL()
 
 // CONNECTION
 
-internal fun getConnectionID(): Connection? = DB.current.connection.underlying
+internal fun getConnectionID(): Connection? = null
 internal fun createConnection(autoCommit: Boolean, readOnly: Boolean, trxLevel: Int): Connection? =
-    DB.current.connection.underlying
+    null
 
-internal fun createConnection(autoCommit: Boolean, trxLevel: Int): Connection? = DB.current.connection.underlying
+internal fun createConnection(autoCommit: Boolean, trxLevel: Int): Connection? = null
 internal fun isConnected(createNew: Boolean): Boolean = !DB.current.connection.underlying.isClosed
 internal fun isConnected() = isConnected(false)
 
@@ -228,32 +257,67 @@ fun forUpdate(po: IPO, timeout: Int): Boolean = throw IllegalArgumentException(N
  */
 fun getRowSet(sql: String ): RowSet = throw IllegalArgumentException(NYI)
 
+object HikariCPI {
+
+    private val pools: ConcurrentMap<String, HikariDataSource> = ConcurrentHashMap()
+
+    fun default(url: String, username: String, password: String): HikariDataSource {
+        return init("default", url, username, password)
+    }
+
+    fun init(name: String, url: String, username: String, password: String): HikariDataSource {
+        val config: HikariConfig = HikariConfig()
+        config.jdbcUrl = url
+        config.username = username
+        config.password = password
+        config.isAutoCommit = false
+        config.addDataSourceProperty("cachePrepStmts", "true")
+        config.addDataSourceProperty("prepStmtCacheSize", "250")
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
+        val existing: HikariDataSource? = pools[name]
+        if (existing != null && existing.isClosed) {
+            existing.close()
+        }
+        val ds = HikariDataSource(config)
+        pools[name] = ds
+        return ds
+    }
+
+    fun dataSource(name: String = "default"): HikariDataSource {
+        val ds: HikariDataSource? = pools[name]
+        if (ds != null && !ds.isClosed) {
+            return ds
+        } else {
+            throw IllegalStateException("DataSource ($name) is absent.")
+        }
+    }
+
+}
+
 // WRAPPER
-
-class DB private constructor(private val session: Session?) {
+class DB  {
     companion object {
-        private val ds = HikariCP.dataSource()
+        private val ds = HikariCPI.dataSource()
 
-        private val context = object : InheritableThreadLocal<Session>() {
-            override fun initialValue(): Session {
-                val result = sessionOf(ds)
-                val cnn = result.connection.underlying
-                cnn.autoCommit  = false
-                return result
+        private val context = object : InheritableThreadLocal<TransactionalSession>() {
+            override fun initialValue(): TransactionalSession? {
+                return null
             }
         }
 
-        val current: Session
-            get() {
-                val result = context.get() as Session
-                if (result.connection.underlying.isClosed) {
-                    val newResult = sessionOf(ds)
-                    context.set(newResult)
-                    val cnn = newResult.connection.underlying
-                    cnn.autoCommit = false
-                    return newResult
+        fun run(operation: () -> Unit) {
+            val session = sessionOf(ds)
+            using(session) {
+                it.transaction { tx ->
+                    context.set(tx)
+                    operation()
                 }
-                return result
+            }
+        }
+
+        val current: TransactionalSession
+            get() {
+                return context.get() ?: throw AdempiereException("Start transaction on the entry point first")
             }
 
         fun dispose() {
