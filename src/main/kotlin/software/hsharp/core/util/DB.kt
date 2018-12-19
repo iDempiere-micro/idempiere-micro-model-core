@@ -45,8 +45,11 @@ fun getSQLValue(trxName: String?, sql: String, vararg params: Any): Int = getSQL
 fun getSQLValueEx(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
 fun getSQLValueEx(trxName: String?, sql: String): Int = getSQLValueEx(trxName, sql, listOf())
 
-fun getSQLValueBD(trxName: String?, sql: String, vararg params: Any): BigDecimal =
-    throw IllegalArgumentException(NYI)
+internal fun getSQLValueBDEx(sql: String, params: List<Any?>): BigDecimal? {
+    val loadQuery = queryOf(sql, params).map { row -> row.bigDecimalOrNull(1) }.asSingle
+    return DB.current.run(loadQuery)
+}
+fun getSQLValueBD(trxName: String?, sql: String, vararg params: Any): BigDecimal? = getSQLValueBDEx(sql, listOf(*params))
 
 fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? =
     throw IllegalArgumentException(NYI)
@@ -153,8 +156,24 @@ internal fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
 }
 
 // CONVERTERS
-fun TO_DATE(time: Timestamp, dayOnly: Boolean): String = throw IllegalArgumentException(NYI)
-fun TO_DATE(time: Timestamp): String = throw IllegalArgumentException(NYI)
+fun TO_DATE(time: Timestamp?, dayOnly: Boolean): String {
+    if (time == null) {
+        return if (dayOnly) "current_date()" else "current_date()"
+    }
+
+    val dateString = StringBuilder("TO_DATE('")
+    //  YYYY-MM-DD HH24:MI:SS.mmmm  JDBC Timestamp format
+    val myDate = time.toString()
+    if (dayOnly) {
+        dateString.append(myDate.substring(0, 10))
+        dateString.append("','YYYY-MM-DD')")
+    } else {
+        dateString.append(myDate.substring(0, myDate.indexOf('.'))) // 	cut off miliseconds
+        dateString.append("','YYYY-MM-DD HH24:MI:SS')")
+    }
+    return dateString.toString()
+}
+fun TO_DATE(time: Timestamp?): String = TO_DATE(time, true)
 
 /** Quote  */
 private const val QUOTE = '\''
