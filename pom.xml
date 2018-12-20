@@ -21,18 +21,18 @@
     </properties>
 
     <dependencies>
-        <!--
         <dependency>
             <groupId>com.github.iDempiere-micro</groupId>
             <artifactId>idempiere-micro-base-interfaces</artifactId>
-            <version>0.0.5</version>
+            <version>0.1.0</version>
         </dependency>
-        -->
+        <!--
         <dependency>
             <groupId>org.idempiere</groupId>
             <artifactId>idempiere-micro-base-interfaces</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        -->
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -98,12 +98,20 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
+        <!-- 
+        <dependency>        
             <groupId>org.idempiere</groupId>
             <artifactId>idempiere-micro-test-support</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
+        -->
+        <dependency>
+            <groupId>com.github.iDempiere-micro</groupId>
+            <artifactId>idempiere-micro-test-support</artifactId>
+            <version>0.0.3</version>
+        </dependency>        
+        
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
