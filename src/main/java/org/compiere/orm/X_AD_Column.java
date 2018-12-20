@@ -222,8 +222,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
 
   public I_AD_Reference getAD_Reference_Value() throws RuntimeException {
     return (I_AD_Reference)
-        MTable.get(getCtx(), I_AD_Reference.Table_Name)
-            .getPO(getAD_Reference_Value_ID(), null);
+        MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getAD_Reference_Value_ID(), null);
   }
 
   /**
@@ -248,8 +247,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
   }
 
   public I_AD_Table getAD_Table() throws RuntimeException {
-    return (I_AD_Table)
-        MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getAD_Table_ID(), null);
+    return (I_AD_Table) MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getAD_Table_ID(), null);
   }
 
   /**

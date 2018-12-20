@@ -97,8 +97,7 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
 
   public org.compiere.model.I_AD_Column getAD_() throws RuntimeException {
     return (org.compiere.model.I_AD_Column)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Column.Table_Name)
-            .getPO(getAD_Key(), null);
+        MTable.get(getCtx(), org.compiere.model.I_AD_Column.Table_Name).getPO(getAD_Key(), null);
   }
 
   /**

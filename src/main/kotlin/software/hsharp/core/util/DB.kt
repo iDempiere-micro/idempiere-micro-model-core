@@ -124,7 +124,8 @@ fun prepareStatement(
 }
 fun prepareStatement(
     sql: String?,
-    a: Int, b: Int,
+    a: Int,
+    b: Int,
     trxName: String?
 ): PreparedStatement? = throw IllegalArgumentException(NYI)
 
@@ -198,7 +199,6 @@ fun TO_STRING(txt: String?, maxLength: Int): String {
     out.append(QUOTE) // 	'
     //
     return out.toString()
-
 }
 fun TO_STRING(txt: String?): String = TO_STRING(txt, 0)
 internal val convert: Convert = Convert_PostgreSQL()
@@ -274,7 +274,7 @@ fun forUpdate(po: IPO, timeout: Int): Boolean = throw IllegalArgumentException(N
  * @param local local RowSet (own connection)
  * @return row set or null
  */
-fun getRowSet(sql: String ): RowSet = throw IllegalArgumentException(NYI)
+fun getRowSet(sql: String): RowSet = throw IllegalArgumentException(NYI)
 
 object HikariCPI {
 
@@ -310,11 +310,10 @@ object HikariCPI {
             throw IllegalStateException("DataSource ($name) is absent.")
         }
     }
-
 }
 
 // WRAPPER
-class DB  {
+class DB {
     companion object {
         private val ds = HikariCPI.dataSource()
 

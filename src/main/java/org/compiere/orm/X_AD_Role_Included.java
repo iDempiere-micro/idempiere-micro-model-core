@@ -47,8 +47,7 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
 
   public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
-            .getPO(getAD_Role_ID(), null);
+        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name).getPO(getAD_Role_ID(), null);
   }
 
   /**

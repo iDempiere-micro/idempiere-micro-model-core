@@ -1,17 +1,16 @@
 package org.compiere.orm;
 
-import kotliquery.Row;
-import org.compiere.util.Msg;
-import org.idempiere.common.util.CLogger;
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
-
-import static software.hsharp.core.util.DBKt.close;
-import static software.hsharp.core.util.DBKt.prepareStatement;
+import kotliquery.Row;
+import org.compiere.util.Msg;
+import org.idempiere.common.util.CLogger;
 
 /**
  * Role Org Access Model
@@ -38,6 +37,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
   public MRoleOrgAccess(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   } //	MRoleOrgAccess
+
   public MRoleOrgAccess(Properties ctx, Row row) {
     super(ctx, row);
   } //	MRoleOrgAccess

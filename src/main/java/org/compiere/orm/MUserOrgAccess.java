@@ -1,16 +1,15 @@
 package org.compiere.orm;
 
-import org.compiere.util.Msg;
-import org.idempiere.common.util.CLogger;
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
-
-import static software.hsharp.core.util.DBKt.close;
-import static software.hsharp.core.util.DBKt.prepareStatement;
+import org.compiere.util.Msg;
+import org.idempiere.common.util.CLogger;
 
 /**
  * User Org Access
@@ -106,9 +105,9 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
   /**
    * User Constructor param user user param AD_Org_ID org
    *
-   * <p>public MUserOrgAccess (MUser user, int AD_Org_ID) { this (user.getCtx(), 0,
-   * user.null); setClientOrg (user.getClientId(), AD_Org_ID); setAD_User_ID
-   * (user.getAD_User_ID()); } // MUserOrgAccess
+   * <p>public MUserOrgAccess (MUser user, int AD_Org_ID) { this (user.getCtx(), 0, user.null);
+   * setClientOrg (user.getClientId(), AD_Org_ID); setAD_User_ID (user.getAD_User_ID()); } //
+   * MUserOrgAccess
    *
    * <p>/** String Representation
    *

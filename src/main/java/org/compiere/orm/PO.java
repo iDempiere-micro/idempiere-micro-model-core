@@ -1,13 +1,7 @@
 package org.compiere.orm;
 
-import kotliquery.Row;
-import org.compiere.model.I_C_ElementValue;
-import org.compiere.util.Msg;
-import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.*;
-import org.idempiere.icommon.model.IPO;
-import org.idempiere.orm.*;
+import static software.hsharp.core.orm.POKt.I_ZERO;
+import static software.hsharp.core.util.DBKt.*;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -16,9 +10,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
-
-import static software.hsharp.core.orm.POKt.I_ZERO;
-import static software.hsharp.core.util.DBKt.*;
+import kotliquery.Row;
+import org.compiere.model.I_C_ElementValue;
+import org.compiere.util.Msg;
+import org.idempiere.common.exceptions.AdempiereException;
+import org.idempiere.common.exceptions.DBException;
+import org.idempiere.common.util.*;
+import org.idempiere.icommon.model.IPO;
+import org.idempiere.orm.*;
 
 public abstract class PO extends org.idempiere.orm.PO {
   /** Attachment with entries */
@@ -353,20 +352,14 @@ public abstract class PO extends org.idempiere.orm.PO {
                   ((I_C_ElementValue) this).getC_Element().getC_Element_ID(),
                   null);
         } else {
-          newParentID =
-              retrieveIdOfParentValue(value, sourceTableName, getClientId(), null);
+          newParentID = retrieveIdOfParentValue(value, sourceTableName, getClientId(), null);
         }
-        int seqNo =
-            getSQLValueEx(null, selMinSeqNo, newParentID, tree.getAD_Tree_ID(), value);
+        int seqNo = getSQLValueEx(null, selMinSeqNo, newParentID, tree.getAD_Tree_ID(), value);
         if (seqNo == -1)
-          seqNo =
-              getSQLValueEx(null, selMaxSeqNo, newParentID, tree.getAD_Tree_ID(), value);
+          seqNo = getSQLValueEx(null, selMaxSeqNo, newParentID, tree.getAD_Tree_ID(), value);
+        executeUpdateEx(updateSeqNo, new Object[] {newParentID, seqNo, tree.getAD_Tree_ID()}, null);
         executeUpdateEx(
-            updateSeqNo, new Object[] {newParentID, seqNo, tree.getAD_Tree_ID()}, null);
-        executeUpdateEx(
-            update,
-            new Object[] {seqNo, newParentID, getId(), tree.getAD_Tree_ID()},
-            null);
+            update, new Object[] {seqNo, newParentID, getId(), tree.getAD_Tree_ID()}, null);
       }
     }
   } //	update_Tree
@@ -465,73 +458,72 @@ public abstract class PO extends org.idempiere.orm.PO {
 
     boolean success = false;
 
-        if (!beforeDelete()) {
-          log.warning("beforeDelete failed");
-          throw new Error("beforeDelete failed");
-        }
-      setReplication(false); // @Trifon
+    if (!beforeDelete()) {
+      log.warning("beforeDelete failed");
+      throw new Error("beforeDelete failed");
+    }
+    setReplication(false); // @Trifon
 
-      try {
-        //
-        if (get_ColumnIndex("IsSummary") >= 0) {
-          delete_Tree(MTree_Base.TREETYPE_CustomTable);
-        }
-
-        //	The Delete Statement
-        StringBuilder sql =
-            new StringBuilder("DELETE FROM ") // jz why no FROM??
-                .append(p_info.getTableName())
-                .append(" WHERE ")
-                .append(get_WhereClause(true));
-        int no = 0;
-        if (isUseTimeoutForUpdate())
-          no = executeUpdateEx(sql.toString(), null, QUERY_TIME_OUT);
-        else no = executeUpdate(sql.toString(), null);
-        success = no == 1;
-      } catch (Exception e) {
-        String msg = DBException.getDefaultDBExceptionMessage(e);
-        log.saveError(msg != null ? msg : e.getLocalizedMessage(), e);
-        success = false;
-      }
-
-      //	Save ID
-      m_idOld = getId();
+    try {
       //
-      if (!success) {
-        log.warning("Not deleted");
-        throw new Error("Not deleted");
-      } else {
-        if (success) {
-
-        } else {
-          log.warning("Not deleted");
-        }
+      if (get_ColumnIndex("IsSummary") >= 0) {
+        delete_Tree(MTree_Base.TREETYPE_CustomTable);
       }
 
-      try {
-        success = afterDelete(success);
-      } catch (Exception e) {
-        log.log(Level.WARNING, "afterDelete", e);
-        String msg = DBException.getDefaultDBExceptionMessage(e);
-        log.saveError(msg != null ? msg : "Error", e, false);
-        success = false;
-        //	throw new DBException(e);
-      }
+      //	The Delete Statement
+      StringBuilder sql =
+          new StringBuilder("DELETE FROM ") // jz why no FROM??
+              .append(p_info.getTableName())
+              .append(" WHERE ")
+              .append(get_WhereClause(true));
+      int no = 0;
+      if (isUseTimeoutForUpdate()) no = executeUpdateEx(sql.toString(), null, QUERY_TIME_OUT);
+      else no = executeUpdate(sql.toString(), null);
+      success = no == 1;
+    } catch (Exception e) {
+      String msg = DBException.getDefaultDBExceptionMessage(e);
+      log.saveError(msg != null ? msg : e.getLocalizedMessage(), e);
+      success = false;
+    }
 
-      if (!success) {
-        throw new Error("not success");
-      }
-      //	Reset
+    //	Save ID
+    m_idOld = getId();
+    //
+    if (!success) {
+      log.warning("Not deleted");
+      throw new Error("Not deleted");
+    } else {
       if (success) {
-        // osgi event handler
-        IEvent event = EventManager.newEvent(IEventTopics.PO_POST_DELETE, this);
-        EventManager.getInstance().postEvent(event);
 
-        m_idOld = 0;
-        int size = p_info.getColumnCount();
-        clearNewValues();
-        CacheMgt.get().reset(p_info.getTableName());
+      } else {
+        log.warning("Not deleted");
       }
+    }
+
+    try {
+      success = afterDelete(success);
+    } catch (Exception e) {
+      log.log(Level.WARNING, "afterDelete", e);
+      String msg = DBException.getDefaultDBExceptionMessage(e);
+      log.saveError(msg != null ? msg : "Error", e, false);
+      success = false;
+      //	throw new DBException(e);
+    }
+
+    if (!success) {
+      throw new Error("not success");
+    }
+    //	Reset
+    if (success) {
+      // osgi event handler
+      IEvent event = EventManager.newEvent(IEventTopics.PO_POST_DELETE, this);
+      EventManager.getInstance().postEvent(event);
+
+      m_idOld = 0;
+      int size = p_info.getColumnCount();
+      clearNewValues();
+      CacheMgt.get().reset(p_info.getTableName());
+    }
     return success;
   } //	delete
 

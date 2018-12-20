@@ -447,7 +447,6 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             log.warn(p_info.getColumnName(index) + " - " + ex.message)
             return 0
         }
-
     } //  get_ValueAsInt
 
     /**
@@ -462,7 +461,6 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             0
         } else get_ValueAsInt(idx)
     }
-
 }
 
 fun getAllIDs(tableName: String, whereClause: String?): IntArray {

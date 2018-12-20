@@ -1,5 +1,26 @@
 package org.idempiere.orm;
 
+import static kotliquery.PackageKt.queryOf;
+import static software.hsharp.core.orm.POKt.I_ZERO;
+import static software.hsharp.core.util.DBKt.*;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.Collator;
+import java.util.*;
+import java.util.logging.Level;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Column;
 import org.compiere.model.I_AD_Element;
@@ -13,28 +34,6 @@ import org.idempiere.icommon.model.IPO;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import software.hsharp.core.util.DB;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.Collator;
-import java.util.*;
-import java.util.logging.Level;
-
-import static kotliquery.PackageKt.queryOf;
-import static software.hsharp.core.orm.POKt.I_ZERO;
-import static software.hsharp.core.util.DBKt.*;
 
 /**
  * Persistent Object. Superclass for actual implementations
@@ -828,7 +827,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
    * @return true if loaded
    */
   protected boolean load(HashMap<String, String> hmIn) {
-    if (hmIn == null) return load((String)null);
+    if (hmIn == null) return load((String) null);
 
     int size = get_ColumnCount();
     boolean success = true;

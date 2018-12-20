@@ -1,12 +1,11 @@
 package org.compiere.util;
 
-import org.idempiere.common.util.*;
-
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
+import org.idempiere.common.util.*;
 
 /**
  * Reads all Messages and stores them in a HashMap

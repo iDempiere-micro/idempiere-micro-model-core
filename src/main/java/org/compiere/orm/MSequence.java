@@ -1,15 +1,8 @@
 package org.compiere.orm;
 
-import kotliquery.Row;
-import org.compiere.model.I_AD_Sequence;
-import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.CLogMgt;
-import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.Env;
-import org.idempiere.common.util.Util;
-import org.idempiere.icommon.model.IPO;
-import software.hsharp.core.orm.MBaseSequence;
+import static software.hsharp.core.orm.MBaseSequenceKt.doGetDocumentNoFromSeq;
+import static software.hsharp.core.orm.MBaseSequenceKt.doGetNextIDImpl;
+import static software.hsharp.core.util.DBKt.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,10 +13,16 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
-
-import static software.hsharp.core.orm.MBaseSequenceKt.doGetDocumentNoFromSeq;
-import static software.hsharp.core.orm.MBaseSequenceKt.doGetNextIDImpl;
-import static software.hsharp.core.util.DBKt.*;
+import kotliquery.Row;
+import org.compiere.model.I_AD_Sequence;
+import org.idempiere.common.exceptions.AdempiereException;
+import org.idempiere.common.exceptions.DBException;
+import org.idempiere.common.util.CLogMgt;
+import org.idempiere.common.util.CLogger;
+import org.idempiere.common.util.Env;
+import org.idempiere.common.util.Util;
+import org.idempiere.icommon.model.IPO;
+import software.hsharp.core.orm.MBaseSequence;
 
 /**
  * Sequence Model.

@@ -1,13 +1,12 @@
 package org.compiere.orm;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Role;
 import org.idempiere.common.util.Env;
 import org.idempiere.orm.I_Persistent;
-
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.util.Properties;
 
 /**
  * Generated Model for AD_Role
@@ -63,6 +62,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   public X_AD_Role(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+
   public X_AD_Role(Properties ctx, Row row) {
     super(ctx, row);
   } //	MRole

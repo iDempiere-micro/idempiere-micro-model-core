@@ -1,11 +1,10 @@
 package org.compiere.orm;
 
+import java.sql.ResultSet;
+import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Role_OrgAccess;
 import org.idempiere.orm.I_Persistent;
-
-import java.sql.ResultSet;
-import java.util.Properties;
 
 /**
  * Generated Model for AD_Role_OrgAccess
@@ -49,8 +48,7 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
 
   public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
-            .getPO(getAD_Role_ID(), null);
+        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name).getPO(getAD_Role_ID(), null);
   }
 
   /**

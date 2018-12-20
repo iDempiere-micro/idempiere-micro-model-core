@@ -1,15 +1,14 @@
 package org.compiere.orm;
 
-import kotliquery.Row;
-import org.compiere.util.Msg;
+import static software.hsharp.core.util.DBKt.close;
+import static software.hsharp.core.util.DBKt.prepareStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
-
-import static software.hsharp.core.util.DBKt.close;
-import static software.hsharp.core.util.DBKt.prepareStatement;
+import kotliquery.Row;
+import org.compiere.util.Msg;
 
 /**
  * @author Jorg Janke
@@ -43,6 +42,7 @@ public class MTableAccess extends X_AD_Table_Access {
   public MTableAccess(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   } //	MTableAccess
+
   public MTableAccess(Properties ctx, Row row) {
     super(ctx, row);
   } //	MTableAccess

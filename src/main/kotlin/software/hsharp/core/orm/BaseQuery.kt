@@ -130,7 +130,7 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
      */
     @Throws(DBException::class)
     fun <T : IPO> list(): List<T> {
-        val sql = convert.convertAll( buildSQL(null, true) )
+        val sql = convert.convertAll(buildSQL(null, true))
         val params = getQueryParameters()
         val sqlQuery =
             @Suppress("UNCHECKED_CAST")

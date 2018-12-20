@@ -1,12 +1,11 @@
 package org.compiere.orm;
 
+import java.sql.ResultSet;
+import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Column_Access;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
-
-import java.sql.ResultSet;
-import java.util.Properties;
 
 /**
  * Generated Model for AD_Column_Access
@@ -32,6 +31,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
   public X_AD_Column_Access(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+
   public X_AD_Column_Access(Properties ctx, Row row) {
     super(ctx, row);
   } //	MColumnAccess
@@ -106,8 +106,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
 
   public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
-            .getPO(getAD_Role_ID(), null);
+        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name).getPO(getAD_Role_ID(), null);
   }
 
   /**

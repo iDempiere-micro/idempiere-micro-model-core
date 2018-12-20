@@ -35,7 +35,7 @@ private data class GetNextIDImplResult(
     )
 }
 
-fun doGetNextIDImpl(clientId: Int, tableName: String) : Int {
+fun doGetNextIDImpl(clientId: Int, tableName: String): Int {
     if (tableName.isEmpty())
         throw IllegalArgumentException("TableName missing")
 
@@ -43,7 +43,7 @@ fun doGetNextIDImpl(clientId: Int, tableName: String) : Int {
         sql ->
             val loadQuery = queryOf(sql, listOf(tableName)).map { GetNextIDImplResult(it) }.asSingle
             val seq = DB.current.run(loadQuery)
-            if (seq != null ) {
+            if (seq != null) {
                 "/sql/updateNextIDImpl.sql".asResource { updateCmd ->
                     val updateQuery = queryOf(updateCmd, listOf(seq.incrementNo, seq.sequenceId)).asUpdate
                     DB.current.run(updateQuery)
@@ -131,10 +131,9 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
             }
         }) ?: return null
 
-    //	create DocumentNo
+    // 	create DocumentNo
     val doc = StringBuilder()
-    if (prefix != null && prefix.isNotEmpty())
-    {
+    if (prefix != null && prefix.isNotEmpty()) {
         val prefixValue = parseVariable(prefix, po, null, false)
         if (!Util.isEmpty(prefixValue)) doc.append(prefixValue)
     }
@@ -144,8 +143,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
     else
         doc.append(next)
 
-    if (suffix != null && suffix.isNotEmpty())
-    {
+    if (suffix != null && suffix.isNotEmpty()) {
         val suffixValue = parseVariable(suffix, po, null, false)
         if (!Util.isEmpty(suffixValue)) doc.append(suffixValue)
     }

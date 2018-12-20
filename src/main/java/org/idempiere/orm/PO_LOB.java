@@ -1,14 +1,13 @@
 package org.idempiere.orm;
 
-import org.compiere.util.DisplayType;
-import org.idempiere.common.util.CLogger;
+import static software.hsharp.core.util.DBKt.*;
 
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.logging.Level;
-
-import static software.hsharp.core.util.DBKt.*;
+import org.compiere.util.DisplayType;
+import org.idempiere.common.util.CLogger;
 
 /**
  * Persistent Object LOB. Allows to store LOB remotely Currently Oracle specific!

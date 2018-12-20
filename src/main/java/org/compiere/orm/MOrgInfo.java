@@ -1,11 +1,10 @@
 package org.compiere.orm;
 
+import java.sql.ResultSet;
+import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_OrgInfo;
 import org.idempiere.common.util.CCache;
-
-import java.sql.ResultSet;
-import java.util.Properties;
 
 /**
  * Organization Info Model
@@ -32,6 +31,7 @@ public class MOrgInfo extends X_AD_OrgInfo {
   public MOrgInfo(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   } //	MOrgInfo
+
   public MOrgInfo(Properties ctx, Row row) {
     super(ctx, row);
   } //	MOrgInfo
