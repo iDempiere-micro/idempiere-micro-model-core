@@ -47,7 +47,7 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
   public org.compiere.model.I_AD_Sequence getAD_Sequence() throws RuntimeException {
     return (org.compiere.model.I_AD_Sequence)
         MTable.get(getCtx(), org.compiere.model.I_AD_Sequence.Table_Name)
-            .getPO(getAD_Sequence_ID(), get_TrxName());
+            .getPO(getAD_Sequence_ID(), null);
   }
 
   /**

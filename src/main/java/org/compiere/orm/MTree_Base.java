@@ -62,7 +62,7 @@ public class MTree_Base extends X_AD_Tree {
    * @param treeType
    */
   public MTree_Base(MClient client, String name, String treeType) {
-    this(client.getCtx(), 0, client.get_TrxName());
+    this(client.getCtx(), 0, null);
     setClientOrg(client);
     setName(name);
     setTreeType(treeType);

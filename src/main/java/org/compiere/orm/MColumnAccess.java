@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
+import kotliquery.Row;
 import org.compiere.util.Msg;
 
 /**
@@ -44,6 +45,10 @@ public class MColumnAccess extends X_AD_Column_Access {
    */
   public MColumnAccess(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MColumnAccess
+
+  public MColumnAccess(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MColumnAccess
 
   /**
@@ -117,7 +122,7 @@ public class MColumnAccess extends X_AD_Column_Access {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Column_ID());
         rs = pstmt.executeQuery();
         if (rs.next()) {

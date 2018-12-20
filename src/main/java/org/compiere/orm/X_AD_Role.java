@@ -3,6 +3,7 @@ package org.compiere.orm;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Role;
 import org.idempiere.common.util.Env;
 import org.idempiere.orm.I_Persistent;
@@ -62,6 +63,10 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
     super(ctx, rs, trxName);
   }
 
+  public X_AD_Role(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MRole
+
   /**
    * AccessLevel
    *
@@ -118,7 +123,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   public org.compiere.model.I_AD_Tree getAD_Tree_Menu() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_Menu_ID(), get_TrxName());
+            .getPO(getAD_Tree_Menu_ID(), null);
   }
 
   /**
@@ -145,7 +150,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   public org.compiere.model.I_AD_Tree getAD_Tree_Org() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
         MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_Org_ID(), get_TrxName());
+            .getPO(getAD_Tree_Org_ID(), null);
   }
 
   /**

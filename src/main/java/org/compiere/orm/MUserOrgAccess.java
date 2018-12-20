@@ -57,7 +57,7 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
    * @param AD_User_ID role
    */
   public MUserOrgAccess(MOrg org, int AD_User_ID) {
-    this(org.getCtx(), 0, org.get_TrxName());
+    this(org.getCtx(), 0, null);
     setClientOrg(org);
     setAD_User_ID(AD_User_ID);
   } //	MUserOrgAccess
@@ -105,9 +105,9 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
   /**
    * User Constructor param user user param AD_Org_ID org
    *
-   * <p>public MUserOrgAccess (MUser user, int AD_Org_ID) { this (user.getCtx(), 0,
-   * user.get_TrxName()); setClientOrg (user.getClientId(), AD_Org_ID); setAD_User_ID
-   * (user.getAD_User_ID()); } // MUserOrgAccess
+   * <p>public MUserOrgAccess (MUser user, int AD_Org_ID) { this (user.getCtx(), 0, user.null);
+   * setClientOrg (user.getClientId(), AD_Org_ID); setAD_User_ID (user.getAD_User_ID()); } //
+   * MUserOrgAccess
    *
    * <p>/** String Representation
    *

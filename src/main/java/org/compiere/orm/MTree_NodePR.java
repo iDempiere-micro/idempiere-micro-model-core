@@ -39,7 +39,7 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
    * @param Node_ID node
    */
   public MTree_NodePR(MTree_Base tree, int Node_ID) {
-    super(tree.getCtx(), 0, tree.get_TrxName());
+    super(tree.getCtx(), 0, null);
     setClientOrg(tree);
     setAD_Tree_ID(tree.getAD_Tree_ID());
     setNode_ID(Node_ID);
@@ -61,11 +61,11 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, tree.get_TrxName());
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, tree.getAD_Tree_ID());
       pstmt.setInt(2, Node_ID);
       rs = pstmt.executeQuery();
-      if (rs.next()) retValue = new MTree_NodePR(tree.getCtx(), rs, tree.get_TrxName());
+      if (rs.next()) retValue = new MTree_NodePR(tree.getCtx(), rs, null);
     } catch (Exception e) {
       s_log.log(Level.SEVERE, sql, e);
     } finally {

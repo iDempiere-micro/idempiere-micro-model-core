@@ -148,7 +148,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
 
   public I_AD_Element getAD_Element() throws RuntimeException {
     return (I_AD_Element)
-        MTable.get(getCtx(), I_AD_Element.Table_Name).getPO(getAD_Element_ID(), get_TrxName());
+        MTable.get(getCtx(), I_AD_Element.Table_Name).getPO(getAD_Element_ID(), null);
   }
 
   /**
@@ -196,7 +196,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
 
   public I_AD_Reference getReference() throws RuntimeException {
     return (I_AD_Reference)
-        MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getReferenceId(), get_TrxName());
+        MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getReferenceId(), null);
   }
 
   /**
@@ -222,8 +222,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
 
   public I_AD_Reference getAD_Reference_Value() throws RuntimeException {
     return (I_AD_Reference)
-        MTable.get(getCtx(), I_AD_Reference.Table_Name)
-            .getPO(getAD_Reference_Value_ID(), get_TrxName());
+        MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getAD_Reference_Value_ID(), null);
   }
 
   /**
@@ -248,8 +247,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
   }
 
   public I_AD_Table getAD_Table() throws RuntimeException {
-    return (I_AD_Table)
-        MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getAD_Table_ID(), get_TrxName());
+    return (I_AD_Table) MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getAD_Table_ID(), null);
   }
 
   /**
@@ -275,7 +273,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
 
   public I_AD_Val_Rule getValRule() throws RuntimeException {
     return (I_AD_Val_Rule)
-        MTable.get(getCtx(), I_AD_Val_Rule.Table_Name).getPO(getValRule_ID(), get_TrxName());
+        MTable.get(getCtx(), I_AD_Val_Rule.Table_Name).getPO(getValRule_ID(), null);
   }
 
   /**

@@ -2,6 +2,7 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Client;
 import org.idempiere.orm.I_Persistent;
 
@@ -44,6 +45,9 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     super(ctx, rs, trxName);
   }
 
+  public X_AD_Client(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MClient
   /**
    * AccessLevel
    *

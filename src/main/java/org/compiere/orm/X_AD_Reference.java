@@ -55,7 +55,7 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
    *
    * @return System Reference and Validation
    */
-  public int getAD_Reference_ID() {
+  public int getReferenceId() {
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Reference_ID);
     if (ii == null) return 0;
     return ii;

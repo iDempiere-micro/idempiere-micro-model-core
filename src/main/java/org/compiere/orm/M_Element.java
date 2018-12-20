@@ -214,7 +214,7 @@ public class M_Element extends X_AD_Element {
                 .append(TO_STRING(getHelp()))
                 .append(" WHERE AD_Element_ID=")
                 .append(getId());
-        no = executeUpdate(sql.toString(), get_TrxName());
+        no = executeUpdate(sql.toString(), null);
         if (log.isLoggable(Level.FINE)) log.fine("afterSave - Columns updated #" + no);
 
         //	Parameter
@@ -232,7 +232,7 @@ public class M_Element extends X_AD_Element {
                 .append(" WHERE UPPER(ColumnName)=")
                 .append(TO_STRING(getColumnName().toUpperCase()))
                 .append(" AND IsCentrallyMaintained='Y' AND AD_Element_ID IS NULL");
-        no = executeUpdate(sql.toString(), get_TrxName());
+        no = executeUpdate(sql.toString(), null);
 
         sql =
             new StringBuilder("UPDATE AD_Process_Para SET ColumnName=")
@@ -246,7 +246,7 @@ public class M_Element extends X_AD_Element {
                 .append(" WHERE AD_Element_ID=")
                 .append(getId())
                 .append(" AND IsCentrallyMaintained='Y'");
-        no += executeUpdate(sql.toString(), get_TrxName());
+        no += executeUpdate(sql.toString(), null);
         if (log.isLoggable(Level.FINE)) log.fine("Parameters updated #" + no);
 
         // Info Column
@@ -262,7 +262,7 @@ public class M_Element extends X_AD_Element {
                 .append(" WHERE AD_Element_ID=")
                 .append(getId())
                 .append(" AND IsCentrallyMaintained='Y'");
-        no += executeUpdate(sql.toString(), get_TrxName());
+        no += executeUpdate(sql.toString(), null);
         if (log.isLoggable(Level.FINE)) log.fine("Info Column updated #" + no);
       }
 
@@ -281,12 +281,12 @@ public class M_Element extends X_AD_Element {
                     " WHERE AD_Column_ID IN (SELECT AD_Column_ID FROM AD_Column WHERE AD_Element_ID=")
                 .append(getId())
                 .append(") AND IsCentrallyMaintained='Y'");
-        no = executeUpdate(sql.toString(), get_TrxName());
+        no = executeUpdate(sql.toString(), null);
         if (log.isLoggable(Level.FINE)) log.fine("Fields updated #" + no);
 
         // Info Column - update Name, Description, Help - doesn't have IsCentrallyMaintained
         // currently
-        // no =executeUpdate(sql.toString(), get_TrxName());
+        // no =executeUpdate(sql.toString(), null);
         // log.fine("InfoColumn updated #" + no);
       }
 
@@ -303,7 +303,7 @@ public class M_Element extends X_AD_Element {
                 .append("WHERE c.AD_Column_ID=AD_PrintFormatItem.AD_Column_ID AND c.AD_Element_ID=")
                 .append(getId())
                 .append(")");
-        no = executeUpdate(sql.toString(), get_TrxName());
+        no = executeUpdate(sql.toString(), null);
         if (log.isLoggable(Level.FINE)) log.fine("PrintFormatItem updated #" + no);
       }
     }

@@ -49,7 +49,7 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn, I_Persiste
   public org.compiere.model.I_AD_Column getAD_Column() throws RuntimeException {
     return (org.compiere.model.I_AD_Column)
         MTable.get(getCtx(), org.compiere.model.I_AD_Column.Table_Name)
-            .getPO(getAD_Column_ID(), get_TrxName());
+            .getPO(getAD_Column_ID(), null);
   }
 
   /**
@@ -115,7 +115,7 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn, I_Persiste
   public org.compiere.model.I_AD_TableIndex getAD_TableIndex() throws RuntimeException {
     return (org.compiere.model.I_AD_TableIndex)
         MTable.get(getCtx(), org.compiere.model.I_AD_TableIndex.Table_Name)
-            .getPO(getAD_TableIndex_ID(), get_TrxName());
+            .getPO(getAD_TableIndex_ID(), null);
   }
 
   /**

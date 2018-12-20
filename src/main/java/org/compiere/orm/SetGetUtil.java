@@ -393,24 +393,6 @@ public class SetGetUtil {
   }
 
   /**
-   * Get TrxName for given object.
-   *
-   * @param o
-   * @return trxName or null
-   */
-  public static String getTrxName(Object o) {
-    if (o == null) {
-      return null;
-    } else if (o instanceof SetGetModel) {
-      return ((SetGetModel) o).get_TrxName();
-    } else if (o instanceof PO) {
-      return ((PO) o).get_TrxName();
-    } else {
-      return null;
-    }
-  }
-
-  /**
    * Check if given object was produced by used entry (i.e. created from a window)
    *
    * @param o object
@@ -461,7 +443,7 @@ public class SetGetUtil {
     }
     //
     // Set LineNo
-    lineNo = getSQLValueEx(model.get_TrxName(), sql.toString(), params);
+    lineNo = getSQLValueEx(null, sql.toString(), params);
     model.set_AttrValue(lineColumnName, lineNo);
   }
 
@@ -531,11 +513,7 @@ public class SetGetUtil {
           return po.is_ValueChanged(ColumnName);
         }
 
-        public String get_TrxName() {
-          return po.get_TrxName();
-        }
-
-        public int get_Table_ID() {
+        public int getTableId() {
           return po.getTableId();
         }
 

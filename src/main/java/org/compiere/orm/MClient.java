@@ -1,8 +1,11 @@
 package org.compiere.orm;
 
+import java.io.File;
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Client;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.Env;
@@ -51,7 +54,7 @@ public class MClient extends X_AD_Client {
         setAutoArchive(AUTOARCHIVE_None);
         setMMPolicy(MMPOLICY_FiFo); // F
         setIsPostImmediate(false);
-      } else load(get_TrxName());
+      } else load((HashMap) null);
     }
   } //	MClient
 
@@ -77,6 +80,10 @@ public class MClient extends X_AD_Client {
     super(ctx, rs, trxName);
   } //	MClient
 
+  public MClient(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MClient
+
   /**
    * Simplified Constructor
    *
@@ -84,7 +91,7 @@ public class MClient extends X_AD_Client {
    * @param trxName transaction
    */
   public MClient(Properties ctx, String trxName) {
-    this(ctx, Env.getADClientID(ctx), trxName);
+    this(ctx, Env.getClientId(ctx), trxName);
   } //	MClient
 
   /**
@@ -94,7 +101,7 @@ public class MClient extends X_AD_Client {
    * @return client
    */
   public static MClient get(Properties ctx) {
-    return get(ctx, Env.getADClientID(ctx));
+    return get(ctx, Env.getClientId(ctx));
   } //	get
 
   /**
@@ -147,7 +154,7 @@ public class MClient extends X_AD_Client {
    * @return Client Info
    */
   public MClientInfo getInfo() {
-    if (m_info == null) m_info = MClientInfo.get(getCtx(), getClientId(), get_TrxName());
+    if (m_info == null) m_info = MClientInfo.get(getCtx(), getClientId(), null);
     return m_info;
   } //	getMClientInfo
 
@@ -156,7 +163,20 @@ public class MClient extends X_AD_Client {
         MSysConfig.getValue(
             MSysConfig.CLIENT_ACCOUNTING,
             CLIENT_ACCOUNTING_QUEUE, // default
-            Env.getADClientID(Env.getCtx()));
+            Env.getClientId(Env.getCtx()));
     return ca.equalsIgnoreCase(CLIENT_ACCOUNTING_IMMEDIATE);
+  }
+
+  public boolean sendEMail(String to, String subject, String message, File attachment) {
+    return true;
+  }
+
+  public boolean sendEMail(int AD_User_ID, String subject, String message, File attachment) {
+    return true;
+  }
+
+  public boolean sendEMail(
+      String to, String subject, String message, File attachment, boolean html) {
+    return true;
   }
 }

@@ -43,8 +43,7 @@ public class X_AD_TreeNodeBP extends PO implements I_AD_TreeNodeBP, I_Persistent
 
   public org.compiere.model.I_AD_Tree getAD_Tree() throws RuntimeException {
     return (org.compiere.model.I_AD_Tree)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name)
-            .getPO(getAD_Tree_ID(), get_TrxName());
+        MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name).getPO(getAD_Tree_ID(), null);
   }
 
   /**

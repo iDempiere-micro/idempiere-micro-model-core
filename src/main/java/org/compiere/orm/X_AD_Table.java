@@ -132,7 +132,7 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   public org.compiere.model.I_AD_Val_Rule getValRule() throws RuntimeException {
     return (org.compiere.model.I_AD_Val_Rule)
         MTable.get(getCtx(), org.compiere.model.I_AD_Val_Rule.Table_Name)
-            .getPO(getValRule_ID(), get_TrxName());
+            .getPO(getValRule_ID(), null);
   }
 
   /**

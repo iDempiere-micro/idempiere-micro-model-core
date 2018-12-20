@@ -1,11 +1,6 @@
 package org.compiere.util;
 
-import static software.hsharp.core.util.DBKt.*;
-
 import java.io.File;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Properties;
@@ -18,11 +13,7 @@ import org.idempiere.common.util.*;
  * @author Jorg Janke
  * @version $Id: Msg.java,v 1.2 2006/07/30 00:54:36 jjanke Exp $
  */
-public final class Msg {
-  /** Initial size of HashMap */
-  private static final int MAP_SIZE = 1500;
-  /** Separator between Msg and optional Tip */
-  private static final String SEPARATOR = Env.NL + Env.NL;
+public final class Msg extends BaseMsg {
 
   /** Singleton */
   private static Msg s_msg = null;
@@ -108,7 +99,7 @@ public final class Msg {
    */
   public static String getMsg(String ad_language, String AD_Message, boolean getText) {
     String retStr = getMsg(ad_language, AD_Message);
-    int pos = retStr.indexOf(SEPARATOR);
+    int pos = retStr.indexOf(Companion.getSEPARATOR());
     //  No Tip
     if (pos == -1) {
       if (getText) return retStr;
@@ -117,7 +108,7 @@ public final class Msg {
     {
       if (getText) retStr = retStr.substring(0, pos);
       else {
-        int start = pos + SEPARATOR.length();
+        int start = pos + Companion.getSEPARATOR().length();
         //	int end = retStr.length();
         retStr = retStr.substring(start);
       }
@@ -260,45 +251,8 @@ public final class Msg {
     String retStr = cache.get(key);
     if (retStr != null) return retStr;
 
-    //	Check AD_Element
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      if (AD_Language == null
-          || AD_Language.length() == 0
-          || Env.isBaseLanguage(AD_Language, "AD_Element"))
-        pstmt =
-            prepareStatement(
-                "SELECT Name, PO_Name FROM AD_Element WHERE UPPER(ColumnName)=?", null);
-      else {
-        pstmt =
-            prepareStatement(
-                "SELECT t.Name, t.PO_Name FROM AD_Element_Trl t, AD_Element e "
-                    + "WHERE t.AD_Element_ID=e.AD_Element_ID AND UPPER(e.ColumnName)=? "
-                    + "AND t.AD_Language=?",
-                null);
-        pstmt.setString(2, AD_Language);
-      }
+    retStr = BaseMsgKt.getElement(ad_language, ColumnName, isSOTrx);
 
-      pstmt.setString(1, ColumnName.toUpperCase());
-      rs = pstmt.executeQuery();
-      if (rs.next()) {
-        retStr = rs.getString(1);
-        if (!isSOTrx) {
-          String temp = rs.getString(2);
-          if (temp != null && temp.length() > 0) retStr = temp;
-        }
-      }
-    } catch (SQLException e) {
-      s_log.log(Level.SEVERE, "getElement", e);
-      return "";
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-
-    retStr = retStr == null ? "" : retStr.trim();
     cache.put(key, retStr);
     return retStr;
   } //  getElement
@@ -496,68 +450,6 @@ public final class Msg {
     m_elementCache.put(AD_Language, retValue);
     return retValue;
   }
-
-  /**
-   * Init message HashMap. The initial call is from ALogin (ConfirmPanel init). The second from
-   * Env.verifyLanguage.
-   *
-   * @param AD_Language Language
-   * @return Cache HashMap
-   */
-  private CCache<String, String> initMsg(String AD_Language) {
-    //	Trace.printStack();
-    CCache<String, String> msg = new CCache<String, String>("AD_Message", MAP_SIZE, 0, false, 0);
-    //
-    if (!isConnected()) {
-      s_log.log(Level.SEVERE, "No DB Connection");
-      return null;
-    }
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      if (AD_Language == null
-          || AD_Language.length() == 0
-          || Env.isBaseLanguage(AD_Language, "AD_Language"))
-        pstmt = prepareStatement("SELECT Value, MsgText, MsgTip FROM AD_Message", null);
-      else {
-        pstmt =
-            prepareStatement(
-                "SELECT m.Value, t.MsgText, t.MsgTip "
-                    + "FROM AD_Message_Trl t, AD_Message m "
-                    + "WHERE m.AD_Message_ID=t.AD_Message_ID"
-                    + " AND t.AD_Language=?",
-                null);
-        pstmt.setString(1, AD_Language);
-      }
-      rs = pstmt.executeQuery();
-
-      //	get values
-      while (rs.next()) {
-        String AD_Message = rs.getString(1);
-        StringBuilder MsgText = new StringBuilder();
-        MsgText.append(rs.getString(2));
-        String MsgTip = rs.getString(3);
-        //
-        if (MsgTip != null) // 	messageTip on next line, if exists
-        MsgText.append(" ").append(SEPARATOR).append(MsgTip);
-        msg.put(AD_Message, MsgText.toString());
-      }
-    } catch (SQLException e) {
-      s_log.log(Level.SEVERE, "initMsg", e);
-      return null;
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    //
-    if (msg.size() < 100) {
-      s_log.log(Level.SEVERE, "Too few (" + msg.size() + ") Records found for " + AD_Language);
-      return null;
-    }
-    if (s_log.isLoggable(Level.INFO)) s_log.info("Records=" + msg.size() + " - " + AD_Language);
-    return msg;
-  } //	initMsg
 
   /** Reset Message cache */
   public void reset() {

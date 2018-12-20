@@ -51,7 +51,7 @@ public class MTableIndex extends X_AD_TableIndex {
    * @param name name
    */
   public MTableIndex(MTable parent, String name) {
-    this(parent.getCtx(), 0, parent.get_TrxName());
+    this(parent.getCtx(), 0, null);
     setClientOrg(parent);
     setAD_Table_ID(parent.getAD_Table_ID());
     setEntityType(parent.getEntityType());
@@ -70,7 +70,7 @@ public class MTableIndex extends X_AD_TableIndex {
             table.getCtx(),
             I_AD_TableIndex.Table_Name,
             I_AD_TableIndex.COLUMNNAME_AD_Table_ID + "=?",
-            table.get_TrxName());
+            null);
     query.setParameters(table.getAD_Table_ID());
     query.setOnlyActiveRecords(true);
     List<MTableIndex> list = query.list();
@@ -107,7 +107,7 @@ public class MTableIndex extends X_AD_TableIndex {
             getCtx(),
             MIndexColumn.Table_Name,
             MIndexColumn.COLUMNNAME_AD_TableIndex_ID + "=?",
-            get_TrxName());
+            null);
     query.setParameters(getAD_TableIndex_ID());
     query.setOrderBy(MIndexColumn.COLUMNNAME_SeqNo);
     List<MIndexColumn> list = query.list();

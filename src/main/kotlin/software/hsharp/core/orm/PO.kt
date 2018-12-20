@@ -85,7 +85,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     val p_info: POInfo = initPO(ctx)
 
     protected fun initPO(ctx: Properties): POInfo {
-        return POInfo.getPOInfo(ctx, this.tableId, _TrxName)
+        return POInfo.getPOInfo(ctx, this.tableId, null)
     }
 
     /** Accounting Columns  */
@@ -316,7 +316,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
                 if (keyColumn.endsWith("_ID")) {
                     val ii: Int? =
                         try {
-                            get_Value(keyColumn) as Int
+                            get_Value(keyColumn) as Int?
                         } catch (e: Exception) {
                             log.error(e) { "" }
                             null
@@ -431,6 +431,36 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     init {
         if (row != null) load(row)
     }
+
+    /**
+     * Get Value as int
+     *
+     * @param index index
+     * @return int value or 0
+     */
+    fun get_ValueAsInt(index: Int): Int {
+        val value = get_Value(index) ?: return 0
+        if (value is Int) return value
+        try {
+            return Integer.parseInt(value.toString())
+        } catch (ex: NumberFormatException) {
+            log.warn(p_info.getColumnName(index) + " - " + ex.message)
+            return 0
+        }
+    } //  get_ValueAsInt
+
+    /**
+     * Get Integer Value
+     *
+     * @param columnName
+     * @return int value
+     */
+    fun get_ValueAsInt(columnName: String): Int {
+        val idx = get_ColumnIndex(columnName)
+        return if (idx < 0) {
+            0
+        } else get_ValueAsInt(idx)
+    }
 }
 
 fun getAllIDs(tableName: String, whereClause: String?): IntArray {
@@ -438,5 +468,10 @@ fun getAllIDs(tableName: String, whereClause: String?): IntArray {
     sql.append(tableName).append("_ID FROM ").append(tableName)
     if (whereClause != null && whereClause.isNotEmpty()) sql.append(" WHERE ").append(whereClause)
     val loadQuery = software.hsharp.core.util.queryOf(sql.toString(), listOf()).map { row -> row.int(1) }.asList
+    return DB.current.run(loadQuery).toIntArray()
+}
+
+fun getIDsEx(trxName: String?, sql: String, vararg params: Any): IntArray {
+    val loadQuery = software.hsharp.core.util.queryOf(sql.toString(), listOf(*params)).map { row -> row.int(1) }.asList
     return DB.current.run(loadQuery).toIntArray()
 }

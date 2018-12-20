@@ -46,7 +46,7 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
   public org.compiere.model.I_AD_Reference getAD_Reference() throws RuntimeException {
     return (org.compiere.model.I_AD_Reference)
         MTable.get(getCtx(), org.compiere.model.I_AD_Reference.Table_Name)
-            .getPO(getAD_Reference_ID(), get_TrxName());
+            .getPO(getReferenceId(), null);
   }
 
   /**
@@ -54,7 +54,7 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
    *
    * @return System Reference and Validation
    */
-  public int getAD_Reference_ID() {
+  public int getReferenceId() {
     Integer ii = (Integer) get_Value(COLUMNNAME_AD_Reference_ID);
     if (ii == null) return 0;
     return ii;

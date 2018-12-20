@@ -2,6 +2,7 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_OrgInfo;
 import org.idempiere.common.util.CCache;
 
@@ -31,13 +32,17 @@ public class MOrgInfo extends X_AD_OrgInfo {
     super(ctx, rs, trxName);
   } //	MOrgInfo
 
+  public MOrgInfo(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MOrgInfo
+
   /**
    * Organization constructor
    *
    * @param org org
    */
   public MOrgInfo(MOrg org) {
-    super(org.getCtx(), 0, org.get_TrxName());
+    super(org.getCtx(), 0, null);
     setClientOrg(org);
     setDUNS("?");
     setTaxID("?");

@@ -2,6 +2,7 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Role_OrgAccess;
 import org.idempiere.orm.I_Persistent;
 
@@ -27,6 +28,10 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
     super(ctx, rs, trxName);
   }
 
+  public X_AD_Role_OrgAccess(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MRoleOrgAccess
+
   /**
    * AccessLevel
    *
@@ -43,8 +48,7 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
 
   public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
-            .getPO(getAD_Role_ID(), get_TrxName());
+        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name).getPO(getAD_Role_ID(), null);
   }
 
   /**

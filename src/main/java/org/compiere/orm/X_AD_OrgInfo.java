@@ -2,6 +2,7 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_OrgInfo;
 import org.idempiere.orm.I_Persistent;
 
@@ -28,6 +29,10 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
   public X_AD_OrgInfo(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+
+  public X_AD_OrgInfo(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MOrgInfo
 
   /**
    * AccessLevel

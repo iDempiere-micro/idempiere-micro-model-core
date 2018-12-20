@@ -2,6 +2,7 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Table_Access;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
@@ -39,6 +40,10 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
     super(ctx, rs, trxName);
   }
 
+  public X_AD_Table_Access(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MTableAccess
+
   /**
    * AccessLevel
    *
@@ -74,8 +79,7 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
 
   public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
-            .getPO(getAD_Role_ID(), get_TrxName());
+        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name).getPO(getAD_Role_ID(), null);
   }
 
   /**
@@ -120,7 +124,7 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access, I_Persis
   public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), get_TrxName());
+            .getPO(getAD_Table_ID(), null);
   }
 
   /**

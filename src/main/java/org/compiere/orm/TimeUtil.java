@@ -712,12 +712,12 @@ public class TimeUtil {
 
   /** Returns start date + nbDays which cannot be saturday or sunday or non business days */
   public static Timestamp addOnlyBusinessDays(
-      Timestamp startDate, int nbDays, int clientID, String trxName) {
+      Timestamp startDate, int nbDays, int clientId, String trxName) {
     Timestamp retValue = startDate;
     while (nbDays > 0) {
       retValue = TimeUtil.addDays(retValue, 1);
       StringBuilder sql = new StringBuilder("SELECT nextBusinessDay(?,?) FROM DUAL");
-      retValue = getSQLValueTSEx(trxName, sql.toString(), retValue, clientID);
+      retValue = getSQLValueTSEx(trxName, sql.toString(), retValue, clientId);
       nbDays--;
     }
     return retValue;

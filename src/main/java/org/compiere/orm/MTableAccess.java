@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
+import kotliquery.Row;
 import org.compiere.util.Msg;
 
 /**
@@ -40,6 +41,10 @@ public class MTableAccess extends X_AD_Table_Access {
    */
   public MTableAccess(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MTableAccess
+
+  public MTableAccess(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MTableAccess
 
   /**
@@ -100,7 +105,7 @@ public class MTableAccess extends X_AD_Table_Access {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Table_ID());
         rs = pstmt.executeQuery();
         if (rs.next()) m_tableName = rs.getString(1);

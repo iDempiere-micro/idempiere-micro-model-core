@@ -4,7 +4,6 @@ import static org.compiere.util.SystemIDs.USER_SUPERUSER;
 import static org.compiere.util.SystemIDs.USER_SYSTEM;
 import static software.hsharp.core.util.DBKt.*;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,11 +11,14 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Role;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.util.*;
 import org.idempiere.icommon.model.IPO;
+import software.hsharp.core.orm.MBaseRole;
+import software.hsharp.core.orm.MBaseRoleKt;
 
 /**
  * Role Model. Includes AD_User runtime info for Personal Access The class is final, so that you
@@ -29,7 +31,7 @@ import org.idempiere.icommon.model.IPO;
  * @contributor KittiU - FR [ 3062553 ] - Duplicated action in DocAction list for Multiple Role
  *     Users
  */
-public class MRole extends X_AD_Role {
+public class MRole extends MBaseRole {
   /** Access SQL Read Write */
   public static final boolean SQL_RW = true;
   /** Access SQL Read Only */
@@ -54,22 +56,10 @@ public class MRole extends X_AD_Role {
   private int m_AD_User_ID = -1;
   /** Positive List of Organizational Access */
   private OrgAccess[] m_orgAccess = null;
-  /** List of Table Access */
-  private MTableAccess[] m_tableAccess = null;
-  /** List of Column Access */
-  private MColumnAccess[] m_columnAccess = null;
   /** List of Record Access */
   private MRecordAccess[] m_recordAccess = null;
   /** List of Dependent Record Access */
   private MRecordAccess[] m_recordDependentAccess = null;
-  /** Table Data Access Level */
-  private HashMap<Integer, String> m_tableAccessLevel = null;
-  /** Table Name */
-  private HashMap<String, Integer> m_tableName = null;
-  /** View Name */
-  private Set<String> m_viewName = null;
-  /** ID Column Name * */
-  private HashMap<String, String> m_tableIdName = null;
   /** Window Access */
   private HashMap<Integer, Boolean> m_windowAccess = null;
   /** Process Access */
@@ -133,6 +123,10 @@ public class MRole extends X_AD_Role {
    */
   public MRole(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MRole
+
+  public MRole(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MRole
 
   /**
@@ -246,25 +240,7 @@ public class MRole extends X_AD_Role {
    * @return roles of client
    */
   public static MRole[] getOfClient(Properties ctx) {
-    String sql = "SELECT * FROM AD_Role WHERE AD_Client_ID=?";
-    ArrayList<MRole> list = new ArrayList<MRole>();
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = prepareStatement(sql, null);
-      pstmt.setInt(1, Env.getADClientID(ctx));
-      rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new MRole(ctx, rs, null));
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    MRole[] retValue = new MRole[list.size()];
-    list.toArray(retValue);
-    return retValue;
+    return MBaseRoleKt.getOfClient(ctx);
   } //	getOfClient
 
   /**
@@ -324,7 +300,7 @@ public class MRole extends X_AD_Role {
           found = oa1.equals(oa2);
           if (found && override) {
             // stronger permissions first
-            if (!oa2.readOnly) oa1.readOnly = false;
+            if (!oa2.getReadOnly()) oa1.setReadOnly(false);
           }
         } else if (o1 instanceof MTableAccess) {
           final MTableAccess ta1 = (MTableAccess) o1;
@@ -463,11 +439,11 @@ public class MRole extends X_AD_Role {
     if (!success) return success;
     if (newRecord && success) {
       //	Add Role to SuperUser
-      MUserRoles su = new MUserRoles(getCtx(), SUPERUSER_USER_ID, getAD_Role_ID(), get_TrxName());
+      MUserRoles su = new MUserRoles(getCtx(), SUPERUSER_USER_ID, getAD_Role_ID(), null);
       su.saveEx();
       //	Add Role to User
       if (getCreatedBy() != SUPERUSER_USER_ID) {
-        MUserRoles ur = new MUserRoles(getCtx(), getCreatedBy(), getAD_Role_ID(), get_TrxName());
+        MUserRoles ur = new MUserRoles(getCtx(), getCreatedBy(), getAD_Role_ID(), null);
         ur.saveEx();
       }
       updateAccessRecords();
@@ -646,12 +622,12 @@ public class MRole extends X_AD_Role {
 
     if (reset) deleteAccessRecords();
 
-    int win = executeUpdateEx(sqlWindow + roleAccessLevelWin, get_TrxName());
-    int proc = executeUpdateEx(sqlProcess + roleAccessLevel, get_TrxName());
-    int form = executeUpdateEx(sqlForm + roleAccessLevel, get_TrxName());
-    int wf = executeUpdateEx(sqlWorkflow + roleAccessLevel, get_TrxName());
-    int docact = executeUpdateEx(sqlDocAction, get_TrxName());
-    int info = executeUpdateEx(sqlInfo, get_TrxName());
+    int win = executeUpdateEx(sqlWindow + roleAccessLevelWin, null);
+    int proc = executeUpdateEx(sqlProcess + roleAccessLevel, null);
+    int form = executeUpdateEx(sqlForm + roleAccessLevel, null);
+    int wf = executeUpdateEx(sqlWorkflow + roleAccessLevel, null);
+    int docact = executeUpdateEx(sqlDocAction, null);
+    int info = executeUpdateEx(sqlInfo, null);
 
     loadAccess(true);
     return "@AD_Window_ID@ #"
@@ -672,13 +648,12 @@ public class MRole extends X_AD_Role {
   private void deleteAccessRecords() {
     String whereDel = " WHERE AD_Role_ID=" + getAD_Role_ID();
     //
-    int winDel = executeUpdateEx("DELETE FROM AD_Window_Access" + whereDel, get_TrxName());
-    int procDel = executeUpdateEx("DELETE FROM AD_Process_Access" + whereDel, get_TrxName());
-    int formDel = executeUpdateEx("DELETE FROM AD_Form_Access" + whereDel, get_TrxName());
-    int wfDel = executeUpdateEx("DELETE FROM AD_WorkFlow_Access" + whereDel, get_TrxName());
-    int docactDel =
-        executeUpdateEx("DELETE FROM AD_Document_Action_Access" + whereDel, get_TrxName());
-    int infoDel = executeUpdateEx("DELETE FROM AD_InfoWindow_Access" + whereDel, get_TrxName());
+    int winDel = executeUpdateEx("DELETE FROM AD_Window_Access" + whereDel, null);
+    int procDel = executeUpdateEx("DELETE FROM AD_Process_Access" + whereDel, null);
+    int formDel = executeUpdateEx("DELETE FROM AD_Form_Access" + whereDel, null);
+    int wfDel = executeUpdateEx("DELETE FROM AD_WorkFlow_Access" + whereDel, null);
+    int docactDel = executeUpdateEx("DELETE FROM AD_Document_Action_Access" + whereDel, null);
+    int infoDel = executeUpdateEx("DELETE FROM AD_InfoWindow_Access" + whereDel, null);
 
     if (log.isLoggable(Level.FINE))
       log.fine(
@@ -742,12 +717,12 @@ public class MRole extends X_AD_Role {
       sb.append(m_orgAccess[i].toString()).append(Env.NL);
     sb.append(Env.NL);
     //
-    loadTableAccess(false);
+    MTableAccess[] m_tableAccess = loadTableAccess(false);
     for (int i = 0; i < m_tableAccess.length; i++)
       sb.append(m_tableAccess[i].toStringX(ctx)).append(Env.NL);
     if (m_tableAccess.length > 0) sb.append(Env.NL);
     //
-    loadColumnAccess(false);
+    MColumnAccess[] m_columnAccess = loadColumnAccess(false);
     for (int i = 0; i < m_columnAccess.length; i++)
       sb.append(m_columnAccess[i].toStringX(ctx)).append(Env.NL);
     if (m_columnAccess.length > 0) sb.append(Env.NL);
@@ -826,11 +801,11 @@ public class MRole extends X_AD_Role {
     ResultSet rs = null;
     String sql = "SELECT * FROM AD_User_OrgAccess " + "WHERE AD_User_ID=? AND IsActive='Y'";
     try {
-      pstmt = prepareStatement(sql, get_TrxName());
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, getAD_User_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
-        MUserOrgAccess oa = new MUserOrgAccess(getCtx(), rs, get_TrxName());
+        MUserOrgAccess oa = new MUserOrgAccess(getCtx(), rs, null);
         loadOrgAccessAdd(list, new OrgAccess(oa.getClientId(), oa.getOrgId(), oa.isReadOnly()));
       }
     } catch (Exception e) {
@@ -839,140 +814,6 @@ public class MRole extends X_AD_Role {
       close(rs, pstmt);
     }
   } //	loadOrgAccessRole
-
-  /**
-   * Load Org Access Role
-   *
-   * @param list list
-   */
-  private void loadOrgAccessRole(ArrayList<OrgAccess> list) {
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    String sql = "SELECT * FROM AD_Role_OrgAccess " + "WHERE AD_Role_ID=? AND IsActive='Y'";
-    try {
-      pstmt = prepareStatement(sql, get_TrxName());
-      pstmt.setInt(1, getAD_Role_ID());
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        MRoleOrgAccess oa = new MRoleOrgAccess(getCtx(), rs, get_TrxName());
-        loadOrgAccessAdd(list, new OrgAccess(oa.getClientId(), oa.getOrgId(), oa.isReadOnly()));
-      }
-    } catch (Exception e) {
-      log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-    }
-  } //	loadOrgAccessRole
-
-  /**
-   * Load Org Access Add Tree to List
-   *
-   * @param list list
-   * @param oa org access
-   * @see Login
-   */
-  private void loadOrgAccessAdd(ArrayList<OrgAccess> list, OrgAccess oa) {
-    if (list.contains(oa)) return;
-    list.add(oa);
-    //	Do we look for trees?
-    if (getAD_Tree_Org_ID() == 0) return;
-    MOrg org = MOrg.get(getCtx(), oa.AD_Org_ID);
-    if (!org.isSummary()) return;
-    //	Summary Org - Get Dependents
-    MTree_Base tree = MTree_Base.get(getCtx(), getAD_Tree_Org_ID(), get_TrxName());
-    String sql =
-        "SELECT AD_Client_ID, AD_Org_ID FROM AD_Org "
-            + "WHERE IsActive='Y' AND AD_Org_ID IN (SELECT Node_ID FROM "
-            + tree.getNodeTableName()
-            + " WHERE AD_Tree_ID=? AND Parent_ID=? AND IsActive='Y')";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = prepareStatement(sql, get_TrxName());
-      pstmt.setInt(1, tree.getAD_Tree_ID());
-      pstmt.setInt(2, org.getOrgId());
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        int AD_Client_ID = rs.getInt(1);
-        int AD_Org_ID = rs.getInt(2);
-        loadOrgAccessAdd(list, new OrgAccess(AD_Client_ID, AD_Org_ID, oa.readOnly));
-      }
-    } catch (Exception e) {
-      log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-  } //	loadOrgAccessAdd
-
-  /**
-   * Load Table Access
-   *
-   * @param reload reload
-   */
-  private void loadTableAccess(boolean reload) {
-    if (m_tableAccess != null && !reload) return;
-    ArrayList<MTableAccess> list = new ArrayList<MTableAccess>();
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    String sql = "SELECT * FROM AD_Table_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'";
-    try {
-      pstmt = prepareStatement(sql, get_TrxName());
-      pstmt.setInt(1, getAD_Role_ID());
-      rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new MTableAccess(getCtx(), rs, get_TrxName()));
-    } catch (Exception e) {
-      log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-    }
-    m_tableAccess = new MTableAccess[list.size()];
-    list.toArray(m_tableAccess);
-    if (log.isLoggable(Level.FINE)) log.fine("#" + m_tableAccess.length);
-  } //	loadTableAccess
-
-  /**
-   * Load Table Access and Name
-   *
-   * @param reload reload
-   */
-  private void loadTableInfo(boolean reload) {
-    if (m_tableAccessLevel != null && m_tableName != null && !reload) return;
-    m_tableAccessLevel = new HashMap<Integer, String>(300);
-    m_tableName = new HashMap<String, Integer>(300);
-    m_viewName = new HashSet<String>(300);
-    m_tableIdName = new HashMap<String, String>(300);
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    String sql =
-        "SELECT AD_Table_ID, AccessLevel, TableName, IsView, "
-            + "(SELECT ColumnName FROM AD_COLUMN WHERE AD_COLUMN.AD_TABLE_ID = AD_TABLE.AD_TABLE_ID AND AD_COLUMN.COLUMNNAME = AD_TABLE.TABLENAME || '_ID') "
-            + "FROM AD_Table WHERE IsActive='Y'";
-    try {
-      pstmt = prepareStatement(sql, get_TrxName());
-      rs = pstmt.executeQuery();
-      while (rs.next()) {
-        Integer ii = new Integer(rs.getInt(1));
-        m_tableAccessLevel.put(ii, rs.getString(2));
-        String tableName = rs.getString(3);
-        m_tableName.put(tableName, ii);
-        String isView = rs.getString(4);
-        if ("Y".equals(isView)) {
-          m_viewName.add(tableName.toUpperCase());
-        }
-        String idColumn = rs.getString(5);
-        if (idColumn != null && idColumn.trim().length() > 0) {
-          m_tableIdName.put(tableName.toUpperCase(), idColumn);
-        }
-      }
-    } catch (Exception e) {
-      log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-    }
-    if (log.isLoggable(Level.FINE)) log.fine("#" + m_tableAccessLevel.size());
-  } //	loadTableAccessLevel
 
   /**
    * Check if tableName is a view
@@ -981,39 +822,14 @@ public class MRole extends X_AD_Role {
    * @return boolean
    */
   private boolean isView(String tableName) {
+    Set<String> m_viewName = getM_viewName();
     if (m_viewName == null) loadAccess(true);
     return m_viewName.contains(tableName.toUpperCase());
   }
 
   private String getIdColumnName(String tableName) {
-    return m_tableIdName.get(tableName.toUpperCase());
+    return getM_tableIdName().get(tableName.toUpperCase());
   }
-
-  /**
-   * Load Column Access
-   *
-   * @param reload reload
-   */
-  private void loadColumnAccess(boolean reload) {
-    if (m_columnAccess != null && !reload) return;
-    ArrayList<MColumnAccess> list = new ArrayList<MColumnAccess>();
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    String sql = "SELECT * FROM AD_Column_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'";
-    try {
-      pstmt = prepareStatement(sql, get_TrxName());
-      pstmt.setInt(1, getAD_Role_ID());
-      rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new MColumnAccess(getCtx(), rs, get_TrxName()));
-    } catch (Exception e) {
-      log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-    }
-    m_columnAccess = new MColumnAccess[list.size()];
-    list.toArray(m_columnAccess);
-    if (log.isLoggable(Level.FINE)) log.fine("#" + m_columnAccess.length);
-  } //	loadColumnAccess
 
   /**
    * Load Record Access
@@ -1030,11 +846,11 @@ public class MRole extends X_AD_Role {
         "SELECT * FROM AD_Record_Access "
             + "WHERE AD_Role_ID=? AND IsActive='Y' ORDER BY AD_Table_ID";
     try {
-      pstmt = prepareStatement(sql, get_TrxName());
+      pstmt = prepareStatement(sql, null);
       pstmt.setInt(1, getAD_Role_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
-        MRecordAccess ra = new MRecordAccess(getCtx(), rs, get_TrxName());
+        MRecordAccess ra = new MRecordAccess(getCtx(), rs, null);
         list.add(ra);
         if (ra.isDependentEntities()) dependent.add(ra);
       }
@@ -1072,7 +888,7 @@ public class MRole extends X_AD_Role {
     if (!rw) set.add("0");
     //	Positive List
     for (int i = 0; i < m_orgAccess.length; i++)
-      set.add(String.valueOf(m_orgAccess[i].AD_Client_ID));
+      set.add(String.valueOf(m_orgAccess[i].getClientId()));
     //
     StringBuilder sb = new StringBuilder();
     Iterator<String> it = set.iterator();
@@ -1107,16 +923,16 @@ public class MRole extends X_AD_Role {
     //
     // Check Access All Orgs:
     if (isAccessAllOrgs()) {
-      // User has access to given AD_Client_ID if the role is defined on that AD_Client_ID
+      // User has access to given clientId if the role is defined on that clientId
       return getClientId() == AD_Client_ID;
     }
     //
     loadOrgAccess(false);
     //	Positive List
     for (int i = 0; i < m_orgAccess.length; i++) {
-      if (m_orgAccess[i].AD_Client_ID == AD_Client_ID) {
+      if (m_orgAccess[i].getClientId() == AD_Client_ID) {
         if (!rw) return true;
-        if (!m_orgAccess[i].readOnly) // 	rw
+        if (!m_orgAccess[i].getReadOnly()) // 	rw
         return true;
       }
     }
@@ -1137,9 +953,9 @@ public class MRole extends X_AD_Role {
     if (!rw) set.add("0");
     //	Positive List
     for (int i = 0; i < m_orgAccess.length; i++) {
-      if (!rw) set.add(String.valueOf(m_orgAccess[i].AD_Org_ID));
-      else if (!m_orgAccess[i].readOnly) // 	rw
-      set.add(String.valueOf(m_orgAccess[i].AD_Org_ID));
+      if (!rw) set.add(String.valueOf(m_orgAccess[i].getOrgId()));
+      else if (!m_orgAccess[i].getReadOnly()) // 	rw
+      set.add(String.valueOf(m_orgAccess[i].getOrgId()));
     }
     //
     StringBuilder sb = new StringBuilder();
@@ -1177,10 +993,10 @@ public class MRole extends X_AD_Role {
 
     //	Positive List
     for (int i = 0; i < m_orgAccess.length; i++) {
-      if (m_orgAccess[i].AD_Org_ID == AD_Org_ID) {
+      if (m_orgAccess[i].getOrgId() == AD_Org_ID) {
         if (!rw) return true;
         // 	rw
-        return !m_orgAccess[i].readOnly;
+        return !m_orgAccess[i].getReadOnly();
       }
     }
     return false;
@@ -1203,6 +1019,7 @@ public class MRole extends X_AD_Role {
 
     // default to negative list, can report on all tables
     boolean canReport = true;
+    MTableAccess[] m_tableAccess = loadTableAccess(false);
     for (int i = 0; i < m_tableAccess.length; i++) {
       if (!X_AD_Table_Access.ACCESSTYPERULE_Reporting.equals(m_tableAccess[i].getAccessTypeRule()))
         continue;
@@ -1245,6 +1062,7 @@ public class MRole extends X_AD_Role {
 
     // default to negative list, can report on all tables
     boolean canExport = true;
+    MTableAccess[] m_tableAccess = loadTableAccess(false);
     for (int i = 0; i < m_tableAccess.length; i++) {
       if (!X_AD_Table_Access.ACCESSTYPERULE_Exporting.equals(m_tableAccess[i].getAccessTypeRule()))
         continue;
@@ -1278,10 +1096,10 @@ public class MRole extends X_AD_Role {
   public boolean isTableAccess(int AD_Table_ID, boolean ro) {
     if (!isTableAccessLevel(AD_Table_ID, ro)) // 	Role Based Access
     return false;
-    loadTableAccess(false);
 
     // default to negative list, can access on all tables
     boolean hasAccess = true; // 	assuming exclusive rule
+    MTableAccess[] m_tableAccess = loadTableAccess(false);
     for (int i = 0; i < m_tableAccess.length; i++) {
       if (!X_AD_Table_Access.ACCESSTYPERULE_Accessing.equals(m_tableAccess[i].getAccessTypeRule()))
         continue;
@@ -1349,7 +1167,7 @@ public class MRole extends X_AD_Role {
     //	AccessLevel
     //		1 = Org - 2 = Client - 4 = System
     //		3 = Org+Client - 6 = Client+System - 7 = All
-    String roleAccessLevel = m_tableAccessLevel.get(new Integer(AD_Table_ID));
+    String roleAccessLevel = getM_tableAccessLevel().get(new Integer(AD_Table_ID));
     if (roleAccessLevel == null) {
       if (log.isLoggable(Level.FINE)) log.fine("NO - No AccessLevel - AD_Table_ID=" + AD_Table_ID);
       return false;
@@ -1393,6 +1211,7 @@ public class MRole extends X_AD_Role {
     loadColumnAccess(false);
 
     boolean retValue = true; // 	assuming exclusive
+    MColumnAccess[] m_columnAccess = loadColumnAccess(false);
     for (int i = 0; i < m_columnAccess.length; i++) {
       if (m_columnAccess[i].isExclude()) // 	Exclude
       //	If you Exclude Access to a column and select Read Only,
@@ -1521,7 +1340,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT w.AD_Window_ID "
                 + "                FROM ASP_Window w, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE w.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND w.IsActive = 'Y' "
@@ -1532,7 +1351,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Window_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Window_ID IS NOT NULL "
@@ -1544,7 +1363,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Window_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Window_ID IS NOT NULL "
@@ -1558,7 +1377,7 @@ public class MRole extends X_AD_Role {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1607,7 +1426,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT p.AD_Process_ID "
                 + "                FROM ASP_Process p, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE p.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND p.IsActive = 'Y' "
@@ -1618,7 +1437,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Process_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Process_ID IS NOT NULL "
@@ -1629,7 +1448,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Process_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Process_ID IS NOT NULL "
@@ -1642,7 +1461,7 @@ public class MRole extends X_AD_Role {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1687,7 +1506,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT t.AD_Task_ID "
                 + "                FROM ASP_Task t, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE t.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND t.IsActive = 'Y' "
@@ -1698,7 +1517,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Task_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Task_ID IS NOT NULL "
@@ -1708,7 +1527,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Task_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Task_ID IS NOT NULL "
@@ -1720,7 +1539,7 @@ public class MRole extends X_AD_Role {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1764,7 +1583,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT f.AD_Form_ID "
                 + "                FROM ASP_Form f, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE f.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND f.IsActive = 'Y' "
@@ -1775,7 +1594,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Form_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Form_ID IS NOT NULL "
@@ -1785,7 +1604,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Form_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Form_ID IS NOT NULL "
@@ -1797,7 +1616,7 @@ public class MRole extends X_AD_Role {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1841,7 +1660,7 @@ public class MRole extends X_AD_Role {
                 + "              SELECT w.AD_Workflow_ID "
                 + "                FROM ASP_Workflow w, ASP_Level l, ASP_ClientLevel cl "
                 + "               WHERE w.ASP_Level_ID = l.ASP_Level_ID "
-                + "                 AND cl.AD_Client_ID = "
+                + "                 AND cl.clientId = "
                 + client.getClientId()
                 + "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
                 + "                 AND w.IsActive = 'Y' "
@@ -1852,7 +1671,7 @@ public class MRole extends X_AD_Role {
                 // + show ASP exceptions for client
                 + "              SELECT AD_Workflow_ID "
                 + "                FROM ASP_ClientException ce "
-                + "               WHERE ce.AD_Client_ID = "
+                + "               WHERE ce.clientId = "
                 + client.getClientId()
                 + "                 AND ce.IsActive = 'Y' "
                 + "                 AND ce.AD_Workflow_ID IS NOT NULL "
@@ -1862,7 +1681,7 @@ public class MRole extends X_AD_Role {
                 // minus hide ASP exceptions for client
                 + "          SELECT AD_Workflow_ID "
                 + "            FROM ASP_ClientException ce "
-                + "           WHERE ce.AD_Client_ID = "
+                + "           WHERE ce.clientId = "
                 + client.getClientId()
                 + "             AND ce.IsActive = 'Y' "
                 + "             AND ce.AD_Workflow_ID IS NOT NULL "
@@ -1874,7 +1693,7 @@ public class MRole extends X_AD_Role {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -2280,7 +2099,7 @@ public class MRole extends X_AD_Role {
    */
   private int getAD_Table_ID(String tableName) {
     loadTableInfo(false);
-    Integer ii = m_tableName.get(tableName);
+    Integer ii = getM_tableName().get(tableName);
     if (ii != null) return ii;
     //	log.log(Level.WARNING,"getAD_Table_ID - not found (" + tableName + ")");
     return 0;
@@ -2383,7 +2202,7 @@ public class MRole extends X_AD_Role {
         int idxpar = 1;
         if (role.getClientId() == 0 && role.isMasterRole()) {
           // master role on system - check options based on docbasetype and docsubtypeso
-          MDocType doc = new MDocType(getCtx(), docTypeId, get_TrxName());
+          MDocType doc = new MDocType(getCtx(), docTypeId, null);
 
           sql =
               "SELECT DISTINCT rl.Value, a.IsActive"
@@ -2407,7 +2226,7 @@ public class MRole extends X_AD_Role {
                   + sql_values
                   + ")";
 
-          pstmt = prepareStatement(sql, get_TrxName());
+          pstmt = prepareStatement(sql, null);
           pstmt.setInt(idxpar++, role.getAD_Role_ID());
           pstmt.setString(idxpar++, doc.getDocBaseType());
           if (MDocType.DOCBASETYPE_SalesOrder.equals(doc.getDocBaseType()))
@@ -2427,7 +2246,7 @@ public class MRole extends X_AD_Role {
                   + " AND rl.Value IN ("
                   + sql_values
                   + ")";
-          pstmt = prepareStatement(sql, get_TrxName());
+          pstmt = prepareStatement(sql, null);
           pstmt.setInt(idxpar++, clientId);
           pstmt.setInt(idxpar++, docTypeId);
           pstmt.setInt(idxpar++, role.getAD_Role_ID());
@@ -2550,8 +2369,8 @@ public class MRole extends X_AD_Role {
       role.loadAccess(reload);
       role.mergeAccesses(reload);
       orgAccess = mergeAccess(orgAccess, role.m_orgAccess, override);
-      tableAccess = mergeAccess(tableAccess, role.m_tableAccess, override);
-      columnAccess = mergeAccess(columnAccess, role.m_columnAccess, override);
+      tableAccess = mergeAccess(tableAccess, role.loadTableAccess(false), override);
+      columnAccess = mergeAccess(columnAccess, role.loadColumnAccess(false), override);
       recordAccess = mergeAccess(recordAccess, role.m_recordAccess, override);
       recordDependentAccess =
           mergeAccess(recordDependentAccess, role.m_recordDependentAccess, override);
@@ -2561,8 +2380,8 @@ public class MRole extends X_AD_Role {
     //
     // Merge permissions inside this role
     this.m_orgAccess = mergeAccess(this.m_orgAccess, orgAccess, false);
-    this.m_tableAccess = mergeAccess(this.m_tableAccess, tableAccess, false);
-    this.m_columnAccess = mergeAccess(this.m_columnAccess, columnAccess, false);
+    this.setTableAccess(mergeAccess(this.loadTableAccess(false), tableAccess, false));
+    this.setColumnAccess(mergeAccess(this.loadColumnAccess(false), columnAccess, false));
     this.m_recordAccess = mergeAccess(this.m_recordAccess, recordAccess, false);
     this.m_recordDependentAccess =
         mergeAccess(this.m_recordDependentAccess, recordDependentAccess, false);
@@ -2584,7 +2403,7 @@ public class MRole extends X_AD_Role {
     //
     final String whereClause = X_AD_Role_Included.COLUMNNAME_AD_Role_ID + "=?";
     List<X_AD_Role_Included> list =
-        new Query(getCtx(), X_AD_Role_Included.Table_Name, whereClause, get_TrxName())
+        new Query(getCtx(), X_AD_Role_Included.Table_Name, whereClause, null)
             .setParameters(getAD_Role_ID())
             .setOnlyActiveRecords(true)
             .setOrderBy(
@@ -2626,7 +2445,7 @@ public class MRole extends X_AD_Role {
             + " AND us.Substitute_ID=?)";
 
     List<MRole> list =
-        new Query(getCtx(), I_AD_Role.Table_Name, whereClause, get_TrxName())
+        new Query(getCtx(), I_AD_Role.Table_Name, whereClause, null)
             .setParameters(AD_User_ID)
             .setClient_ID()
             .setOrderBy(I_AD_Role.COLUMNNAME_AD_Role_ID)
@@ -2754,7 +2573,7 @@ public class MRole extends X_AD_Role {
       		+ "              SELECT f.AD_InfoWindow_ID "
       		+ "                FROM ASP_InfoWindow f, ASP_Level l, ASP_ClientLevel cl "
       		+ "               WHERE f.ASP_Level_ID = l.ASP_Level_ID "
-      		+ "                 AND cl.AD_Client_ID = " + client.getClientId()
+      		+ "                 AND cl.clientId = " + client.getClientId()
       		+ "                 AND cl.ASP_Level_ID = l.ASP_Level_ID "
       		+ "                 AND f.IsActive = 'Y' "
       		+ "                 AND l.IsActive = 'Y' "
@@ -2764,7 +2583,7 @@ public class MRole extends X_AD_Role {
       		// + show ASP exceptions for client
       		+ "              SELECT AD_InfoWindow_ID "
       		+ "                FROM ASP_ClientException ce "
-      		+ "               WHERE ce.AD_Client_ID = " + client.getClientId()
+      		+ "               WHERE ce.clientId = " + client.getClientId()
       		+ "                 AND ce.IsActive = 'Y' "
       		+ "                 AND ce.AD_InfoWindow_ID IS NOT NULL "
       		+ "                 AND ce.ASP_Status = 'S') " // Show
@@ -2773,7 +2592,7 @@ public class MRole extends X_AD_Role {
       		// minus hide ASP exceptions for client
       		+ "          SELECT AD_InfoWindow_ID "
       		+ "            FROM ASP_ClientException ce "
-      		+ "           WHERE ce.AD_Client_ID = " + client.getClientId()
+      		+ "           WHERE ce.clientId = " + client.getClientId()
       		+ "             AND ce.IsActive = 'Y' "
       		+ "             AND ce.AD_InfoWindow_ID IS NOT NULL "
       		+ "             AND ce.ASP_Status = 'H')"; // Hide
@@ -2785,7 +2604,7 @@ public class MRole extends X_AD_Role {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, get_TrxName());
+        pstmt = prepareStatement(sql, null);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -2811,74 +2630,4 @@ public class MRole extends X_AD_Role {
   public void setClientOrg(IPO a) {
     super.setClientOrg(a);
   }
-
-  /** Org Access Summary */
-  class OrgAccess implements Serializable {
-    /** */
-    private static final long serialVersionUID = -4880665261978385315L;
-    /** Client */
-    public int AD_Client_ID = 0;
-    /** Organization */
-    public int AD_Org_ID = 0;
-    /** Read Only */
-    public boolean readOnly = true;
-
-    /**
-     * Org Access constructor
-     *
-     * @param ad_Client_ID client
-     * @param ad_Org_ID org
-     * @param readonly r/o
-     */
-    public OrgAccess(int ad_Client_ID, int ad_Org_ID, boolean readonly) {
-      this.AD_Client_ID = ad_Client_ID;
-      this.AD_Org_ID = ad_Org_ID;
-      this.readOnly = readonly;
-    }
-
-    /**
-     * Equals
-     *
-     * @param obj object to compare
-     * @return true if equals
-     */
-    public boolean equals(Object obj) {
-      if (obj != null && obj instanceof OrgAccess) {
-        OrgAccess comp = (OrgAccess) obj;
-        return comp.AD_Client_ID == AD_Client_ID && comp.AD_Org_ID == AD_Org_ID;
-      }
-      return false;
-    } //	equals
-
-    /**
-     * Hash Code
-     *
-     * @return hash Code
-     */
-    public int hashCode() {
-      return (AD_Client_ID * 7) + AD_Org_ID;
-    } //	hashCode
-
-    /**
-     * Extended String Representation
-     *
-     * @return extended info
-     */
-    public String toString() {
-      String clientName = "System";
-      if (AD_Client_ID != 0) clientName = MClient.get(getCtx(), AD_Client_ID).getName();
-      String orgName = "*";
-      if (AD_Org_ID != 0) orgName = MOrg.get(getCtx(), AD_Org_ID).getName();
-      StringBuilder sb = new StringBuilder();
-      sb.append(Msg.translate(getCtx(), "AD_Client_ID"))
-          .append("=")
-          .append(clientName)
-          .append(" - ")
-          .append(Msg.translate(getCtx(), "AD_Org_ID"))
-          .append("=")
-          .append(orgName);
-      if (readOnly) sb.append(" r/o");
-      return sb.toString();
-    } //	toString
-  } //	OrgAccess
 } //	MRole

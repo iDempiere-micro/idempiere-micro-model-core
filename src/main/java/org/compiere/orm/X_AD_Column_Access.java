@@ -2,6 +2,7 @@ package org.compiere.orm;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Column_Access;
 import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
@@ -30,6 +31,10 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
   public X_AD_Column_Access(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+
+  public X_AD_Column_Access(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MColumnAccess
 
   /**
    * AccessLevel
@@ -66,7 +71,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
   public org.compiere.model.I_AD_Column getAD_Column() throws RuntimeException {
     return (org.compiere.model.I_AD_Column)
         MTable.get(getCtx(), org.compiere.model.I_AD_Column.Table_Name)
-            .getPO(getAD_Column_ID(), get_TrxName());
+            .getPO(getAD_Column_ID(), null);
   }
 
   /**
@@ -101,8 +106,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
 
   public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
     return (org.compiere.model.I_AD_Role)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name)
-            .getPO(getAD_Role_ID(), get_TrxName());
+        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name).getPO(getAD_Role_ID(), null);
   }
 
   /**
@@ -129,7 +133,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
   public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), get_TrxName());
+            .getPO(getAD_Table_ID(), null);
   }
 
   /**

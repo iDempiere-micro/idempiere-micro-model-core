@@ -56,7 +56,7 @@ public class MOrg extends X_AD_Org {
    * @param name name
    */
   public MOrg(MClient client, String value, String name) {
-    this(client.getCtx(), 0, client.get_TrxName());
+    this(client.getCtx(), 0, null);
     setADClientID(client.getClientId());
     setValue(value);
     setName(name);
@@ -102,7 +102,7 @@ public class MOrg extends X_AD_Org {
    * @return Org Info
    */
   public MOrgInfo getInfo() {
-    return MOrgInfo.get(getCtx(), getOrgId(), get_TrxName());
+    return MOrgInfo.get(getCtx(), getOrgId(), null);
   } //	getMOrgInfo
 
   /**
@@ -121,7 +121,7 @@ public class MOrg extends X_AD_Org {
       //	Access
       MRoleOrgAccess.createForOrg(this);
       MRole role = MRole.getDefault(getCtx(), true); // 	reload
-      role.set_TrxName(get_TrxName());
+      role.set_TrxName(null);
       role.loadAccess(true); // reload org access within transaction
       //	TreeNode
       insert_Tree(MTree_Base.TREETYPE_Organization);

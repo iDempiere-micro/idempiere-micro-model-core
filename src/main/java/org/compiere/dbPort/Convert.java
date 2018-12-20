@@ -273,7 +273,7 @@ public abstract class Convert {
     StringBuilder sb = new StringBuilder(sqlStatements.length() + 10);
     for (int i = 0; i < sql.length; i++) {
       //  line.separator
-      sb.append(sql[i]).append("\n/\n");
+      sb.append(sql[i]).append("\n;\n");
       if (m_verbose) log.info("Statement " + i + ": " + sql[i]);
     }
     return sb.toString();

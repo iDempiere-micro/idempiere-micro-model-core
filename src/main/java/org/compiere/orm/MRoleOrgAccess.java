@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
+import kotliquery.Row;
 import org.compiere.util.Msg;
 import org.idempiere.common.util.CLogger;
 
@@ -37,6 +38,10 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     super(ctx, rs, trxName);
   } //	MRoleOrgAccess
 
+  public MRoleOrgAccess(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MRoleOrgAccess
+
   /**
    * Persistency Constructor
    *
@@ -57,7 +62,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @param AD_Role_ID role
    */
   public MRoleOrgAccess(MOrg org, int AD_Role_ID) {
-    this(org.getCtx(), 0, org.get_TrxName());
+    this(org.getCtx(), 0, null);
     setClientOrg(org);
     setAD_Role_ID(AD_Role_ID);
   } //	MRoleOrgAccess
@@ -69,7 +74,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @param AD_Org_ID org
    */
   public MRoleOrgAccess(MRole role, int AD_Org_ID) {
-    this(role.getCtx(), 0, role.get_TrxName());
+    this(role.getCtx(), 0, null);
     setClientOrg(role.getClientId(), AD_Org_ID);
     setAD_Role_ID(role.getAD_Role_ID());
   } //	MRoleOrgAccess

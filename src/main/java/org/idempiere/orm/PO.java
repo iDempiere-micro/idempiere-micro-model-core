@@ -11,7 +11,6 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Savepoint;
 import java.sql.Timestamp;
 import java.text.Collator;
 import java.util.*;
@@ -166,9 +165,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
    *  You load
    * 		- an existing single key record with 	new PO (ctx, Record_ID)
    * 			or									new PO (ctx, Record_ID, trxName)
-   * 			or									new PO (ctx, rs, get_TrxName())
+   * 			or									new PO (ctx, rs, null)
    * 		- a new single key record with			new PO (ctx, 0)
-   * 		- an existing multi key record with		new PO (ctx, rs, get_TrxName())
+   * 		- an existing multi key record with		new PO (ctx, rs, null)
    * 		- a new multi key record with			new PO (ctx, null)
    *  The ID for new single key records is created automatically,
    *  you need to set the IDs for multi-key records explicitly.
@@ -207,7 +206,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
   /** Returns the summary node with the corresponding value */
   public static int retrieveIdOfParentValue(
-      String value, String tableName, int clientID, String trxName) {
+      String value, String tableName, int AD_Client_ID, String trxName) {
     String sql =
         "SELECT "
             + tableName
@@ -217,7 +216,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     int pos = value.length() - 1;
     while (pos > 0) {
       String testParentValue = value.substring(0, pos);
-      int parentID = getSQLValueEx(trxName, sql, clientID, testParentValue);
+      int parentID = getSQLValueEx(trxName, sql, AD_Client_ID, testParentValue);
       if (parentID > 0) return parentID;
       pos--;
     }
@@ -392,25 +391,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     }
     return getOldValues()[index];
   } //  get_Value
-
-  /**
-   * Get Value as int
-   *
-   * @param index index
-   * @return int value or 0
-   */
-  public int get_ValueAsInt(int index) {
-    Object value = get_Value(index);
-    if (value == null) return 0;
-    if (value instanceof Integer) return (Integer) value;
-    try {
-      return Integer.parseInt(value.toString());
-    } catch (NumberFormatException ex) {
-      POInfo p_info = super.getP_info();
-      log.warning(p_info.getColumnName(index) + " - " + ex.getMessage());
-      return 0;
-    }
-  } //  get_ValueAsInt
 
   /**
    * Get Value
@@ -847,6 +827,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
    * @return true if loaded
    */
   protected boolean load(HashMap<String, String> hmIn) {
+    if (hmIn == null) return load((String) null);
+
     int size = get_ColumnCount();
     boolean success = true;
     int index = 0;
@@ -990,7 +972,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
       else if (colName.equals(p_info.getTableName() + "_ID")) //  KeyColumn
       newValues[i] = I_ZERO;
       else if (colName.equals("IsActive")) newValues[i] = Boolean.TRUE;
-      else if (colName.equals("AD_Client_ID")) newValues[i] = Env.getADClientID(getCtx());
+      else if (colName.equals("AD_Client_ID")) newValues[i] = Env.getClientId(getCtx());
       else if (colName.equals("AD_Org_ID")) newValues[i] = Env.getOrgId(getCtx());
       else if (colName.equals("Processed")) newValues[i] = Boolean.FALSE;
       else if (colName.equals("Processing")) newValues[i] = Boolean.FALSE;
@@ -1128,7 +1110,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 .append(getM_keyColumns()[0])
                 .append("=?")
                 .append(" AND AD_Language=?");
-        retValue = getSQLValueString(get_TrxName(), sql.toString(), ID, AD_Language);
+        retValue = getSQLValueString(null, sql.toString(), ID, AD_Language);
       }
     }
     //
@@ -1334,13 +1316,13 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
   /** Returns the summary node from C_ElementValue with the corresponding value */
   protected int retrieveIdOfElementValue(
-      String value, int clientID, int elementID, String trxName) {
+      String value, int AD_Client_ID, int elementID, String trxName) {
     String sql =
         "SELECT C_ElementValue_ID FROM C_ElementValue WHERE IsSummary='Y' AND AD_Client_ID=? AND C_Element_ID=? AND Value=?";
     int pos = value.length() - 1;
     while (pos > 0) {
       String testParentValue = value.substring(0, pos);
-      int parentID = getSQLValueEx(trxName, sql, clientID, elementID, testParentValue);
+      int parentID = getSQLValueEx(trxName, sql, AD_Client_ID, elementID, testParentValue);
       if (parentID > 0) return parentID;
       pos--;
     }
@@ -1413,15 +1395,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     }
     return true;
   } //	unlock
-
-  /**
-   * Get Trx
-   *
-   * @return transaction
-   */
-  public String get_TrxName() {
-    return m_trxName;
-  } //	getTrx
 
   /**
    * Set Trx
@@ -1498,7 +1471,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     boolean retValue = true;
     for (int i = 0; i < m_lobInfo.size(); i++) {
       PO_LOB lob = m_lobInfo.get(i);
-      if (!lob.save(get_TrxName())) {
+      if (!lob.save(null)) {
         retValue = false;
         break;
       }
@@ -1614,20 +1587,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
   public void setReplication(boolean isFromReplication) {
     m_isReplication = isFromReplication;
-  }
-
-  /**
-   * Get Integer Value
-   *
-   * @param columnName
-   * @return int value
-   */
-  public int get_ValueAsInt(String columnName) {
-    int idx = get_ColumnIndex(columnName);
-    if (idx < 0) {
-      return 0;
-    }
-    return get_ValueAsInt(idx);
   }
 
   /**
@@ -1965,117 +1924,25 @@ public abstract class PO extends software.hsharp.core.orm.PO
       }
     }
 
-    Trx localTrx = null;
-    Trx trx = null;
-    Savepoint savepoint = null;
-    if (m_trxName == null) {
-      StringBuilder l_trxname = new StringBuilder(LOCAL_TRX_PREFIX).append(get_TableName());
-      if (l_trxname.length() > 23) l_trxname.setLength(23);
-      m_trxName = Trx.createTrxName(l_trxname.toString());
-      localTrx = Trx.get(m_trxName, true);
-      localTrx.setDisplayName(getClass().getName() + "_save");
-      localTrx.getConnection();
+    if (!beforeSave(newRecord)) {
+      log.warning("beforeSave failed - " + toString());
+      throw new Error("beforeSave failed - " + toString());
+    }
+
+    //	Save
+    if (newRecord) {
+      boolean b = saveNew();
+      if (b) {
+        return b;
+      } else {
+        throw new Error("saveNew failed - " + toString());
+      }
     } else {
-      trx = Trx.get(m_trxName, false);
-      if (trx == null) {
-        // Using a trx that was previously closed or never opened
-        // Creating and starting the transaction right here, but please note
-        // that this is not a good practice
-        trx = Trx.get(m_trxName, true);
-        log.severe(
-            "Transaction closed or never opened ("
-                + m_trxName
-                + ") => starting now --> "
-                + toString());
-      }
-    }
-
-    //	Before Save
-    try {
-      // If not a localTrx we need to set a savepoint for rollback
-      if (localTrx == null) savepoint = trx.setSavepoint(null);
-
-      if (!beforeSave(newRecord)) {
-        log.warning("beforeSave failed - " + toString());
-        if (localTrx != null) {
-          localTrx.rollback();
-          localTrx.close();
-          m_trxName = null;
-        } else {
-          trx.rollback(savepoint);
-          savepoint = null;
-        }
-        return false;
-      }
-    } catch (Exception e) {
-      log.log(Level.WARNING, "beforeSave - " + toString(), e);
-      String msg = org.idempiere.common.exceptions.DBException.getDefaultDBExceptionMessage(e);
-      log.saveError(msg != null ? msg : "Error", e, false);
-      if (localTrx != null) {
-        localTrx.rollback();
-        localTrx.close();
-        m_trxName = null;
-      } else if (savepoint != null) {
-        try {
-          trx.rollback(savepoint);
-        } catch (SQLException e1) {
-        }
-        savepoint = null;
-      }
-      return false;
-    }
-
-    try {
-      //	Save
-      if (newRecord) {
-        boolean b = saveNew();
-        if (b) {
-          if (localTrx != null) return localTrx.commit();
-          else return b;
-        } else {
-          if (localTrx != null) localTrx.rollback();
-          else trx.rollback(savepoint);
-          return b;
-        }
+      boolean b = saveUpdate();
+      if (b) {
+        return b;
       } else {
-        boolean b = saveUpdate();
-        if (b) {
-          if (localTrx != null) return localTrx.commit();
-          else return b;
-        } else {
-          if (localTrx != null) localTrx.rollback();
-          else trx.rollback(savepoint);
-          return b;
-        }
-      }
-    } catch (Exception e) {
-      log.log(Level.WARNING, "afterSave - " + toString(), e);
-      String msg = DBException.getDefaultDBExceptionMessage(e);
-      log.saveError(msg != null ? msg : "Error", e);
-      if (localTrx != null) {
-        localTrx.rollback();
-      } else if (savepoint != null) {
-        try {
-          trx.rollback(savepoint);
-        } catch (SQLException e1) {
-        }
-        savepoint = null;
-      }
-      return false;
-    } finally {
-      if (localTrx != null) {
-        localTrx.close();
-        m_trxName = null;
-      } else {
-        if (savepoint != null) {
-          try {
-            trx.releaseSavepoint(savepoint);
-          } catch (SQLException e) {
-            e.printStackTrace();
-          }
-        }
-        savepoint = null;
-        trx = null;
+        throw new Error("saveUpdate failed - " + toString());
       }
     }
   }
