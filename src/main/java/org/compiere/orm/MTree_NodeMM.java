@@ -1,8 +1,9 @@
 package org.compiere.orm;
 
+import org.idempiere.common.util.CLogger;
+
 import java.sql.ResultSet;
 import java.util.Properties;
-import org.idempiere.common.util.CLogger;
 
 /**
  * (Disk) Tree Node Model Menu

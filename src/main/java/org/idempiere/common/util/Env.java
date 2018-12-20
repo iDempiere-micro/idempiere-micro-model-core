@@ -1,14 +1,14 @@
 package org.idempiere.common.util;
 
+import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
-import javax.swing.*;
 
 /**
  * System Environment and static variables.

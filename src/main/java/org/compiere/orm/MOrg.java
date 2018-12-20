@@ -1,12 +1,13 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.getSQLValue;
+import org.compiere.model.I_AD_Org;
+import org.idempiere.common.util.CCache;
 
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
-import org.compiere.model.I_AD_Org;
-import org.idempiere.common.util.CCache;
+
+import static software.hsharp.core.util.DBKt.getSQLValue;
 
 /**
  * Organization Model

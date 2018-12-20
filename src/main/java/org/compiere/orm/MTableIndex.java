@@ -1,12 +1,13 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Properties;
 import org.compiere.model.I_AD_TableIndex;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.orm.PO;
+
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.Properties;
 
 public class MTableIndex extends X_AD_TableIndex {
   /** */
