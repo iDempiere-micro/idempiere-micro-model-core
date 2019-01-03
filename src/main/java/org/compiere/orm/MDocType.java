@@ -1,16 +1,18 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.executeUpdate;
-import static software.hsharp.core.util.DBKt.getSQLValue;
+import kotliquery.Row;
+import org.compiere.model.HasName;
+import org.compiere.model.I_C_DocType;
+import org.idempiere.common.util.CCache;
+import org.idempiere.common.util.Env;
 
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.compiere.model.HasName;
-import org.compiere.model.I_C_DocType;
-import org.idempiere.common.util.CCache;
-import org.idempiere.common.util.Env;
+
+import static software.hsharp.core.util.DBKt.executeUpdate;
+import static software.hsharp.core.util.DBKt.getSQLValue;
 
 /**
  * Document Type Model
@@ -68,6 +70,9 @@ public class MDocType extends X_C_DocType {
    */
   public MDocType(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MDocType
+  public MDocType(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MDocType
 
   /**

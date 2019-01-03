@@ -57,8 +57,11 @@ fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? 
 internal fun getSQLValueTSEx(trxName: String, sql: String, vararg params: Any): Timestamp? =
     throw IllegalArgumentException(NYI)
 
-fun getSQLValueString(trxName: String?, sql: String, vararg params: Any): String? =
-    throw IllegalArgumentException(NYI)
+fun getSQLValueString(trxName: String?, sql: String, vararg params: Any): String? {
+    val loadQuery = queryOf(sql, listOf(*params)).map { row -> row.stringOrNull(1) }.asSingle
+    return DB.current.run(loadQuery)
+}
+
 
 internal fun getSQLValueStringEx(trxName: String, sql: String, vararg params: Any): String? =
     throw IllegalArgumentException(NYI)
@@ -98,10 +101,10 @@ fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String?): Int =
     executeUpdateEx(sql, objects, trxName, 0)
 
 fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String?, timeOut: Int): Int =
-    DB.current.run(queryOf(convert.convertAll(sql), objects.toList()).asUpdate)
+    DB.current.run(queryOf(convert.convertAll(sql), objects.toList().map { param -> convertParameter(param) }).asUpdate)
 
 fun executeUpdateEx(sql: String, objects: List<Any>, trxName: String?, timeOut: Int): Int =
-    DB.current.run(queryOf(convert.convertAll(sql), objects).asUpdate)
+    DB.current.run(queryOf(convert.convertAll(sql), objects.map { param -> convertParameter(param) }).asUpdate)
 
 fun executeUpdate(sql: String, param: Int, trxName: String?): Int = executeUpdateEx(sql, listOf(param), trxName, 0)
 fun executeUpdate(sql: String, ignoreError: Boolean, trxName: String?): Int {
@@ -130,6 +133,25 @@ fun prepareStatement(
 ): PreparedStatement? = throw IllegalArgumentException(NYI)
 
 fun createStatement(): PreparedStatement? = throw IllegalArgumentException(NYI)
+
+internal fun convertParameter(param: Any?): Any? {
+    if (param == null)
+        return null
+    else if (param is String)
+        return param
+    else if (param is Int)
+        return param.toInt()
+    else if (param is BigDecimal)
+        return param
+    else if (param is Timestamp)
+        return param
+    else if (param is Boolean)
+        return if (param) "Y" else "N"
+    else if (param is ByteArray)
+        return param
+    else
+        throw DBException("Unknown parameter type $param")
+}
 
 internal fun setParameter(pstmt: PreparedStatement, index: Int, param: Any?) {
     if (param == null)
@@ -264,7 +286,33 @@ internal fun createSequence(
  * @param timeout
  * @return true if lock is granted
  */
-fun forUpdate(po: IPO, timeout: Int): Boolean = throw IllegalArgumentException(NYI)
+fun forUpdate(po: IPO, timeout: Int): Boolean {
+    val keyColumns = po._KeyColumns
+    val sqlBuffer = StringBuilder(" SELECT ")
+    sqlBuffer.append(keyColumns[0]).append(" FROM ").append(po._TableName).append(" WHERE ")
+    for (i in keyColumns.indices) {
+        if (i > 0) sqlBuffer.append(" AND ")
+        sqlBuffer.append(keyColumns[i]).append("=?")
+    }
+    sqlBuffer.append(" FOR UPDATE ")
+
+    val parameters = arrayOfNulls<Any>(keyColumns.size)
+    for (i in keyColumns.indices) {
+        var parameter: Any? = po.get_Value(keyColumns[i])
+        if (parameter != null && parameter is Boolean) {
+            if ((parameter as Boolean?)!!)
+                parameter = "Y"
+            else
+                parameter = "N"
+        }
+        parameters[i] = parameter
+    }
+
+    val loadQuery =  queryOf(sqlBuffer.toString(), parameters.toList()).map { 1 }.asSingle
+    val result = DB.current.run(loadQuery)
+
+    return result != null
+}
 
 /**
  * Get Row Set. When a Rowset is closed, it also closes the underlying connection. If the created
