@@ -1,9 +1,11 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_AD_Org;
 import org.idempiere.orm.I_Persistent;
+
+import java.sql.ResultSet;
+import java.util.Properties;
 
 /**
  * Generated Model for AD_Org
@@ -25,6 +27,9 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
   public X_AD_Org(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+  public X_AD_Org(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MOrg
 
   /**
    * AccessLevel

@@ -1,9 +1,11 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.Properties;
+import kotliquery.Row;
 import org.compiere.model.I_C_DocType;
 import org.idempiere.orm.I_Persistent;
+
+import java.sql.ResultSet;
+import java.util.Properties;
 
 /**
  * Generated Model for C_DocType
@@ -117,6 +119,9 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
   public X_C_DocType(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
   }
+  public X_C_DocType(Properties ctx, Row row) {
+    super(ctx, row);
+  } //	MDocType
 
   /**
    * AccessLevel

@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.I_AD_Org;
 import org.idempiere.common.util.CCache;
 
@@ -48,6 +49,9 @@ public class MOrg extends X_AD_Org {
    */
   public MOrg(Properties ctx, ResultSet rs, String trxName) {
     super(ctx, rs, trxName);
+  } //	MOrg
+  public MOrg(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MOrg
 
   /**
