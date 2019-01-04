@@ -28,6 +28,7 @@ jobs:
       JWT_ISSUER: Kotlin_Spring
 
       BASE_INTERFACES_VERSION: 0.1.0
+      TEST_SUPPORT_VERSION: 0.0.3
 
     steps:
       - setup_remote_docker
