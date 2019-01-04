@@ -18,20 +18,31 @@
         <junit.version>4.12</junit.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <idempiere-micro-base-interfaces.version>1.0-SNAPSHOT</idempiere-micro-base-interfaces.version>
+        <idempiere-micro-base-interfaces.groupId>org.idempiere</idempiere-micro-base-interfaces.groupId>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>ci</id>
+            <activation>
+                <property>
+                    <name>env.BASE_INTERFACES_VERSION</name>
+                </property>
+            </activation>
+            <properties>
+                <!-- Override only if necessary -->
+                <idempiere-micro-base-interfaces.version>${env.BASE_INTERFACES_VERSION}</idempiere-micro-base-interfaces.version>
+                <idempiere-micro-base-interfaces.groupId>com.github.iDempiere-micro</idempiere-micro-base-interfaces.groupId>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
-        <!--
         <dependency>
-            <groupId>com.github.iDempiere-micro</groupId>
+            <groupId>${idempiere-micro-base-interfaces.groupId}</groupId>
             <artifactId>idempiere-micro-base-interfaces</artifactId>
-            <version>0.0.5</version>
-        </dependency>
-        -->
-        <dependency>
-            <groupId>org.idempiere</groupId>
-            <artifactId>idempiere-micro-base-interfaces</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${idempiere-micro-base-interfaces.version}</version>
         </dependency>
 
         <dependency>
