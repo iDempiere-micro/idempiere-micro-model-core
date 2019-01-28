@@ -94,16 +94,7 @@ public class POResultSet<T extends PO> {
     }
   }
 
-  /**
-   * Will be the {@link PreparedStatement} and {@link ResultSet} closed on any database exception
-   *
-   * @return true if yes, false otherwise
-   */
-  public boolean isCloseOnError() {
-    return this.closeOnError;
-  }
-
-  /**
+    /**
    * Should we automatically close the {@link PreparedStatement} and {@link ResultSet} in case we
    * get an error.
    *

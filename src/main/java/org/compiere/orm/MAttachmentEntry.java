@@ -81,16 +81,7 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
     if (m_name == null) m_name = "?";
   } //	setName
 
-  /**
-   * Get Attachment Index
-   *
-   * @return timestamp
-   */
-  public int getIndex() {
-    return m_index;
-  } //	getIndex
-
-  public void setIndex(int index) {
+    public void setIndex(int index) {
     m_index = index;
   }
 
@@ -129,50 +120,7 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
     return sb.toString();
   } //	toStringX
 
-  /** Dump Data */
-  public void dump() {
-    StringBuilder hdr = new StringBuilder("----- ").append(getName()).append(" -----");
-    System.out.println(hdr.toString());
-    if (m_data == null) {
-      System.out.println("----- no data -----");
-      return;
-    }
-    //	raw data
-    for (int i = 0; i < m_data.length; i++) {
-      char data = (char) m_data[i];
-      System.out.print(data);
-    }
-
-    System.out.println();
-    System.out.println(hdr.toString());
-    //	Count nulls at end
-    int ii = m_data.length - 1;
-    int nullCount = 0;
-    while (m_data[ii--] == 0) nullCount++;
-    StringBuilder msgout =
-        new StringBuilder("----- Length=")
-            .append(m_data.length)
-            .append(", EndNulls=")
-            .append(nullCount)
-            .append(", RealLength=")
-            .append((m_data.length - nullCount));
-    System.out.println(msgout.toString());
     /**
-     * // Dump w/o nulls if (nullCount > 0) { for (int i = 0; i < m_data.length-nullCount; i++)
-     * System.out.print((char)m_data[i]); System.out.println (); System.out.println (hdr); } /** *
-     */
-  } //	dump
-
-  /**
-   * Get File with default name
-   *
-   * @return File
-   */
-  public File getFile() {
-    return getFile(getName());
-  } //	getFile
-
-  /**
    * Get File with name
    *
    * @param fileName optional file name
@@ -202,26 +150,7 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
     return file;
   } //	getFile
 
-  /**
-   * Is attachment entry a PDF
-   *
-   * @return true if PDF
-   */
-  public boolean isPDF() {
-    return m_name.toLowerCase().endsWith(".pdf");
-  } //	isPDF
-
-  /**
-   * Is attachment entry a Graphic
-   *
-   * @return true if *.gif, *.jpg, *.png
-   */
-  public boolean isGraphic() {
-    String m_lowname = m_name.toLowerCase();
-    return m_lowname.endsWith(".gif") || m_lowname.endsWith(".jpg") || m_lowname.endsWith(".png");
-  } //	isGraphic
-
-  /**
+    /**
    * Get Content (Mime) Type
    *
    * @return content type
@@ -230,13 +159,4 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
     return MimeType.getMimeType(m_name);
   } //	getContentType
 
-  /**
-   * Get Data as Input Stream
-   *
-   * @return input stream
-   */
-  public InputStream getInputStream() {
-    if (m_data == null) return null;
-    return new ByteArrayInputStream(m_data);
-  } //	getInputStream
 } //	MAttachmentItem

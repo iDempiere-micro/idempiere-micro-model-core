@@ -44,55 +44,7 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
     return "X_AD_Org[" + getId() + "]";
   }
 
-  /**
-   * Get AD_Org_UU.
-   *
-   * @return AD_Org_UU
-   */
-  public String getAD_Org_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Org_UU);
-  }
-
-  /**
-   * Set AD_Org_UU.
-   *
-   * @param AD_Org_UU AD_Org_UU
-   */
-  public void setAD_Org_UU(String AD_Org_UU) {
-    set_Value(COLUMNNAME_AD_Org_UU, AD_Org_UU);
-  }
-
-  /**
-   * Get Replication Strategy.
-   *
-   * @return Data Replication Strategy
-   */
-  public int getADReplicationStrategyID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_ReplicationStrategy_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set Replication Strategy.
-   *
-   * @param AD_ReplicationStrategy_ID Data Replication Strategy
-   */
-  public void setADReplicationStrategyID(int AD_ReplicationStrategy_ID) {
-    if (AD_ReplicationStrategy_ID < 1) set_Value(COLUMNNAME_AD_ReplicationStrategy_ID, null);
-    else set_Value(COLUMNNAME_AD_ReplicationStrategy_ID, AD_ReplicationStrategy_ID);
-  }
-
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
-  }
-
-  /**
+    /**
    * Set Description.
    *
    * @param Description Optional short description of the record

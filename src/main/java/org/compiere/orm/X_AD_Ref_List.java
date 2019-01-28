@@ -14,9 +14,7 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_Persistent {
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
-  /** */
+    /** */
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
@@ -43,13 +41,7 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
     return sb.toString();
   }
 
-  public org.compiere.model.I_AD_Reference getAD_Reference() throws RuntimeException {
-    return (org.compiere.model.I_AD_Reference)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Reference.Table_Name)
-            .getPO(getReferenceId(), null);
-  }
-
-  /**
+    /**
    * Get Reference.
    *
    * @return System Reference and Validation
@@ -60,83 +52,7 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
     return ii;
   }
 
-  /**
-   * Set Reference.
-   *
-   * @param AD_Reference_ID System Reference and Validation
-   */
-  public void setAD_Reference_ID(int AD_Reference_ID) {
-    if (AD_Reference_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Reference_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Reference_ID, Integer.valueOf(AD_Reference_ID));
-  }
-
-  /**
-   * Get Reference List.
-   *
-   * @return Reference List based on Table
-   */
-  public int getAD_Ref_List_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Ref_List_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set Reference List.
-   *
-   * @param AD_Ref_List_ID Reference List based on Table
-   */
-  public void setAD_Ref_List_ID(int AD_Ref_List_ID) {
-    if (AD_Ref_List_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Ref_List_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Ref_List_ID, Integer.valueOf(AD_Ref_List_ID));
-  }
-
-  /**
-   * Get AD_Ref_List_UU.
-   *
-   * @return AD_Ref_List_UU
-   */
-  public String getAD_Ref_List_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Ref_List_UU);
-  }
-
-  /**
-   * Set AD_Ref_List_UU.
-   *
-   * @param AD_Ref_List_UU AD_Ref_List_UU
-   */
-  public void setAD_Ref_List_UU(String AD_Ref_List_UU) {
-    set_Value(COLUMNNAME_AD_Ref_List_UU, AD_Ref_List_UU);
-  }
-
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
-  }
-
-  /**
-   * Set Description.
-   *
-   * @param Description Optional short description of the record
-   */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
-  }
-
-  /**
-   * Get Entity Type.
-   *
-   * @return Dictionary Entity Type; Determines ownership and synchronization
-   */
-  public String getEntityType() {
-    return (String) get_Value(COLUMNNAME_EntityType);
-  }
-
-  /**
+    /**
    * Set Entity Type.
    *
    * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
@@ -146,43 +62,7 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
     set_Value(COLUMNNAME_EntityType, EntityType);
   }
 
-  /**
-   * Get Valid from.
-   *
-   * @return Valid from including this date (first day)
-   */
-  public Timestamp getValidFrom() {
-    return (Timestamp) get_Value(COLUMNNAME_ValidFrom);
-  }
-
-  /**
-   * Set Valid from.
-   *
-   * @param ValidFrom Valid from including this date (first day)
-   */
-  public void setValidFrom(Timestamp ValidFrom) {
-    set_Value(COLUMNNAME_ValidFrom, ValidFrom);
-  }
-
-  /**
-   * Get Valid to.
-   *
-   * @return Valid to including this date (last day)
-   */
-  public Timestamp getValidTo() {
-    return (Timestamp) get_Value(COLUMNNAME_ValidTo);
-  }
-
-  /**
-   * Set Valid to.
-   *
-   * @param ValidTo Valid to including this date (last day)
-   */
-  public void setValidTo(Timestamp ValidTo) {
-    set_Value(COLUMNNAME_ValidTo, ValidTo);
-  }
-
-  @Override
+    @Override
   public int getTableId() {
     return Table_ID;
   }

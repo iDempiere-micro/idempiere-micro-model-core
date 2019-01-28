@@ -14,9 +14,7 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
 
-  /** TreeType AD_Reference_ID=120 */
-  public static final int TREETYPE_AD_Reference_ID = 120;
-  /** Menu = MM */
+    /** Menu = MM */
   public static final String TREETYPE_Menu = "MM";
   /** Element Value = EV */
   public static final String TREETYPE_ElementValue = "EV";
@@ -87,13 +85,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
     return sb.toString();
   }
 
-  public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
-    return (org.compiere.model.I_AD_Table)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), null);
-  }
-
-  /**
+    /**
    * Get Table.
    *
    * @return Database Table information
@@ -104,17 +96,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
     return ii;
   }
 
-  /**
-   * Set Table.
-   *
-   * @param AD_Table_ID Database Table information
-   */
-  public void setAD_Table_ID(int AD_Table_ID) {
-    if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
-  }
-
-  /**
+    /**
    * Get Tree.
    *
    * @return Identifies a Tree
@@ -125,35 +107,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
     return ii;
   }
 
-  /**
-   * Set Tree.
-   *
-   * @param AD_Tree_ID Identifies a Tree
-   */
-  public void setAD_Tree_ID(int AD_Tree_ID) {
-    if (AD_Tree_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Tree_ID, Integer.valueOf(AD_Tree_ID));
-  }
-
-  /**
-   * Get AD_Tree_UU.
-   *
-   * @return AD_Tree_UU
-   */
-  public String getAD_Tree_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Tree_UU);
-  }
-
-  /**
-   * Set AD_Tree_UU.
-   *
-   * @param AD_Tree_UU AD_Tree_UU
-   */
-  public void setAD_Tree_UU(String AD_Tree_UU) {
-    set_Value(COLUMNNAME_AD_Tree_UU, AD_Tree_UU);
-  }
-
-  /**
+    /**
    * Get Description.
    *
    * @return Optional short description of the record
@@ -162,16 +116,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
     return (String) get_Value(COLUMNNAME_Description);
   }
 
-  /**
-   * Set Description.
-   *
-   * @param Description Optional short description of the record
-   */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
-  }
-
-  /**
+    /**
    * Set All Nodes.
    *
    * @param IsAllNodes All Nodes are included (Complete Tree)
@@ -203,44 +148,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
     set_Value(COLUMNNAME_IsDefault, Boolean.valueOf(IsDefault));
   }
 
-  /**
-   * Get Default.
-   *
-   * @return Default value
-   */
-  public boolean isDefault() {
-    Object oo = get_Value(COLUMNNAME_IsDefault);
-    if (oo != null) {
-      if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
-   * Set Loads directly all nodes.
-   *
-   * @param IsLoadAllNodesImmediately If checked, all nodes are loaded before tree is displayed
-   */
-  public void setIsLoadAllNodesImmediately(boolean IsLoadAllNodesImmediately) {
-    set_Value(COLUMNNAME_IsLoadAllNodesImmediately, Boolean.valueOf(IsLoadAllNodesImmediately));
-  }
-
-  /**
-   * Get Loads directly all nodes.
-   *
-   * @return If checked, all nodes are loaded before tree is displayed
-   */
-  public boolean isLoadAllNodesImmediately() {
-    Object oo = get_Value(COLUMNNAME_IsLoadAllNodesImmediately);
-    if (oo != null) {
-      if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
+    /**
    * Set Driven by Search Key.
    *
    * @param IsTreeDrivenByValue Driven by Search Key
@@ -263,30 +171,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
     return false;
   }
 
-  /**
-   * Get Process Now.
-   *
-   * @return Process Now
-   */
-  public boolean isProcessing() {
-    Object oo = get_Value(COLUMNNAME_Processing);
-    if (oo != null) {
-      if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
-   * Set Process Now.
-   *
-   * @param Processing Process Now
-   */
-  public void setProcessing(boolean Processing) {
-    set_Value(COLUMNNAME_Processing, Boolean.valueOf(Processing));
-  }
-
-  /**
+    /**
    * Get Type | Area.
    *
    * @return Element this tree is built on (i.e Product, Business Partner)

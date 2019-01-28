@@ -128,19 +128,7 @@ public final class Msg extends BaseMsg {
     return getMsg(Env.getADLanguage(ctx), AD_Message, getText);
   } //  getMsg
 
-  /**
-   * Get translated text message for AD_Message
-   *
-   * @param language Language
-   * @param AD_Message Message Key
-   * @param getText if true only return Text, if false only return Tip
-   * @return translated text
-   */
-  public static String getMsg(Language language, String AD_Message, boolean getText) {
-    return getMsg(language.getADLanguage(), AD_Message, getText);
-  } //  getMsg
-
-  /**
+    /**
    * Get clear text for AD_Message with parameters
    *
    * @param ctx Context to retrieve language
@@ -153,20 +141,7 @@ public final class Msg extends BaseMsg {
     return getMsg(Env.getADLanguage(ctx), AD_Message, args);
   } //	getMsg
 
-  /**
-   * Get clear text for AD_Message with parameters
-   *
-   * @param language Language
-   * @param AD_Message Message key
-   * @param args MessageFormat arguments
-   * @return translated text
-   * @see java.text.MessageFormat for formatting options
-   */
-  public static String getMsg(Language language, String AD_Message, Object[] args) {
-    return getMsg(language.getADLanguage(), AD_Message, args);
-  } //	getMsg
-
-  /**
+    /**
    * Get clear text for AD_Message with parameters
    *
    * @param ad_language Language
@@ -186,51 +161,7 @@ public final class Msg extends BaseMsg {
     return retStr;
   } //	getMsg
 
-  /**
-   * ************************************************************************ Get Amount in Words
-   *
-   * @param language language
-   * @param amount numeric amount (352.80)
-   * @return amount in words (three*five*two 80/100)
-   */
-  public static String getAmtInWords(Language language, String amount) {
-    if (amount == null || language == null) return amount;
-    //	Try to find Class
-    String className = "org.compiere.util.AmtInWords_";
-    try {
-      className += language.getLanguageCode().toUpperCase();
-      Class<?> clazz = Class.forName(className);
-      AmtInWords aiw = (AmtInWords) clazz.newInstance();
-      return aiw.getAmtInWords(amount);
-    } catch (ClassNotFoundException e) {
-      s_log.warning("Class not found: " + className);
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, className, e);
-    }
-
-    //	Fallback
-    StringBuilder sb = new StringBuilder();
-    int pos = amount.lastIndexOf('.');
-    int pos2 = amount.lastIndexOf(',');
-    if (pos2 > pos) pos = pos2;
-    for (int i = 0; i < amount.length(); i++) {
-      if (pos == i) // 	we are done
-      {
-        String cents = amount.substring(i + 1);
-        sb.append(' ').append(cents).append("/100");
-        break;
-      } else {
-        char c = amount.charAt(i);
-        if (c == ',' || c == '.') // 	skip thousand separator
-        continue;
-        if (sb.length() > 0) sb.append("*");
-        sb.append(getMsg(language, String.valueOf(c)));
-      }
-    }
-    return sb.toString();
-  } //	getAmtInWords
-
-  /**
+    /**
    * ************************************************************************ Get Translation for
    * Element
    *
@@ -351,23 +282,7 @@ public final class Msg extends BaseMsg {
     return translate(Env.getADLanguage(ctx), Env.isSOTrx(ctx), text);
   } //  translate
 
-  /**
-   * "Translate" text.
-   *
-   * <pre>
-   * 	- Check AD_Message.AD_Message 	->	MsgText
-   * 	- Check AD_Element.ColumnName	->	Name
-   *  </pre>
-   *
-   * @param language Language
-   * @param text Text
-   * @return translated text or original text if not found
-   */
-  public static String translate(Language language, String text) {
-    return translate(language.getADLanguage(), false, text);
-  } //  translate
-
-  /**
+    /**
    * Translate elements enclosed in "@" (at sign)
    *
    * @param ctx Context
@@ -404,18 +319,7 @@ public final class Msg extends BaseMsg {
     return outStr.toString();
   } //  parseTranslation
 
-  /**
-   * Get translated text message for AD_Message, ampersand cleaned (used to indicate shortcut)
-   *
-   * @param ctx Context to retrieve language
-   * @param AD_Message - Message Key
-   * @return translated text
-   */
-  public static String getCleanMsg(Properties ctx, String string) {
-    return Util.cleanAmp(getMsg(Env.getADLanguage(ctx), string));
-  }
-
-  /**
+    /**
    * Get Language specific Message Map
    *
    * @param ad_language Language Key
@@ -451,43 +355,7 @@ public final class Msg extends BaseMsg {
     return retValue;
   }
 
-  /** Reset Message cache */
-  public void reset() {
-    if (m_languages == null) return;
-
-    //  clear all languages
-    Iterator<CCache<String, String>> iterator = m_languages.values().iterator();
-    while (iterator.hasNext()) {
-      CCache<String, String> hm = iterator.next();
-      hm.reset();
-    }
-    m_languages.clear();
-  } //  reset
-
-  /**
-   * Return an array of the installed Languages
-   *
-   * @return Array of loaded Languages or null
-   */
-  public String[] getLanguages() {
-    if (m_languages == null) return null;
-    String[] retValue = new String[m_languages.size()];
-    m_languages.keySet().toArray(retValue);
-    return retValue;
-  } //  getLanguages
-
-  /**
-   * Check if Language is loaded
-   *
-   * @param language Language code
-   * @return true, if language is loaded
-   */
-  public boolean isLoaded(String language) {
-    if (m_languages == null) return false;
-    return m_languages.containsKey(language);
-  } //  isLoaded
-
-  /**
+    /**
    * Lookup term
    *
    * @param AD_Language language

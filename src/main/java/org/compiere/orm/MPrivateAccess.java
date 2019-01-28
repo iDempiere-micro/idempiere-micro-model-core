@@ -13,10 +13,8 @@ import org.idempiere.common.util.CLogger;
 public class MPrivateAccess extends X_AD_Private_Access {
   /** */
   private static final long serialVersionUID = -5649529789751432279L;
-  /** Logger */
-  private static CLogger s_log = CLogger.getCLogger(MPrivateAccess.class);
 
-  /**
+    /**
    * Persistency Constructor
    *
    * @param ctx context

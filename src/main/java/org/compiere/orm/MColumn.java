@@ -35,10 +35,8 @@ public class MColumn extends X_AD_Column {
   /** Cache */
   private static CCache<Integer, MColumn> s_cache =
       new CCache<Integer, MColumn>(I_AD_Column.Table_Name, 20);
-  /** Static Logger */
-  private static CLogger s_log = CLogger.getCLogger(MColumn.class);
 
-  /**
+    /**
    * ************************************************************************ Standard Constructor
    *
    * @param ctx context
@@ -147,36 +145,7 @@ public class MColumn extends X_AD_Column {
     return col.getColumnName();
   } //	getColumnName
 
-  /**
-   * Get Table Id for a column
-   *
-   * @param ctx context
-   * @param AD_Column_ID id
-   * @param trxName transaction
-   * @return MColumn
-   */
-  public static int getTable_ID(Properties ctx, int AD_Column_ID, String trxName) {
-    String sqlStmt = "SELECT AD_Table_ID FROM AD_Column WHERE AD_Column_ID=?";
-    return getSQLValue(trxName, sqlStmt, AD_Column_ID);
-  }
-
-  public static boolean isSuggestSelectionColumn(String columnName, boolean caseSensitive) {
-    if (Util.isEmpty(columnName, true)) return false;
-    //
-    if (columnName.equals("Value") || (!caseSensitive && columnName.equalsIgnoreCase("Value")))
-      return true;
-    else if (columnName.equals("Name") || (!caseSensitive && columnName.equalsIgnoreCase("Name")))
-      return true;
-    else if (columnName.equals("DocumentNo")
-        || (!caseSensitive && columnName.equalsIgnoreCase("DocumentNo"))) return true;
-    else if (columnName.equals("Description")
-        || (!caseSensitive && columnName.equalsIgnoreCase("Description"))) return true;
-    else
-      return columnName.indexOf("Name") != -1
-          || (!caseSensitive && columnName.toUpperCase().indexOf("Name".toUpperCase()) != -1);
-  }
-
-  /**
+    /**
    * Is Standard Column
    *
    * @return true for AD_Client_ID, etc.
@@ -403,30 +372,7 @@ public class MColumn extends X_AD_Column {
     return success;
   } //	afterSave
 
-  /**
-   * Get SQL Add command
-   *
-   * @param table table
-   * @return sql
-   */
-  public String getSQLAdd(MTable table) {
-    StringBuilder sql =
-        new StringBuilder("ALTER TABLE ")
-            .append(table.getTableName())
-            .append(" ADD ")
-            .append(getSQLDDL());
-    String constraint = getConstraint(table.getTableName());
-    if (constraint != null && constraint.length() > 0) {
-      sql.append(SQLSTATEMENT_SEPARATOR)
-          .append("ALTER TABLE ")
-          .append(table.getTableName())
-          .append(" ADD ")
-          .append(constraint);
-    }
-    return sql.toString();
-  } //	getSQLAdd
-
-  /**
+    /**
    * Get SQL DDL
    *
    * @return columnName datataype ..
@@ -502,76 +448,7 @@ public class MColumn extends X_AD_Column {
   }	//	getSQLDataType
   */
 
-  /**
-   * Get SQL Modify command
-   *
-   * @param table table
-   * @param setNullOption generate null / not null statement
-   * @return sql separated by ;
-   */
-  public String getSQLModify(MTable table, boolean setNullOption) {
-    StringBuilder sql = new StringBuilder();
-    StringBuilder sqlBase =
-        new StringBuilder("ALTER TABLE ")
-            .append(table.getTableName())
-            .append(" MODIFY ")
-            .append(getColumnName());
-
-    //	Default
-    StringBuilder sqlDefault = new StringBuilder(sqlBase).append(" ").append(getSQLDataType());
-    String defaultValue = getDefaultValue();
-    if (defaultValue != null
-        && defaultValue.length() > 0
-        && defaultValue.indexOf('@') == -1 // 	no variables
-        && (!(DisplayType.isID(getReferenceId())
-            && defaultValue.equals("-1")))) // not for ID's with default -1
-    {
-      if (DisplayType.isText(getReferenceId())
-          || getReferenceId() == DisplayType.List
-          || getReferenceId() == DisplayType.YesNo
-          // Two special columns: Defined as Table but DB Type is String
-          || getColumnName().equals("EntityType")
-          || getColumnName().equals("AD_Language")
-          || (getReferenceId() == DisplayType.Button && !(getColumnName().endsWith("_ID")))) {
-        if (!defaultValue.startsWith("'") && !defaultValue.endsWith("'"))
-          defaultValue = TO_STRING(defaultValue);
-      }
-      sqlDefault.append(" DEFAULT ").append(defaultValue);
-    } else {
-      if (!isMandatory()) sqlDefault.append(" DEFAULT NULL ");
-      defaultValue = null;
-    }
-    sql.append(sqlDefault);
-
-    //	Constraint
-
-    //	Null Values
-    if (isMandatory() && defaultValue != null && defaultValue.length() > 0) {
-      StringBuilder sqlSet =
-          new StringBuilder("UPDATE ")
-              .append(table.getTableName())
-              .append(" SET ")
-              .append(getColumnName())
-              .append("=")
-              .append(defaultValue)
-              .append(" WHERE ")
-              .append(getColumnName())
-              .append(" IS NULL");
-      sql.append(SQLSTATEMENT_SEPARATOR).append(sqlSet);
-    }
-
-    //	Null
-    if (setNullOption) {
-      StringBuilder sqlNull = new StringBuilder(sqlBase);
-      if (isMandatory()) sqlNull.append(" NOT NULL");
-      else sqlNull.append(" NULL");
-      sql.append(SQLSTATEMENT_SEPARATOR).append(sqlNull);
-    }
-    //
-    return sql.toString();
-  } //	getSQLModify
-
-  /**
+    /**
    * Get SQL Data Type
    *
    * @return e.g. NVARCHAR2(60)

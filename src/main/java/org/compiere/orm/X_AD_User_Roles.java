@@ -41,12 +41,7 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
     return sb.toString();
   }
 
-  public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
-    return (org.compiere.model.I_AD_Role)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name).getPO(getAD_Role_ID(), null);
-  }
-
-  /**
+    /**
    * Get Role.
    *
    * @return Responsibility Role
@@ -88,25 +83,7 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
     else set_ValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
   }
 
-  /**
-   * Get AD_User_Roles_UU.
-   *
-   * @return AD_User_Roles_UU
-   */
-  public String getAD_User_Roles_UU() {
-    return (String) get_Value(COLUMNNAME_AD_User_Roles_UU);
-  }
-
-  /**
-   * Set AD_User_Roles_UU.
-   *
-   * @param AD_User_Roles_UU AD_User_Roles_UU
-   */
-  public void setAD_User_Roles_UU(String AD_User_Roles_UU) {
-    set_Value(COLUMNNAME_AD_User_Roles_UU, AD_User_Roles_UU);
-  }
-
-  @Override
+    @Override
   public int getTableId() {
     return Table_ID;
   }

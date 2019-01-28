@@ -44,13 +44,7 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
     return sb.toString();
   }
 
-  public org.compiere.model.I_AD_Sequence getAD_Sequence() throws RuntimeException {
-    return (org.compiere.model.I_AD_Sequence)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Sequence.Table_Name)
-            .getPO(getAD_Sequence_ID(), null);
-  }
-
-  /**
+    /**
    * Get Sequence.
    *
    * @return Document Sequence
@@ -71,34 +65,7 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
     else set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
   }
 
-  /**
-   * Get AD_Sequence_No_UU.
-   *
-   * @return AD_Sequence_No_UU
-   */
-  public String getAD_Sequence_No_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Sequence_No_UU);
-  }
-
-  /**
-   * Set AD_Sequence_No_UU.
-   *
-   * @param AD_Sequence_No_UU AD_Sequence_No_UU
-   */
-  public void setAD_Sequence_No_UU(String AD_Sequence_No_UU) {
-    set_Value(COLUMNNAME_AD_Sequence_No_UU, AD_Sequence_No_UU);
-  }
-
-  /**
-   * Get YearMonth.
-   *
-   * @return YYYYMM
-   */
-  public String getCalendarYearMonth() {
-    return (String) get_Value(COLUMNNAME_CalendarYearMonth);
-  }
-
-  /**
+    /**
    * Set YearMonth.
    *
    * @param CalendarYearMonth YYYYMM
@@ -107,18 +74,7 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
     set_ValueNoCheck(COLUMNNAME_CalendarYearMonth, CalendarYearMonth);
   }
 
-  /**
-   * Get Current Next.
-   *
-   * @return The next number to be used
-   */
-  public int getCurrentNext() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_CurrentNext);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
+    /**
    * Set Current Next.
    *
    * @param CurrentNext The next number to be used

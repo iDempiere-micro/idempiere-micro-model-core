@@ -26,35 +26,7 @@ public interface IEventManager {
    */
   boolean sendEvent(IEvent event);
 
-  /**
-   * register a new event handler
-   *
-   * @param topic
-   * @param eventHandler
-   * @return true if registration is successful, false otherwise
-   */
-  boolean register(String topic, IEventHandler eventHandler);
-
-  /**
-   * register a new event handler
-   *
-   * @param topics
-   * @param eventHandler
-   * @return true if registration is successful, false otherwise
-   */
-  boolean register(String[] topics, IEventHandler eventHandler);
-
-  /**
-   * register a new event handler
-   *
-   * @param topic
-   * @param filter
-   * @param eventHandler
-   * @return true if registration is successful, false otherwise
-   */
-  boolean register(String topic, String filter, IEventHandler eventHandler);
-
-  /**
+    /**
    * register a new event handler
    *
    * @param topics
@@ -64,15 +36,7 @@ public interface IEventManager {
    */
   boolean register(String[] topics, String filter, IEventHandler eventHandler);
 
-  /**
-   * un-register an event handler
-   *
-   * @param eventHandler
-   * @return true if unregistration is done, false otherwise
-   */
-  boolean unregister(IEventHandler eventHandler);
-
-  IEvent createNewEvent(String topic, Object data);
+    IEvent createNewEvent(String topic, Object data);
 
   IEvent createNewEvent(String topic, EventProperty... properties);
 }

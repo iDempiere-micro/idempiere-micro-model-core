@@ -55,19 +55,6 @@ public class CLogFile extends Handler {
     return s.substring(0, 10);
   } //	getFileNameDate
 
-  public static CLogFile get(boolean create, String idempiereHome, boolean isClient) {
-    Handler[] handlers = CLogMgt.getHandlers();
-    for (Handler handler : handlers) {
-      if (handler instanceof CLogFile) return (CLogFile) handler;
-    }
-    if (create) {
-      CLogFile handler = new CLogFile(idempiereHome, true, isClient);
-      CLogMgt.addHandler(handler);
-      return handler;
-    }
-    return null;
-  }
-
   /**
    * Initialize
    *
@@ -195,16 +182,6 @@ public class CLogFile extends Handler {
     if (m_file != null) return m_file.getAbsolutePath();
     return "";
   } //	getFileName
-
-  /**
-   * Get Log Directory
-   *
-   * @return log directory or null
-   */
-  public File getLogDirectory() {
-    if (m_file != null) return m_file.getParentFile();
-    return null;
-  } //	getLogDirectory
 
   /**
    * Set Level

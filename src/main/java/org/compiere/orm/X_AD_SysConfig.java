@@ -14,17 +14,13 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I_Persistent {
 
-  /** ConfigurationLevel AD_Reference_ID=53222 */
-  public static final int CONFIGURATIONLEVEL_AD_Reference_ID = 53222;
-  /** System = S */
+    /** System = S */
   public static final String CONFIGURATIONLEVEL_System = "S";
   /** Client = C */
   public static final String CONFIGURATIONLEVEL_Client = "C";
   /** Organization = O */
   public static final String CONFIGURATIONLEVEL_Organization = "O";
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
-  /** */
+    /** */
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
@@ -55,46 +51,7 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
     return sb.toString();
   }
 
-  /**
-   * Get System Configurator.
-   *
-   * @return System Configurator
-   */
-  public int getAD_SysConfig_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_SysConfig_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set System Configurator.
-   *
-   * @param AD_SysConfig_ID System Configurator
-   */
-  public void setAD_SysConfig_ID(int AD_SysConfig_ID) {
-    if (AD_SysConfig_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_SysConfig_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_SysConfig_ID, Integer.valueOf(AD_SysConfig_ID));
-  }
-
-  /**
-   * Get AD_SysConfig_UU.
-   *
-   * @return AD_SysConfig_UU
-   */
-  public String getAD_SysConfig_UU() {
-    return (String) get_Value(COLUMNNAME_AD_SysConfig_UU);
-  }
-
-  /**
-   * Set AD_SysConfig_UU.
-   *
-   * @param AD_SysConfig_UU AD_SysConfig_UU
-   */
-  public void setAD_SysConfig_UU(String AD_SysConfig_UU) {
-    set_Value(COLUMNNAME_AD_SysConfig_UU, AD_SysConfig_UU);
-  }
-
-  /**
+    /**
    * Get Configuration Level.
    *
    * @return Configuration Level for this parameter
@@ -113,25 +70,7 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
     set_Value(COLUMNNAME_ConfigurationLevel, ConfigurationLevel);
   }
 
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
-  }
-
-  /**
-   * Set Description.
-   *
-   * @param Description Optional short description of the record
-   */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
-  }
-
-  /**
+    /**
    * Get Entity Type.
    *
    * @return Dictionary Entity Type; Determines ownership and synchronization
@@ -140,17 +79,7 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
     return (String) get_Value(COLUMNNAME_EntityType);
   }
 
-  /**
-   * Set Entity Type.
-   *
-   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
-   */
-  public void setEntityType(String EntityType) {
-
-    set_Value(COLUMNNAME_EntityType, EntityType);
-  }
-
-  @Override
+    @Override
   public int getTableId() {
     return Table_ID;
   }

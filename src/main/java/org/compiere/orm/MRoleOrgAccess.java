@@ -79,29 +79,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     setAD_Role_ID(role.getAD_Role_ID());
   } //	MRoleOrgAccess
 
-  /**
-   * Get Organizational Access of Role
-   *
-   * @param ctx context
-   * @param AD_Role_ID role
-   * @return array of Role Org Access
-   */
-  public static MRoleOrgAccess[] getOfRole(Properties ctx, int AD_Role_ID) {
-    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE AD_Role_ID=?", AD_Role_ID);
-  } //	getOfRole
-
-  /**
-   * Get Organizational Access of Client
-   *
-   * @param ctx context
-   * @param AD_Client_ID client
-   * @return array of Role Org Access
-   */
-  public static MRoleOrgAccess[] getOfClient(Properties ctx, int AD_Client_ID) {
-    return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE AD_Client_ID=?", AD_Client_ID);
-  } //	getOfClient
-
-  /**
+    /**
    * Get Organizational Access of Org
    *
    * @param ctx context
@@ -179,26 +157,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     return sb.toString();
   } //	toString
 
-  /**
-   * ************************************************************************ Extended String
-   * Representation
-   *
-   * @param ctx context
-   * @return extended info
-   */
-  public String toStringX(Properties ctx) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(Msg.translate(ctx, "AD_Client_ID"))
-        .append("=")
-        .append(getClientName())
-        .append(" - ")
-        .append(Msg.translate(ctx, "AD_Org_ID"))
-        .append("=")
-        .append(getOrgName());
-    return sb.toString();
-  } //	toStringX
-
-  /**
+    /**
    * Get Client Name
    *
    * @return name

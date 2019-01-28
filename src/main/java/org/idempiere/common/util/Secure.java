@@ -1,12 +1,10 @@
 package org.idempiere.common.util;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.security.AlgorithmParameters;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.util.logging.Level;
 import javax.crypto.Cipher;
 import org.idempiere.common.base.IServiceHolder;
@@ -38,26 +36,7 @@ public class Secure implements SecureInterface {
     initCipher();
   } //	Secure
 
-  /**
-   * ************************************************************************ Hash checksum number
-   *
-   * @param key key
-   * @return checksum number
-   */
-  public static int hash(String key) {
-    long tableSize = 2147483647; // one less than max int
-    long hashValue = 0;
-
-    for (int i = 0; i < key.length(); i++) hashValue = (37 * hashValue) + (key.charAt(i) - 31);
-
-    hashValue %= tableSize;
-    if (hashValue < 0) hashValue += tableSize;
-
-    int retValue = (int) hashValue;
-    return retValue;
-  } //	hash
-
-  /**
+    /**
    * ************************************************************************ Convert Byte Array to
    * Hex String
    *
@@ -204,70 +183,7 @@ public class Secure implements SecureInterface {
     return null;
   } //	decrypt
 
-  /**
-   * Encryption. The methods must recognize clear text values
-   *
-   * @param value clear value
-   * @param ad_client_id
-   * @return encrypted String
-   */
-  public Integer encrypt(Integer value, int ad_client_id) {
-    return value;
-  } //	encrypt
-
-  /**
-   * Decryption. The methods must recognize clear text values
-   *
-   * @param value encrypted value
-   * @return decrypted String
-   */
-  public Integer decrypt(Integer value, int ad_client_id) {
-    return value;
-  } //	decrypt
-
-  /**
-   * Encryption. The methods must recognize clear text values
-   *
-   * @param value clear value
-   * @param ad_client_id
-   * @return encrypted String
-   */
-  public BigDecimal encrypt(BigDecimal value, int ad_client_id) {
-    return value;
-  } //	encrypt
-
-  /**
-   * Decryption. The methods must recognize clear text values
-   *
-   * @param value encrypted value
-   * @return decrypted String
-   */
-  public BigDecimal decrypt(BigDecimal value, int ad_client_id) {
-    return value;
-  } //	decrypt
-
-  /**
-   * Encryption. The methods must recognize clear text values
-   *
-   * @param value clear value
-   * @param ad_client_id
-   * @return encrypted String
-   */
-  public Timestamp encrypt(Timestamp value, int ad_client_id) {
-    return value;
-  } //	encrypt
-
-  /**
-   * Decryption. The methods must recognize clear text values
-   *
-   * @param value encrypted value
-   * @return decrypted String
-   */
-  public Timestamp decrypt(Timestamp value, int ad_client_id) {
-    return value;
-  } //	decrypt
-
-  /**
+    /**
    * Convert String to Digest. JavaScript version see - http://pajhome.org.uk/crypt/md5/index.html
    *
    * @param value message
@@ -298,19 +214,7 @@ public class Secure implements SecureInterface {
     return convertToHexString(output);
   } //	getDigest
 
-  /**
-   * Checks, if value is a valid digest
-   *
-   * @param value digest string
-   * @return true if valid digest
-   */
-  public boolean isDigest(String value) {
-    if (value == null || value.length() != 32) return false;
-    //	needs to be a hex string, so try to convert it
-    return (convertHexString(value) != null);
-  } //	isDigest
-
-  /**
+    /**
    * Convert String and salt to SHA-512 hash with iterations
    * https://www.owasp.org/index.php/Hashing_Java
    *

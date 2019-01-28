@@ -64,22 +64,7 @@ public class MRefList extends X_AD_Ref_List {
     super(ctx, rs, trxName);
   } //	MRef_List
 
-  /**
-   * Get Reference List
-   *
-   * @param ctx context
-   * @param AD_Reference_ID reference
-   * @param Value value
-   * @param trxName transaction
-   * @return List or null
-   */
-  public static MRefList get(Properties ctx, int AD_Reference_ID, String Value, String trxName) {
-    return new Query(ctx, I_AD_Ref_List.Table_Name, "AD_Reference_ID=? AND Value=?", trxName)
-        .setParameters(AD_Reference_ID, Value)
-        .firstOnly();
-  } //	get
-
-  /**
+    /**
    * Get Reference List Value Name (cached)
    *
    * @param ctx context
@@ -139,20 +124,7 @@ public class MRefList extends X_AD_Ref_List {
     return retValue;
   } //	getListName
 
-  /**
-   * Get Reference List Value Description (cached)
-   *
-   * @param ctx context
-   * @param ListName reference
-   * @param Value value
-   * @return List or null
-   */
-  public static String getListDescription(Properties ctx, String ListName, String Value) {
-    String AD_Language = Env.getADLanguage(ctx);
-    return getListDescription(AD_Language, ListName, Value);
-  }
-
-  /**
+    /**
    * Get Reference List Value Description (cached)
    *
    * @param Language
@@ -202,47 +174,7 @@ public class MRefList extends X_AD_Ref_List {
     return retValue;
   } //	getListDescription
 
-  /**
-   * Get Reference List (translated)
-   *
-   * @param ctx context
-   * @param AD_Reference_ID reference
-   * @param optional if true add "",""
-   * @return List or null
-   */
-  public static ValueNamePair[] getList(Properties ctx, int AD_Reference_ID, boolean optional) {
-    String ad_language = Env.getADLanguage(ctx);
-    boolean isBaseLanguage = Env.isBaseLanguage(ad_language, "AD_Ref_List");
-    String sql =
-        isBaseLanguage
-            ? "SELECT Value, Name FROM AD_Ref_List WHERE AD_Reference_ID=? AND IsActive='Y' ORDER BY Name"
-            : "SELECT r.Value, t.Name FROM AD_Ref_List_Trl t"
-                + " INNER JOIN AD_Ref_List r ON (r.AD_Ref_List_ID=t.AD_Ref_List_ID)"
-                + " WHERE r.AD_Reference_ID=? AND t.AD_Language=? AND r.IsActive='Y'"
-                + " ORDER BY t.Name";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    ArrayList<ValueNamePair> list = new ArrayList<ValueNamePair>();
-    if (optional) list.add(new ValueNamePair("", ""));
-    try {
-      pstmt = prepareStatement(sql, null);
-      pstmt.setInt(1, AD_Reference_ID);
-      if (!isBaseLanguage) pstmt.setString(2, ad_language);
-      rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new ValueNamePair(rs.getString(1), rs.getString(2)));
-    } catch (SQLException e) {
-      s_log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    ValueNamePair[] retValue = new ValueNamePair[list.size()];
-    list.toArray(retValue);
-    return retValue;
-  } //	getList
-
-  /**
+    /**
    * String Representation
    *
    * @return Name

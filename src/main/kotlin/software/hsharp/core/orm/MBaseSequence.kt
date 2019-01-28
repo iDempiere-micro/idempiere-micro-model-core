@@ -121,8 +121,8 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
                 val seqno = X_AD_Sequence_No(Env.getCtx(), 0, null)
                 seqno.aD_Sequence_ID = AD_Sequence_ID
                 seqno.setAD_Org_ID(docOrg_ID)
-                seqno.calendarYearMonth = calendarYearMonth
-                seqno.currentNext = startNo + incrementNo
+                seqno.setCalendarYearMonth(calendarYearMonth)
+                seqno.setCurrentNext(startNo + incrementNo)
                 seqno.saveEx()
 
                 startNo

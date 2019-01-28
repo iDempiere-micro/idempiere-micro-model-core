@@ -56,43 +56,7 @@ public class X_AD_Attachment extends PO implements I_Persistent {
     return ii;
   }
 
-  /**
-   * Set Attachment.
-   *
-   * @param AD_Attachment_ID Attachment for the document
-   */
-  public void setAD_Attachment_ID(int AD_Attachment_ID) {
-    if (AD_Attachment_ID < 1) set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Attachment_ID, null);
-    else
-      set_ValueNoCheck(
-          I_AD_Attachment.COLUMNNAME_AD_Attachment_ID, Integer.valueOf(AD_Attachment_ID));
-  }
-
-  /**
-   * Get AD_Attachment_UU.
-   *
-   * @return AD_Attachment_UU
-   */
-  public String getAD_Attachment_UU() {
-    return (String) get_Value(I_AD_Attachment.COLUMNNAME_AD_Attachment_UU);
-  }
-
-  /**
-   * Set AD_Attachment_UU.
-   *
-   * @param AD_Attachment_UU AD_Attachment_UU
-   */
-  public void setAD_Attachment_UU(String AD_Attachment_UU) {
-    set_Value(I_AD_Attachment.COLUMNNAME_AD_Attachment_UU, AD_Attachment_UU);
-  }
-
-  public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
-    return (org.compiere.model.I_AD_Table)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), null);
-  }
-
-  /**
+    /**
    * Get Table.
    *
    * @return Database Table information
@@ -113,16 +77,7 @@ public class X_AD_Attachment extends PO implements I_Persistent {
     else set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
-  /**
-   * Get Binary Data.
-   *
-   * @return Binary Data
-   */
-  public byte[] getBinaryData() {
-    return (byte[]) get_Value(I_AD_Attachment.COLUMNNAME_BinaryData);
-  }
-
-  /**
+    /**
    * Set Binary Data.
    *
    * @param BinaryData Binary Data
@@ -131,18 +86,7 @@ public class X_AD_Attachment extends PO implements I_Persistent {
     set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_BinaryData, BinaryData);
   }
 
-  /**
-   * Get Record ID.
-   *
-   * @return Direct internal record ID
-   */
-  public int getRecord_ID() {
-    Integer ii = (Integer) get_Value(I_AD_Attachment.COLUMNNAME_Record_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
+    /**
    * Set Record ID.
    *
    * @param Record_ID Direct internal record ID
@@ -188,16 +132,7 @@ public class X_AD_Attachment extends PO implements I_Persistent {
     set_Value(I_AD_Attachment.COLUMNNAME_Title, Title);
   }
 
-  /**
-   * Get Record ID/ColumnName
-   *
-   * @return ID/ColumnName pair
-   */
-  public KeyNamePair getKeyNamePair() {
-    return new KeyNamePair(getId(), getTitle());
-  }
-
-  @Override
+    @Override
   public int getTableId() {
     return I_AD_Attachment.Table_ID;
   }

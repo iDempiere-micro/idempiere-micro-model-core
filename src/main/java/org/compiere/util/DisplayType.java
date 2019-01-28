@@ -98,8 +98,6 @@ public final class DisplayType {
 
   public static final int Chart = SystemIDs.REFERENCE_DATATYPE_CHART;
 
-  public static final int DashboardContent = SystemIDs.REFERENCE_DATATYPE_DASHBOARD_CONTENT;
-
   public static final int SingleSelectionGrid = SystemIDs.REFERENCE_DATATYPE_SINGLE_SELECTION_GRID;
 
   public static final int MultipleSelectionGrid =
@@ -193,30 +191,6 @@ public final class DisplayType {
 
     return false;
   } //	isNumeric
-
-  /**
-   * Get Default Precision. Used for databases who cannot handle dynamic number precision.
-   *
-   * @param displayType display type
-   * @return scale (decimal precision)
-   */
-  public static int getDefaultPrecision(int displayType) {
-    if (displayType == Amount) return 2;
-    if (displayType == Number) return 6;
-    if (displayType == CostPrice || displayType == Quantity) return 4;
-
-    IServicesHolder<IDisplayTypeFactory> service =
-        Service.Companion.locator().list(IDisplayTypeFactory.class);
-    if (service != null) {
-      List<IDisplayTypeFactory> factoryList = service.getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        if (factory.getDefaultPrecision(displayType) != null)
-          return factory.getDefaultPrecision(displayType).intValue();
-      }
-    }
-
-    return 0;
-  } //	getDefaultPrecision
 
   /**
    * Returns true, if DisplayType is text (String, Text, TextLong, Memo).
@@ -414,16 +388,6 @@ public final class DisplayType {
   } //  getDateFormat
 
   /**
-   * Return Date Format
-   *
-   * @param language Language
-   * @return date format
-   */
-  public static SimpleDateFormat getDateFormat(Language language) {
-    return getDateFormat(DisplayType.Date, language);
-  } //	getDateFormat
-
-  /**
    * Return format for date displayType
    *
    * @param displayType Display Type
@@ -596,71 +560,4 @@ public final class DisplayType {
     return "VARCHAR2(" + fieldLength + ")";
   } //	getSQLDataType
 
-  /**
-   * Get Description
-   *
-   * @param displayType display Type
-   * @return display type description
-   */
-  public static String getDescription(int displayType) {
-    if (displayType == String) return "String";
-    if (displayType == Integer) return "Integer";
-    if (displayType == Amount) return "Amount";
-    if (displayType == ID) return "ID";
-    if (displayType == Text) return "Text";
-    if (displayType == Date) return "Date";
-    if (displayType == DateTime) return "DateTime";
-    if (displayType == List) return "List";
-    if (displayType == Table) return "Table";
-    if (displayType == TableDir) return "TableDir";
-    if (displayType == YesNo) return "YesNo";
-    if (displayType == Location) return "Location";
-    if (displayType == Number) return "Number";
-    if (displayType == Binary) return "Binary";
-    if (displayType == Time) return "Time";
-    if (displayType == Account) return "Account";
-    if (displayType == RowID) return "RowID";
-    if (displayType == Color) return "Color";
-    if (displayType == Button) return "Button";
-    if (displayType == Quantity) return "Quantity";
-    if (displayType == Search) return "Search";
-    if (displayType == Locator) return "Locator";
-    if (displayType == Image) return "Image";
-    if (displayType == Assignment) return "Assignment";
-    if (displayType == Memo) return "Memo";
-    if (displayType == PAttribute) return "PAttribute";
-    if (displayType == TextLong) return "TextLong";
-    if (displayType == CostPrice) return "CostPrice";
-    if (displayType == FilePath) return "FilePath";
-    if (displayType == FileName) return "FileName";
-    if (displayType == URL) return "URL";
-    if (displayType == PrinterName) return "PrinterName";
-    if (displayType == Payment) return "Payment";
-    if (displayType == Chart) return "Chart";
-
-    List<IDisplayTypeFactory> factoryList =
-        Service.Companion.locator().list(IDisplayTypeFactory.class).getServices();
-    for (IDisplayTypeFactory factory : factoryList) {
-      String osgiDescription = factory.getDescription(displayType);
-      if (osgiDescription != null) return osgiDescription;
-    }
-
-    //
-    return "UNKNOWN DisplayType=" + displayType;
-  } //	getDescription
-
-  /**
-   * Helper method to get a currency format in a language (multi-currency and multi-language system)
-   *
-   * @param language locale code
-   * @param currency code
-   * @return number format
-   */
-  public static NumberFormat getCurrencyFormat(String langcode, String currencyCode) {
-    Locale locale = Language.getLocale(langcode);
-    NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
-    Currency currency = Currency.getInstance(currencyCode);
-    currencyFormatter.setCurrency(currency);
-    return currencyFormatter;
-  } //  getCurrencyFormat
 } //	DisplayType

@@ -13,9 +13,7 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn, I_Persistent {
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
-  /** */
+    /** */
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
@@ -46,13 +44,7 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn, I_Persiste
     return sb.toString();
   }
 
-  public org.compiere.model.I_AD_Column getAD_Column() throws RuntimeException {
-    return (org.compiere.model.I_AD_Column)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Column.Table_Name)
-            .getPO(getAD_Column_ID(), null);
-  }
-
-  /**
+    /**
    * Get Column.
    *
    * @return Column in the table
@@ -73,52 +65,7 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn, I_Persiste
     else set_ValueNoCheck(COLUMNNAME_AD_Column_ID, Integer.valueOf(AD_Column_ID));
   }
 
-  /**
-   * Get Table Index Column.
-   *
-   * @return Table Index Column
-   */
-  public int getAD_IndexColumn_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_IndexColumn_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set Table Index Column.
-   *
-   * @param AD_IndexColumn_ID Table Index Column
-   */
-  public void setAD_IndexColumn_ID(int AD_IndexColumn_ID) {
-    if (AD_IndexColumn_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_IndexColumn_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_IndexColumn_ID, Integer.valueOf(AD_IndexColumn_ID));
-  }
-
-  /**
-   * Get AD_IndexColumn_UU.
-   *
-   * @return AD_IndexColumn_UU
-   */
-  public String getAD_IndexColumn_UU() {
-    return (String) get_Value(COLUMNNAME_AD_IndexColumn_UU);
-  }
-
-  /**
-   * Set AD_IndexColumn_UU.
-   *
-   * @param AD_IndexColumn_UU AD_IndexColumn_UU
-   */
-  public void setAD_IndexColumn_UU(String AD_IndexColumn_UU) {
-    set_Value(COLUMNNAME_AD_IndexColumn_UU, AD_IndexColumn_UU);
-  }
-
-  public org.compiere.model.I_AD_TableIndex getAD_TableIndex() throws RuntimeException {
-    return (org.compiere.model.I_AD_TableIndex)
-        MTable.get(getCtx(), org.compiere.model.I_AD_TableIndex.Table_Name)
-            .getPO(getAD_TableIndex_ID(), null);
-  }
-
-  /**
+    /**
    * Get Table Index.
    *
    * @return Table Index
@@ -148,46 +95,7 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn, I_Persiste
     return (String) get_Value(COLUMNNAME_ColumnSQL);
   }
 
-  /**
-   * Set Column SQL.
-   *
-   * @param ColumnSQL Virtual Column (r/o)
-   */
-  public void setColumnSQL(String ColumnSQL) {
-    set_Value(COLUMNNAME_ColumnSQL, ColumnSQL);
-  }
-
-  /**
-   * Get Entity Type.
-   *
-   * @return Dictionary Entity Type; Determines ownership and synchronization
-   */
-  public String getEntityType() {
-    return (String) get_Value(COLUMNNAME_EntityType);
-  }
-
-  /**
-   * Set Entity Type.
-   *
-   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
-   */
-  public void setEntityType(String EntityType) {
-
-    set_Value(COLUMNNAME_EntityType, EntityType);
-  }
-
-  /**
-   * Get Sequence.
-   *
-   * @return Method of ordering records; lowest number comes first
-   */
-  public int getSeqNo() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_SeqNo);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
+    /**
    * Set Sequence.
    *
    * @param SeqNo Method of ordering records; lowest number comes first

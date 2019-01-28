@@ -73,17 +73,7 @@ public class M_Element extends X_AD_Element {
     setEntityType(EntityType); // U
   } //	M_Element
 
-  /**
-   * Get case sensitive Column Name
-   *
-   * @param columnName case insensitive column name
-   * @return case sensitive column name
-   */
-  public static String getColumnName(String columnName) {
-    return getColumnName(columnName, null);
-  }
-
-  /**
+    /**
    * Get case sensitive Column Name
    *
    * @param columnName case insensitive column name
@@ -148,18 +138,7 @@ public class M_Element extends X_AD_Element {
     return retValue;
   } //	get
 
-  /**
-   * Get Element
-   *
-   * @param ctx context
-   * @param columnName case insentitive column name
-   * @return case sensitive column name
-   */
-  public static M_Element getOfColumn(Properties ctx, int AD_Column_ID) {
-    return getOfColumn(ctx, AD_Column_ID, null);
-  } //	get
-
-  /* (non-Javadoc)
+    /* (non-Javadoc)
    * @see PO#beforeSave(boolean)
    */
   @Override

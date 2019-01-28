@@ -92,7 +92,7 @@ public class MDocType extends X_C_DocType {
     setGL_Category_ID();
   } //	MDocType
 
-  /**
+    /**
    * Return the first Doc Type for this BaseType
    *
    * @param DocBaseType
@@ -187,17 +187,7 @@ public class MDocType extends X_C_DocType {
     return sb.toString();
   } //	toString
 
-  /**
-   * Is this a Quotation (Binding)
-   *
-   * @return true if Quotation
-   */
-  public boolean isQuotation() {
-    return X_C_DocType.DOCSUBTYPESO_Quotation.equals(getDocSubTypeSO())
-        && X_C_DocType.DOCBASETYPE_SalesOrder.equals(getDocBaseType());
-  } //	isQuotation
-
-  /**
+    /**
    * Is this a Proposal (Not binding)
    *
    * @return true if proposal

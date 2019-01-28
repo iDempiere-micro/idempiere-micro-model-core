@@ -170,12 +170,7 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
     return m_justReset;
   } //	isReset
 
-  /** Resets the Reset flag */
-  public void setUsed() {
-    m_justReset = false;
-  } //	setUsed
-
-  /**
+    /**
    * Reset Cache
    *
    * @return number of items cleared
@@ -329,27 +324,7 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
     return cache.values();
   } //	values
 
-  /**
-   * Add Vetoable Change Listener
-   *
-   * @param listener listner
-   */
-  public void addVetoableChangeListener(VetoableChangeListener listener) {
-    if (m_changeSupport == null) m_changeSupport = new VetoableChangeSupport(this);
-    if (listener != null) m_changeSupport.addVetoableChangeListener(listener);
-  } //	addVetoableChangeListener
-
-  /**
-   * Remove Vetoable Change Listener
-   *
-   * @param listener listener
-   */
-  public void removeVetoableChangeListener(VetoableChangeListener listener) {
-    if (m_changeSupport != null && listener != null)
-      m_changeSupport.removeVetoableChangeListener(listener);
-  } //	removeVetoableChangeListener
-
-  @Override
+    @Override
   public V remove(Object key) {
     if (!nullList.isEmpty()) {
       if (nullList.remove(key)) return null;
