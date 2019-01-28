@@ -15,10 +15,7 @@ public class MTree_NodeMM extends X_AD_TreeNodeMM {
   /** */
   private static final long serialVersionUID = 3786314890360604549L;
 
-  /** Static Logger */
-  private static CLogger s_log = CLogger.getCLogger(MTree_NodeMM.class);
-
-  /**
+    /**
    * Load Constructor
    *
    * @param ctx context

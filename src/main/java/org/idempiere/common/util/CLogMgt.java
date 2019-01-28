@@ -46,17 +46,7 @@ public class CLogMgt {
   /** Logger */
   private static Logger log = Logger.getAnonymousLogger();
 
-  private static final PropertyChangeListener listener =
-      new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-          if (evt.getPropertyName() == null) {
-            reInit();
-          }
-        }
-      };
-
-  /** ******************************************************************** CLogMgt */
+    /** ******************************************************************** CLogMgt */
   public CLogMgt() {
     testLog();
   }
@@ -216,26 +206,7 @@ public class CLogMgt {
     if (log.isLoggable(Level.CONFIG)) log.log(Level.CONFIG, "Filter=" + filter);
   } //	setFilter
 
-  /**
-   * Set Level for all Loggers
-   *
-   * @param level log level
-   * @param loggerNamePart optional partial class/logger name
-   */
-  public static void setLoggerLevel(Level level, String loggerNamePart) {
-    if (level == null) return;
-    LogManager mgr = LogManager.getLogManager();
-    Enumeration<?> en = mgr.getLoggerNames();
-    while (en.hasMoreElements()) {
-      String name = en.nextElement().toString();
-      if (loggerNamePart == null || name.indexOf(loggerNamePart) != -1) {
-        Logger lll = Logger.getLogger(name);
-        lll.setLevel(level);
-      }
-    }
-  } //	setLoggerLevel
-
-  /**
+    /**
    * Set Level for all handlers
    *
    * @param level log level
@@ -307,16 +278,7 @@ public class CLogMgt {
     setLevel(null, level);
   }
 
-  /**
-   * Set Level
-   *
-   * @param intLevel integer value of level
-   */
-  public static void setLevel(int intLevel) {
-    setLevel(String.valueOf(intLevel));
-  } //	setLevel
-
-  /**
+    /**
    * Set Level
    *
    * @param levelString string representation of level
@@ -391,57 +353,7 @@ public class CLogMgt {
     return Level.INFO.intValue() >= getLevelAsInt();
   } //	isLevelFine
 
-  /**
-   * Enable/Disable logging (of handlers)
-   *
-   * @param enableLogging true if logging enabled
-   */
-  public static void enable(boolean enableLogging) {
-    Logger rootLogger = getRootLogger();
-
-    if (enableLogging) setLevel(rootLogger.getLevel());
-    else {
-      setLevel(Level.OFF);
-    }
-  } //	enable
-
-  /** Shutdown Logging system */
-  public static void shutdown() {
-    LogManager mgr = LogManager.getLogManager();
-    mgr.reset();
-  } //	shutdown
-
-  /**
-   * Print Properties
-   *
-   * @param p Properties to print
-   * @param description Description of properties
-   * @param logIt if true write to Log (Level.Config), else to System.out
-   */
-  public static void printProperties(Properties p, String description, boolean logIt) {
-    if (p == null) return;
-    if (logIt) {
-      if (log.isLoggable(Level.INFO))
-        log.info(
-            description + " - Size=" + p.size() + ", Hash=" + p.hashCode() + "\n" + getLocalHost());
-    } else {
-      System.out.println("Log.printProperties = " + description + ", Size=" + p.size());
-    }
-
-    Object[] pp = p.keySet().toArray();
-    Arrays.sort(pp);
-    for (int i = 0; i < pp.length; i++) {
-      String key = pp[i].toString();
-      String value = p.getProperty(key);
-      if (logIt) {
-        if (log.isLoggable(Level.CONFIG)) log.config(key + "=" + value);
-      } else {
-        System.out.println("  " + key + " = " + value);
-      }
-    }
-  } //  printProperties
-
-  /**
+    /**
    * Get Adempiere System Info
    *
    * @param sb buffer to append or null

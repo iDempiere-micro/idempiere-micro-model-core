@@ -49,31 +49,4 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
     setSeqNo(0);
   } //	MTree_NodePR
 
-  /**
-   * Get Tree Node
-   *
-   * @param tree tree
-   * @param Node_ID node
-   * @return node or null
-   */
-  public static MTree_NodePR get(MTree_Base tree, int Node_ID) {
-    MTree_NodePR retValue = null;
-    String sql = "SELECT * FROM AD_TreeNodePR WHERE AD_Tree_ID=? AND Node_ID=?";
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = prepareStatement(sql, null);
-      pstmt.setInt(1, tree.getAD_Tree_ID());
-      pstmt.setInt(2, Node_ID);
-      rs = pstmt.executeQuery();
-      if (rs.next()) retValue = new MTree_NodePR(tree.getCtx(), rs, null);
-    } catch (Exception e) {
-      s_log.log(Level.SEVERE, sql, e);
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    return retValue;
-  } //	get
 } //	MTree_NodePR

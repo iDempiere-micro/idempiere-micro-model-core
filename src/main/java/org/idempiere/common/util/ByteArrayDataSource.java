@@ -1,7 +1,6 @@
 package org.idempiere.common.util;
 
 import java.io.*;
-import java.util.logging.Level;
 import javax.activation.DataSource;
 
 /**
@@ -22,59 +21,7 @@ public class ByteArrayDataSource implements DataSource {
   /** Name * */
   private String m_name = null;
 
-  /**
-   * Create a DataSource from an input stream
-   *
-   * @param is stream
-   * @param type optional MIME type e.g. text/html
-   */
-  public ByteArrayDataSource(InputStream is, String type) {
-    try {
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
-      int ch;
-
-      while ((ch = is.read()) != -1) {
-        // XXX - must be made more efficient by
-        // doing buffered reads, rather than one byte reads
-        os.write(ch);
-      }
-      m_data = os.toByteArray();
-    } catch (IOException ioex) {
-      log.log(Level.WARNING, "", ioex);
-    }
-    if (type != null && type.length() > 0) m_type = type;
-  } //	ByteArrayDataSource
-
-  /**
-   * Create a DataSource from a byte array
-   *
-   * @param data data
-   * @param type type e.g. text/html
-   */
-  public ByteArrayDataSource(byte[] data, String type) {
-    m_data = data;
-    if (type != null && type.length() > 0) m_type = type;
-  } //	ByteArrayDataSource
-
-  /**
-   * Create a DataSource from a String
-   *
-   * @param stringData content
-   * @param charSetName optional if null/empty uses UTF-8
-   * @param type optional MIME type e.g. text/html
-   */
-  public ByteArrayDataSource(String stringData, String charSetName, String type) {
-    if (charSetName == null || charSetName.length() == 0)
-      charSetName = "UTF-8"; // WebEnv.ENCODING - alternatibe iso-8859-1
-    try {
-      m_data = stringData.getBytes(charSetName);
-    } catch (UnsupportedEncodingException uex) {
-      log.log(Level.WARNING, "CharSetName=" + charSetName, uex);
-    }
-    if (type != null && type.length() > 0) m_type = type;
-  } //	ByteArrayDataSource
-
-  /**
+    /**
    * Return an InputStream for the data.
    *
    * @return inputstream
@@ -115,14 +62,4 @@ public class ByteArrayDataSource implements DataSource {
     return "ByteArrayDataStream " + m_type;
   } //	getName
 
-  /**
-   * Set Name
-   *
-   * @param name name
-   * @return this
-   */
-  public ByteArrayDataSource setName(String name) {
-    m_name = name;
-    return this;
-  } //	setName
 } //	ByteArrayDataStream

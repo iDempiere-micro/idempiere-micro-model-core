@@ -30,21 +30,12 @@ import static software.hsharp.core.util.DBKt.getSQLValue;
 public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
   /** Indicator for no data */
   public static final String NONE = ".";
-  /** Indicator for zip data */
-  public static final String ZIP = "zip";
-  /** Indicator for xml data (store on file system) */
-  public static final String XML = "xml";
-  /** */
+    /** */
   private static final long serialVersionUID = -8261865873158774665L;
   /** Static Logger */
   @SuppressWarnings("unused")
   private static CLogger s_log = CLogger.getCLogger(MAttachment.class);
-  /**
-   * string replaces the attachment root in stored xml file to allow the changing of the attachment
-   * root.
-   */
-  public final String ATTACHMENT_FOLDER_PLACEHOLDER = "%ATTACHMENT_FOLDER%";
-  /** List of Entry Data */
+    /** List of Entry Data */
   public ArrayList<I_AD_AttachmentEntry> m_items = null;
 
   private MStorageProvider provider;
@@ -161,18 +152,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     initAttachmentStoreDetails(getCtx(), null);
   } //	setClientOrg
 
-  /**
-   * Add to Text Msg
-   *
-   * @param added text
-   */
-  public void addTextMsg(String added) {
-    String oldTextMsg = getTextMsg();
-    if (oldTextMsg == null) setTextMsg(added);
-    else if (added != null) setTextMsg(oldTextMsg + added);
-  } //	addTextMsg
-
-  /**
+    /**
    * Get Text Msg
    *
    * @return trimmed message
@@ -317,40 +297,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     return (MAttachmentEntry) m_items.get(index);
   } //	getEntry
 
-  /**
-   * Get Attachment Entries as array
-   *
-   * @return array or null
-   */
-  public MAttachmentEntry[] getEntries() {
-    if (m_items == null) loadLOBData();
-    MAttachmentEntry[] retValue = new MAttachmentEntry[m_items.size()];
-    m_items.toArray(retValue);
-    return retValue;
-  } //	getEntries
-
-  /**
-   * Delete Entry
-   *
-   * @param index index
-   * @return true if deleted
-   */
-  public boolean deleteEntry(int index) {
-    if (m_items == null) loadLOBData();
-    if (index >= 0 && index < m_items.size()) {
-      IAttachmentStore prov = provider.getAttachmentStore();
-      if (prov != null) {
-        if (prov.deleteEntry(this, provider, index))
-          return set_ValueNoCheck("Updated", new Timestamp(System.currentTimeMillis()));
-        return false;
-      }
-      return false;
-    }
-    log.warning("Not deleted Index=" + index + " - Size=" + m_items.size());
-    return false;
-  } // deleteEntry
-
-  /**
+    /**
    * Get Entry Count
    *
    * @return number of entries
@@ -381,60 +328,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     return null;
   } // getEntryName
 
-  /** Dump Entry Names */
-  public void dumpEntryNames() {
-    if (m_items == null) loadLOBData();
-    if (m_items == null || m_items.size() == 0) {
-      System.out.println("- no entries -");
-      return;
-    }
-    StringBuilder msgout = new StringBuilder("- entries: ").append(m_items.size());
-    System.out.println(msgout.toString());
-    for (int i = 0; i < m_items.size(); i++) {
-      msgout = new StringBuilder("  - ").append(getEntryName(i));
-      System.out.println(msgout.toString());
-    }
-  } //	dumpEntryNames
-
-  /**
-   * Get Entry Data
-   *
-   * @param index index
-   * @return data or null
-   */
-  public byte[] getEntryData(int index) {
-    MAttachmentEntry item = getEntry(index);
-    if (item != null) return item.getData();
-    return null;
-  } //	getEntryData
-
-  /**
-   * Get Entry File with name
-   *
-   * @param index index
-   * @param fileName optional file name
-   * @return file
-   */
-  public File getEntryFile(int index, String fileName) {
-    MAttachmentEntry item = getEntry(index);
-    if (item != null) return item.getFile(fileName);
-    return null;
-  } //	getEntryFile
-
-  /**
-   * Get Entry File with name
-   *
-   * @param index index
-   * @param file file
-   * @return file
-   */
-  public File getEntryFile(int index, File file) {
-    MAttachmentEntry item = getEntry(index);
-    if (item != null) return item.getFile(file);
-    return null;
-  } //	getEntryFile
-
-  /**
+    /**
    * Save Entry Data in Zip File format
    *
    * @return true if saved
@@ -488,47 +382,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     return false;
   } //	beforeDelete
 
-  /**
-   * Update existing entry
-   *
-   * @param i
-   * @param file
-   * @return true if success, false otherwise
-   */
-  public boolean updateEntry(int i, File file) {
-    if (file == null) {
-      log.warning("No File");
-      return false;
-    }
-    if (!file.exists() || file.isDirectory() || !file.canRead()) {
-      log.warning(
-          "not added - "
-              + file
-              + ", Exists="
-              + file.exists()
-              + ", Directory="
-              + file.isDirectory());
-      return false;
-    }
-    if (log.isLoggable(Level.FINE)) log.fine("updateEntry - " + file);
-    //
-    byte[] data = null;
-    try {
-      FileInputStream fis = new FileInputStream(file);
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
-      byte[] buffer = new byte[1024 * 8]; //  8kB
-      int length = -1;
-      while ((length = fis.read(buffer)) != -1) os.write(buffer, 0, length);
-      fis.close();
-      data = os.toByteArray();
-      os.close();
-    } catch (IOException ioe) {
-      log.log(Level.SEVERE, "(file)", ioe);
-    }
-    return updateEntry(i, data);
-  }
-
-  /**
+    /**
    * Update existing entry
    *
    * @param i
@@ -542,15 +396,4 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     return true;
   }
 
-  public ArrayList<I_AD_AttachmentEntry> getItems() {
-    return m_items;
-  }
-
-  public void cleanItems() {
-    m_items = null;
-  }
-
-  public void prepareItems() {
-    m_items = new ArrayList<I_AD_AttachmentEntry>();
-  }
 } //	MAttachment

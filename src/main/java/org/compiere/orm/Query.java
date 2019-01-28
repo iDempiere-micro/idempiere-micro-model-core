@@ -42,9 +42,6 @@ import software.hsharp.core.orm.BaseQuery;
 public class Query extends BaseQuery {
   public static final String AGGREGATE_COUNT = "COUNT";
   public static final String AGGREGATE_SUM = "SUM";
-  public static final String AGGREGATE_AVG = "AVG";
-  public static final String AGGREGATE_MIN = "MIN";
-  public static final String AGGREGATE_MAX = "MAX";
 
   private static CLogger log = CLogger.getCLogger(Query.class);
 
@@ -118,16 +115,6 @@ public class Query extends BaseQuery {
   }
 
   /**
-   * Turn on/off the addition of data access filter
-   *
-   * @param flag
-   */
-  public Query setApplyAccessFilter(boolean flag) {
-    this.applyAccessFilter = flag;
-    return this;
-  }
-
-  /**
    * Turn on data access filter with controls
    *
    * @param flag
@@ -140,27 +127,12 @@ public class Query extends BaseQuery {
   }
 
   /**
-   * Only records that are in T_Selection with AD_PInstance_ID.
-   *
-   * @param AD_PInstance_ID
-   */
-  public Query setOnlySelection(int AD_PInstance_ID) {
-    this.onlySelection_ID = AD_PInstance_ID;
-    return this;
-  }
-
-  /**
    * Add FOR UPDATE clause
    *
    * @param forUpdate
    */
   public Query setForUpdate(boolean forUpdate) {
     this.forUpdate = forUpdate;
-    return this;
-  }
-
-  public Query setNoVirtualColumn(boolean noVirtualColumn) {
-    this.noVirtualColumn = noVirtualColumn;
     return this;
   }
 
@@ -182,16 +154,6 @@ public class Query extends BaseQuery {
    */
   public int firstId() throws DBException {
     return firstId(false);
-  }
-
-  /**
-   * Return first ID. If there are more results and exception is thrown.
-   *
-   * @return first ID or -1 if not found
-   * @throws DBException
-   */
-  public int firstIdOnly() throws DBException {
-    return firstId(true);
   }
 
   private int firstId(boolean assumeOnlyOneResult) throws DBException {
@@ -228,15 +190,6 @@ public class Query extends BaseQuery {
     }
     //
     return id;
-  }
-
-  /**
-   * red1 - returns full SQL string - for caller needs
-   *
-   * @return buildSQL(null, true)
-   */
-  public String getSQL() throws DBException {
-    return buildSQL(null, true);
   }
 
   /**
@@ -338,16 +291,6 @@ public class Query extends BaseQuery {
    */
   public int count() throws DBException {
     return aggregate("*", AGGREGATE_COUNT).intValue();
-  }
-
-  /**
-   * SUM sqlExpression for items that match query criteria
-   *
-   * @param sqlExpression
-   * @return sum
-   */
-  public BigDecimal sum(String sqlExpression) {
-    return aggregate(sqlExpression, AGGREGATE_SUM);
   }
 
   /**
@@ -540,30 +483,6 @@ public class Query extends BaseQuery {
   }
 
   /**
-   * Set the pagination of the query.
-   *
-   * @param pPageSize Limit current query rows return.
-   * @return current Query
-   */
-  public Query setPageSize(int pPageSize) {
-    this.pageSize = pPageSize;
-    return this;
-  }
-
-  /**
-   * Set the pagination of the query.
-   *
-   * @param pPageSize Limit current query rows return.
-   * @param pPagesToSkip Number of pages will be skipped on query run. ZERO for first page
-   * @return current Query
-   */
-  public Query setPage(int pPageSize, int pPagesToSkip) {
-    this.pageSize = pPageSize;
-    this.pagesToSkip = pPagesToSkip;
-    return this;
-  }
-
-  /**
    * If top is bigger than 0 set the pagination on query
    *
    * @param query SQL String
@@ -612,45 +531,4 @@ public class Query extends BaseQuery {
     return pstmt.executeQuery();
   }
 
-  /**
-   * Get a Array with the IDs for this Query
-   *
-   * @return Get a Array with the IDs
-   */
-  public int[] getIDs() {
-    MTable table = super.getTable();
-    String[] keys = table.getKeyColumns();
-    if (keys.length != 1) {
-      throw new DBException("Table " + table + " has 0 or more than 1 key columns");
-    }
-
-    StringBuilder selectClause = new StringBuilder("SELECT ");
-    if (!joinClauseList.isEmpty()) selectClause.append(table.getTableName()).append(".");
-    selectClause.append(keys[0]);
-    selectClause.append(" FROM ").append(table.getTableName());
-    String sql = buildSQL(selectClause, true);
-
-    ArrayList<Integer> list = new ArrayList<Integer>();
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try {
-      pstmt = prepareStatement(sql, trxName);
-      rs = createResultSet(pstmt);
-      while (rs.next()) {
-        list.add(rs.getInt(1));
-      }
-    } catch (SQLException e) {
-      throw new DBException(e, sql);
-    } finally {
-      close(rs, pstmt);
-      rs = null;
-      pstmt = null;
-    }
-    //	Convert to array
-    int[] retValue = new int[list.size()];
-    for (int i = 0; i < retValue.length; i++) {
-      retValue[i] = list.get(i);
-    }
-    return retValue;
-  } //	get_IDs
 }

@@ -167,102 +167,7 @@ public abstract class Convert {
     w.flush();
   }
 
-  /**
-   * Set Verbose
-   *
-   * @param verbose
-   */
-  public void setVerbose(boolean verbose) {
-    m_verbose = verbose;
-  } //  setVerbose
-
-  /**
-   * ************************************************************************ Execute SQL Statement
-   * (stops at first error). If an error occured hadError() returns true. You can get details via
-   * getConversionError() or getException()
-   *
-   * @param sqlStatements
-   * @param conn connection
-   * @return true if success
-   * @throws IllegalStateException if no connection
-   */
-  public boolean execute(String sqlStatements, Connection conn) {
-    if (conn == null) throw new IllegalStateException("Require connection");
-    //
-    String[] sql = convert(sqlStatements);
-    m_exception = null;
-    if (m_conversionError != null || sql == null) return false;
-
-    boolean ok = true;
-    int i = 0;
-    String statement = null;
-    try {
-      if (m_stmt == null) m_stmt = conn.createStatement();
-      //
-      for (i = 0; ok && i < sql.length; i++) {
-        statement = sql[i];
-        if (statement.length() == 0) {
-          if (m_verbose) log.trace("Skipping empty (" + i + ")");
-        } else {
-          if (m_verbose) {
-            log.info("Executing (" + i + ") <<" + statement + ">>");
-          } else {
-            log.info("Executing " + i);
-          }
-          try {
-            m_stmt.clearWarnings();
-            int no = m_stmt.executeUpdate(statement);
-            SQLWarning warn = m_stmt.getWarnings();
-            if (warn != null) {
-              if (m_verbose) {
-                log.info("- " + warn);
-              } else {
-                log.info("Executing (" + i + ") <<" + statement + ">>");
-                log.info("- " + warn);
-              }
-            }
-            if (m_verbose) log.trace("- ok " + no);
-          } catch (SQLException ex) {
-            //  Ignore Drop Errors
-            if (!statement.startsWith("DROP ")) {
-              ok = false;
-              m_exception = ex;
-            }
-            if (!m_verbose) log.info("Executing (" + i + ") <<" + statement + ">>");
-            log.info("Error executing " + i + "/" + sql.length + " = " + ex);
-          }
-        }
-      } //  for all statements
-    } catch (SQLException e) {
-      m_exception = e;
-      if (!m_verbose) log.info("Executing (" + i + ") <<" + statement + ">>");
-
-      log.info("Error executing " + i + "/" + sql.length + " = " + e);
-      return false;
-    }
-    return ok;
-  } //  execute
-
-  /**
-   * Return last execution exception
-   *
-   * @return execution exception
-   */
-  public Exception getException() {
-    return m_exception;
-  } //  getException
-
-  /**
-   * Returns true if a conversion or execution error had occured. Get more details via
-   * getConversionError() or getException()
-   *
-   * @return true if error had occured
-   */
-  public boolean hasError() {
-    return (m_exception != null) | (m_conversionError != null);
-  } //  hasError
-
-  /**
+    /**
    * Convert SQL Statement (stops at first error). Statements are delimited by / If an error occured
    * hadError() returns true. You can get details via getConversionError()
    *
@@ -298,16 +203,7 @@ public abstract class Convert {
     return convertIt(sqlStatements);
   } //  convert
 
-  /**
-   * Return last conversion error or null.
-   *
-   * @return lst conversion error
-   */
-  public String getConversionError() {
-    return m_conversionError;
-  } //  getConversionError
-
-  /**
+    /**
    * ************************************************************************ Conversion routine
    * (stops at first error).
    *
@@ -491,50 +387,4 @@ public abstract class Convert {
    */
   protected abstract ArrayList<String> convertStatement(String sqlStatement);
 
-  /**
-   * True if the database support native oracle dialect, false otherwise.
-   *
-   * @return boolean
-   */
-  public abstract boolean isOracle();
-
-  public synchronized void logMigrationScript(String oraStatement, String pgStatement) {
-    // Check AdempiereSys
-    // check property Log migration script
-    boolean logMigrationScript = false;
-    String sysProperty = Env.getCtx().getProperty("LogMigrationScript", "N");
-    logMigrationScript = "y".equalsIgnoreCase(sysProperty) || "true".equalsIgnoreCase(sysProperty);
-    if (logMigrationScript) {
-      if (dontLog(oraStatement)) return;
-      // Log oracle and postgres migration scripts in temp directory
-      // migration_script_oracle.sql and migration_script_postgresql.sql
-      try {
-        if (tempFileOr == null) {
-          File fileNameOr = File.createTempFile("migration_script_", "_oracle.sql");
-          tempFileOr = new FileOutputStream(fileNameOr, true);
-          writerOr = new BufferedWriter(new OutputStreamWriter(tempFileOr, StandardCharsets.UTF_8));
-          writerOr.append("SET SQLBLANKLINES ON\nSET DEFINE OFF\n\n");
-        }
-        writeLogMigrationScript(writerOr, oraStatement);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      try {
-        if (pgStatement == null) {
-          // if oracle call convert for postgres before logging
-          Convert convert = this;
-          String[] r = convert.convert(oraStatement);
-          pgStatement = r[0];
-        }
-        if (tempFilePg == null) {
-          File fileNamePg = File.createTempFile("migration_script_", "_postgresql.sql");
-          tempFilePg = new FileOutputStream(fileNamePg, true);
-          writerPg = new BufferedWriter(new OutputStreamWriter(tempFilePg, StandardCharsets.UTF_8));
-        }
-        writeLogMigrationScript(writerPg, pgStatement);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-  }
 } //  Convert

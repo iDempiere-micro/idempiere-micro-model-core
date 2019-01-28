@@ -34,21 +34,7 @@ public class CLogErrorBuffer extends Handler {
     initialize();
   } //	CLogErrorBuffer
 
-  public static CLogErrorBuffer get(boolean create) {
-    Handler[] handlers = CLogMgt.getHandlers();
-    for (Handler handler : handlers) {
-      if (handler instanceof CLogErrorBuffer) return (CLogErrorBuffer) handler;
-    }
-    if (create) {
-      CLogErrorBuffer handler = new CLogErrorBuffer();
-      CLogMgt.addHandler(handler);
-      return handler;
-    }
-
-    return null;
-  }
-
-  /** Initialize */
+    /** Initialize */
   private void initialize() {
     //	System.out.println("CLogConsole.initialize");
 
@@ -204,57 +190,7 @@ public class CLogErrorBuffer extends Handler {
     Env.getCtx().remove(HISTORY_KEY);
   } // close
 
-  /**
-   * ************************************************************************ Get ColumnNames of Log
-   * Entries
-   *
-   * @param ctx context (not used)
-   * @return string vector
-   */
-  public Vector<String> getColumnNames(Properties ctx) {
-    Vector<String> cn = new Vector<String>();
-    cn.add(Msg.getMsg(ctx, "DateTime"));
-    cn.add(Msg.getMsg(ctx, "Level"));
-    //
-    cn.add(Msg.getMsg(ctx, "Class.Method"));
-    cn.add(Msg.getMsg(ctx, "Message"));
-    // 2
-    cn.add(Msg.getMsg(ctx, "Parameter"));
-    cn.add(Msg.getMsg(ctx, "Trace"));
-    //
-    return cn;
-  } //	getColumnNames
-
-  /**
-   * Get Log Data
-   *
-   * @param errorsOnly if true errors otherwise log
-   * @return data array
-   */
-  public Vector<Vector<Object>> getLogData(boolean errorsOnly) {
-    LogRecord[] records = getRecords(errorsOnly);
-    //	System.out.println("getLogData - " + events.length);
-    Vector<Vector<Object>> rows = new Vector<Vector<Object>>(records.length);
-
-    for (int i = 0; i < records.length; i++) {
-      LogRecord record = records[i];
-      Vector<Object> cols = new Vector<Object>();
-      //
-      cols.add(new Timestamp(record.getMillis()));
-      cols.add(record.getLevel().getName());
-      //
-      cols.add(CLogFormatter.getClassMethod(record));
-      cols.add(record.getMessage());
-      //
-      cols.add(CLogFormatter.getParameters(record));
-      cols.add(CLogFormatter.getExceptionTrace(record));
-      //
-      rows.add(cols);
-    }
-    return rows;
-  } //	getData
-
-  /**
+    /**
    * Get Array of events with most recent first
    *
    * @param errorsOnly if true errors otherwise log
@@ -282,70 +218,7 @@ public class CLogErrorBuffer extends Handler {
     return retValue;
   } //	getEvents
 
-  /**
-   * Reset Error Buffer
-   *
-   * @param errorsOnly if true errors otherwise log
-   */
-  public void resetBuffer(boolean errorsOnly) {
-    checkContext();
-
-    @SuppressWarnings("unchecked")
-    LinkedList<LogRecord> m_logs = (LinkedList<LogRecord>) Env.getCtx().get(LOGS_KEY);
-    @SuppressWarnings("unchecked")
-    LinkedList<LogRecord> m_errors = (LinkedList<LogRecord>) Env.getCtx().get(ERRORS_KEY);
-    @SuppressWarnings("unchecked")
-    LinkedList<LogRecord[]> m_history = (LinkedList<LogRecord[]>) Env.getCtx().get(HISTORY_KEY);
-    synchronized (m_errors) {
-      m_errors.clear();
-      m_history.clear();
-    }
-    if (!errorsOnly) {
-      synchronized (m_logs) {
-        m_logs.clear();
-      }
-    }
-  } //	resetBuffer
-
-  /**
-   * Get/Put Error Info in String
-   *
-   * @param ctx context
-   * @param errorsOnly if true errors otherwise log
-   * @return error info
-   */
-  public String getErrorInfo(Properties ctx, boolean errorsOnly) {
-    checkContext();
-
-    StringBuffer sb = new StringBuffer();
-    //
-    if (errorsOnly) {
-      @SuppressWarnings("unchecked")
-      LinkedList<LogRecord[]> m_history = (LinkedList<LogRecord[]>) Env.getCtx().get(HISTORY_KEY);
-      for (int i = 0; i < m_history.size(); i++) {
-        sb.append("-------------------------------\n");
-        LogRecord[] records = m_history.get(i);
-        for (int j = 0; j < records.length; j++) {
-          LogRecord record = records[j];
-          sb.append(getFormatter().format(record));
-        }
-      }
-    } else {
-      @SuppressWarnings("unchecked")
-      LinkedList<LogRecord> m_logs = (LinkedList<LogRecord>) Env.getCtx().get(LOGS_KEY);
-      for (int i = 0; i < m_logs.size(); i++) {
-        LogRecord record = m_logs.get(i);
-        sb.append(getFormatter().format(record));
-      }
-    }
-    sb.append("\n");
-    CLogMgt.getInfo(sb);
-    CLogMgt.getInfoDetail(sb, ctx);
-    //
-    return sb.toString();
-  } //	getErrorInfo
-
-  private void checkContext() {
+    private void checkContext() {
     if (!Env.getCtx().containsKey(LOGS_KEY)) {
       LinkedList<LogRecord> m_logs = new LinkedList<LogRecord>();
       Env.getCtx().put(LOGS_KEY, m_logs);

@@ -42,11 +42,6 @@ public class AdempiereSystemError extends Exception {
     super(message, cause);
   } //	AdempiereSystemError
 
-  /** @return Returns the detail. */
-  public Object getDetail() {
-    return m_detail;
-  }
-
   /** @param detail The detail to set. */
   public void setDetail(Object detail) {
     m_detail = detail;

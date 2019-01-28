@@ -15,10 +15,7 @@ public class MTree_NodeBP extends X_AD_TreeNodeBP {
   /** */
   private static final long serialVersionUID = 5103486471442008006L;
 
-  /** Static Logger */
-  private static CLogger s_log = CLogger.getCLogger(MTree_NodeBP.class);
-
-  /**
+    /**
    * Load Constructor
    *
    * @param ctx context

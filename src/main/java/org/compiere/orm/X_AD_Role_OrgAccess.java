@@ -46,12 +46,7 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
     return sb.toString();
   }
 
-  public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
-    return (org.compiere.model.I_AD_Role)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name).getPO(getAD_Role_ID(), null);
-  }
-
-  /**
+    /**
    * Get Role.
    *
    * @return Responsibility Role
@@ -72,25 +67,7 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
     else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
   }
 
-  /**
-   * Get AD_Role_OrgAccess_UU.
-   *
-   * @return AD_Role_OrgAccess_UU
-   */
-  public String getAD_Role_OrgAccess_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Role_OrgAccess_UU);
-  }
-
-  /**
-   * Set AD_Role_OrgAccess_UU.
-   *
-   * @param AD_Role_OrgAccess_UU AD_Role_OrgAccess_UU
-   */
-  public void setAD_Role_OrgAccess_UU(String AD_Role_OrgAccess_UU) {
-    set_Value(COLUMNNAME_AD_Role_OrgAccess_UU, AD_Role_OrgAccess_UU);
-  }
-
-  /**
+    /**
    * Set Read Only.
    *
    * @param IsReadOnly Field is read only

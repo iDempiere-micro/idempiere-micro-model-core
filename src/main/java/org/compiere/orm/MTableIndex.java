@@ -1,11 +1,9 @@
 package org.compiere.orm;
 
-import org.compiere.model.I_AD_TableIndex;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.orm.PO;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,68 +31,7 @@ public class MTableIndex extends X_AD_TableIndex {
     }
   }
 
-  /**
-   * Load constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName trx name
-   */
-  public MTableIndex(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-    m_ddl = createDDL();
-  }
-
-  /**
-   * Parent constructor
-   *
-   * @param parent parent
-   * @param name name
-   */
-  public MTableIndex(MTable parent, String name) {
-    this(parent.getCtx(), 0, null);
-    setClientOrg(parent);
-    setAD_Table_ID(parent.getAD_Table_ID());
-    setEntityType(parent.getEntityType());
-    setName(name);
-  }
-
-  /**
-   * Get active indexes from table
-   *
-   * @param table table
-   * @return array of table index
-   */
-  public static MTableIndex[] get(MTable table) {
-    Query query =
-        new Query(
-            table.getCtx(),
-            I_AD_TableIndex.Table_Name,
-            I_AD_TableIndex.COLUMNNAME_AD_Table_ID + "=?",
-            null);
-    query.setParameters(table.getAD_Table_ID());
-    query.setOnlyActiveRecords(true);
-    List<MTableIndex> list = query.list();
-
-    MTableIndex[] retValue = new MTableIndex[list.size()];
-    list.toArray(retValue);
-    return retValue;
-  }
-
-  /**
-   * Get table indexes with where clause
-   *
-   * @param ctx context
-   * @param whereClause where clause
-   * @return array of table index
-   */
-  public static List<MTableIndex> getTableIndexesByQuery(Properties ctx, String whereClause) {
-    Query query = new Query(ctx, I_AD_TableIndex.Table_Name, whereClause, null);
-    List<MTableIndex> list = query.list();
-    return list;
-  }
-
-  /**
+    /**
    * Get index columns
    *
    * @param reload reload data
@@ -175,35 +112,7 @@ public class MTableIndex extends X_AD_TableIndex {
     return sql.toString();
   }
 
-  /**
-   * Get SQL index create DDL
-   *
-   * @return SQL DDL
-   */
-  public String getDDL() {
-    if (m_ddl == null) m_ddl = createDDL();
-    return m_ddl;
-  }
-
-  /**
-   * Get SQL index create DDL
-   *
-   * @return SQL DDL
-   */
-  public String getDropDDL() {
-    String sql = null;
-    if (isCreateConstraint())
-      sql =
-          "ALTER TABLE "
-              + getAD_Table().getTableName()
-              + " DROP CONSTRAINT "
-              + getName()
-              + " CASCADE";
-    else sql = "DROP INDEX " + getName();
-    return sql;
-  }
-
-  /**
+    /**
    * String representation
    *
    * @return info

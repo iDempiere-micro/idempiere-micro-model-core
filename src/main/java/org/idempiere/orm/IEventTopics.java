@@ -23,9 +23,8 @@ public interface IEventTopics {
   String PO_POST_CREATE = MODEL_EVENT_PREFIX + "postCreate";
   String PO_POST_UPADTE = MODEL_EVENT_PREFIX + "postUpdate";
   String PO_POST_DELETE = MODEL_EVENT_PREFIX + "postDelete";
-  String PO_ALL = MODEL_EVENT_PREFIX + "*";
 
-  String DOC_EVENT_PREFIX = "adempiere/doc/";
+    String DOC_EVENT_PREFIX = "adempiere/doc/";
   /** Called before document is prepared */
   String DOC_BEFORE_PREPARE = DOC_EVENT_PREFIX + "beforePrepare";
   /** Called before document is void */
@@ -59,13 +58,9 @@ public interface IEventTopics {
   /** Called after document is posted */
   String DOC_AFTER_POST = DOC_EVENT_PREFIX + "afterPost";
 
-  String DOC_ALL = DOC_EVENT_PREFIX + "*";
+    String AFTER_LOGIN = "adempiere/afterLogin";
 
-  String AFTER_LOGIN = "adempiere/afterLogin";
-
-  String ACCT_FACTS_VALIDATE = "adempiere/acct/factsValidate";
-
-  /** Import Events * */
+    /** Import Events * */
   String IMPORT_PREFIX = "adempiere/import/";
   /** Event triggered before all import records are validated */
   String IMPORT_BEFORE_VALIDATE = IMPORT_PREFIX + "beforeValidate";
@@ -78,10 +73,4 @@ public interface IEventTopics {
 
   String PREF_AFTER_LOAD = "adempiere/pref/afterLoad";
 
-  /** Called after next document actions are set */
-  String DOCACTION = "adempiere/docAction";
-
-  String BROADCAST_MESSAGE = "idempiere/broadcastMsg";
-
-  String REQUEST_SEND_EMAIL = "idempiere/requestSendEMail";
 }

@@ -1,8 +1,7 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
 import java.util.Properties;
-import org.compiere.model.IArchiveStore;
+
 import org.compiere.model.IAttachmentStore;
 import org.compiere.model.I_AD_StorageProvider;
 import org.idempiere.common.base.Service;
@@ -17,11 +16,7 @@ public class MStorageProvider extends X_AD_StorageProvider implements I_AD_Stora
     super(ctx, AD_StorageProvider_ID, trxName);
   }
 
-  public MStorageProvider(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  }
-
-  public IAttachmentStore getAttachmentStore() {
+    public IAttachmentStore getAttachmentStore() {
     ServiceQuery query = new ServiceQuery();
     String method = this.getMethod();
     if (method == null) method = "DB";
@@ -34,16 +29,4 @@ public class MStorageProvider extends X_AD_StorageProvider implements I_AD_Stora
     return store;
   }
 
-  public IArchiveStore getArchiveStore() {
-    ServiceQuery query = new ServiceQuery();
-    String method = this.getMethod();
-    if (method == null) method = "DB";
-    query.put("method", method);
-    IArchiveStore store =
-        Service.Companion.locator().locate(IArchiveStore.class, query).getService();
-    if (store == null) {
-      throw new AdempiereException("No archive storage provider found");
-    }
-    return store;
-  }
 }

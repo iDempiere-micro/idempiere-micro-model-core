@@ -17,35 +17,9 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
-  /** FKConstraintType AD_Reference_ID=200075 */
-  public static final int FKCONSTRAINTTYPE_AD_Reference_ID = 200075;
-  /** Do Not Create = D */
-  public static final String FKCONSTRAINTTYPE_DoNotCreate = "D";
-  /** No Action = N */
-  public static final String FKCONSTRAINTTYPE_NoAction = "N";
-  /** Cascade = C */
-  public static final String FKCONSTRAINTTYPE_Cascade = "C";
-  /** Set Null = S */
-  public static final String FKCONSTRAINTTYPE_SetNull = "S";
-  /** Model Cascade = M */
-  public static final String FKCONSTRAINTTYPE_ModelCascade = "M";
-  /** IsEncrypted AD_Reference_ID=354 */
-  public static final int ISENCRYPTED_AD_Reference_ID = 354;
-  /** Encrypted = Y */
-  public static final String ISENCRYPTED_Encrypted = "Y";
-  /** Not Encrypted = N */
-  public static final String ISENCRYPTED_NotEncrypted = "N";
-  /** IsToolbarButton AD_Reference_ID=200099 */
-  public static final int ISTOOLBARBUTTON_AD_Reference_ID = 200099;
-  /** Toolbar = Y */
-  public static final String ISTOOLBARBUTTON_Toolbar = "Y";
-  /** Window = N */
+    /** Window = N */
   public static final String ISTOOLBARBUTTON_Window = "N";
-  /** Both = B */
-  public static final String ISTOOLBARBUTTON_Both = "B";
-  /** */
+    /** */
   private static final long serialVersionUID = 20171031L;
 
   public X_AD_Column(Properties ctx, Row row) {
@@ -86,28 +60,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return sb.toString();
   }
 
-  /**
-   * Get Chart.
-   *
-   * @return Chart
-   */
-  public int getAD_Chart_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Chart_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set Chart.
-   *
-   * @param AD_Chart_ID Chart
-   */
-  public void setAD_Chart_ID(int AD_Chart_ID) {
-    if (AD_Chart_ID < 1) set_Value(COLUMNNAME_AD_Chart_ID, null);
-    else set_Value(COLUMNNAME_AD_Chart_ID, Integer.valueOf(AD_Chart_ID));
-  }
-
-  /**
+    /**
    * Get Column.
    *
    * @return Column in the table
@@ -118,40 +71,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return ii;
   }
 
-  /**
-   * Set Column.
-   *
-   * @param AD_Column_ID Column in the table
-   */
-  public void setColumnId(int AD_Column_ID) {
-    if (AD_Column_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Column_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Column_ID, Integer.valueOf(AD_Column_ID));
-  }
-
-  /**
-   * Get AD_Column_UU.
-   *
-   * @return AD_Column_UU
-   */
-  public String getAD_Column_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Column_UU);
-  }
-
-  /**
-   * Set AD_Column_UU.
-   *
-   * @param AD_Column_UU AD_Column_UU
-   */
-  public void setAD_Column_UU(String AD_Column_UU) {
-    set_Value(COLUMNNAME_AD_Column_UU, AD_Column_UU);
-  }
-
-  public I_AD_Element getAD_Element() throws RuntimeException {
-    return (I_AD_Element)
-        MTable.get(getCtx(), I_AD_Element.Table_Name).getPO(getAD_Element_ID(), null);
-  }
-
-  /**
+    /**
    * Get System Element.
    *
    * @return System Element enables the central maintenance of column description and help.
@@ -184,17 +104,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return ii;
   }
 
-  /**
-   * Set Process.
-   *
-   * @param AD_Process_ID Process or Report
-   */
-  public void setAD_Process_ID(int AD_Process_ID) {
-    if (AD_Process_ID < 1) set_Value(COLUMNNAME_AD_Process_ID, null);
-    else set_Value(COLUMNNAME_AD_Process_ID, Integer.valueOf(AD_Process_ID));
-  }
-
-  public I_AD_Reference getReference() throws RuntimeException {
+    public I_AD_Reference getReference() throws RuntimeException {
     return (I_AD_Reference)
         MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getReferenceId(), null);
   }
@@ -220,12 +130,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     else set_Value(COLUMNNAME_AD_Reference_ID, Integer.valueOf(AD_Reference_ID));
   }
 
-  public I_AD_Reference getAD_Reference_Value() throws RuntimeException {
-    return (I_AD_Reference)
-        MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getAD_Reference_Value_ID(), null);
-  }
-
-  /**
+    /**
    * Get Reference Key.
    *
    * @return Required to specify, if data type is Table or List
@@ -236,17 +141,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return ii;
   }
 
-  /**
-   * Set Reference Key.
-   *
-   * @param AD_Reference_Value_ID Required to specify, if data type is Table or List
-   */
-  public void setAD_Reference_Value_ID(int AD_Reference_Value_ID) {
-    if (AD_Reference_Value_ID < 1) set_Value(COLUMNNAME_AD_Reference_Value_ID, null);
-    else set_Value(COLUMNNAME_AD_Reference_Value_ID, Integer.valueOf(AD_Reference_Value_ID));
-  }
-
-  public I_AD_Table getAD_Table() throws RuntimeException {
+    public I_AD_Table getAD_Table() throws RuntimeException {
     return (I_AD_Table) MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getAD_Table_ID(), null);
   }
 
@@ -271,22 +166,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
-  public I_AD_Val_Rule getValRule() throws RuntimeException {
-    return (I_AD_Val_Rule)
-        MTable.get(getCtx(), I_AD_Val_Rule.Table_Name).getPO(getValRule_ID(), null);
-  }
-
-  /**
-   * Set Dynamic Validation.
-   *
-   * @param AD_Val_Rule_ID Dynamic Validation Rule
-   */
-  public void setAD_Val_Rule_ID(int AD_Val_Rule_ID) {
-    if (AD_Val_Rule_ID < 1) set_Value(COLUMNNAME_AD_Val_Rule_ID, null);
-    else set_Value(COLUMNNAME_AD_Val_Rule_ID, Integer.valueOf(AD_Val_Rule_ID));
-  }
-
-  /**
+    /**
    * Get Dynamic Validation.
    *
    * @return Dynamic Validation Rule
@@ -297,25 +177,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return ii;
   }
 
-  /**
-   * Get Callout.
-   *
-   * @return Fully qualified class names and method - separated by semicolons
-   */
-  public String getCallout() {
-    return (String) get_Value(COLUMNNAME_Callout);
-  }
-
-  /**
-   * Set Callout.
-   *
-   * @param Callout Fully qualified class names and method - separated by semicolons
-   */
-  public void setCallout(String Callout) {
-    set_Value(COLUMNNAME_Callout, Callout);
-  }
-
-  /**
+    /**
    * Get DB Column Name.
    *
    * @return Name of the column in the database
@@ -333,16 +195,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     set_Value(COLUMNNAME_ColumnName, ColumnName);
   }
 
-  /**
-   * Get Record ID/ColumnName
-   *
-   * @return ID/ColumnName pair
-   */
-  public KeyNamePair getKeyNamePair() {
-    return new KeyNamePair(getId(), getColumnName());
-  }
-
-  /**
+    /**
    * Get Column SQL.
    *
    * @return Virtual Column (r/o)
@@ -351,16 +204,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return (String) get_Value(COLUMNNAME_ColumnSQL);
   }
 
-  /**
-   * Set Column SQL.
-   *
-   * @param ColumnSQL Virtual Column (r/o)
-   */
-  public void setColumnSQL(String ColumnSQL) {
-    set_Value(COLUMNNAME_ColumnSQL, ColumnSQL);
-  }
-
-  /**
+    /**
    * Get Default Logic.
    *
    * @return Default value hierarchy, separated by ;
@@ -369,25 +213,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return (String) get_Value(COLUMNNAME_DefaultValue);
   }
 
-  /**
-   * Set Default Logic.
-   *
-   * @param DefaultValue Default value hierarchy, separated by ;
-   */
-  public void setDefaultValue(String DefaultValue) {
-    set_Value(COLUMNNAME_DefaultValue, DefaultValue);
-  }
-
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
-  }
-
-  /**
+    /**
    * Set Description.
    *
    * @param Description Optional short description of the record
@@ -396,16 +222,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     set_Value(COLUMNNAME_Description, Description);
   }
 
-  /**
-   * Get Entity Type.
-   *
-   * @return Dictionary Entity Type; Determines ownership and synchronization
-   */
-  public String getEntityType() {
-    return (String) get_Value(COLUMNNAME_EntityType);
-  }
-
-  /**
+    /**
    * Set Entity Type.
    *
    * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
@@ -435,44 +252,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     set_Value(COLUMNNAME_FieldLength, Integer.valueOf(FieldLength));
   }
 
-  /**
-   * Get Constraint Name.
-   *
-   * @return Constraint Name
-   */
-  public String getFKConstraintName() {
-    return (String) get_Value(COLUMNNAME_FKConstraintName);
-  }
-
-  /**
-   * Set Constraint Name.
-   *
-   * @param FKConstraintName Constraint Name
-   */
-  public void setFKConstraintName(String FKConstraintName) {
-    set_Value(COLUMNNAME_FKConstraintName, FKConstraintName);
-  }
-
-  /**
-   * Get Constraint Type.
-   *
-   * @return Constraint Type
-   */
-  public String getFKConstraintType() {
-    return (String) get_Value(COLUMNNAME_FKConstraintType);
-  }
-
-  /**
-   * Set Constraint Type.
-   *
-   * @param FKConstraintType Constraint Type
-   */
-  public void setFKConstraintType(String FKConstraintType) {
-
-    set_Value(COLUMNNAME_FKConstraintType, FKConstraintType);
-  }
-
-  /**
+    /**
    * Get Format Pattern.
    *
    * @return The pattern used to format a number or date.
@@ -490,16 +270,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     set_Value(COLUMNNAME_FormatPattern, FormatPattern);
   }
 
-  /**
-   * Get Comment/Help.
-   *
-   * @return Comment or Hint
-   */
-  public String getHelp() {
-    return (String) get_Value(COLUMNNAME_Help);
-  }
-
-  /**
+    /**
    * Set Comment/Help.
    *
    * @param Help Comment or Hint
@@ -531,30 +302,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return false;
   }
 
-  /**
-   * Set Allow Logging.
-   *
-   * @param IsAllowLogging Determine if a column must be recorded into the change log
-   */
-  public void setIsAllowLogging(boolean IsAllowLogging) {
-    set_Value(COLUMNNAME_IsAllowLogging, Boolean.valueOf(IsAllowLogging));
-  }
-
-  /**
-   * Get Allow Logging.
-   *
-   * @return Determine if a column must be recorded into the change log
-   */
-  public boolean isAllowLogging() {
-    Object oo = get_Value(COLUMNNAME_IsAllowLogging);
-    if (oo != null) {
-      if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
+    /**
    * Set Always Updatable.
    *
    * @param IsAlwaysUpdateable The column is always updateable, even if the record is not active or
@@ -578,30 +326,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return false;
   }
 
-  /**
-   * Set Autocomplete.
-   *
-   * @param IsAutocomplete Automatic completion for textfields
-   */
-  public void setIsAutocomplete(boolean IsAutocomplete) {
-    set_Value(COLUMNNAME_IsAutocomplete, Boolean.valueOf(IsAutocomplete));
-  }
-
-  /**
-   * Get Autocomplete.
-   *
-   * @return Automatic completion for textfields
-   */
-  public boolean isAutocomplete() {
-    Object oo = get_Value(COLUMNNAME_IsAutocomplete);
-    if (oo != null) {
-      if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
+    /**
    * Get Encrypted.
    *
    * @return Display or Storage is encrypted
@@ -714,16 +439,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return false;
   }
 
-  /**
-   * Set Secure content.
-   *
-   * @param IsSecure Defines whether content must be treated as secure
-   */
-  public void setIsSecure(boolean IsSecure) {
-    set_Value(COLUMNNAME_IsSecure, Boolean.valueOf(IsSecure));
-  }
-
-  /**
+    /**
    * Get Secure content.
    *
    * @return Defines whether content must be treated as secure
@@ -746,39 +462,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     set_Value(COLUMNNAME_IsSelectionColumn, Boolean.valueOf(IsSelectionColumn));
   }
 
-  /**
-   * Get Selection Column.
-   *
-   * @return Is this column used for finding rows in windows
-   */
-  public boolean isSelectionColumn() {
-    Object oo = get_Value(COLUMNNAME_IsSelectionColumn);
-    if (oo != null) {
-      if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
-   * Get Synchronize Database.
-   *
-   * @return Change database table definition when changing dictionary definition
-   */
-  public String getIsSyncDatabase() {
-    return (String) get_Value(COLUMNNAME_IsSyncDatabase);
-  }
-
-  /**
-   * Set Synchronize Database.
-   *
-   * @param IsSyncDatabase Change database table definition when changing dictionary definition
-   */
-  public void setIsSyncDatabase(String IsSyncDatabase) {
-    set_Value(COLUMNNAME_IsSyncDatabase, IsSyncDatabase);
-  }
-
-  /**
+    /**
    * Get Toolbar Button.
    *
    * @return Show the button on the toolbar, the window, or both
@@ -843,25 +527,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return false;
   }
 
-  /**
-   * Get Mandatory Logic.
-   *
-   * @return Mandatory Logic
-   */
-  public String getMandatoryLogic() {
-    return (String) get_Value(COLUMNNAME_MandatoryLogic);
-  }
-
-  /**
-   * Set Mandatory Logic.
-   *
-   * @param MandatoryLogic Mandatory Logic
-   */
-  public void setMandatoryLogic(String MandatoryLogic) {
-    set_Value(COLUMNNAME_MandatoryLogic, MandatoryLogic);
-  }
-
-  /**
+    /**
    * Get Name.
    *
    * @return Alphanumeric identifier of the entity
@@ -879,47 +545,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     set_Value(HasName.Companion.getCOLUMNNAME_Name(), Name);
   }
 
-  /**
-   * Get Dashboard Content.
-   *
-   * @return Dashboard Content
-   */
-  public int getPA_DashboardContent_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_PA_DashboardContent_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set Dashboard Content.
-   *
-   * @param PA_DashboardContent_ID Dashboard Content
-   */
-  public void setPA_DashboardContent_ID(int PA_DashboardContent_ID) {
-    if (PA_DashboardContent_ID < 1) set_Value(COLUMNNAME_PA_DashboardContent_ID, null);
-    else set_Value(COLUMNNAME_PA_DashboardContent_ID, Integer.valueOf(PA_DashboardContent_ID));
-  }
-
-  /**
-   * Get Read Only Logic.
-   *
-   * @return Logic to determine if field is read only (applies only when field is read-write)
-   */
-  public String getReadOnlyLogic() {
-    return (String) get_Value(COLUMNNAME_ReadOnlyLogic);
-  }
-
-  /**
-   * Set Read Only Logic.
-   *
-   * @param ReadOnlyLogic Logic to determine if field is read only (applies only when field is
-   *     read-write)
-   */
-  public void setReadOnlyLogic(String ReadOnlyLogic) {
-    set_Value(COLUMNNAME_ReadOnlyLogic, ReadOnlyLogic);
-  }
-
-  /**
+    /**
    * Get Sequence.
    *
    * @return Method of ordering records; lowest number comes first
@@ -930,36 +556,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return ii;
   }
 
-  /**
-   * Set Sequence.
-   *
-   * @param SeqNo Method of ordering records; lowest number comes first
-   */
-  public void setSeqNo(int SeqNo) {
-    set_Value(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
-  }
-
-  /**
-   * Get Selection Column Sequence.
-   *
-   * @return Selection Column Sequence
-   */
-  public int getSeqNoSelection() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_SeqNoSelection);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set Selection Column Sequence.
-   *
-   * @param SeqNoSelection Selection Column Sequence
-   */
-  public void setSeqNoSelection(int SeqNoSelection) {
-    set_Value(COLUMNNAME_SeqNoSelection, Integer.valueOf(SeqNoSelection));
-  }
-
-  /**
+    /**
    * Get Max. Value.
    *
    * @return Maximum Value for a field
@@ -968,16 +565,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return (String) get_Value(COLUMNNAME_ValueMax);
   }
 
-  /**
-   * Set Max. Value.
-   *
-   * @param ValueMax Maximum Value for a field
-   */
-  public void setValueMax(String ValueMax) {
-    set_Value(COLUMNNAME_ValueMax, ValueMax);
-  }
-
-  /**
+    /**
    * Get Min. Value.
    *
    * @return Minimum Value for a field
@@ -986,27 +574,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     return (String) get_Value(COLUMNNAME_ValueMin);
   }
 
-  /**
-   * Set Min. Value.
-   *
-   * @param ValueMin Minimum Value for a field
-   */
-  public void setValueMin(String ValueMin) {
-    set_Value(COLUMNNAME_ValueMin, ValueMin);
-  }
-
-  /**
-   * Get Version.
-   *
-   * @return Version of the table definition
-   */
-  public BigDecimal getVersion() {
-    BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_Version);
-    if (bd == null) return Env.ZERO;
-    return bd;
-  }
-
-  /**
+    /**
    * Set Version.
    *
    * @param Version Version of the table definition
@@ -1015,26 +583,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     set_Value(COLUMNNAME_Version, Version);
   }
 
-  /**
-   * Get Value Format.
-   *
-   * @return Format of the value; Can contain fixed format elements, Variables: "_lLoOaAcCa09"
-   */
-  public String getVFormat() {
-    return (String) get_Value(COLUMNNAME_VFormat);
-  }
-
-  /**
-   * Set Value Format.
-   *
-   * @param VFormat Format of the value; Can contain fixed format elements, Variables:
-   *     "_lLoOaAcCa09"
-   */
-  public void setVFormat(String VFormat) {
-    set_Value(COLUMNNAME_VFormat, VFormat);
-  }
-
-  @Override
+    @Override
   public int getTableId() {
     return Table_ID;
   }

@@ -52,11 +52,7 @@ public class POInfoColumn implements Serializable {
   public boolean IsAllowLogging;
   /** Allow Copy */
   public boolean IsAllowCopy;
-  /** Reference Value */
-  public int AD_Reference_Value_ID;
-  /** Validation */
-  public String ValidationCode;
-  /** Field Length */
+    /** Field Length */
   public int FieldLength;
   /** Min Value */
   public String ValueMin;
@@ -135,9 +131,7 @@ public class POInfoColumn implements Serializable {
     IsKey = isKey;
     IsParent = isParent;
     //
-    AD_Reference_Value_ID = ad_Reference_Value_ID;
-    ValidationCode = validationCode;
-    //
+      //
     FieldLength = fieldLength;
     ValueMin = valueMin;
     try {

@@ -7,10 +7,7 @@ package org.idempiere.common.util;
  * @version $Id: ValueNamePair.java,v 1.2 2006/07/30 00:52:23 jjanke Exp $
  */
 public final class ValueNamePair extends NamePair {
-  public static final ValueNamePair EMPTY = new ValueNamePair("", "");
-  /** */
-  private static final long serialVersionUID = -8315081335749462163L;
-  /** The Value */
+    /** The Value */
   private String m_value = null;
 
   /**
@@ -34,17 +31,7 @@ public final class ValueNamePair extends NamePair {
     return m_value;
   } //	getValue
 
-  /**
-   * Get ID
-   *
-   * @return Value
-   */
-  public String getID() {
-    if ("".equals(m_value)) return null;
-    return m_value;
-  } //	getID
-
-  /**
+    /**
    * Equals
    *
    * @param obj Object
@@ -61,16 +48,7 @@ public final class ValueNamePair extends NamePair {
     return false;
   } //	equals
 
-  /**
-   * Get the Object representation of the value
-   *
-   * @return value
-   */
-  public Object getValueObject() {
-    return m_value;
-  }
-
-  /**
+    /**
    * Return Hashcode of value
    *
    * @return hascode

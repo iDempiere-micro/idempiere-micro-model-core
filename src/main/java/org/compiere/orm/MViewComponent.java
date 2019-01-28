@@ -1,6 +1,5 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -23,17 +22,6 @@ public class MViewComponent extends X_AD_ViewComponent {
   }
 
   /**
-   * Load constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName trx name
-   */
-  public MViewComponent(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  }
-
-  /**
    * Parent constructor
    *
    * @param parent parent
@@ -44,7 +32,7 @@ public class MViewComponent extends X_AD_ViewComponent {
     setAD_Table_ID(parent.getAD_Table_ID());
   }
 
-  /**
+    /**
    * Get columns
    *
    * @param reload reload data
@@ -68,60 +56,7 @@ public class MViewComponent extends X_AD_ViewComponent {
     return m_columns;
   }
 
-  /**
-   * Get SQL select
-   *
-   * @param requery requery data
-   * @param vCols array of view column
-   * @return select statement
-   */
-  public String getSelect(boolean requery, MViewColumn[] vCols) {
-    getColumns(requery);
-    if (m_columns == null || m_columns.length == 0) return null;
-
-    if (vCols == null) vCols = m_columns;
-
-    StringBuilder sb = new StringBuilder("SELECT ");
-    //
-
-    for (int i = 0; i < vCols.length; i++) {
-      String colName = vCols[i].getColumnName();
-      MViewColumn vc = null;
-      for (MViewColumn element : m_columns) {
-        if (element.getColumnName().equals(colName)) {
-          vc = element;
-          break;
-        }
-      }
-      if (i > 0) sb.append(", ");
-      String colSQL = vc.getColumnSQL();
-
-      if (colSQL == null || colSQL.toUpperCase().equals("NULL")) {
-        String dt = vc.getDBDataType();
-        if (dt != null) {
-          if (dt.equals(MViewColumn.DBDATATYPE_CharacterFixed)
-              || dt.equals(MViewColumn.DBDATATYPE_CharacterVariable)) colSQL = "NULLIF('a','a')";
-          else if (dt.equals(MViewColumn.DBDATATYPE_Decimal)
-              || dt.equals(MViewColumn.DBDATATYPE_Integer)
-              || dt.equals(MViewColumn.DBDATATYPE_Number)) colSQL = "NULLIF(1,1)";
-          else if (dt.equals(MViewColumn.DBDATATYPE_Timestamp)) colSQL = "NULL";
-        } else colSQL = "NULL";
-      }
-
-      sb.append(colSQL);
-      if (!colName.equals("*")) sb.append(" AS ").append(colName);
-    }
-
-    sb.append(" ").append(getFromClause());
-    String t = getWhereClause();
-    if (t != null && t.length() > 0) sb.append(" ").append(t);
-    t = getOtherClause();
-    if (t != null && t.length() > 0) sb.append(" ").append(t);
-
-    return sb.toString();
-  }
-
-  /**
+    /**
    * String representation
    *
    * @return info

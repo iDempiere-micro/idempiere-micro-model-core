@@ -85,61 +85,7 @@ public class MTree_Base extends X_AD_Tree {
     setIsDefault(false);
   } //	MTree_Base
 
-  /**
-   * Add Node to correct tree
-   *
-   * @param ctx cpntext
-   * @param treeType tree type
-   * @param Record_ID id
-   * @param trxName transaction
-   * @return true if node added
-   */
-  public static boolean addNode(Properties ctx, String treeType, int Record_ID, String trxName) {
-    //	Get Tree
-    int AD_Tree_ID = 0;
-    MClient client = MClient.get(ctx);
-    MClientInfo ci = client.getInfo();
-
-    if (X_AD_Tree.TREETYPE_Activity.equals(treeType)) AD_Tree_ID = ci.getAD_Tree_Activity_ID();
-    else if (X_AD_Tree.TREETYPE_BoM.equals(treeType))
-      throw new IllegalArgumentException("BoM Trees not supported");
-    else if (X_AD_Tree.TREETYPE_BPartner.equals(treeType)) AD_Tree_ID = ci.getAD_Tree_BPartner_ID();
-    else if (X_AD_Tree.TREETYPE_Campaign.equals(treeType)) AD_Tree_ID = ci.getAD_Tree_Campaign_ID();
-    else if (X_AD_Tree.TREETYPE_ElementValue.equals(treeType))
-      throw new IllegalArgumentException("ElementValue cannot use this API");
-    else if (X_AD_Tree.TREETYPE_Menu.equals(treeType)) AD_Tree_ID = ci.getAD_Tree_Menu_ID();
-    else if (X_AD_Tree.TREETYPE_Organization.equals(treeType)) AD_Tree_ID = ci.getAD_Tree_Org_ID();
-    else if (X_AD_Tree.TREETYPE_Product.equals(treeType)) AD_Tree_ID = ci.getAD_Tree_Product_ID();
-    else if (X_AD_Tree.TREETYPE_ProductCategory.equals(treeType))
-      throw new IllegalArgumentException("Product Category Trees not supported");
-    else if (X_AD_Tree.TREETYPE_Project.equals(treeType)) AD_Tree_ID = ci.getAD_Tree_Project_ID();
-    else if (X_AD_Tree.TREETYPE_SalesRegion.equals(treeType))
-      AD_Tree_ID = ci.getAD_Tree_SalesRegion_ID();
-
-    if (AD_Tree_ID == 0) throw new IllegalArgumentException("No Tree found");
-    MTree_Base tree = MTree_Base.get(ctx, AD_Tree_ID, trxName);
-    if (tree.getId() != AD_Tree_ID)
-      throw new IllegalArgumentException("Tree found AD_Tree_ID=" + AD_Tree_ID);
-
-    //	Insert Tree in correct tree
-    boolean saved = false;
-    if (X_AD_Tree.TREETYPE_Menu.equals(treeType)) {
-      MTree_NodeMM node = new MTree_NodeMM(tree, Record_ID);
-      saved = node.save();
-    } else if (X_AD_Tree.TREETYPE_BPartner.equals(treeType)) {
-      MTree_NodeBP node = new MTree_NodeBP(tree, Record_ID);
-      saved = node.save();
-    } else if (X_AD_Tree.TREETYPE_Product.equals(treeType)) {
-      MTree_NodePR node = new MTree_NodePR(tree, Record_ID);
-      saved = node.save();
-    } else {
-      MTree_Node node = new MTree_Node(tree, Record_ID);
-      saved = node.save();
-    }
-    return saved;
-  } //	addNode
-
-  /**
+    /**
    * ************************************************************************ Get Node TableName
    *
    * @param treeType tree type
@@ -216,14 +162,7 @@ public class MTree_Base extends X_AD_Tree {
     return retValue;
   } //	get
 
-  /** Returns true if should load all tree nodes immediately */
-  public static boolean isLoadAllNodesImmediately(int treeID, String trxName) {
-    return getSQLValueStringEx(
-            trxName, "SELECT IsLoadAllNodesImmediately FROM AD_Tree WHERE AD_Tree_ID = ?", treeID)
-        .equals("Y");
-  }
-
-  /**
+    /**
    * Get Node TableName
    *
    * @return node table name, e.g. AD_TreeNode

@@ -1,10 +1,10 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_OrgInfo;
 import org.idempiere.common.util.CCache;
+
+import java.util.Properties;
 
 /**
  * Organization Info Model
@@ -21,22 +21,7 @@ public class MOrgInfo extends X_AD_OrgInfo {
   private static CCache<Integer, MOrgInfo> s_cache =
       new CCache<Integer, MOrgInfo>(I_AD_OrgInfo.Table_Name, 50);
 
-  /**
-   * ************************************************************************ Load Constructor
-   *
-   * @param ctx context
-   * @param rs result set
-   * @param trxName transaction
-   */
-  public MOrgInfo(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  } //	MOrgInfo
-
-  public MOrgInfo(Properties ctx, Row row) {
-    super(ctx, row);
-  } //	MOrgInfo
-
-  /**
+    /**
    * Organization constructor
    *
    * @param org org
@@ -46,6 +31,9 @@ public class MOrgInfo extends X_AD_OrgInfo {
     setClientOrg(org);
     setDUNS("?");
     setTaxID("?");
+  } //	MOrgInfo
+  public MOrgInfo(Properties ctx, Row row) {
+    super(ctx, row);
   } //	MOrgInfo
 
   /**

@@ -1,10 +1,11 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Sequence;
 import org.idempiere.orm.I_Persistent;
+
+import java.sql.ResultSet;
+import java.util.Properties;
 
 /**
  * Generated Model for AD_Sequence
@@ -17,30 +18,30 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   /** */
   private static final long serialVersionUID = 20171031L;
 
-  /** Standard Constructor */
-  public X_AD_Sequence(Properties ctx, int AD_Sequence_ID, String trxName) {
-    super(ctx, AD_Sequence_ID, trxName);
-  }
+    /** Standard Constructor */
+    public X_AD_Sequence(Properties ctx, int AD_Sequence_ID, String trxName) {
+        super(ctx, AD_Sequence_ID, trxName);
+    }
 
-  /** Load Constructor */
-  public X_AD_Sequence(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-  }
+    /** Load Constructor */
+    public X_AD_Sequence(Properties ctx, ResultSet rs, String trxName) {
+        super(ctx, rs, trxName);
+    }
 
-  public X_AD_Sequence(Properties ctx, Row row) {
-    super(ctx, row);
-  }
+    public X_AD_Sequence(Properties ctx, Row row) {
+        super(ctx, row);
+    }
 
-  /**
-   * AccessLevel
-   *
-   * @return 6 - System - Client
-   */
-  protected int getAccessLevel() {
-    return accessLevel.intValue();
-  }
+    /**
+     * AccessLevel
+     *
+     * @return 6 - System - Client
+     */
+    protected int getAccessLevel() {
+        return accessLevel.intValue();
+    }
 
-  public String toString() {
+    public String toString() {
     StringBuffer sb = new StringBuffer("X_AD_Sequence[").append(getId()).append("]");
     return sb.toString();
   }
@@ -56,35 +57,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
     return ii;
   }
 
-  /**
-   * Set Sequence.
-   *
-   * @param AD_Sequence_ID Document Sequence
-   */
-  public void setAD_Sequence_ID(int AD_Sequence_ID) {
-    if (AD_Sequence_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
-  }
-
-  /**
-   * Get AD_Sequence_UU.
-   *
-   * @return AD_Sequence_UU
-   */
-  public String getAD_Sequence_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Sequence_UU);
-  }
-
-  /**
-   * Set AD_Sequence_UU.
-   *
-   * @param AD_Sequence_UU AD_Sequence_UU
-   */
-  public void setAD_Sequence_UU(String AD_Sequence_UU) {
-    set_Value(COLUMNNAME_AD_Sequence_UU, AD_Sequence_UU);
-  }
-
-  /**
+    /**
    * Get Current Next.
    *
    * @return The next number to be used
@@ -133,16 +106,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
     return (String) get_Value(COLUMNNAME_DateColumn);
   }
 
-  /**
-   * Set Date Column.
-   *
-   * @param DateColumn Fully qualified date column
-   */
-  public void setDateColumn(String DateColumn) {
-    set_Value(COLUMNNAME_DateColumn, DateColumn);
-  }
-
-  /**
+    /**
    * Get Decimal Pattern.
    *
    * @return Java Decimal Pattern
@@ -151,25 +115,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
     return (String) get_Value(COLUMNNAME_DecimalPattern);
   }
 
-  /**
-   * Set Decimal Pattern.
-   *
-   * @param DecimalPattern Java Decimal Pattern
-   */
-  public void setDecimalPattern(String DecimalPattern) {
-    set_Value(COLUMNNAME_DecimalPattern, DecimalPattern);
-  }
-
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
-  }
-
-  /**
+    /**
    * Set Description.
    *
    * @param Description Optional short description of the record
@@ -207,21 +153,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
     set_Value(COLUMNNAME_IsAudited, Boolean.valueOf(IsAudited));
   }
 
-  /**
-   * Get Activate Audit.
-   *
-   * @return Activate Audit Trail of what numbers are generated
-   */
-  public boolean isAudited() {
-    Object oo = get_Value(COLUMNNAME_IsAudited);
-    if (oo != null) {
-      if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
+    /**
    * Set Auto numbering.
    *
    * @param IsAutoSequence Automatically assign the next number
@@ -230,30 +162,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
     set_Value(COLUMNNAME_IsAutoSequence, Boolean.valueOf(IsAutoSequence));
   }
 
-  /**
-   * Get Auto numbering.
-   *
-   * @return Automatically assign the next number
-   */
-  public boolean isAutoSequence() {
-    Object oo = get_Value(COLUMNNAME_IsAutoSequence);
-    if (oo != null) {
-      if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
-   * Set Organization level.
-   *
-   * @param IsOrgLevelSequence This sequence can be defined for each organization
-   */
-  public void setIsOrgLevelSequence(boolean IsOrgLevelSequence) {
-    set_Value(COLUMNNAME_IsOrgLevelSequence, Boolean.valueOf(IsOrgLevelSequence));
-  }
-
-  /**
+    /**
    * Get Organization level.
    *
    * @return This sequence can be defined for each organization
@@ -299,16 +208,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
     return (String) get_Value(COLUMNNAME_OrgColumn);
   }
 
-  /**
-   * Set Org Column.
-   *
-   * @param OrgColumn Fully qualified Organization column (AD_Org_ID)
-   */
-  public void setOrgColumn(String OrgColumn) {
-    set_Value(COLUMNNAME_OrgColumn, OrgColumn);
-  }
-
-  /**
+    /**
    * Get Prefix.
    *
    * @return Prefix before the sequence number
@@ -317,16 +217,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
     return (String) get_Value(COLUMNNAME_Prefix);
   }
 
-  /**
-   * Set Prefix.
-   *
-   * @param Prefix Prefix before the sequence number
-   */
-  public void setPrefix(String Prefix) {
-    set_Value(COLUMNNAME_Prefix, Prefix);
-  }
-
-  /**
+    /**
    * Get Restart sequence every month.
    *
    * @return Restart sequence every month
@@ -401,35 +292,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
     return (String) get_Value(COLUMNNAME_Suffix);
   }
 
-  /**
-   * Set Suffix.
-   *
-   * @param Suffix Suffix after the number
-   */
-  public void setSuffix(String Suffix) {
-    set_Value(COLUMNNAME_Suffix, Suffix);
-  }
-
-  /**
-   * Get Value Format.
-   *
-   * @return Format of the value; Can contain fixed format elements, Variables: "_lLoOaAcCa09"
-   */
-  public String getVFormat() {
-    return (String) get_Value(COLUMNNAME_VFormat);
-  }
-
-  /**
-   * Set Value Format.
-   *
-   * @param VFormat Format of the value; Can contain fixed format elements, Variables:
-   *     "_lLoOaAcCa09"
-   */
-  public void setVFormat(String VFormat) {
-    set_Value(COLUMNNAME_VFormat, VFormat);
-  }
-
-  @Override
+    @Override
   public int getTableId() {
     return Table_ID;
   }

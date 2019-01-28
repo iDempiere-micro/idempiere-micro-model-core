@@ -23,19 +23,7 @@ public class MRecordAccess extends X_AD_Record_Access {
   /** TableName */
   private String m_tableName;
 
-  /**
-   * Persistency Constructor
-   *
-   * @param ctx context
-   * @param ignored ignored
-   * @param trxName transaction
-   */
-  public MRecordAccess(Properties ctx, int ignored, String trxName) {
-    super(ctx, 0, trxName);
-    if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
-  } //	MRecordAccess
-
-  /**
+    /**
    * Load Constructor
    *
    * @param ctx context
@@ -46,28 +34,7 @@ public class MRecordAccess extends X_AD_Record_Access {
     super(ctx, rs, trxName);
   } //	MRecordAccess
 
-  /**
-   * Full New Constructor
-   *
-   * @param ctx context
-   * @param AD_Role_ID role
-   * @param AD_Table_ID table
-   * @param Record_ID record
-   * @param trxName transaction
-   */
-  public MRecordAccess(
-      Properties ctx, int AD_Role_ID, int AD_Table_ID, int Record_ID, String trxName) {
-    super(ctx, 0, trxName);
-    setAD_Role_ID(AD_Role_ID);
-    setAD_Table_ID(AD_Table_ID);
-    setRecord_ID(Record_ID);
-    //
-    setIsExclude(true);
-    setIsReadOnly(false);
-    setIsDependentEntities(false);
-  } //	MRecordAccess
-
-  /**
+    /**
    * Get Key Column Name
    *
    * @return Key Column Name
@@ -115,26 +82,7 @@ public class MRecordAccess extends X_AD_Record_Access {
     return null;
   } //	getSynonym
 
-  /**
-   * Key Column has a Synonym
-   *
-   * @return true if Key Column has Synonym
-   */
-  public boolean isSynonym() {
-    return getSynonym() == null;
-  } //	isSynonym
-
-  /**
-   * Is Read Write
-   *
-   * @return rw - false if exclude
-   */
-  public boolean isReadWrite() {
-    if (isExclude()) return false;
-    return !super.isReadOnly();
-  } //	isReadWrite
-
-  /**
+    /**
    * Get Key Column Name with consideration of Synonym
    *
    * @param tableInfo

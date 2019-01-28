@@ -103,26 +103,7 @@ public class DBException extends AdempiereException {
     return isErrorCode(e, 2292);
   }
 
-  /**
-   * Check if "invalid identifier" exception (aka ORA-00904)
-   *
-   * @param e exception
-   */
-  public static boolean isInvalidIdentifierError(Exception e) {
-    if (isPostgreSQL()) return isSQLState(e, "42P01");
-    return isErrorCode(e, 904);
-  }
-
-  /**
-   * Check if "invalid username/password" exception (aka ORA-01017)
-   *
-   * @param e exception
-   */
-  public static boolean isInvalidUserPassError(Exception e) {
-    return isErrorCode(e, 1017);
-  }
-
-  /**
+    /**
    * Check if "time out" exception (aka ORA-01013)
    *
    * @param e
@@ -145,33 +126,11 @@ public class DBException extends AdempiereException {
     }
   }
 
-  /** @return SQL Query or null */
-  public String getSQL() {
-    return m_sql;
-  }
-
-  /** @return Wrapped SQLException or null */
+    /** @return Wrapped SQLException or null */
   public SQLException getSQLException() {
     Throwable cause = getCause();
     if (cause instanceof SQLException) return (SQLException) cause;
     return null;
   }
 
-  /** @see java.sql.SQLException#getErrorCode() */
-  public int getErrorCode() {
-    SQLException e = getSQLException();
-    return (e != null ? e.getErrorCode() : -1);
-  }
-
-  /** @see java.sql.SQLException#getNextException() */
-  public SQLException getNextException() {
-    SQLException e = getSQLException();
-    return (e != null ? e.getNextException() : null);
-  }
-
-  /** @see java.sql.SQLException#getSQLState() */
-  public String getSQLState() {
-    SQLException e = getSQLException();
-    return (e != null ? e.getSQLState() : null);
-  }
 } //	DBException

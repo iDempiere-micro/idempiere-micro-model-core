@@ -62,18 +62,7 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
     setAD_User_ID(AD_User_ID);
   } //	MUserOrgAccess
 
-  /**
-   * Get Organizational Access of User
-   *
-   * @param ctx context
-   * @param AD_User_ID user
-   * @return array of User Org Access
-   */
-  public static MUserOrgAccess[] getOfUser(Properties ctx, int AD_User_ID) {
-    return get(ctx, "SELECT * FROM AD_User_OrgAccess WHERE AD_User_ID=?", AD_User_ID);
-  } //	getOfUser
-
-  /**
+    /**
    * Get Organizational Info
    *
    * @param ctx context
@@ -127,26 +116,7 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
     return sb.toString();
   } //	toString
 
-  /**
-   * ************************************************************************ Extended String
-   * Representation
-   *
-   * @param ctx context
-   * @return extended info
-   */
-  public String toStringX(Properties ctx) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(Msg.translate(ctx, "AD_Client_ID"))
-        .append("=")
-        .append(getClientName())
-        .append(" - ")
-        .append(Msg.translate(ctx, "AD_Org_ID"))
-        .append("=")
-        .append(getOrgName());
-    return sb.toString();
-  } //	toStringX
-
-  /**
+    /**
    * Get Client Name
    *
    * @return name

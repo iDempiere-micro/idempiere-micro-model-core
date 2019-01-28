@@ -94,27 +94,7 @@ public class CacheMgt {
     return map;
   } //	register
 
-  /**
-   * Un-Register Cache Instance
-   *
-   * @param instance Cache
-   * @return true if removed
-   */
-  public synchronized boolean unregister(CacheInterface instance) {
-    if (instance == null) return false;
-    boolean found = false;
-    //	Could be included multiple times
-    for (int i = m_instances.size() - 1; i >= 0; i--) {
-      CacheInterface stored = m_instances.get(i);
-      if (instance.equals(stored)) {
-        m_instances.remove(i);
-        found = true;
-      }
-    }
-    return found;
-  } //	unregister
-
-  /**
+    /**
    * do a cluster wide cache reset
    *
    * @return number of deleted cache entries
@@ -335,22 +315,7 @@ public class CacheMgt {
     return sb.toString();
   } //	toString
 
-  /**
-   * Extended String Representation
-   *
-   * @return info
-   */
-  public String toStringX() {
-    StringBuilder sb = new StringBuilder("CacheMgt[");
-    sb.append("Instances=")
-        .append(m_instances.size())
-        .append(", Elements=")
-        .append(getElementCount())
-        .append("]");
-    return sb.toString();
-  } //	toString
-
-  public void newRecord(String tableName, int recordId) {
+    public void newRecord(String tableName, int recordId) {
     clusterNewRecord(tableName, recordId);
   }
 

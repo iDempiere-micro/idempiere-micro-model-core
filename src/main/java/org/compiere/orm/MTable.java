@@ -36,8 +36,7 @@ import software.hsharp.core.orm.MBaseTableKt;
  * @version $Id: MTable.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
  */
 public class MTable extends MBaseTable {
-  public static final int MAX_OFFICIAL_ID = 999999;
-  /** */
+    /** */
   private static final long serialVersionUID = -8757836873040013402L;
   /** Static Logger */
   private static CLogger s_log = CLogger.getCLogger(MTable.class);
@@ -138,23 +137,7 @@ public class MTable extends MBaseTable {
     return MTable.get(ctx, AD_Table_ID).getTableName();
   } //	getTableName
 
-  /**
-   * Get Persistence Class for Table
-   *
-   * @param tableName table name
-   * @return class or null
-   */
-  public static Class<?> getClass(String tableName) {
-    IModelFactory[] factoryList = getFactoryList();
-    if (factoryList == null) return null;
-    for (IModelFactory factory : factoryList) {
-      Class<?> clazz = factory.getClass(tableName);
-      if (clazz != null) return clazz;
-    }
-    return null;
-  } //	getClass
-
-  /**
+    /**
    * Grant independence to GenerateModel from AD_Table_ID
    *
    * @param String tableName
@@ -232,22 +215,7 @@ public class MTable extends MBaseTable {
     return -1;
   } //  getColumnIndex
 
-  /**
-   * Get Column Index
-   *
-   * @param AD_Column_ID column
-   * @return index of column with ColumnName or -1 if not found
-   */
-  public synchronized int getColumnIndex(int AD_Column_ID) {
-    MColumn[] m_columns = super.getM_columns();
-    if (m_columns == null) getColumns(false);
-    Integer i = getM_columnIdMap().get(AD_Column_ID);
-    if (i != null) return i.intValue();
-
-    return -1;
-  } //  getColumnIndex
-
-  /**
+    /**
    * Table has a single Key
    *
    * @return true if table has single key column
@@ -276,35 +244,7 @@ public class MTable extends MBaseTable {
     return retValue;
   } //	getKeyColumns
 
-  /**
-   * Get Identifier Columns of Table
-   *
-   * @return Identifier columns
-   */
-  public String[] getIdentifierColumns() {
-    ArrayList<KeyNamePair> listkn = new ArrayList<KeyNamePair>();
-    for (MColumn column : getColumns(false)) {
-      if (column.isIdentifier())
-        listkn.add(new KeyNamePair(column.getSeqNo(), column.getColumnName()));
-    }
-    // Order by SeqNo
-    Collections.sort(
-        listkn,
-        new Comparator<KeyNamePair>() {
-          public int compare(KeyNamePair s1, KeyNamePair s2) {
-            if (s1.getKey() < s2.getKey()) return -1;
-            else if (s1.getKey() > s2.getKey()) return 1;
-            else return 0;
-          }
-        });
-    String[] retValue = new String[listkn.size()];
-    for (int i = 0; i < listkn.size(); i++) {
-      retValue[i] = listkn.get(i).getName();
-    }
-    return retValue;
-  } //	getIdentifierColumns
-
-  /**
+    /**
    * ************************************************************************ Get PO Class Instance
    *
    * @param Record_ID record
@@ -368,18 +308,7 @@ public class MTable extends MBaseTable {
     return po;
   } //	getPO
 
-  /**
-   * Get PO Class Instance
-   *
-   * @param whereClause where clause
-   * @param trxName transaction
-   * @return PO for Record or null
-   */
-  public PO getPO(String whereClause, String trxName) {
-    return (PO) getPO(whereClause, null, trxName);
-  } //	getPO
-
-  /**
+    /**
    * Get PO class instance
    *
    * @param whereClause
@@ -456,62 +385,7 @@ public class MTable extends MBaseTable {
     return success;
   } //	afterSave
 
-  /**
-   * Get SQL Create
-   *
-   * @return create table DDL
-   */
-  public String getSQLCreate() {
-    StringBuffer sb = new StringBuffer("CREATE TABLE ").append(getTableName()).append(" (");
-    //
-    // boolean hasPK = false;
-    // boolean hasParents = false;
-    StringBuffer constraints = new StringBuffer();
-    MColumn[] m_columns = getColumns(true);
-    boolean columnAdded = false;
-    for (int i = 0; i < m_columns.length; i++) {
-      MColumn column = m_columns[i];
-      String colSQL = column.getSQLDDL();
-      if (colSQL != null) {
-        if (columnAdded) sb.append(", ");
-        else columnAdded = true;
-        sb.append(column.getSQLDDL());
-      } else // virtual column
-      continue;
-      //
-      // if (column.isKey())
-      //	hasPK = true;
-      // if (column.isParent())
-      //	hasParents = true;
-      String constraint = column.getConstraint(getTableName());
-      if (constraint != null && constraint.length() > 0)
-        constraints.append(", ").append(constraint);
-    }
-    /* IDEMPIERE-1901 - deprecate code that create composite primary key
-    //	Multi Column PK
-    if (!hasPK && hasParents)
-    {
-    	StringBuffer cols = new StringBuffer();
-    	for (int i = 0; i < columns.length; i++)
-    	{
-    		MColumn column = columns[i];
-    		if (!column.isParent())
-    			continue;
-    		if (cols.length() > 0)
-    			cols.append(", ");
-    		cols.append(column.getColumnName());
-    	}
-    	sb.append(", CONSTRAINT ")
-    		.append(getTableName()).append("_Key PRIMARY KEY (")
-    		.append(cols).append(")");
-    }
-    */
-
-    sb.append(constraints).append(")");
-    return sb.toString();
-  } //	getSQLCreate
-
-  /**
+    /**
    * Create query to retrieve one or more PO.
    *
    * @param whereClause

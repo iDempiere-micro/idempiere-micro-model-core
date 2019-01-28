@@ -41,12 +41,7 @@ public class X_AD_TreeNode extends PO implements I_AD_TreeNode, I_Persistent {
     return sb.toString();
   }
 
-  public org.compiere.model.I_AD_Tree getAD_Tree() throws RuntimeException {
-    return (org.compiere.model.I_AD_Tree)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Tree.Table_Name).getPO(getAD_Tree_ID(), null);
-  }
-
-  /**
+    /**
    * Get Tree.
    *
    * @return Identifies a Tree
@@ -67,36 +62,7 @@ public class X_AD_TreeNode extends PO implements I_AD_TreeNode, I_Persistent {
     else set_ValueNoCheck(COLUMNNAME_AD_Tree_ID, Integer.valueOf(AD_Tree_ID));
   }
 
-  /**
-   * Get AD_TreeNode_UU.
-   *
-   * @return AD_TreeNode_UU
-   */
-  public String getAD_TreeNode_UU() {
-    return (String) get_Value(COLUMNNAME_AD_TreeNode_UU);
-  }
-
-  /**
-   * Set AD_TreeNode_UU.
-   *
-   * @param AD_TreeNode_UU AD_TreeNode_UU
-   */
-  public void setAD_TreeNode_UU(String AD_TreeNode_UU) {
-    set_Value(COLUMNNAME_AD_TreeNode_UU, AD_TreeNode_UU);
-  }
-
-  /**
-   * Get Node.
-   *
-   * @return Node
-   */
-  public int getNode_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_Node_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
+    /**
    * Set Node.
    *
    * @param Node_ID Node
@@ -106,18 +72,7 @@ public class X_AD_TreeNode extends PO implements I_AD_TreeNode, I_Persistent {
     else set_ValueNoCheck(COLUMNNAME_Node_ID, Integer.valueOf(Node_ID));
   }
 
-  /**
-   * Get Parent.
-   *
-   * @return Parent of Entity
-   */
-  public int getParent_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_Parent_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
+    /**
    * Set Parent.
    *
    * @param Parent_ID Parent of Entity
@@ -127,18 +82,7 @@ public class X_AD_TreeNode extends PO implements I_AD_TreeNode, I_Persistent {
     else set_Value(COLUMNNAME_Parent_ID, Integer.valueOf(Parent_ID));
   }
 
-  /**
-   * Get Sequence.
-   *
-   * @return Method of ordering records; lowest number comes first
-   */
-  public int getSeqNo() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_SeqNo);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
+    /**
    * Set Sequence.
    *
    * @param SeqNo Method of ordering records; lowest number comes first

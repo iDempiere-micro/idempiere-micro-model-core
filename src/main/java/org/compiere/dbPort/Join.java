@@ -59,16 +59,7 @@ public class Join {
     m_condition = Util.replace(joinClause, "(+)", "").trim();
   } //  evaluate
 
-  /**
-   * Get origial Join Clause. e.g. f.AD_Column_ID = c.AD_Column_ID(+)
-   *
-   * @return Join cluase
-   */
-  public String getJoinClause() {
-    return m_joinClause;
-  } //  getJoinClause
-
-  /**
+    /**
    * Get Main Table Alias
    *
    * @return Main Table Alias

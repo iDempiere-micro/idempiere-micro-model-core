@@ -17,8 +17,6 @@ import javax.swing.*;
  * @version $Id: Util.java,v 1.3 2006/07/30 00:52:23 jjanke Exp $
  */
 public class Util {
-  /** Logger */
-  private static CLogger log = CLogger.getCLogger(Util.class.getName());
 
   /**
    * Replace String values.
@@ -47,57 +45,6 @@ public class Util {
     // retValue.toString());
     return retValue.toString();
   } //	replace
-
-  /**
-   * Remove CR / LF from String
-   *
-   * @param in input
-   * @return cleaned string
-   */
-  public static String removeCRLF(String in) {
-    char[] inArray = in.toCharArray();
-    StringBuilder out = new StringBuilder(inArray.length);
-    for (int i = 0; i < inArray.length; i++) {
-      char c = inArray[i];
-      if (c == '\n' || c == '\r') ;
-      else out.append(c);
-    }
-    return out.toString();
-  } //	removeCRLF
-
-  /**
-   * Clean - Remove all white spaces
-   *
-   * @param in in
-   * @return cleaned string
-   */
-  public static String cleanWhitespace(String in) {
-    char[] inArray = in.toCharArray();
-    StringBuilder out = new StringBuilder(inArray.length);
-    boolean lastWasSpace = false;
-    for (int i = 0; i < inArray.length; i++) {
-      char c = inArray[i];
-      if (Character.isWhitespace(c)) {
-        if (!lastWasSpace) out.append(' ');
-        lastWasSpace = true;
-      } else {
-        out.append(c);
-        lastWasSpace = false;
-      }
-    }
-    return out.toString();
-  } //	cleanWhitespace
-
-  /**
-   * Mask HTML content. i.e. replace characters with &values; CR is not masked
-   *
-   * @param content content
-   * @return masked content
-   * @see #maskHTML(String, boolean)
-   */
-  public static String maskHTML(String content) {
-    return maskHTML(content, false);
-  } //	maskHTML
 
   /**
    * Mask HTML content. i.e. replace characters with &values;
@@ -145,23 +92,6 @@ public class Util {
   } //	maskHTML
 
   /**
-   * Get the number of occurances of countChar in string.
-   *
-   * @param string String to be searched
-   * @param countChar to be counted character
-   * @return number of occurances
-   */
-  public static int getCount(String string, char countChar) {
-    if (string == null || string.length() == 0) return 0;
-    int counter = 0;
-    char[] array = string.toCharArray();
-    for (int i = 0; i < array.length; i++) {
-      if (array[i] == countChar) counter++;
-    }
-    return counter;
-  } //	getCount
-
-  /**
    * Is String Empty
    *
    * @param str string
@@ -183,19 +113,6 @@ public class Util {
     if (trimWhitespaces) return str.trim().length() == 0;
     else return str.length() == 0;
   } //	isEmpty
-
-  /**
-   * Remove accents from string
-   *
-   * @param str string
-   * @return Unaccented String
-   */
-  public static String deleteAccents(String text) {
-    String nfdNormalizedString = Normalizer.normalize(text, Normalizer.Form.NFD);
-    Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-    text = pattern.matcher(nfdNormalizedString).replaceAll("");
-    return text;
-  }
 
   /**
    * ************************************************************************ Find index of search
@@ -280,185 +197,6 @@ public class Util {
   }
 
   /**
-   * Return Hex String representation of char c
-   *
-   * @param c character
-   * @return Hex
-   */
-  public static String toHex(char c) {
-    byte hi = (byte) (c >>> 8);
-    byte lo = (byte) (c & 0xff);
-    return toHex(hi) + toHex(lo);
-  } //  toHex
-
-  /**
-   * ************************************************************************ Init Cap Words With
-   * Spaces
-   *
-   * @param in string
-   * @return init cap
-   */
-  public static String initCap(String in) {
-    if (in == null || in.length() == 0) return in;
-    //
-    boolean capitalize = true;
-    char[] data = in.toCharArray();
-    for (int i = 0; i < data.length; i++) {
-      if (data[i] == ' ' || Character.isWhitespace(data[i])) capitalize = true;
-      else if (capitalize) {
-        data[i] = Character.toUpperCase(data[i]);
-        capitalize = false;
-      } else data[i] = Character.toLowerCase(data[i]);
-    }
-    return new String(data);
-  } //	initCap
-
-  /**
-   * ************************************************************************ Return a Iterator with
-   * only the relevant attributes. Fixes implementation in AttributedString, which returns
-   * everything
-   *
-   * @param aString attributed string
-   * @param relevantAttributes relevant attributes
-   * @return iterator
-   */
-  public static AttributedCharacterIterator getIterator(
-      AttributedString aString, AttributedCharacterIterator.Attribute[] relevantAttributes) {
-    AttributedCharacterIterator iter = aString.getIterator();
-    Set<?> set = iter.getAllAttributeKeys();
-    //	System.out.println("AllAttributeKeys=" + set);
-    if (set.size() == 0) return iter;
-    //	Check, if there are unwanted attributes
-    Set<AttributedCharacterIterator.Attribute> unwanted =
-        new HashSet<AttributedCharacterIterator.Attribute>(iter.getAllAttributeKeys());
-    for (int i = 0; i < relevantAttributes.length; i++) unwanted.remove(relevantAttributes[i]);
-    if (unwanted.size() == 0) return iter;
-
-    //	Create new String
-    StringBuilder sb = new StringBuilder();
-    for (char c = iter.first(); c != AttributedCharacterIterator.DONE; c = iter.next())
-      sb.append(c);
-    aString = new AttributedString(sb.toString());
-
-    //	copy relevant attributes
-    Iterator<AttributedCharacterIterator.Attribute> it = iter.getAllAttributeKeys().iterator();
-    while (it.hasNext()) {
-      AttributedCharacterIterator.Attribute att = it.next();
-      if (!unwanted.contains(att)) {
-        for (char c = iter.first(); c != AttributedCharacterIterator.DONE; c = iter.next()) {
-          Object value = iter.getAttribute(att);
-          if (value != null) {
-            int start = iter.getRunStart(att);
-            int limit = iter.getRunLimit(att);
-            //	System.out.println("Attribute=" + att + " Value=" + value + " Start=" + start + "
-            // Limit=" + limit);
-            aString.addAttribute(att, value, start, limit);
-            iter.setIndex(limit);
-          }
-        }
-      }
-      //	else
-      //		System.out.println("Unwanted: " + att);
-    }
-    return aString.getIterator();
-  } //	getIterator
-
-  /**
-   * Dump a Map (key=value) to out
-   *
-   * @param map Map
-   */
-  public static void dump(Map<Object, Object> map) {
-    System.out.println("Dump Map - size=" + map.size());
-    Iterator<Object> it = map.keySet().iterator();
-    while (it.hasNext()) {
-      Object key = it.next();
-      Object value = map.get(key);
-      System.out.println(key + "=" + value);
-    }
-  } //	dump (Map)
-
-  /**
-   * Print Action and Input Map for component
-   *
-   * @param comp Component with ActionMap
-   */
-  public static void printActionInputMap(JComponent comp) {
-    //	Action Map
-    ActionMap am = comp.getActionMap();
-    Object[] amKeys = am.allKeys(); //  including Parents
-    if (amKeys != null) {
-      System.out.println("-------------------------");
-      System.out.println("ActionMap for Component " + comp.toString());
-      for (int i = 0; i < amKeys.length; i++) {
-        Action a = am.get(amKeys[i]);
-
-        StringBuilder sb = new StringBuilder("- ");
-        sb.append(a.getValue(Action.NAME));
-        if (a.getValue(Action.ACTION_COMMAND_KEY) != null)
-          sb.append(", Cmd=").append(a.getValue(Action.ACTION_COMMAND_KEY));
-        if (a.getValue(Action.SHORT_DESCRIPTION) != null)
-          sb.append(" - ").append(a.getValue(Action.SHORT_DESCRIPTION));
-        System.out.println(sb.toString() + " - " + a);
-      }
-    }
-    /**
-     * Same as below KeyStroke[] kStrokes = comp.getRegisteredKeyStrokes(); if (kStrokes != null) {
-     * System.out.println("-------------------------"); System.out.println("Registered Key Strokes -
-     * " + comp.toString()); for (int i = 0; i < kStrokes.length; i++) { System.out.println("- " +
-     * kStrokes[i].toString()); } } /** Focused
-     */
-    InputMap im = comp.getInputMap(JComponent.WHEN_FOCUSED);
-    KeyStroke[] kStrokes = im.allKeys();
-    if (kStrokes != null) {
-      System.out.println("-------------------------");
-      System.out.println("InputMap for Component When Focused - " + comp.toString());
-      for (int i = 0; i < kStrokes.length; i++) {
-        System.out.println("- " + kStrokes[i].toString() + " - " + im.get(kStrokes[i]).toString());
-      }
-    }
-    /** Focused in Window */
-    im = comp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-    kStrokes = im.allKeys();
-    if (kStrokes != null) {
-      System.out.println("-------------------------");
-      System.out.println("InputMap for Component When Focused in Window - " + comp.toString());
-      for (int i = 0; i < kStrokes.length; i++) {
-        System.out.println("- " + kStrokes[i].toString() + " - " + im.get(kStrokes[i]).toString());
-      }
-    }
-    /** Focused when Ancester */
-    im = comp.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    kStrokes = im.allKeys();
-    if (kStrokes != null) {
-      System.out.println("-------------------------");
-      System.out.println("InputMap for Component When Ancestor - " + comp.toString());
-      for (int i = 0; i < kStrokes.length; i++) {
-        System.out.println("- " + kStrokes[i].toString() + " - " + im.get(kStrokes[i]).toString());
-      }
-    }
-    System.out.println("-------------------------");
-  } //  printActionInputMap
-
-  /**
-   * Is 8 Bit
-   *
-   * @param str string
-   * @return true if string contains chars > 255
-   */
-  public static boolean is8Bit(String str) {
-    if (str == null || str.length() == 0) return true;
-    char[] cc = str.toCharArray();
-    for (int i = 0; i < cc.length; i++) {
-      if (cc[i] > 255) {
-        //	System.out.println("Not 8 Bit - " + str);
-        return false;
-      }
-    }
-    return true;
-  } //	is8Bit
-
-  /**
    * Clean Ampersand (used to indicate shortcut)
    *
    * @param in input
@@ -473,34 +211,6 @@ public class Util {
       in = in.substring(0, pos) + in.substring(pos + 1);
     return in;
   } //	cleanAmp
-
-  /**
-   * Trim to max character length
-   *
-   * @param str string
-   * @param length max (incl) character length
-   * @return string
-   */
-  public static String trimLength(String str, int length) {
-    if (str == null) return str;
-    if (length <= 0) throw new IllegalArgumentException("Trim length invalid: " + length);
-    if (str.length() > length) return str.substring(0, length);
-    return str;
-  } //	trimLength
-
-  /**
-   * Size of String in bytes
-   *
-   * @param str string
-   * @return size in bytes
-   */
-  public static int size(String str) {
-    if (str == null) return 0;
-    int length = str.length();
-    int size = length;
-    size = str.getBytes(StandardCharsets.UTF_8).length;
-    return size;
-  } //	size
 
   /**
    * Trim to max byte size
@@ -522,31 +232,6 @@ public class Util {
     System.arraycopy(bytes, 0, result, 0, size);
     return new String(result, StandardCharsets.UTF_8);
   } //	trimSize
-
-  /**
-   * String diacritics from given string
-   *
-   * @param s original string
-   * @return string without diacritics
-   */
-  public static String stripDiacritics(String s) {
-    /* JAVA5 behaviour */
-    return s;
-    /* JAVA6 behaviour *
-    if (s == null) {
-    	return s;
-    }
-    String normStr = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD);
-
-    StringBuffer sb = new StringBuffer();
-    for (int i = 0; i < normStr.length(); i++) {
-    	char ch = normStr.charAt(i);
-    	if (ch < 255)
-    		sb.append(ch);
-    }
-    return sb.toString();
-    /* */
-  }
 
   public static Timestamp removeTime(Timestamp ts) {
     Calendar cal = Calendar.getInstance();

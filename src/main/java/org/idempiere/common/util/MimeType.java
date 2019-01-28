@@ -700,32 +700,12 @@ public class MimeType {
     return BINARY;
   } //	getMimeType
 
-  /**
-   * Get Mime Type of file name
-   *
-   * @param fileName file name
-   * @return mime type
-   */
-  public static MimeType get(String fileName) {
-    return new MimeType(fileName, getMimeType(fileName));
-  } //	get
-
-  /** @return Returns the extension. */
-  public String getExtension() {
-    return m_extension;
-  } //	getExtension
-
-  /** @param extension The extension to set. */
+    /** @param extension The extension to set. */
   public void setExtension(String extension) {
     m_extension = extension;
   } //	setExtension
 
-  /** @return Returns the Mime Type (Content Type). */
-  public String getMimeType() {
-    return m_mimeType;
-  } //	getMimeType
-
-  /** @param mimeType The mimeType to set. */
+    /** @param mimeType The mimeType to set. */
   public void setMimeType(String mimeType) {
     m_mimeType = mimeType;
   } //	setMimeType
