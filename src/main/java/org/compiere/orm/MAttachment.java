@@ -1,6 +1,10 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.getSQLValue;
+import org.compiere.model.IAttachmentStore;
+import org.compiere.model.I_AD_Attachment;
+import org.compiere.model.I_AD_AttachmentEntry;
+import org.idempiere.common.util.CLogger;
+import org.idempiere.common.util.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,11 +15,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.compiere.model.IAttachmentStore;
-import org.compiere.model.I_AD_Attachment;
-import org.compiere.model.I_AD_AttachmentEntry;
-import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.Util;
+
+import static software.hsharp.core.util.DBKt.getSQLValue;
 
 /**
  * Attachment Model. One Attachment can have multiple entries
@@ -541,17 +542,14 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     return true;
   }
 
-  @Override
   public ArrayList<I_AD_AttachmentEntry> getItems() {
     return m_items;
   }
 
-  @Override
   public void cleanItems() {
     m_items = null;
   }
 
-  @Override
   public void prepareItems() {
     m_items = new ArrayList<I_AD_AttachmentEntry>();
   }
