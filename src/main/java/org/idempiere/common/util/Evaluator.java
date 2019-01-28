@@ -15,36 +15,7 @@ public class Evaluator {
   /** Static Logger */
   private static CLogger s_log = CLogger.getCLogger(Evaluator.class);
 
-  /**
-   * Check if All Variables are Defined
-   *
-   * @param source source
-   * @param logic logic info
-   * @return true if fully defined
-   */
-  public static boolean isAllVariablesDefined(Evaluatee source, String logic) {
-    if (logic == null || logic.length() == 0) return true;
-    //
-    int pos = 0;
-    while (pos < logic.length()) {
-      int first = logic.indexOf('@', pos);
-      if (first == -1) return true;
-      int second = logic.indexOf('@', first + 1);
-      if (second == -1) {
-        s_log.severe("No second @ in Logic: " + logic);
-        return false;
-      }
-      String variable = logic.substring(first + 1, second - 1);
-      String eval = source.get_ValueAsString(variable);
-      if (s_log.isLoggable(Level.FINEST)) s_log.finest(variable + "=" + eval);
-      if (eval == null || eval.length() == 0) return false;
-      //
-      pos = second + 1;
-    }
-    return true;
-  } //	isAllVariablesDefined
-
-  /**
+    /**
    * Evaluate Logic. <code>
    * format		:= <expression> [<logic> <expression>]
    * expression	:= @<context>@<exLogic><value>
@@ -226,31 +197,4 @@ public class Evaluator {
     }
   } //	evaluateLogicTuple
 
-  /**
-   * Parse String and add variables with @ to the list.
-   *
-   * @param list list to be added to
-   * @param parseString string to parse for variables
-   */
-  public static void parseDepends(ArrayList<String> list, String parseString) {
-    if (parseString == null || parseString.length() == 0) return;
-    //	log.fine( "MField.parseDepends", parseString);
-    String s = parseString;
-    //  while we have variables
-    while (s.indexOf('@') != -1) {
-      int pos = s.indexOf('@');
-      s = s.substring(pos + 1);
-      pos = s.indexOf('@');
-      if (pos == -1) continue; // 	error number of @@ not correct
-      String variable = s.substring(0, pos);
-      s = s.substring(pos + 1);
-      //	log.fine( variable);
-      if (variable.startsWith("~")) variable = variable.substring(1);
-      // strip also @tabno|
-      variable = variable.replaceFirst("[0-9][0-9]*\\|", "");
-      if (variable.indexOf(".") > 0) variable = variable.substring(0, variable.indexOf("."));
-      if (variable.indexOf(":") > 0) variable = variable.substring(0, variable.indexOf(":"));
-      list.add(variable);
-    }
-  } //  parseDepends
 } //	Evaluator

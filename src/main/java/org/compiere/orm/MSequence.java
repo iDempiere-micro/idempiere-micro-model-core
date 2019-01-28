@@ -43,8 +43,7 @@ public class MSequence extends MBaseSequence {
   /** Log Level for Next ID Call */
   private static final Level LOGLEVEL = Level.ALL;
 
-  private static final int QUERY_TIME_OUT = 30;
-  /** Sequence for Table Document No's */
+    /** Sequence for Table Document No's */
   private static final String PREFIX_DOCSEQ = "DocumentNo_";
   /** Static Logger */
   private static CLogger s_log = CLogger.getCLogger(MSequence.class);
@@ -169,22 +168,7 @@ public class MSequence extends MBaseSequence {
     return getNextID(AD_Client_ID, TableName, null);
   }
 
-  /**
-   * ************************************************************************ Get next number for
-   * Key column = 0 is Error. * @param ctx client
-   *
-   * @param TableName table name
-   * @param trxName optionl transaction name
-   * @return next no
-   */
-  public static int getNextID(Properties ctx, String TableName, String trxName) {
-    if (ctx == null) throw new IllegalArgumentException("Context missing");
-    if (TableName == null || TableName.length() == 0)
-      throw new IllegalArgumentException("TableName missing");
-    return getNextID(Env.getClientId(ctx), TableName, trxName);
-  } //	getNextID
-
-  /**
+    /**
    * Get next number for Key column = 0 is Error.
    *
    * @param AD_Client_ID client
@@ -563,72 +547,7 @@ public class MSequence extends MBaseSequence {
     return retValue;
   } //	get
 
-  /**
-   * Get Document Number for current document. <br>
-   * - first search for DocType based Document No - then Search for DocumentNo based on TableName
-   *
-   * @param ctx context
-   * @param WindowNo window
-   * @param TableName table
-   * @param onlyDocType Do not search for document no based on TableName
-   * @param trxName optional Transaction Name
-   * @return DocumentNo or null, if no doc number defined
-   */
-  public static String getDocumentNo(
-      Properties ctx, int WindowNo, String TableName, boolean onlyDocType, String trxName) {
-    if (ctx == null || TableName == null || TableName.length() == 0)
-      throw new IllegalArgumentException("Required parameter missing");
-    int AD_Client_ID = Env.getContextAsInt(ctx, WindowNo, "AD_Client_ID");
-
-    //	Get C_DocType_ID from context - NO Defaults -
-    int C_DocType_ID = Env.getContextAsInt(ctx, WindowNo + "|C_DocTypeTarget_ID");
-    if (C_DocType_ID == 0) C_DocType_ID = Env.getContextAsInt(ctx, WindowNo + "|C_DocType_ID");
-    if (C_DocType_ID == 0) {
-      if (s_log.isLoggable(Level.FINE))
-        s_log.fine(
-            "Window="
-                + WindowNo
-                + " - Target="
-                + Env.getContextAsInt(ctx, WindowNo + "|C_DocTypeTarget_ID")
-                + "/"
-                + Env.getContextAsInt(ctx, WindowNo, "C_DocTypeTarget_ID")
-                + " - Actual="
-                + Env.getContextAsInt(ctx, WindowNo + "|C_DocType_ID")
-                + "/"
-                + Env.getContextAsInt(ctx, WindowNo, "C_DocType_ID"));
-      return getDocumentNo(AD_Client_ID, TableName, trxName);
-    }
-
-    String retValue = getDocumentNo(C_DocType_ID, trxName, false);
-    if (!onlyDocType && retValue == null) return getDocumentNo(AD_Client_ID, TableName, trxName);
-    return retValue;
-  } //	getDocumentNo
-
-  private static boolean isExceptionCentralized(String tableName) {
-
-    for (String exceptionTable : dontUseCentralized) {
-      if (tableName.equalsIgnoreCase(exceptionTable)) return true;
-    }
-
-    // don't log selects or insert/update for exception tables (i.e. AD_Issue, AD_ChangeLog)
-    return false;
-  }
-
-  /**
-   * ************************************************************************ Get Next No and
-   * increase current next
-   *
-   * @return next no to use
-   */
-  public int getNextID() {
-    int retValue = getCurrentNext();
-    if (!(MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false) && isTableID())) {
-      setCurrentNext(retValue + getIncrementNo());
-    }
-    return retValue;
-  } //	getNextNo
-
-  /**
+    /**
    * Validate Table Sequence Values
    *
    * @return true if updated
@@ -742,16 +661,7 @@ public class MSequence extends MBaseSequence {
     @SuppressWarnings("unused")
     private int m_i;
 
-    /**
-     * Get IDs
-     *
-     * @param i
-     */
-    public GetIDs(int i) {
-      m_i = i;
-    }
-
-    /** Run */
+      /** Run */
     public void run() {
       for (int i = 0; i < 100; i++) {
         try {

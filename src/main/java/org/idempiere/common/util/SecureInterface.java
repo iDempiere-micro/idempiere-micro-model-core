@@ -45,61 +45,7 @@ public interface SecureInterface {
    */
   String decrypt(String value, int AD_Client_ID);
 
-  /**
-   * Encryption. The methods must recognize clear text values
-   *
-   * @param value clear value
-   * @param AD_Client_ID
-   * @return encrypted String
-   */
-  Integer encrypt(Integer value, int AD_Client_ID);
-
-  /**
-   * Decryption. The methods must recognize clear text values
-   *
-   * @param value encrypted value
-   * @param AD_Client_ID
-   * @return decrypted String
-   */
-  Integer decrypt(Integer value, int AD_Client_ID);
-
-  /**
-   * Encryption. The methods must recognize clear text values
-   *
-   * @param value clear value
-   * @param AD_Client_ID
-   * @return encrypted String
-   */
-  BigDecimal encrypt(BigDecimal value, int AD_Client_ID);
-
-  /**
-   * Decryption. The methods must recognize clear text values
-   *
-   * @param value encrypted value
-   * @param AD_Client_ID
-   * @return decrypted String
-   */
-  BigDecimal decrypt(BigDecimal value, int AD_Client_ID);
-
-  /**
-   * Encryption. The methods must recognize clear text values
-   *
-   * @param value clear value
-   * @param AD_Client_ID
-   * @return encrypted String
-   */
-  Timestamp encrypt(Timestamp value, int AD_Client_ID);
-
-  /**
-   * Decryption. The methods must recognize clear text values
-   *
-   * @param value encrypted value
-   * @param AD_Client_ID
-   * @return decrypted String
-   */
-  Timestamp decrypt(Timestamp value, int AD_Client_ID);
-
-  /**
+    /**
    * Convert String to Digest. JavaScript version see - http://pajhome.org.uk/crypt/md5/index.html
    *
    * @param value message
@@ -107,15 +53,7 @@ public interface SecureInterface {
    */
   String getDigest(String value);
 
-  /**
-   * Checks, if value is a valid digest
-   *
-   * @param value digest string
-   * @return true if valid digest
-   */
-  boolean isDigest(String value);
-
-  /**
+    /**
    * Convert String and salt to SHA-512 hash with iterations
    * https://www.owasp.org/index.php/Hashing_Java
    *

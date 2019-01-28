@@ -96,17 +96,7 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
     return sb.toString();
   }
 
-  /** Save error */
-  public void saveError(CLogger log) {
-    log.saveError("Error", getLocalizedMessage());
-  }
-
-  /** */
-  public ArhRuntimeException addInfo(String name, boolean value) {
-    return addInfo(name, Boolean.valueOf(value));
-  }
-
-  /** */
+    /** */
   public ArhRuntimeException addInfo(String name) {
     return addInfo(name, "");
   }
@@ -118,12 +108,7 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
     return this;
   }
 
-  public ArhRuntimeException addField(String fieldName, Object value) {
-    addInfo("@" + fieldName + "@ =", value);
-    return this;
-  }
-
-  /** */
+    /** */
   public boolean hasInfo() {
     return !m_info.isEmpty();
   }

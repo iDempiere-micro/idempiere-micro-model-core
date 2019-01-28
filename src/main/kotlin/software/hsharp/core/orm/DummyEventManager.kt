@@ -29,10 +29,6 @@ class DummyEventManager : EventManager() {
         return true
     }
 
-    override fun unregister(eventHandler: IEventHandler?): Boolean {
-        return true
-    }
-
     override fun createNewEvent(topic: String?, data: Any?): IEvent {
         return DummyEvent()
     }

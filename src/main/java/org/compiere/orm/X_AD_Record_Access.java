@@ -45,30 +45,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
     return sb.toString();
   }
 
-  /**
-   * Get AD_Record_Access_UU.
-   *
-   * @return AD_Record_Access_UU
-   */
-  public String getAD_Record_Access_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Record_Access_UU);
-  }
-
-  /**
-   * Set AD_Record_Access_UU.
-   *
-   * @param AD_Record_Access_UU AD_Record_Access_UU
-   */
-  public void setAD_Record_Access_UU(String AD_Record_Access_UU) {
-    set_Value(COLUMNNAME_AD_Record_Access_UU, AD_Record_Access_UU);
-  }
-
-  public org.compiere.model.I_AD_Role getAD_Role() throws RuntimeException {
-    return (org.compiere.model.I_AD_Role)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Role.Table_Name).getPO(getAD_Role_ID(), null);
-  }
-
-  /**
+    /**
    * Get Role.
    *
    * @return Responsibility Role
@@ -89,13 +66,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
     else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
   }
 
-  public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
-    return (org.compiere.model.I_AD_Table)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), null);
-  }
-
-  /**
+    /**
    * Get Table.
    *
    * @return Database Table information
@@ -116,16 +87,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
     else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
   }
 
-  /**
-   * Get Record ID/ColumnName
-   *
-   * @return ID/ColumnName pair
-   */
-  public KeyNamePair getKeyNamePair() {
-    return new KeyNamePair(getId(), String.valueOf(getAD_Table_ID()));
-  }
-
-  /**
+    /**
    * Set Dependent Entities.
    *
    * @param IsDependentEntities Also check access in dependent entities

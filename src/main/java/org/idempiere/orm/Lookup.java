@@ -50,25 +50,7 @@ public abstract class Lookup extends AbstractListModel<Object>
     m_WindowNo = windowNo;
   } //  Lookup
 
-  /**
-   * Get Display Type
-   *
-   * @return display type
-   */
-  public int getDisplayType() {
-    return m_displayType;
-  } //	getDisplayType
-
-  /**
-   * Get Window No
-   *
-   * @return Window No
-   */
-  public int getWindowNo() {
-    return m_WindowNo;
-  } //	getWindowNo
-
-  /**
+    /**
    * Return previously selected Item
    *
    * @return value
@@ -120,17 +102,7 @@ public abstract class Lookup extends AbstractListModel<Object>
     return p_data.get(index);
   } //  getElementAt
 
-  /**
-   * Returns the index-position of the specified object in the list.
-   *
-   * @param anObject object
-   * @return an int representing the index position, where 0 is the first position
-   */
-  public int getIndexOf(Object anObject) {
-    return p_data.indexOf(anObject);
-  } //  getIndexOf
-
-  /**
+    /**
    * Add Element at the end
    *
    * @param anObject object
@@ -177,41 +149,7 @@ public abstract class Lookup extends AbstractListModel<Object>
     if (index != -1) removeElementAt(index);
   } //  removeItem
 
-  /** Empties the list. */
-  public void removeAllElements() {
-    if (p_data.size() > 0) {
-      int firstIndex = 0;
-      int lastIndex = p_data.size() - 1;
-      p_data.clear();
-      m_selectedObject = null;
-      fireIntervalRemoved(this, firstIndex, lastIndex);
-    }
-    m_loaded = false;
-  } //  removeAllElements
-
-  /**
-   * ************************************************************************ Put Value
-   *
-   * @param key key
-   * @param value value
-   */
-  public void put(String key, String value) {
-    NamePair pp = new ValueNamePair(key, value);
-    addElement(pp);
-  } //	put
-
-  /**
-   * Put Value
-   *
-   * @param key key
-   * @param value value
-   */
-  public void put(int key, String value) {
-    NamePair pp = new KeyNamePair(key, value);
-    addElement(pp);
-  } //	put
-
-  /**
+    /**
    * Fill ComboBox with lookup data (async using Worker). - try to maintain selected item
    *
    * @param mandatory has mandatory data only (i.e. no "null" selection)
@@ -277,40 +215,7 @@ public abstract class Lookup extends AbstractListModel<Object>
     }
   } //  fillComboBox
 
-  /**
-   * Fill ComboBox with old saved data (if exists) or all data available
-   *
-   * @param restore if true, use saved data - else fill it with all data
-   */
-  public void fillComboBox(boolean restore) {
-    if (restore && m_tempData != null) {
-      Object obj = m_selectedObject;
-      p_data.clear();
-      //  restore old data
-      p_data = new ArrayList<Object>(m_tempData.length);
-      for (int i = 0; i < m_tempData.length; i++) p_data.add(m_tempData[i]);
-      m_tempData = null;
-
-      //  if nothing selected, select first
-      if (obj == null && p_data.size() > 0) obj = p_data.get(0);
-      setSelectedItem(obj);
-
-      fireContentsChanged(this, 0, p_data.size());
-      return;
-    }
-    if (p_data != null) fillComboBox(isMandatory(), true, true, false, false); // IDEMPIERE 90
-  } //  fillComboBox
-
-  /**
-   * ************************************************************************ Get Display of Key
-   * Value
-   *
-   * @param key key
-   * @return String
-   */
-  public abstract String getDisplay(Object key);
-
-  /**
+    /**
    * Get Object of Key Value
    *
    * @param key key
@@ -341,77 +246,7 @@ public abstract class Lookup extends AbstractListModel<Object>
    */
   public abstract String getColumnName();
 
-  /**
-   * The Lookup contains the key
-   *
-   * @param key key
-   * @return true if contains key
-   */
-  public abstract boolean containsKey(Object key);
-
-  /**
-   * The Lookup contains the key, do not push direct
-   *
-   * @param key key
-   * @return true if contains key
-   */
-  public abstract boolean containsKeyNoDirect(Object key);
-
-  /**
-   * ************************************************************************ Refresh Values -
-   * default implementation
-   *
-   * @return size
-   */
-  public int refresh() {
-    return 0;
-  } //	refresh
-
-  /**
-   * Is Validated - default implementation
-   *
-   * @return true if validated
-   */
-  public boolean isValidated() {
-    return true;
-  } //	isValidated
-
-  /**
-   * Get dynamic Validation SQL (none)
-   *
-   * @return validation
-   */
-  public String getValidation() {
-    return "";
-  } //  getValidation
-
-  /**
-   * Has Inactive records - default implementation
-   *
-   * @return true if inactive
-   */
-  public boolean hasInactive() {
-    return false;
-  }
-
-  /**
-   * Get Zoom - default implementation
-   *
-   * @return Zoom AD_Window_ID
-   */
-  public int getZoom() {
-    return 0;
-  } //	getZoom
-
-  /**
-   * @param isSOTrx
-   * @return Zoom AD_Window_ID
-   */
-  public int getZoom(boolean isSOTrx) {
-    return 0;
-  }
-
-  /**
+    /**
    * Get Zoom - default implementation
    *
    * @param query query
@@ -426,31 +261,7 @@ public abstract class Lookup extends AbstractListModel<Object>
    *     <p>public MQuery getZoomQuery() { return null; } // getZoomQuery
    */
 
-  /**
-   * Get Data Direct from Table. Default implementation - does not requery
-   *
-   * @param key key
-   * @param saveInCache save in cache for r/w
-   * @param cacheLocal cache locally for r/o
-   * @return value
-   */
-  public NamePair getDirect(Object key, boolean saveInCache, boolean cacheLocal) {
-    return get(key);
-  } //	getDirect
-
-  /** Dispose - clear items w/o firing events */
-  public void dispose() {
-    if (p_data != null) p_data.clear();
-    p_data = null;
-    m_selectedObject = null;
-    m_tempData = null;
-    m_loaded = false;
-  } //  dispose
-
-  /** Wait until async Load Complete */
-  public void loadComplete() {} //  loadComplete
-
-  /**
+    /**
    * Is lookup model mandatory
    *
    * @return boolean
@@ -459,31 +270,5 @@ public abstract class Lookup extends AbstractListModel<Object>
     return m_mandatory;
   }
 
-  /**
-   * Set lookup model as mandatory, use in loading data
-   *
-   * @param flag
-   */
-  public void setMandatory(boolean flag) {
-    m_mandatory = flag;
-  }
-
-  /**
-   * Is this lookup model populated
-   *
-   * @return boolean
-   */
-  public boolean isLoaded() {
-    return m_loaded;
-  }
-
-  public boolean isShortList() {
-    return m_shortList;
-  }
-
-  // IDEMPIERE 90
-  public void setShortList(boolean shortlist) {
-    m_shortList = shortlist;
-  }
-  // IDEMPIERE 90
+    // IDEMPIERE 90
 } //	Lookup

@@ -45,7 +45,7 @@ public class MIndexColumn extends X_AD_IndexColumn {
     setSeqNo(seqNo);
   }
 
-  /**
+    /**
    * Get column name
    *
    * @return column name

@@ -49,12 +49,7 @@ public class POIterator<T extends PO> implements Iterator<T> {
     throw new UnsupportedOperationException("Remove operatiotn not supported.");
   }
 
-  /** @return number of records */
-  public int size() {
-    return idList.size();
-  }
-
-  /**
+    /**
    * @param index
    * @return PO or null if index is invalid
    */

@@ -76,25 +76,7 @@ public class MUserRoles extends X_AD_User_Roles {
     return retValue;
   } //	getOfRole
 
-  /**
-   * Get User Roles Of User
-   *
-   * @param ctx context
-   * @param AD_User_ID role
-   * @return array of user roles
-   */
-  public static MUserRoles[] getOfUser(Properties ctx, int AD_User_ID) {
-    final String whereClause = I_AD_User_Roles.COLUMNNAME_AD_User_ID + "=?";
-    List<MUserRoles> list =
-        new Query(ctx, I_AD_User_Roles.Table_Name, whereClause, null)
-            .setParameters(AD_User_ID)
-            .list();
-    MUserRoles[] retValue = new MUserRoles[list.size()];
-    list.toArray(retValue);
-    return retValue;
-  } //	getOfUser
-
-  /**
+    /**
    * Set User/Contact. User within the system - Internal or Business Partner Contact
    *
    * @param AD_User_ID user

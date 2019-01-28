@@ -102,12 +102,7 @@ public class SetGetUtil {
     }
   } //	updateColumns
 
-  public static void updateColumns(SetGetModel model, String[] columnNames, ResultSet rs)
-      throws SQLException {
-    updateColumns(new SetGetModel[] {model}, columnNames, rs);
-  }
-
-  public static void updateColumns(
+    public static void updateColumns(
       SetGetModel model, String[] columnNames, String sql, String trxName) {
     updateColumns(new SetGetModel[] {model}, columnNames, sql, null, trxName);
   }
@@ -150,17 +145,7 @@ public class SetGetUtil {
     return no >= 0;
   }
 
-  /**
-   * Copy all values from "from" to "to"
-   *
-   * @return number of columns that were copied and were were also changed in object "from"
-   * @see #copyValues(PO, PO, String[], String[])
-   */
-  public static int copyChangedValues(PO to, PO from) {
-    return copyValues(to, from, null, null, true);
-  }
-
-  /**
+    /**
    * @param to
    * @param from
    * @param includeFields
@@ -335,23 +320,7 @@ public class SetGetUtil {
     return BigDecimal.ZERO;
   } //	get_AttrValueAsBigDecimal
 
-  /**
-   * Get Value as Boolean
-   *
-   * @param model
-   * @param name
-   * @return boolean value
-   */
-  public static boolean get_AttrValueAsBoolean(SetGetModel model, String name) {
-    Object o = model.get_AttrValue(name);
-    if (o != null) {
-      if (o instanceof Boolean) return ((Boolean) o).booleanValue();
-      else return "Y".equals(o);
-    }
-    return false;
-  }
-
-  /**
+    /**
    * Get Value as String
    *
    * @param model
@@ -365,105 +334,7 @@ public class SetGetUtil {
     return o.toString();
   }
 
-  /**
-   * Set Attribute Value
-   *
-   * @param model
-   * @param name
-   * @param value
-   * @throws AdempiereException if it can not be set (error setting, attribute/column name not
-   *     found).
-   */
-  public static void set_AttrValueEx(SetGetModel model, String name, Object value) {
-    if (!model.set_AttrValue(name, value))
-      throw new AdempiereException("Value not set " + name + "=" + value);
-  }
-
-  /**
-   * @param model
-   * @param propertyNames
-   * @return true if ANY of given properties had changed
-   */
-  public static boolean is_ValueChanged(SetGetModel model, String... propertyNames) {
-    for (String name : propertyNames) {
-      if (model.is_AttrValueChanged(name)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Check if given object was produced by used entry (i.e. created from a window)
-   *
-   * @param o object
-   * @return If object is instanceof PO then {@link PO#is_UserEntry()} will be checked. If object is
-   *     null then false will be returned. Else true will be returned.
-   */
-  public static boolean isUserEntry(Object o) {
-    if (o == null) {
-      return false;
-    } else return !(o instanceof PO);
-  }
-
-  /**
-   * Set model's Line#
-   *
-   * @param model
-   * @param parentColumnName parent column name; if null then it won't be used
-   * @param lineColumnName line column name; if null "Line" will be used
-   */
-  public static void setLineNo(SetGetModel model, String parentColumnName, String lineColumnName) {
-    if (lineColumnName == null) {
-      lineColumnName = "Line";
-    }
-    int lineNo = get_AttrValueAsInt(model, lineColumnName);
-    if (lineNo != 0) {
-      return;
-    }
-    //
-    String tableName = model.get_TableName();
-    String idColumnName = tableName + "_ID";
-    //
-    Collection<Object> params = new ArrayList<Object>();
-    StringBuilder sql = new StringBuilder("SELECT COALESCE(MAX(" + lineColumnName + "),0)+10");
-    sql.append(" FROM ").append(tableName);
-    // Only active records
-    sql.append(" WHERE IsActive=?");
-    params.add(true);
-    // Client Security Check
-    sql.append(" AND AD_Client_ID IN (0,?)");
-    params.add(SetGetUtil.get_AttrValueAsInt(model, "AD_Client_ID"));
-    // Ignore this record
-    sql.append(" AND ").append(idColumnName).append("<>?");
-    params.add(get_AttrValueAsInt(model, idColumnName));
-    // With same parent (if defined)
-    if (parentColumnName != null) {
-      sql.append(" AND ").append(parentColumnName).append("=?");
-      params.add(get_AttrValueAsInt(model, parentColumnName));
-    }
-    //
-    // Set LineNo
-    lineNo = getSQLValueEx(null, sql.toString(), params);
-    model.set_AttrValue(lineColumnName, lineNo);
-  }
-
-  /**
-   * Get Table_Name for given PO class
-   *
-   * @param clazz
-   * @return tableName
-   * @throws AdempiereException if no table name found or any other exception occurs
-   */
-  public static String getTableName(Class<? extends PO> clazz) {
-    try {
-      return (String) clazz.getField("Table_Name").get(null);
-    } catch (Exception e) {
-      throw new AdempiereException(e);
-    }
-  }
-
-  /**
+    /**
    * Check if given object is persistent object
    *
    * @param o object
@@ -473,26 +344,7 @@ public class SetGetUtil {
     return o != null && o instanceof PO;
   }
 
-  /**
-   * Get Context from given object. If object is null, null will be returned. If object does not
-   * have getCtx() support then Env.getCtx() will be returned.
-   *
-   * @param o object
-   * @return context or null(if object is null)
-   */
-  public static Properties getCtx(Object o) {
-    if (o == null) {
-      return null;
-    } else if (o instanceof SetGetModel) {
-      return ((SetGetModel) o).getCtx();
-    }
-    if (o instanceof PO) {
-      return ((PO) o).getCtx();
-    }
-    return Env.getCtx();
-  }
-
-  /**
+    /**
    * Wrap given object (if possible) to SetGetModel
    *
    * @param o object
@@ -535,30 +387,4 @@ public class SetGetUtil {
     }
   }
 
-  public static <T> T newInstance(Properties ctx, Class<T> clazz, String trxName) {
-    try {
-      return clazz
-          .getConstructor(Properties.class, int.class, String.class)
-          .newInstance(ctx, 0, trxName);
-    } catch (Exception e) {
-      throw new AdempiereException(e);
-    }
-  }
-
-  public static void appendValue(SetGetModel model, String columnName, String value) {
-    if (Util.isEmpty(value, true)) {
-      return;
-    }
-    //
-    final String valueToAppend = value.trim();
-    final String valueOld = get_AttrValueAsString(model, columnName, null);
-    final String valueNew;
-    if (Util.isEmpty(valueOld, true)) {
-      valueNew = value;
-    } else {
-      valueNew = valueOld + " | " + valueToAppend;
-    }
-    //
-    model.set_AttrValue(columnName, valueNew);
-  }
 }

@@ -142,27 +142,7 @@ public class CLogger extends Logger implements Serializable {
     return ex;
   } //  retrieveError
 
-  /**
-   * Get Warning from Stack
-   *
-   * @return AD_Message as Value and Message as String
-   */
-  public static ValueNamePair retrieveWarning() {
-    ValueNamePair vp = (ValueNamePair) Env.getCtx().remove(LAST_WARNING);
-    return vp;
-  } //  retrieveWarning
-
-  /**
-   * Get Info from Stack
-   *
-   * @return AD_Message as Value and Message as String
-   */
-  public static ValueNamePair retrieveInfo() {
-    ValueNamePair vp = (ValueNamePair) Env.getCtx().remove(LAST_INFO);
-    return vp;
-  } //  retrieveInfo
-
-  /** Reset Saved Messages/Errors/Info */
+    /** Reset Saved Messages/Errors/Info */
   public static void resetLast() {
     Env.getCtx().remove(LAST_ERROR);
     Env.getCtx().remove(LAST_EXCEPTION);
@@ -170,21 +150,7 @@ public class CLogger extends Logger implements Serializable {
     Env.getCtx().remove(LAST_INFO);
   } //	resetLast
 
-  /**
-   * Get root cause
-   *
-   * @param t
-   * @return Throwable
-   */
-  public static Throwable getRootCause(Throwable t) {
-    Throwable cause = t;
-    while (cause.getCause() != null) {
-      cause = cause.getCause();
-    }
-    return cause;
-  }
-
-  /**
+    /**
    * Set and issue Error and save as ValueNamePair
    *
    * @param AD_Message message key
@@ -253,21 +219,7 @@ public class CLogger extends Logger implements Serializable {
     return true;
   } //  saveWarning
 
-  /**
-   * Save Info as ValueNamePair
-   *
-   * @param AD_Message message key
-   * @param message clear text message
-   * @return true
-   */
-  public boolean saveInfo(String AD_Message, String message) {
-    //		s_lastInfo = new ValueNamePair (AD_Message, message);
-    ValueNamePair lastInfo = new ValueNamePair(AD_Message, message);
-    Env.getCtx().put(LAST_INFO, lastInfo);
-    return true;
-  } //  saveInfo
-
-  public void severe(String msg) {
+    public void severe(String msg) {
     if (throwOnError) throw new Error(msg);
     super.severe(msg);
   }

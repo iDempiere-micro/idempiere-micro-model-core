@@ -1,15 +1,5 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.orm.POKt.I_ZERO;
-import static software.hsharp.core.util.DBKt.*;
-
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
-import java.util.logging.Level;
 import kotliquery.Row;
 import org.compiere.model.I_C_ElementValue;
 import org.compiere.util.Msg;
@@ -18,6 +8,15 @@ import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.*;
 import org.idempiere.icommon.model.IPO;
 import org.idempiere.orm.*;
+
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
+import java.util.logging.Level;
+
+import static software.hsharp.core.orm.POKt.I_ZERO;
+import static software.hsharp.core.util.DBKt.*;
 
 public abstract class PO extends org.idempiere.orm.PO {
   /** Attachment with entries */
@@ -584,17 +583,7 @@ public abstract class PO extends org.idempiere.orm.PO {
     else return false;
   }
 
-  /**
-   * Set Value of Column
-   *
-   * @param AD_Column_ID column
-   * @param value value
-   */
-  public final void set_ValueOfColumn(int AD_Column_ID, Object value) {
-    set_ValueOfColumnReturningBoolean(AD_Column_ID, value);
-  } //  setValueOfColumn
-
-  /**
+    /**
    * Set Value of Column
    *
    * @param AD_Column_ID column
@@ -656,17 +645,7 @@ public abstract class PO extends org.idempiere.orm.PO {
     deleteEx(force);
   }
 
-  /**
-   * ************************************************************************ Get Attachments. An
-   * attachment may have multiple entries
-   *
-   * @return Attachment or null
-   */
-  public MAttachment getAttachment() {
-    return getAttachment(false);
-  } //	getAttachment
-
-  /**
+    /**
    * Get Attachments
    *
    * @param requery requery
@@ -679,29 +658,7 @@ public abstract class PO extends org.idempiere.orm.PO {
     return m_attachment;
   } //	getAttachment
 
-  /* FR 2962094 - Finish implementation of weighted average costing
-     Fill the column ProcessedOn (if it exists) with a bigdecimal representation of current timestamp (with nanoseconds)
-  */
-  public void setProcessedOn(String ColumnName, Object value, Object oldValue) {
-    if ("Processed".equals(ColumnName)
-        && value instanceof Boolean
-        && ((Boolean) value).booleanValue() == true
-        && (oldValue == null
-            || (oldValue instanceof Boolean && ((Boolean) oldValue).booleanValue() == false))) {
-      if (get_ColumnIndex("ProcessedOn") > 0) {
-        // fill processed on column
-        // get current time from db
-        Timestamp ts = getSQLValueTS(null, "SELECT CURRENT_TIMESTAMP FROM DUAL");
-        long mili = ts.getTime();
-        int nano = ts.getNanos();
-        double doublets = Double.parseDouble(mili + "." + nano);
-        BigDecimal bdtimestamp = BigDecimal.valueOf(doublets);
-        set_Value("ProcessedOn", bdtimestamp);
-      }
-    }
-  }
-
-  /**
+    /**
    * Insert Accounting Records
    *
    * @param acctTable accounting sub table

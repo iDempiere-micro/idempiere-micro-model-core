@@ -64,16 +64,7 @@ public class Task extends Thread {
         } //  run
       }; //  m_errReader
 
-  /**
-   * Create Process with cmd
-   *
-   * @param cmd o/s command
-   */
-  public Task(String cmd) {
-    m_cmd = cmd;
-  } //  Task
-
-  /** Execute it */
+    /** Execute it */
   public void run() {
     log.info(m_cmd);
     try {
@@ -149,30 +140,4 @@ public class Task extends Thread {
     return false;
   } //  checkInterrupted
 
-  /**
-   * Get Out Info
-   *
-   * @return StringBuffer
-   */
-  public StringBuffer getOut() {
-    return m_out;
-  } //  getOut
-
-  /**
-   * Get Err Info
-   *
-   * @return StringBuffer
-   */
-  public StringBuffer getErr() {
-    return m_err;
-  } //  getErr
-
-  /**
-   * Get The process input stream - i.e. we output to it
-   *
-   * @return OutputStream
-   */
-  public OutputStream getInStream() {
-    return m_inStream;
-  } //  getInStream
 } //  Task

@@ -15,9 +15,7 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Persistent {
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
-  /** */
+    /** */
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
@@ -49,13 +47,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     return sb.toString();
   }
 
-  public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
-    return (org.compiere.model.I_AD_Table)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), null);
-  }
-
-  /**
+    /**
    * Get Table.
    *
    * @return Database Table information
@@ -87,53 +79,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     return ii;
   }
 
-  /**
-   * Set Database View Component.
-   *
-   * @param AD_ViewComponent_ID Database View Component
-   */
-  public void setAD_ViewComponent_ID(int AD_ViewComponent_ID) {
-    if (AD_ViewComponent_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, Integer.valueOf(AD_ViewComponent_ID));
-  }
-
-  /**
-   * Get AD_ViewComponent_UU.
-   *
-   * @return AD_ViewComponent_UU
-   */
-  public String getAD_ViewComponent_UU() {
-    return (String) get_Value(COLUMNNAME_AD_ViewComponent_UU);
-  }
-
-  /**
-   * Set AD_ViewComponent_UU.
-   *
-   * @param AD_ViewComponent_UU AD_ViewComponent_UU
-   */
-  public void setAD_ViewComponent_UU(String AD_ViewComponent_UU) {
-    set_Value(COLUMNNAME_AD_ViewComponent_UU, AD_ViewComponent_UU);
-  }
-
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
-  }
-
-  /**
-   * Set Description.
-   *
-   * @param Description Optional short description of the record
-   */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
-  }
-
-  /**
+    /**
    * Get Entity Type.
    *
    * @return Dictionary Entity Type; Determines ownership and synchronization
@@ -161,34 +107,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     return (String) get_Value(COLUMNNAME_FromClause);
   }
 
-  /**
-   * Set Sql FROM.
-   *
-   * @param FromClause SQL FROM clause
-   */
-  public void setFromClause(String FromClause) {
-    set_Value(COLUMNNAME_FromClause, FromClause);
-  }
-
-  /**
-   * Get Comment/Help.
-   *
-   * @return Comment or Hint
-   */
-  public String getHelp() {
-    return (String) get_Value(COLUMNNAME_Help);
-  }
-
-  /**
-   * Set Comment/Help.
-   *
-   * @param Help Comment or Hint
-   */
-  public void setHelp(String Help) {
-    set_Value(COLUMNNAME_Help, Help);
-  }
-
-  /**
+    /**
    * Get Name.
    *
    * @return Alphanumeric identifier of the entity
@@ -197,25 +116,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     return (String) get_Value(HasName.Companion.getCOLUMNNAME_Name());
   }
 
-  /**
-   * Set Name.
-   *
-   * @param Name Alphanumeric identifier of the entity
-   */
-  public void setName(String Name) {
-    set_Value(HasName.Companion.getCOLUMNNAME_Name(), Name);
-  }
-
-  /**
-   * Get Record ID/ColumnName
-   *
-   * @return ID/ColumnName pair
-   */
-  public KeyNamePair getKeyNamePair() {
-    return new KeyNamePair(getId(), getName());
-  }
-
-  /**
+    /**
    * Get Other SQL Clause.
    *
    * @return Other SQL Clause
@@ -224,22 +125,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     return (String) get_Value(COLUMNNAME_OtherClause);
   }
 
-  /**
-   * Set Other SQL Clause.
-   *
-   * @param OtherClause Other SQL Clause
-   */
-  public void setOtherClause(String OtherClause) {
-    set_Value(COLUMNNAME_OtherClause, OtherClause);
-  }
-
-  public org.compiere.model.I_AD_Table getReferenced_Table() throws RuntimeException {
-    return (org.compiere.model.I_AD_Table)
-        MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getReferenced_Table_ID(), null);
-  }
-
-  /**
+    /**
    * Get Referenced Table.
    *
    * @return Referenced Table
@@ -250,37 +136,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     return ii;
   }
 
-  /**
-   * Set Referenced Table.
-   *
-   * @param Referenced_Table_ID Referenced Table
-   */
-  public void setReferenced_Table_ID(int Referenced_Table_ID) {
-    if (Referenced_Table_ID < 1) set_Value(COLUMNNAME_Referenced_Table_ID, null);
-    else set_Value(COLUMNNAME_Referenced_Table_ID, Integer.valueOf(Referenced_Table_ID));
-  }
-
-  /**
-   * Get Sequence.
-   *
-   * @return Method of ordering records; lowest number comes first
-   */
-  public int getSeqNo() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_SeqNo);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set Sequence.
-   *
-   * @param SeqNo Method of ordering records; lowest number comes first
-   */
-  public void setSeqNo(int SeqNo) {
-    set_Value(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
-  }
-
-  /**
+    /**
    * Get Sql WHERE.
    *
    * @return Fully qualified SQL WHERE clause
@@ -289,16 +145,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     return (String) get_Value(COLUMNNAME_WhereClause);
   }
 
-  /**
-   * Set Sql WHERE.
-   *
-   * @param WhereClause Fully qualified SQL WHERE clause
-   */
-  public void setWhereClause(String WhereClause) {
-    set_Value(COLUMNNAME_WhereClause, WhereClause);
-  }
-
-  @Override
+    @Override
   public int getTableId() {
     return Table_ID;
   }

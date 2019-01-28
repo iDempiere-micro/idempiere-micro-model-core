@@ -49,19 +49,7 @@ public class PO_LOB implements Serializable {
     m_value = value;
   } //	PO_LOB
 
-  /**
-   * Save LOB
-   *
-   * @param whereClause clause
-   * @param trxName trx name
-   * @return true if saved
-   */
-  public boolean save(String whereClause, String trxName) {
-    m_whereClause = whereClause;
-    return save(trxName);
-  } //	save
-
-  /**
+    /**
    * Save LOB. see also org.compiere.session.ServerBean#updateLOB
    *
    * @param trxName trx name

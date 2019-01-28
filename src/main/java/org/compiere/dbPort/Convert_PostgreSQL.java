@@ -27,15 +27,6 @@ public class Convert_PostgreSQL extends Convert_SQL92 {
     m_map = ConvertMap_PostgreSQL.getConvertMap();
   } // Convert
 
-  /**
-   * Is Oracle DB
-   *
-   * @return true if connection is Oracle DB
-   */
-  public boolean isOracle() {
-    return false;
-  } // isOracle
-
   @Override
   protected Map<String, String> getConvertMap() {
     return m_map;

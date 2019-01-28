@@ -62,25 +62,7 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess, I_Pe
     else set_ValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
   }
 
-  /**
-   * Get AD_User_OrgAccess_UU.
-   *
-   * @return AD_User_OrgAccess_UU
-   */
-  public String getAD_User_OrgAccess_UU() {
-    return (String) get_Value(COLUMNNAME_AD_User_OrgAccess_UU);
-  }
-
-  /**
-   * Set AD_User_OrgAccess_UU.
-   *
-   * @param AD_User_OrgAccess_UU AD_User_OrgAccess_UU
-   */
-  public void setAD_User_OrgAccess_UU(String AD_User_OrgAccess_UU) {
-    set_Value(COLUMNNAME_AD_User_OrgAccess_UU, AD_User_OrgAccess_UU);
-  }
-
-  /**
+    /**
    * Set Read Only.
    *
    * @param IsReadOnly Field is read only

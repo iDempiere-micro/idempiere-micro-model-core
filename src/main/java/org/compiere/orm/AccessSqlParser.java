@@ -32,10 +32,7 @@ public class AccessSqlParser {
   /** List of Arrays */
   private ArrayList<TableInfo[]> m_tableInfo = new ArrayList<TableInfo[]>();
 
-  /** Base Constructor. You need to set the SQL and start the parsing manually. */
-  public AccessSqlParser() {} // 	AccessSqlParser
-
-  /**
+    /**
    * Full Constructor
    *
    * @param sql sql command
@@ -44,16 +41,7 @@ public class AccessSqlParser {
     setSql(sql);
   } //	AccessSqlParser
 
-  /**
-   * Get (original) Sql
-   *
-   * @return sql
-   */
-  public String getSql() {
-    return m_sqlOriginal;
-  } //	getSql
-
-  /**
+    /**
    * Set Sql and parse it
    *
    * @param sql sql
@@ -262,28 +250,7 @@ public class AccessSqlParser {
     return retValue;
   } //	getTableInfo
 
-  /**
-   * Get Sql Statements
-   *
-   * @param index record index
-   * @return index index of query
-   */
-  public String getSqlStatement(int index) {
-    if (index < 0 || index > m_sql.length) return null;
-    return m_sql[index];
-  } //	getSqlStatement
-
-  /**
-   * Get No of SQL Statements
-   *
-   * @return FROM clause count
-   */
-  public int getNoSqlStatments() {
-    if (m_sql == null) return 0;
-    return m_sql.length;
-  } //	getNoSqlStatments
-
-  /**
+    /**
    * Get index of main Statements
    *
    * @return index of main statement or -1 if not found

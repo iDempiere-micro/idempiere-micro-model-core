@@ -32,9 +32,7 @@ import software.hsharp.core.orm.MBaseRoleKt;
  *     Users
  */
 public class MRole extends MBaseRole {
-  /** Access SQL Read Write */
-  public static final boolean SQL_RW = true;
-  /** Access SQL Read Only */
+    /** Access SQL Read Only */
   public static final boolean SQL_RO = false;
   /** Access SQL Fully Qualified */
   public static final boolean SQL_FULLYQUALIFIED = true;
@@ -42,9 +40,7 @@ public class MRole extends MBaseRole {
   public static final boolean SQL_NOTQUALIFIED = false;
   /** The AD_User_ID of the SuperUser */
   public static final int SUPERUSER_USER_ID = USER_SUPERUSER;
-  /** The AD_User_ID of the System Administrator */
-  public static final int SYSTEM_USER_ID = USER_SYSTEM;
-  /** */
+    /** */
   private static final long serialVersionUID = 8952907008982481439L;
 
   private static final String ROLE_KEY = "org.compiere.impl.DefaultRole";
@@ -78,9 +74,8 @@ public class MRole extends MBaseRole {
   private MRole m_parent = null;
 
   private int m_includedSeqNo = -1;
-  private Boolean m_canAccess_Info_Product = null;
 
-  /**
+    /**
    * ************************************************************************ Standard Constructor
    *
    * @param ctx context
@@ -385,32 +380,7 @@ public class MRole extends MBaseRole {
     return no;
   } //	getConfirmQueryRecords
 
-  /**
-   * Require Query
-   *
-   * @param noRecords records
-   * @return true if query required
-   */
-  public boolean isQueryRequire(int noRecords) {
-    if (noRecords < 2) return false;
-    int max = getMaxQueryRecords();
-    if (max > 0 && noRecords > max) return true;
-    int qu = getConfirmQueryRecords();
-    return (noRecords > qu);
-  } //	isQueryRequire
-
-  /**
-   * Over max Query
-   *
-   * @param noRecords records
-   * @return true if over max query
-   */
-  public boolean isQueryMax(int noRecords) {
-    int max = getMaxQueryRecords();
-    return max > 0 && noRecords > max;
-  } //	isQueryMax
-
-  /**
+    /**
    * Before Save
    *
    * @param newRecord new
@@ -691,49 +661,7 @@ public class MRole extends MBaseRole {
     return sb.toString();
   } //	toString
 
-  /**
-   * Extended String Representation
-   *
-   * @param ctx Properties
-   * @return extended info
-   */
-  public String toStringX(Properties ctx) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(Msg.translate(ctx, "AD_Role_ID"))
-        .append("=")
-        .append(getName())
-        .append(" - ")
-        .append(Msg.translate(ctx, "IsCanExport"))
-        .append("=")
-        .append(isCanExport())
-        .append(" - ")
-        .append(Msg.translate(ctx, "IsCanReport"))
-        .append("=")
-        .append(isCanReport())
-        .append(Env.NL)
-        .append(Env.NL);
-    //
-    for (int i = 0; i < m_orgAccess.length; i++)
-      sb.append(m_orgAccess[i].toString()).append(Env.NL);
-    sb.append(Env.NL);
-    //
-    MTableAccess[] m_tableAccess = loadTableAccess(false);
-    for (int i = 0; i < m_tableAccess.length; i++)
-      sb.append(m_tableAccess[i].toStringX(ctx)).append(Env.NL);
-    if (m_tableAccess.length > 0) sb.append(Env.NL);
-    //
-    MColumnAccess[] m_columnAccess = loadColumnAccess(false);
-    for (int i = 0; i < m_columnAccess.length; i++)
-      sb.append(m_columnAccess[i].toStringX(ctx)).append(Env.NL);
-    if (m_columnAccess.length > 0) sb.append(Env.NL);
-    //
-    loadRecordAccess(false);
-    for (int i = 0; i < m_recordAccess.length; i++)
-      sb.append(m_recordAccess[i].toStringX(ctx)).append(Env.NL);
-    return sb.toString();
-  } //	toStringX
-
-  /**
+    /**
    * Get Logged in user
    *
    * @return AD_User_ID user requesting info
@@ -1043,50 +971,7 @@ public class MRole extends MBaseRole {
     return canReport;
   } //	isCanReport
 
-  /**
-   * Can Export Table
-   *
-   * @param AD_Table_ID
-   * @return true if access
-   */
-  public boolean isCanExport(int AD_Table_ID) {
-    if (!isCanExport()) //	Role Level block
-    {
-      log.warning("Role denied");
-      return false;
-    }
-    if (!isTableAccess(AD_Table_ID, true)) // 	No R/O Access to Table
-    return false;
-    if (!isCanReport(AD_Table_ID)) // 	We cannot Export if we cannot report
-    return false;
-
-    // default to negative list, can report on all tables
-    boolean canExport = true;
-    MTableAccess[] m_tableAccess = loadTableAccess(false);
-    for (int i = 0; i < m_tableAccess.length; i++) {
-      if (!X_AD_Table_Access.ACCESSTYPERULE_Exporting.equals(m_tableAccess[i].getAccessTypeRule()))
-        continue;
-      if (m_tableAccess[i].isExclude()) // 	Exclude
-      {
-        if (m_tableAccess[i].getAD_Table_ID() == AD_Table_ID) {
-          if (log.isLoggable(Level.FINE)) log.fine("Exclude " + AD_Table_ID);
-          return false;
-        }
-      } else //	Include
-      {
-        // positive list, can export ONLY on included tables
-        canExport = false;
-        if (m_tableAccess[i].getAD_Table_ID() == AD_Table_ID) {
-          if (log.isLoggable(Level.FINE)) log.fine("Include " + AD_Table_ID);
-          return true;
-        }
-      }
-    } //	for all Table Access
-    if (log.isLoggable(Level.FINE)) log.fine(AD_Table_ID + " - " + canExport);
-    return canExport;
-  } //	isCanExport
-
-  /**
+    /**
    * Access to Table
    *
    * @param AD_Table_ID table
@@ -1197,89 +1082,7 @@ public class MRole extends MBaseRole {
     return false;
   } //	isTableAccessLevel
 
-  /**
-   * Access to Column
-   *
-   * @param AD_Table_ID table
-   * @param AD_Column_ID column
-   * @param ro read only
-   * @return true if access
-   */
-  public boolean isColumnAccess(int AD_Table_ID, int AD_Column_ID, boolean ro) {
-    if (!isTableAccess(AD_Table_ID, ro)) // 	No Access to Table
-    return false;
-    loadColumnAccess(false);
-
-    boolean retValue = true; // 	assuming exclusive
-    MColumnAccess[] m_columnAccess = loadColumnAccess(false);
-    for (int i = 0; i < m_columnAccess.length; i++) {
-      if (m_columnAccess[i].isExclude()) // 	Exclude
-      //	If you Exclude Access to a column and select Read Only,
-      //	you can only read data (otherwise no access).
-      {
-        if (m_columnAccess[i].getAD_Table_ID() == AD_Table_ID
-            && m_columnAccess[i].getAD_Column_ID() == AD_Column_ID) {
-          if (ro) //	just R/O Access requested
-          retValue = m_columnAccess[i].isReadOnly();
-          else retValue = false;
-          if (!retValue)
-            if (log.isLoggable(Level.FINE))
-              log.fine(
-                  "Exclude AD_Table_ID="
-                      + AD_Table_ID
-                      + ", AD_Column_ID="
-                      + AD_Column_ID
-                      + " (ro="
-                      + ro
-                      + ",ColumnAccessRO="
-                      + m_columnAccess[i].isReadOnly()
-                      + ") = "
-                      + retValue);
-          return retValue;
-        }
-      } else //	Include
-      //	If you Include Access to a column and select Read Only,
-      //	you can only read data (otherwise full access).
-      {
-        if (m_columnAccess[i].getAD_Table_ID() == AD_Table_ID) {
-          retValue = false;
-          if (m_columnAccess[i].getAD_Column_ID() == AD_Column_ID) {
-            if (!ro) //	rw only if not r/o
-            retValue = !m_columnAccess[i].isReadOnly();
-            else retValue = true;
-            if (!retValue)
-              if (log.isLoggable(Level.FINE))
-                log.fine(
-                    "Include AD_Table_ID="
-                        + AD_Table_ID
-                        + ", AD_Column_ID="
-                        + AD_Column_ID
-                        + " (ro="
-                        + ro
-                        + ",ColumnAccessRO="
-                        + m_columnAccess[i].isReadOnly()
-                        + ") = "
-                        + retValue);
-            return retValue;
-          }
-        } //	same table
-      } //	include
-    } //	for all Table Access
-    if (!retValue)
-      if (log.isLoggable(Level.FINE))
-        log.fine(
-            "AD_Table_ID="
-                + AD_Table_ID
-                + ", AD_Column_ID="
-                + AD_Column_ID
-                + " (ro="
-                + ro
-                + ") = "
-                + retValue);
-    return retValue;
-  } //	isColumnAccess
-
-  /**
+    /**
    * Access to Record (no check of table)
    *
    * @param AD_Table_ID table
@@ -1933,146 +1736,7 @@ public class MRole extends MBaseRole {
     return retValue;
   } //	getDependentRecordWhereColumn
 
-  /**
-   * UPDATE - Can I Update the record. Access error info (AccessTableNoUpdate) is saved in the log
-   *
-   * @param AD_Client_ID context to derive client/org/user level
-   * @param AD_Org_ID number of the current window to retrieve context
-   * @param AD_Table_ID table
-   * @param Record_ID record id
-   * @param createError boolean
-   * @return true if you can update see MTable#dataSave(boolean)
-   */
-  public boolean canUpdate(
-      int AD_Client_ID, int AD_Org_ID, int AD_Table_ID, int Record_ID, boolean createError) {
-    String userLevel = getUserLevel(); // 	Format 'SCO'
-
-    if (userLevel.indexOf('S') != -1) // 	System can change anything
-    return true;
-
-    boolean retValue = true;
-    String whatMissing = "";
-
-    //	System == Client=0 & Org=0
-    if (AD_Client_ID == 0 && AD_Org_ID == 0 && userLevel.charAt(0) != 'S') {
-      retValue = false;
-      whatMissing += "S";
-    }
-
-    //	Client == Client!=0 & Org=0
-    else if (AD_Client_ID != 0 && AD_Org_ID == 0 && userLevel.charAt(1) != 'C') {
-      if (userLevel.charAt(2) == 'O' && isOrgAccess(AD_Org_ID, true))
-        ; //	Client+Org with access to *
-      else {
-        retValue = false;
-        whatMissing += "C";
-      }
-    }
-
-    //	Organization == Client!=0 & Org!=0
-    else if (AD_Client_ID != 0 && AD_Org_ID != 0 && userLevel.charAt(2) != 'O') {
-      retValue = false;
-      whatMissing += "O";
-    }
-
-    // Client Access: Verify if the role has access to the given client - teo_sarca, BF [ 1982398 ]
-    if (retValue) {
-      retValue = isClientAccess(AD_Client_ID, true); // r/w access
-      whatMissing += "C";
-    }
-
-    // Org Access: Verify if the role has access to the given organization - teo_sarca, patch [
-    // 1628050 ]
-    if (retValue) {
-      retValue = isOrgAccess(AD_Org_ID, true); // r/w access
-      whatMissing = "W";
-    }
-
-    //	Data Access
-    if (retValue) retValue = isTableAccess(AD_Table_ID, false);
-
-    if (retValue && Record_ID != 0) retValue = isRecordAccess(AD_Table_ID, Record_ID, false);
-
-    if (!retValue && createError) {
-      log.saveWarning(
-          "AccessTableNoUpdate",
-          "AD_Client_ID="
-              + AD_Client_ID
-              + ", AD_Org_ID="
-              + AD_Org_ID
-              + ", UserLevel="
-              + userLevel
-              + " => missing="
-              + whatMissing);
-      log.warning(toString());
-    }
-    return retValue;
-  } //	canUpdate
-
-  /**
-   * VIEW - Can I view record in Table with given TableLevel. <code>
-   * TableLevel			S__ 100		4	System info
-   * SCO	111		7	System shared info
-   * SC_ 110		6	System/Client info
-   * _CO	011		3	Client shared info
-   * _C_	011		2	Client shared info
-   * __O	001		1	Organization info
-   * </code>
-   *
-   * @param ctx context
-   * @param TableLevel AccessLevel
-   * @return true/false Access error info (AccessTableNoUpdate, AccessTableNoView) is saved in the
-   *     log see org.compiere.model.MTabVO#loadTabDetails(MTabVO, ResultSet)
-   */
-  public boolean canView(Properties ctx, String TableLevel) {
-    String userLevel = getUserLevel(); // 	Format 'SCO'
-
-    boolean retValue = true;
-
-    //	7 - All
-    if (X_AD_Table.ACCESSLEVEL_All.equals(TableLevel)) retValue = true;
-
-    //	4 - System data requires S
-    else if (X_AD_Table.ACCESSLEVEL_SystemOnly.equals(TableLevel) && userLevel.charAt(0) != 'S')
-      retValue = false;
-
-    //	2 - Client data requires C
-    else if (X_AD_Table.ACCESSLEVEL_ClientOnly.equals(TableLevel) && userLevel.charAt(1) != 'C')
-      retValue = false;
-
-    //	1 - Organization data requires O
-    else if (X_AD_Table.ACCESSLEVEL_Organization.equals(TableLevel) && userLevel.charAt(2) != 'O')
-      retValue = false;
-
-    //	3 - Client Shared requires C or O
-    else if (X_AD_Table.ACCESSLEVEL_ClientPlusOrganization.equals(TableLevel)
-        && (!(userLevel.charAt(1) == 'C' || userLevel.charAt(2) == 'O'))) retValue = false;
-
-    //	6 - System/Client requires S or C
-    else if (X_AD_Table.ACCESSLEVEL_SystemPlusClient.equals(TableLevel)
-        && (!(userLevel.charAt(0) == 'S' || userLevel.charAt(1) == 'C'))) retValue = false;
-
-    if (retValue) return retValue;
-
-    //  Notification
     /**
-     * if (forInsert) log.saveWarning("AccessTableNoUpdate", "(Required=" + TableLevel + "(" +
-     * getTableLevelString(Env.getADLanguage(ctx), TableLevel) + ") != UserLevel=" + userLevel);
-     * else
-     */
-    log.saveWarning(
-        "AccessTableNoView",
-        "Required="
-            + TableLevel
-            + "("
-            + getTableLevelString(Env.getADLanguage(ctx), TableLevel)
-            + ") != UserLevel="
-            + userLevel);
-    if (log.isLoggable(Level.INFO)) log.info(toString());
-    return retValue;
-  } //	canView
-
-  /**
    * Returns clear text String of TableLevel
    *
    * @param AD_Language language
@@ -2159,16 +1823,7 @@ public class MRole extends MBaseRole {
     return sb.toString();
   } //	getRecordWhere
 
-  /**
-   * Show (Value) Preference Menu
-   *
-   * @return true if preference type is not None
-   */
-  public boolean isShowPreference() {
-    return !X_AD_Role.PREFERENCETYPE_None.equals(getPreferenceType());
-  } //	isShowPreference
-
-  /**
+    /**
    * Checks the access rights of the given role/client for the given document actions.
    *
    * @param clientId
@@ -2527,37 +2182,7 @@ public class MRole extends MBaseRole {
     }
   }
 
-  /**
-   * Get Role Where Clause. It will look something like myalias.AD_Role_ID IN (?, ?, ?).
-   *
-   * @param roleColumnSQL role columnname or role column SQL (e.g. myalias.AD_Role_ID)
-   * @param params a list where the method will put SQL parameters. If null, this method will
-   *     generate a not parametrized query
-   * @return role SQL where clause
-   */
-  public String getIncludedRolesWhereClause(String roleColumnSQL, List<Object> params) {
-    StringBuilder whereClause = new StringBuilder();
-    if (params != null) {
-      whereClause.append("?");
-      params.add(getAD_Role_ID());
-    } else {
-      whereClause.append(getAD_Role_ID());
-    }
-    //
-    for (MRole role : getIncludedRoles(true)) {
-      if (params != null) {
-        whereClause.append(",?");
-        params.add(role.getAD_Role_ID());
-      } else {
-        whereClause.append(",").append(role.getAD_Role_ID());
-      }
-    }
-    //
-    whereClause.insert(0, roleColumnSQL + " IN (").append(")");
-    return whereClause.toString();
-  }
-
-  public synchronized Boolean getInfoAccess(int AD_InfoWindow_ID) {
+    public synchronized Boolean getInfoAccess(int AD_InfoWindow_ID) {
     if (m_infoAccess == null) {
       m_infoAccess = new HashMap<Integer, Boolean>(20);
       // first get the info access from the included and substitute roles

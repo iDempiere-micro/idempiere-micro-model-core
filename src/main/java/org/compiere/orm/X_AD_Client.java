@@ -14,23 +14,9 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persistent {
 
-  /** AD_Language AD_Reference_ID=327 */
-  public static final int AD_LANGUAGE_AD_Reference_ID = 327;
-  /** AutoArchive AD_Reference_ID=334 */
-  public static final int AUTOARCHIVE_AD_Reference_ID = 334;
-  /** None = N */
+    /** None = N */
   public static final String AUTOARCHIVE_None = "N";
-  /** All (Reports, Documents) = 1 */
-  public static final String AUTOARCHIVE_AllReportsDocuments = "1";
-  /** Documents = 2 */
-  public static final String AUTOARCHIVE_Documents = "2";
-  /** External Documents = 3 */
-  public static final String AUTOARCHIVE_ExternalDocuments = "3";
-  /** MMPolicy AD_Reference_ID=335 */
-  public static final int MMPOLICY_AD_Reference_ID = 335;
-  /** LiFo = L */
-  public static final String MMPOLICY_LiFo = "L";
-  /** FiFo = F */
+    /** FiFo = F */
   public static final String MMPOLICY_FiFo = "F";
   /** */
   private static final long serialVersionUID = 20171031L;
@@ -61,25 +47,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     return "X_AD_Client[" + getId() + "]";
   }
 
-  /**
-   * Get AD_Client_UU.
-   *
-   * @return AD_Client_UU
-   */
-  public String getADClientUU() {
-    return (String) get_Value(COLUMNNAME_AD_Client_UU);
-  }
-
-  /**
-   * Set AD_Client_UU.
-   *
-   * @param AD_Client_UU AD_Client_UU
-   */
-  public void setADClientUU(String AD_Client_UU) {
-    set_Value(COLUMNNAME_AD_Client_UU, AD_Client_UU);
-  }
-
-  /**
+    /**
    * Get Language.
    *
    * @return Language for this entity
@@ -98,49 +66,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     set_Value(COLUMNNAME_AD_Language, AD_Language);
   }
 
-  /**
-   * Set Password Policies.
-   *
-   * @param AD_PasswordRule_ID Password Policies
-   */
-  public void setAD_PasswordRule_ID(int AD_PasswordRule_ID) {
-    if (AD_PasswordRule_ID < 1) set_Value(COLUMNNAME_AD_PasswordRule_ID, null);
-    else set_Value(COLUMNNAME_AD_PasswordRule_ID, AD_PasswordRule_ID);
-  }
-
-  /**
-   * Get Password Policies.
-   *
-   * @return Password Policies
-   */
-  public int getADPasswordRule_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_PasswordRule_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Get Replication Strategy.
-   *
-   * @return Data Replication Strategy
-   */
-  public int getADReplicationStrategyID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_ReplicationStrategy_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
-
-  /**
-   * Set Replication Strategy.
-   *
-   * @param AD_ReplicationStrategy_ID Data Replication Strategy
-   */
-  public void setADReplicationStrategyID(int AD_ReplicationStrategy_ID) {
-    if (AD_ReplicationStrategy_ID < 1) set_Value(COLUMNNAME_AD_ReplicationStrategy_ID, null);
-    else set_Value(COLUMNNAME_AD_ReplicationStrategy_ID, AD_ReplicationStrategy_ID);
-  }
-
-  /**
+    /**
    * Get Auto Archive.
    *
    * @return Enable and level of automatic Archive of documents
@@ -159,61 +85,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     set_Value(COLUMNNAME_AutoArchive, AutoArchive);
   }
 
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
-  }
-
-  /**
-   * Set Description.
-   *
-   * @param Description Optional short description of the record
-   */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
-  }
-
-  /**
-   * Get Document Directory.
-   *
-   * @return Directory for documents from the application server
-   */
-  public String getDocumentDir() {
-    return (String) get_Value(COLUMNNAME_DocumentDir);
-  }
-
-  /**
-   * Set Document Directory.
-   *
-   * @param DocumentDir Directory for documents from the application server
-   */
-  public void setDocumentDir(String DocumentDir) {
-    set_Value(COLUMNNAME_DocumentDir, DocumentDir);
-  }
-
-  /**
-   * Get EMail Test.
-   *
-   * @return Test EMail
-   */
-  public String getEMailTest() {
-    return (String) get_Value(COLUMNNAME_EMailTest);
-  }
-
-  /**
-   * Set EMail Test.
-   *
-   * @param EMailTest Test EMail
-   */
-  public void setEMailTest(String EMailTest) {
-    set_Value(COLUMNNAME_EMailTest, EMailTest);
-  }
-
-  /**
+    /**
    * Set Multi Lingual Documents.
    *
    * @param IsMultiLingualDocument Documents are Multi Lingual
@@ -245,30 +117,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     set_Value(COLUMNNAME_IsPostImmediate, IsPostImmediate);
   }
 
-  /**
-   * Get Post Immediately (Deprecated).
-   *
-   * @return Post the accounting immediately for testing (Deprecated)
-   */
-  public boolean isPostImmediate() {
-    Object oo = get_Value(COLUMNNAME_IsPostImmediate);
-    if (oo != null) {
-      if (oo instanceof Boolean) return (Boolean) oo;
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
-   * Set SMTP SSL/TLS.
-   *
-   * @param IsSecureSMTP Use SSL/TLS for SMTP
-   */
-  public void setIsSecureSMTP(boolean IsSecureSMTP) {
-    set_Value(COLUMNNAME_IsSecureSMTP, IsSecureSMTP);
-  }
-
-  /**
+    /**
    * Get SMTP SSL/TLS.
    *
    * @return Use SSL/TLS for SMTP
@@ -291,21 +140,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     set_Value(COLUMNNAME_IsServerEMail, IsServerEMail);
   }
 
-  /**
-   * Get Server EMail.
-   *
-   * @return Send EMail from Server
-   */
-  public boolean isServerEMail() {
-    Object oo = get_Value(COLUMNNAME_IsServerEMail);
-    if (oo != null) {
-      if (oo instanceof Boolean) return (Boolean) oo;
-      return "Y".equals(oo);
-    }
-    return false;
-  }
-
-  /**
+    /**
    * Set SMTP Authentication.
    *
    * @param IsSmtpAuthorization Your mail server requires Authentication
@@ -328,16 +163,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     return false;
   }
 
-  /**
-   * Set IsUseASP.
-   *
-   * @param IsUseASP IsUseASP
-   */
-  public void setIsUseASP(boolean IsUseASP) {
-    set_Value(COLUMNNAME_IsUseASP, IsUseASP);
-  }
-
-  /**
+    /**
    * Get IsUseASP.
    *
    * @return IsUseASP
@@ -402,16 +228,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     return (String) get_Value(COLUMNNAME_ModelValidationClasses);
   }
 
-  /**
-   * Set Model Validation Classes.
-   *
-   * @param ModelValidationClasses List of data model validation classes separated by ;
-   */
-  public void setModelValidationClasses(String ModelValidationClasses) {
-    set_Value(COLUMNNAME_ModelValidationClasses, ModelValidationClasses);
-  }
-
-  /**
+    /**
    * Get Request EMail.
    *
    * @return EMail address to send automated mails from or receive mails for automated processing
@@ -421,35 +238,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     return (String) get_Value(COLUMNNAME_RequestEMail);
   }
 
-  /**
-   * Set Request EMail.
-   *
-   * @param RequestEMail EMail address to send automated mails from or receive mails for automated
-   *     processing (fully qualified)
-   */
-  public void setRequestEMail(String RequestEMail) {
-    set_Value(COLUMNNAME_RequestEMail, RequestEMail);
-  }
-
-  /**
-   * Get Request Folder.
-   *
-   * @return EMail folder to process incoming emails; if empty INBOX is used
-   */
-  public String getRequestFolder() {
-    return (String) get_Value(COLUMNNAME_RequestFolder);
-  }
-
-  /**
-   * Set Request Folder.
-   *
-   * @param RequestFolder EMail folder to process incoming emails; if empty INBOX is used
-   */
-  public void setRequestFolder(String RequestFolder) {
-    set_Value(COLUMNNAME_RequestFolder, RequestFolder);
-  }
-
-  /**
+    /**
    * Get Request User.
    *
    * @return User Name (ID) of the email owner
@@ -458,16 +247,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     return (String) get_Value(COLUMNNAME_RequestUser);
   }
 
-  /**
-   * Set Request User.
-   *
-   * @param RequestUser User Name (ID) of the email owner
-   */
-  public void setRequestUser(String RequestUser) {
-    set_Value(COLUMNNAME_RequestUser, RequestUser);
-  }
-
-  /**
+    /**
    * Get Request User Password.
    *
    * @return Password of the user name (ID) for mail processing
@@ -476,16 +256,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     return (String) get_Value(COLUMNNAME_RequestUserPW);
   }
 
-  /**
-   * Set Request User Password.
-   *
-   * @param RequestUserPW Password of the user name (ID) for mail processing
-   */
-  public void setRequestUserPW(String RequestUserPW) {
-    set_Value(COLUMNNAME_RequestUserPW, RequestUserPW);
-  }
-
-  /**
+    /**
    * Get Mail Host.
    *
    * @return Hostname of Mail Server for SMTP and IMAP
@@ -494,16 +265,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     return (String) get_Value(COLUMNNAME_SMTPHost);
   }
 
-  /**
-   * Set Mail Host.
-   *
-   * @param SMTPHost Hostname of Mail Server for SMTP and IMAP
-   */
-  public void setSMTPHost(String SMTPHost) {
-    set_Value(COLUMNNAME_SMTPHost, SMTPHost);
-  }
-
-  /**
+    /**
    * Get SMTP Port.
    *
    * @return SMTP Port Number
@@ -514,16 +276,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     return ii;
   }
 
-  /**
-   * Set SMTP Port.
-   *
-   * @param SMTPPort SMTP Port Number
-   */
-  public void setSMTPPort(int SMTPPort) {
-    set_Value(COLUMNNAME_SMTPPort, SMTPPort);
-  }
-
-  @Override
+    @Override
   public int getTableId() {
     return Table_ID;
   }

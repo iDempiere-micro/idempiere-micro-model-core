@@ -53,18 +53,7 @@ public class Trace {
     return array[nestLevel];
   } //  getCallerClass
 
-  /**
-   * Is the caller Called From the class mentioned
-   *
-   * @param className calling class
-   * @return the caller was called from className
-   */
-  public static boolean isCalledFrom(String className) {
-    if (className == null || className.length() == 0) return false;
-    return getCallerClass(1).indexOf(className) != -1;
-  } //	isCalledFrom
-
-  /** Print Stack Trace Info (raw) idempiereOnly - first9only */
+    /** Print Stack Trace Info (raw) idempiereOnly - first9only */
   public static void printStack() {
     printStack(true, true);
   } //	printStack

@@ -44,8 +44,7 @@ public class Language implements Serializable {
   /** Base Language */
   private static Language s_baseLanguage = null;
 
-  private static boolean isBaseLanguageSet = false;
-  /** Logger */
+    /** Logger */
   private static CLogger log = CLogger.getCLogger(Language.class.getName());
 
   static {
@@ -109,27 +108,7 @@ public class Language implements Serializable {
     this(name, AD_Language, locale, null, null, null);
   } //	Language
 
-  /**
-   * Get Number of Languages
-   *
-   * @return Language count
-   */
-  public static int getLanguageCount() {
-    return s_languages.size();
-  } //  getLanguageCount
-
-  /**
-   * Get Language
-   *
-   * @param index index
-   * @return Language
-   */
-  public static Language getLanguage(int index) {
-    if (index < 0 || index >= s_languages.size()) return s_baseLanguage;
-    return s_languages.get(index);
-  } //  getLanguage
-
-  /**
+    /**
    * ************************************************************************ Get Language. If
    * language does not exist, create it on the fly assuming that it is valid
    *
@@ -215,18 +194,7 @@ public class Language implements Serializable {
     return s_baseLanguage;
   } //  getLanguage
 
-  private static void setBaseLanguage() {
-    isBaseLanguageSet = true;
-    String baselang =
-        getSQLValueStringEx(
-            null,
-            "SELECT AD_Language FROM AD_Language WHERE IsActive='Y' AND IsBaseLanguage = 'Y'");
-    if (baselang != null) {
-      getLanguage(baselang);
-    }
-  }
-
-  /**
+    /**
    * Is it the base language
    *
    * @param langInfo either language (en) or locale (en-US) or display name
@@ -268,64 +236,7 @@ public class Language implements Serializable {
     return getLanguage(langInfo).getLocale();
   } //  getLocale
 
-  /**
-   * Get Supported Language
-   *
-   * @param langInfo either language (en) or locale (en-US) or display name
-   * @return AD_Language (e.g. en-US)
-   */
-  public static String getADLanguage(String langInfo) {
-    return getLanguage(langInfo).getADLanguage();
-  } //  getADLanguage
-
-  /**
-   * Get Supported Language
-   *
-   * @param locale Locale
-   * @return AD_Language (e.g. en-US)
-   */
-  public static String getADLanguage(Locale locale) {
-    if (locale != null) {
-      for (int i = 0; i < s_languages.size(); i++) {
-        if (locale.getLanguage().equals(s_languages.get(i).getLocale().getLanguage()))
-          return s_languages.get(i).getADLanguage();
-      }
-    }
-    return s_baseLanguage.getADLanguage();
-  } //  getLocale
-
-  /**
-   * Get Language Name
-   *
-   * @param langInfo either language (en) or locale (en-US) or display name
-   * @return Language Name (e.g. English)
-   */
-  public static String getName(String langInfo) {
-    return getLanguage(langInfo).getName();
-  } //  getADLanguage
-
-  /**
-   * Returns true if Decimal Point (not comma)
-   *
-   * @param langInfo either language (en) or locale (en-US) or display name
-   * @return use of decimal point
-   */
-  public static boolean isDecimalPoint(String langInfo) {
-    return getLanguage(langInfo).isDecimalPoint();
-  } //  getADLanguage
-
-  /**
-   * Get Display names of supported languages
-   *
-   * @return Array of Language names
-   */
-  public static String[] getNames() {
-    String[] retValue = new String[s_languages.size()];
-    for (int i = 0; i < s_languages.size(); i++) retValue[i] = s_languages.get(i).getName();
-    return retValue;
-  } //  getNames
-
-  /**
+    /**
    * ************************************************************************ Get Current Login
    * Language
    *
@@ -335,19 +246,7 @@ public class Language implements Serializable {
     return Env.getLanguage(Env.getCtx());
   } //  getLanguage
 
-  /**
-   * Set Current Login Language
-   *
-   * @param language language
-   */
-  public static void setLoginLanguage(Language language) {
-    if (language != null) {
-      Env.setContext(Env.getCtx(), Env.LANGUAGE, language.getADLanguage());
-      if (log.isLoggable(Level.CONFIG)) log.config(language.toString());
-    }
-  } //  setLanguage
-
-  /**
+    /**
    * Get Language Name. e.g. English
    *
    * @return name
@@ -365,19 +264,7 @@ public class Language implements Serializable {
     return m_AD_Language;
   } //  getADLanguage
 
-  /**
-   * Set Application Dictionary Language (system supported).
-   *
-   * @param AD_Language e.g. en-US
-   */
-  public void setADLanguage(String AD_Language) {
-    if (AD_Language != null) {
-      m_AD_Language = AD_Language;
-      if (log.isLoggable(Level.CONFIG)) log.config(toString());
-    }
-  } //  getADLanguage
-
-  /**
+    /**
    * Get Locale
    *
    * @return locale
@@ -386,18 +273,7 @@ public class Language implements Serializable {
     return m_locale;
   } //  getLocale
 
-  /**
-   * Overwrite Locale
-   *
-   * @param locale locale
-   */
-  public void setLocale(Locale locale) {
-    if (locale == null) return;
-    m_locale = locale;
-    m_decimalPoint = null; //  reset
-  } //  getLocale
-
-  /**
+    /**
    * Get Language Code. e.g. en - derived from Locale
    *
    * @return language code
@@ -406,19 +282,7 @@ public class Language implements Serializable {
     return m_locale.getLanguage();
   } //  getLanguageCode
 
-  /**
-   * Component orientation is Left To Right
-   *
-   * @return true if left-to-right
-   */
-  public boolean isLeftToRight() {
-    if (m_leftToRight == null)
-      //  returns true if language not iw, ar, fa, ur
-      m_leftToRight = new Boolean(ComponentOrientation.getOrientation(m_locale).isLeftToRight());
-    return m_leftToRight.booleanValue();
-  } //  isLeftToRight
-
-  /**
+    /**
    * Returns true if Decimal Point (not comma)
    *
    * @return use of decimal point
@@ -531,16 +395,7 @@ public class Language implements Serializable {
     return getDateFormat().toPattern().toUpperCase(m_locale);
   } //  getDBdatePattern
 
-  /**
-   * Get default MediaSize
-   *
-   * @return media size
-   */
-  public MediaSize getMediaSize() {
-    return m_mediaSize;
-  } //	getMediaSize
-
-  /**
+    /**
    * Set default MediaSize
    *
    * @param size media size

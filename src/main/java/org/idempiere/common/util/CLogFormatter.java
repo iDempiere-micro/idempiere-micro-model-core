@@ -244,12 +244,4 @@ public class CLogFormatter extends Formatter {
     return sb.toString();
   } //	getTail
 
-  /**
-   * Set Format
-   *
-   * @param shortFormat format
-   */
-  public void setFormat(boolean shortFormat) {
-    m_shortFormat = shortFormat;
-  } //	setFormat
 } //	CLogFormatter

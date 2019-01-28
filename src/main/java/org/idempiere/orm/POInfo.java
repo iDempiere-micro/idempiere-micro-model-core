@@ -50,18 +50,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     super(ctx, AD_Table_ID, baseLanguageOnly);
   } //  PInfo
 
-  /**
-   * POInfo Factory
-   *
-   * @param ctx context
-   * @param AD_Table_ID AD_Table_ID
-   * @return POInfo
-   */
-  public static POInfo getPOInfo(Properties ctx, int AD_Table_ID) {
-    return getPOInfo(ctx, AD_Table_ID, null);
-  }
-
-  /**
+    /**
    * POInfo Factory
    *
    * @param ctx context
@@ -256,19 +245,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     return columns[index].DisplayType;
   } //  getColumnDisplayType
 
-  /**
-   * Get Column Default Logic
-   *
-   * @param index index
-   * @return Default Logic
-   */
-  public String getDefaultLogic(int index) {
-    POInfoColumn[] columns = getColumns();
-    if (index < 0 || index >= columns.length) return null;
-    return columns[index].DefaultLogic;
-  } //  getDefaultLogic
-
-  /**
+    /**
    * Is Column Mandatory
    *
    * @param index index
@@ -314,19 +291,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     for (int i = 0; i < columns.length; i++) columns[i].IsUpdateable = updateable;
   } //	setUpdateable
 
-  /**
-   * Is Lookup Column
-   *
-   * @param index index
-   * @return true if it is a lookup column
-   */
-  public boolean isColumnLookup(int index) {
-    POInfoColumn[] columns = getColumns();
-    if (index < 0 || index >= columns.length) return false;
-    return DisplayType.isLookup(columns[index].DisplayType);
-  } //  isColumnLookup
-
-  /**
+    /**
    * Is Column Key
    *
    * @param index index
@@ -393,31 +358,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     return columns[index].IsEncrypted;
   } //  isEncrypted
 
-  /**
-   * Is allowed logging on this column
-   *
-   * @param index index
-   * @return true if column is allowed to be logged
-   */
-  public boolean isAllowLogging(int index) {
-    POInfoColumn[] columns = getColumns();
-    if (index < 0 || index >= columns.length) return false;
-    return columns[index].IsAllowLogging;
-  } // isAllowLogging
-
-  /**
-   * Is allowed copying this column
-   *
-   * @param index index
-   * @return true if column is allowed to be copied
-   */
-  public boolean isAllowCopy(int index) {
-    POInfoColumn[] columns = getColumns();
-    if (index < 0 || index >= columns.length) return false;
-    return columns[index].IsAllowCopy;
-  } // isAllowCopy
-
-  /**
+    /**
    * Get Column FieldLength
    *
    * @param index index
@@ -429,21 +370,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     return columns[index].FieldLength;
   } //  getFieldLength
 
-  /**
-   * Get Column FieldLength
-   *
-   * @param columnName Column Name
-   * @return field length or 0
-   */
-  public int getFieldLength(String columnName) {
-    int index = getColumnIndex(columnName);
-    if (index >= 0) {
-      return getFieldLength(index);
-    }
-    return 0;
-  }
-
-  /**
+    /**
    * Validate Content
    *
    * @param index index

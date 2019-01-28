@@ -67,26 +67,7 @@ public class SecureEngine {
     }
   } //	init
 
-  /**
-   * Initialize/Test Security
-   *
-   * @param className class name
-   */
-  public static void init(String className) {
-    if (s_engine == null) s_engine = new SecureEngine(className);
-    else if (className != null && !className.equals(getClassName())) {
-      String msg =
-          "Requested Security class = "
-              + className
-              + " is not the same as the active class = "
-              + getClassName()
-              + "\nMake sure to set the security class in the start script";
-      log.severe(msg);
-      System.err.println(msg);
-    }
-  } //	init
-
-  /**
+    /**
    * Get Class Name
    *
    * @return class name
@@ -111,18 +92,7 @@ public class SecureEngine {
     return s_engine.implementation.getSHA512Hash(iterations, value, salt);
   } //	getDigest
 
-  /**
-   * Convert String to Digest. JavaScript version see - http://pajhome.org.uk/crypt/md5/index.html
-   *
-   * @param value message
-   * @return HexString of message (length = 32 characters)
-   */
-  public static String getDigest(String value) {
-    if (s_engine == null) init(System.getProperties());
-    return s_engine.implementation.getDigest(value);
-  } //	getDigest
-
-  /**
+    /**
    * Encryption. The methods must recognize clear text values
    *
    * @param value clear value
@@ -218,23 +188,4 @@ public class SecureEngine {
     return valid;
   }
 
-  /**
-   * Test output
-   *
-   * @param test test value
-   * @param should target value
-   * @return info
-   */
-  private static String test(Object test, Object should) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(test);
-    if (test == null) {
-      if (should == null) sb.append(" - ok");
-      else sb.append(" [Should=").append(should).append("] - ERROR");
-    } else {
-      if (test.equals(should)) sb.append(" - ok");
-      else sb.append(" [Should=").append(should).append("] - ERROR");
-    }
-    return sb.toString();
-  } //	test
 } //	SecureEngine

@@ -14,9 +14,7 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persistent {
 
-  /** EntityType AD_Reference_ID=389 */
-  public static final int ENTITYTYPE_AD_Reference_ID = 389;
-  /** */
+    /** */
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
@@ -58,36 +56,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
     return ii;
   }
 
-  /**
-   * Set System Element.
-   *
-   * @param AD_Element_ID System Element enables the central maintenance of column description and
-   *     help.
-   */
-  public void setAD_Element_ID(int AD_Element_ID) {
-    if (AD_Element_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Element_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Element_ID, Integer.valueOf(AD_Element_ID));
-  }
-
-  /**
-   * Get AD_Element_UU.
-   *
-   * @return AD_Element_UU
-   */
-  public String getAD_Element_UU() {
-    return (String) get_Value(COLUMNNAME_AD_Element_UU);
-  }
-
-  /**
-   * Set AD_Element_UU.
-   *
-   * @param AD_Element_UU AD_Element_UU
-   */
-  public void setAD_Element_UU(String AD_Element_UU) {
-    set_Value(COLUMNNAME_AD_Element_UU, AD_Element_UU);
-  }
-
-  /**
+    /**
    * Get DB Column Name.
    *
    * @return Name of the column in the database
@@ -123,16 +92,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
     set_Value(COLUMNNAME_Description, Description);
   }
 
-  /**
-   * Get Entity Type.
-   *
-   * @return Dictionary Entity Type; Determines ownership and synchronization
-   */
-  public String getEntityType() {
-    return (String) get_Value(COLUMNNAME_EntityType);
-  }
-
-  /**
+    /**
    * Set Entity Type.
    *
    * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
@@ -160,79 +120,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
     set_Value(COLUMNNAME_Help, Help);
   }
 
-  /**
-   * Get PO Description.
-   *
-   * @return Description in PO Screens
-   */
-  public String getPO_Description() {
-    return (String) get_Value(COLUMNNAME_PO_Description);
-  }
-
-  /**
-   * Set PO Description.
-   *
-   * @param PO_Description Description in PO Screens
-   */
-  public void setPO_Description(String PO_Description) {
-    set_Value(COLUMNNAME_PO_Description, PO_Description);
-  }
-
-  /**
-   * Get PO Help.
-   *
-   * @return Help for PO Screens
-   */
-  public String getPO_Help() {
-    return (String) get_Value(COLUMNNAME_PO_Help);
-  }
-
-  /**
-   * Set PO Help.
-   *
-   * @param PO_Help Help for PO Screens
-   */
-  public void setPO_Help(String PO_Help) {
-    set_Value(COLUMNNAME_PO_Help, PO_Help);
-  }
-
-  /**
-   * Get PO Name.
-   *
-   * @return Name on PO Screens
-   */
-  public String getPO_Name() {
-    return (String) get_Value(COLUMNNAME_PO_Name);
-  }
-
-  /**
-   * Set PO Name.
-   *
-   * @param PO_Name Name on PO Screens
-   */
-  public void setPO_Name(String PO_Name) {
-    set_Value(COLUMNNAME_PO_Name, PO_Name);
-  }
-
-  /**
-   * Get PO Print name.
-   *
-   * @return Print name on PO Screens/Reports
-   */
-  public String getPO_PrintName() {
-    return (String) get_Value(COLUMNNAME_PO_PrintName);
-  }
-
-  /**
-   * Set PO Print name.
-   *
-   * @param PO_PrintName Print name on PO Screens/Reports
-   */
-  public void setPO_PrintName(String PO_PrintName) {
-    set_Value(COLUMNNAME_PO_PrintName, PO_PrintName);
-  }
-
-  /**
+    /**
    * Get Print Text.
    *
    * @return The label text to be printed on a document or correspondence.

@@ -5,7 +5,4 @@ import java.net.InetAddress;
 public interface IClusterMember {
   String getId();
 
-  InetAddress getAddress();
-
-  int getPort();
 }

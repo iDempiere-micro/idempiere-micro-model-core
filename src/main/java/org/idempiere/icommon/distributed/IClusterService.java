@@ -14,14 +14,7 @@ public interface IClusterService {
   /** @return Local node */
   IClusterMember getLocalMember();
 
-  /**
-   * @param task
-   * @param member
-   * @return Future
-   */
-  <V> Future<V> execute(Callable<V> task, IClusterMember member);
-
-  /**
+    /**
    * @param task
    * @param members
    * @return Map of IClusterMember and Future
