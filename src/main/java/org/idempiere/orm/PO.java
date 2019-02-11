@@ -204,7 +204,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     int pos = value.length() - 1;
     while (pos > 0) {
       String testParentValue = value.substring(0, pos);
-      int parentID = getSQLValueEx(trxName, sql, AD_Client_ID, testParentValue);
+      int parentID = getSQLValueEx(sql, AD_Client_ID, testParentValue);
       if (parentID > 0) return parentID;
       pos--;
     }
@@ -613,7 +613,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
       setKeyInfo();
       setIds(new Object[] {ID});
       // keyColumns = new String[] {p_info.getTableName() + "_ID"};
-      load(trxName);
+      load();
     } else //	new
     {
       loadDefaults();
@@ -709,7 +709,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
    * @return true if loaded
    */
   protected boolean load(HashMap<String, String> hmIn) {
-    if (hmIn == null) return load((String) null);
+    if (hmIn == null) return load();
 
     int size = get_ColumnCount();
     boolean success = true;
@@ -925,7 +925,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 .append(getM_keyColumns()[0])
                 .append("=?")
                 .append(" AND AD_Language=?");
-        retValue = getSQLValueString(null, sql.toString(), ID, AD_Language);
+        retValue = getSQLValueString(sql.toString(), ID, AD_Language);
       }
     }
     //
@@ -1104,7 +1104,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     int pos = value.length() - 1;
     while (pos > 0) {
       String testParentValue = value.substring(0, pos);
-      int parentID = getSQLValueEx(trxName, sql, AD_Client_ID, elementID, testParentValue);
+      int parentID = getSQLValueEx(sql, AD_Client_ID, elementID, testParentValue);
       if (parentID > 0) return parentID;
       pos--;
     }
@@ -1129,8 +1129,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
               + get_WhereClause(true);
       boolean success = false;
       if (isUseTimeoutForUpdate())
-        success = executeUpdateEx(sql, null, QUERY_TIME_OUT) == 1; // 	outside trx
-      else success = executeUpdate(sql, null) == 1; // 	outside trx
+        success = executeUpdateEx(sql) == 1; // 	outside trx
+      else success = executeUpdate(sql) == 1; // 	outside trx
       if (success) log.fine("success");
       else log.log(Level.WARNING, "failed");
       return success;
@@ -1165,8 +1165,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
       String sql =
           "UPDATE " + p_info.getTableName() + " SET Processing='N' WHERE " + get_WhereClause(true);
       boolean success = false;
-      if (isUseTimeoutForUpdate()) success = executeUpdateEx(sql, trxName, QUERY_TIME_OUT) == 1;
-      else success = executeUpdate(sql, trxName) == 1;
+      if (isUseTimeoutForUpdate()) success = executeUpdateEx(sql) == 1;
+      else success = executeUpdate(sql) == 1;
       if (success) {
         if (log.isLoggable(Level.FINE))
           log.fine("success" + (trxName == null ? "" : "[" + trxName + "]"));
@@ -1990,13 +1990,13 @@ public abstract class PO extends software.hsharp.core.orm.PO
       if (isUseTimeoutForUpdate())
         no =
             withValues
-                ? executeUpdateEx(sql.toString(), m_trxName, QUERY_TIME_OUT)
-                : executeUpdateEx(sql.toString(), params, m_trxName, QUERY_TIME_OUT);
+                ? executeUpdateEx(sql.toString())
+                : executeUpdateEx(sql.toString(), params);
       else
         no =
             withValues
-                ? executeUpdate(sql.toString(), m_trxName)
-                : executeUpdate(sql.toString(), params, false, m_trxName);
+                ? executeUpdate(sql.toString())
+                : executeUpdate(sql.toString(), params);
       boolean ok = no == 1;
       if (ok) ok = lobSave();
       else {
@@ -2155,7 +2155,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     boolean ok = no == 1;
     if (ok) {
       ok = lobSave();
-      if (!load(m_trxName)) // 	re-read Info
+      if (!load()) // 	re-read Info
       {
         if (m_trxName == null) log.log(Level.SEVERE, "reloading");
         else log.log(Level.SEVERE, "[" + m_trxName + "] - reloading");

@@ -225,7 +225,6 @@ public abstract class PO extends org.idempiere.orm.PO {
     // uuid column
     int uuidColumnId =
         getSQLValue(
-            null,
             "SELECT col.AD_Column_ID FROM AD_Column col INNER JOIN AD_Table tbl ON col.AD_Table_ID = tbl.AD_Table_ID WHERE tbl.TableName=? AND col.ColumnName=?",
             tableName,
             org.idempiere.orm.PO.getUUIDColumnName(tableName));
@@ -270,7 +269,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                 + "WHERE e.AD_Tree_ID=t.AD_Tree_ID AND Node_ID=")
         .append(getId())
         .append(")");
-    int no = executeUpdate(sb.toString(), null);
+    int no = executeUpdate(sb.toString());
     if (no > 0) {
       if (log.isLoggable(Level.FINE)) log.fine("#" + no + " - TreeType=" + treeType);
     } else {
@@ -353,12 +352,12 @@ public abstract class PO extends org.idempiere.orm.PO {
         } else {
           newParentID = retrieveIdOfParentValue(value, sourceTableName, getClientId(), null);
         }
-        int seqNo = getSQLValueEx(null, selMinSeqNo, newParentID, tree.getAD_Tree_ID(), value);
+        int seqNo = getSQLValueEx(selMinSeqNo, newParentID, tree.getAD_Tree_ID(), value);
         if (seqNo == -1)
-          seqNo = getSQLValueEx(null, selMaxSeqNo, newParentID, tree.getAD_Tree_ID(), value);
-        executeUpdateEx(updateSeqNo, new Object[] {newParentID, seqNo, tree.getAD_Tree_ID()}, null);
+          seqNo = getSQLValueEx(selMaxSeqNo, newParentID, tree.getAD_Tree_ID(), value);
+        executeUpdateEx(updateSeqNo, new Object[] {newParentID, seqNo, tree.getAD_Tree_ID()});
         executeUpdateEx(
-            update, new Object[] {seqNo, newParentID, getId(), tree.getAD_Tree_ID()}, null);
+            update, new Object[] {seqNo, newParentID, getId(), tree.getAD_Tree_ID()});
       }
     }
   } //	update_Tree
@@ -381,7 +380,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             .append(" WHERE Parent_ID=? AND t.TreeType=?");
     if (MTree_Base.TREETYPE_CustomTable.equals(treeType))
       countSql.append(" AND t.AD_Table_ID=").append(getTableId());
-    int cnt = getSQLValueEx(null, countSql.toString(), id, treeType);
+    int cnt = getSQLValueEx(countSql.toString(), id, treeType);
     if (cnt > 0)
       throw new AdempiereException(Msg.getMsg(Env.getCtx(), "NoParentDelete", new Object[] {cnt}));
 
@@ -398,7 +397,7 @@ public abstract class PO extends org.idempiere.orm.PO {
     if (MTree_Base.TREETYPE_CustomTable.equals(treeType))
       sb.append(" AND t.AD_Table_ID=").append(getTableId());
     sb.append(")");
-    int no = executeUpdate(sb.toString(), null);
+    int no = executeUpdate(sb.toString());
     if (no > 0) {
       if (log.isLoggable(Level.FINE)) log.fine("#" + no + " - TreeType=" + treeType);
     } else {
@@ -476,8 +475,8 @@ public abstract class PO extends org.idempiere.orm.PO {
               .append(" WHERE ")
               .append(get_WhereClause(true));
       int no = 0;
-      if (isUseTimeoutForUpdate()) no = executeUpdateEx(sql.toString(), null, QUERY_TIME_OUT);
-      else no = executeUpdate(sql.toString(), null);
+      if (isUseTimeoutForUpdate()) no = executeUpdateEx(sql.toString());
+      else no = executeUpdate(sql.toString());
       success = no == 1;
     } catch (Exception e) {
       String msg = DBException.getDefaultDBExceptionMessage(e);

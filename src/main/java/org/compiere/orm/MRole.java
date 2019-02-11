@@ -187,7 +187,7 @@ public class MRole extends MBaseRole {
       s_roles.put(key, role);
       if (AD_Role_ID == 0) {
         String trxName = null;
-        role.load(trxName); // 	special Handling
+        role.load(); // 	special Handling
       }
       role.setAD_User_ID(AD_User_ID);
       role.loadAccess(reload);
@@ -252,13 +252,12 @@ public class MRole extends MBaseRole {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, null);
+      pstmt = prepareStatement(sql);
       rs = pstmt.executeQuery();
       while (rs.next()) list.add(new MRole(ctx, rs, null));
     } catch (Exception e) {
       s_log.log(Level.SEVERE, sql, e);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -592,12 +591,12 @@ public class MRole extends MBaseRole {
 
     if (reset) deleteAccessRecords();
 
-    int win = executeUpdateEx(sqlWindow + roleAccessLevelWin, null);
-    int proc = executeUpdateEx(sqlProcess + roleAccessLevel, null);
-    int form = executeUpdateEx(sqlForm + roleAccessLevel, null);
-    int wf = executeUpdateEx(sqlWorkflow + roleAccessLevel, null);
-    int docact = executeUpdateEx(sqlDocAction, null);
-    int info = executeUpdateEx(sqlInfo, null);
+    int win = executeUpdateEx(sqlWindow + roleAccessLevelWin);
+    int proc = executeUpdateEx(sqlProcess + roleAccessLevel);
+    int form = executeUpdateEx(sqlForm + roleAccessLevel);
+    int wf = executeUpdateEx(sqlWorkflow + roleAccessLevel);
+    int docact = executeUpdateEx(sqlDocAction);
+    int info = executeUpdateEx(sqlInfo);
 
     loadAccess(true);
     return "@AD_Window_ID@ #"
@@ -618,12 +617,12 @@ public class MRole extends MBaseRole {
   private void deleteAccessRecords() {
     String whereDel = " WHERE AD_Role_ID=" + getAD_Role_ID();
     //
-    int winDel = executeUpdateEx("DELETE FROM AD_Window_Access" + whereDel, null);
-    int procDel = executeUpdateEx("DELETE FROM AD_Process_Access" + whereDel, null);
-    int formDel = executeUpdateEx("DELETE FROM AD_Form_Access" + whereDel, null);
-    int wfDel = executeUpdateEx("DELETE FROM AD_WorkFlow_Access" + whereDel, null);
-    int docactDel = executeUpdateEx("DELETE FROM AD_Document_Action_Access" + whereDel, null);
-    int infoDel = executeUpdateEx("DELETE FROM AD_InfoWindow_Access" + whereDel, null);
+    int winDel = executeUpdateEx("DELETE FROM AD_Window_Access" + whereDel);
+    int procDel = executeUpdateEx("DELETE FROM AD_Process_Access" + whereDel);
+    int formDel = executeUpdateEx("DELETE FROM AD_Form_Access" + whereDel);
+    int wfDel = executeUpdateEx("DELETE FROM AD_WorkFlow_Access" + whereDel);
+    int docactDel = executeUpdateEx("DELETE FROM AD_Document_Action_Access" + whereDel);
+    int infoDel = executeUpdateEx("DELETE FROM AD_InfoWindow_Access" + whereDel);
 
     if (log.isLoggable(Level.FINE))
       log.fine(
@@ -729,7 +728,7 @@ public class MRole extends MBaseRole {
     ResultSet rs = null;
     String sql = "SELECT * FROM AD_User_OrgAccess " + "WHERE AD_User_ID=? AND IsActive='Y'";
     try {
-      pstmt = prepareStatement(sql, null);
+      pstmt = prepareStatement(sql);
       pstmt.setInt(1, getAD_User_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
@@ -739,7 +738,6 @@ public class MRole extends MBaseRole {
     } catch (Exception e) {
       log.log(Level.SEVERE, sql, e);
     } finally {
-      close(rs, pstmt);
     }
   } //	loadOrgAccessRole
 
@@ -774,7 +772,7 @@ public class MRole extends MBaseRole {
         "SELECT * FROM AD_Record_Access "
             + "WHERE AD_Role_ID=? AND IsActive='Y' ORDER BY AD_Table_ID";
     try {
-      pstmt = prepareStatement(sql, null);
+      pstmt = prepareStatement(sql);
       pstmt.setInt(1, getAD_Role_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
@@ -785,7 +783,6 @@ public class MRole extends MBaseRole {
     } catch (Exception e) {
       log.log(Level.SEVERE, sql, e);
     } finally {
-      close(rs, pstmt);
     }
     m_recordAccess = new MRecordAccess[list.size()];
     list.toArray(m_recordAccess);
@@ -1180,7 +1177,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1195,7 +1192,6 @@ public class MRole extends MBaseRole {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        close(rs, pstmt);
       }
       //
       setAccessMap(
@@ -1264,7 +1260,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1279,7 +1275,6 @@ public class MRole extends MBaseRole {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        close(rs, pstmt);
       }
       setAccessMap(
           "m_processAccess", mergeAccess(getAccessMap("m_processAccess"), directAccess, true));
@@ -1342,7 +1337,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1357,7 +1352,6 @@ public class MRole extends MBaseRole {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        close(rs, pstmt);
       }
       setAccessMap("m_taskAccess", mergeAccess(getAccessMap("m_taskAccess"), directAccess, true));
     } //	reload
@@ -1419,7 +1413,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1434,7 +1428,6 @@ public class MRole extends MBaseRole {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        close(rs, pstmt);
       }
       setAccessMap("m_formAccess", mergeAccess(getAccessMap("m_formAccess"), directAccess, true));
     } //	reload
@@ -1496,7 +1489,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -1511,7 +1504,6 @@ public class MRole extends MBaseRole {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        close(rs, pstmt);
       }
       setAccessMap(
           "m_workflowAccess", mergeAccess(getAccessMap("m_workflowAccess"), directAccess, true));
@@ -1881,7 +1873,7 @@ public class MRole extends MBaseRole {
                   + sql_values
                   + ")";
 
-          pstmt = prepareStatement(sql, null);
+          pstmt = prepareStatement(sql);
           pstmt.setInt(idxpar++, role.getAD_Role_ID());
           pstmt.setString(idxpar++, doc.getDocBaseType());
           if (MDocType.DOCBASETYPE_SalesOrder.equals(doc.getDocBaseType()))
@@ -1901,7 +1893,7 @@ public class MRole extends MBaseRole {
                   + " AND rl.Value IN ("
                   + sql_values
                   + ")";
-          pstmt = prepareStatement(sql, null);
+          pstmt = prepareStatement(sql);
           pstmt.setInt(idxpar++, clientId);
           pstmt.setInt(idxpar++, docTypeId);
           pstmt.setInt(idxpar++, role.getAD_Role_ID());
@@ -1921,14 +1913,12 @@ public class MRole extends MBaseRole {
           }
         }
 
-        close(rs, pstmt);
       }
 
       validOptions.toArray(options);
     } catch (SQLException e) {
       log.log(Level.SEVERE, sql, e);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -2229,7 +2219,7 @@ public class MRole extends MBaseRole {
       ResultSet rs = null;
       HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setInt(1, getAD_Role_ID());
         rs = pstmt.executeQuery();
         while (rs.next()) {
@@ -2244,7 +2234,6 @@ public class MRole extends MBaseRole {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        close(rs, pstmt);
       }
       setAccessMap("m_infoAccess", mergeAccess(getAccessMap("m_infoAccess"), directAccess, true));
     } //	reload

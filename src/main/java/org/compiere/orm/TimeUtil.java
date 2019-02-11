@@ -3,11 +3,8 @@ package org.compiere.orm;
 import org.idempiere.common.util.Language;
 
 import java.sql.Timestamp;
-import java.util.BitSet;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import static software.hsharp.core.util.DBKt.getSQLValueTSEx;
 
 public class TimeUtil {
   /** Truncate Day - D */

@@ -126,7 +126,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
    */
   public static int getID(int Table_ID, int Record_ID) {
     String sql = "SELECT AD_Attachment_ID FROM AD_Attachment WHERE AD_Table_ID=? AND Record_ID=?";
-    int attachid = getSQLValue(null, sql, Table_ID, Record_ID);
+    int attachid = getSQLValue(sql, Table_ID, Record_ID);
     return attachid;
   }
 

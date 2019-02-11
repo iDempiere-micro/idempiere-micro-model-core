@@ -1,6 +1,5 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.close;
 import static software.hsharp.core.util.DBKt.prepareStatement;
 
 import java.sql.PreparedStatement;
@@ -8,7 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.compiere.util.Msg;
+
 import org.idempiere.common.util.CLogger;
 
 /**
@@ -75,14 +74,13 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, null);
+      pstmt = prepareStatement(sql);
       pstmt.setInt(1, id);
       rs = pstmt.executeQuery();
       while (rs.next()) list.add(new MUserOrgAccess(ctx, rs, null));
     } catch (Exception e) {
       s_log.log(Level.SEVERE, sql, e);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -130,7 +128,7 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setInt(1, getOrgId());
         rs = pstmt.executeQuery();
         if (rs.next()) {
@@ -140,7 +138,6 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }

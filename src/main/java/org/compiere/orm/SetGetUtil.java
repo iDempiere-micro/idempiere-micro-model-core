@@ -89,14 +89,13 @@ public class SetGetUtil {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql);
       setParameters(pstmt, params);
       rs = pstmt.executeQuery();
       updateColumns(models, columnNames, rs);
     } catch (SQLException e) {
       throw new DBException(e, sql);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }

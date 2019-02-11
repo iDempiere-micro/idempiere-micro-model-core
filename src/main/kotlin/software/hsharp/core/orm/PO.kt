@@ -185,7 +185,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      * @param trxName transaction
      * @return true if loaded
      */
-    fun load(trxName: String?): Boolean {
+    fun load(): Boolean {
         var sql = "SELECT "
         val size = p_info.columnCount
         for (i in 0 until size) {
@@ -387,7 +387,6 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         for (i in s_acctColumns.indices) sb.append(",").append(s_acctColumns[i])
 
         val uuidColumnId = getSQLValue(
-            null,
             "SELECT col.AD_Column_ID FROM AD_Column col INNER JOIN AD_Table tbl ON col.AD_Table_ID = tbl.AD_Table_ID WHERE tbl.TableName=? AND col.ColumnName=?",
             acctTable,
             org.idempiere.orm.PO.getUUIDColumnName(acctTable)
@@ -418,7 +417,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             .append(id)
             .append(")")
         //
-        val no = executeUpdate(sb.toString(), "")
+        val no = executeUpdate(sb.toString())
         if (no > 0) {
             log.trace { "#$no" }
         } else {
@@ -471,7 +470,7 @@ fun getAllIDs(tableName: String, whereClause: String?): IntArray {
     return DB.current.run(loadQuery).toIntArray()
 }
 
-fun getIDsEx(trxName: String?, sql: String, vararg params: Any): IntArray {
+fun getIDsEx(sql: String, vararg params: Any): IntArray {
     val loadQuery = software.hsharp.core.util.queryOf(sql.toString(), listOf(*params)).map { row -> row.int(1) }.asList
     return DB.current.run(loadQuery).toIntArray()
 }

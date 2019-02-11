@@ -106,7 +106,6 @@ public class POResultSet<T extends PO> {
 
   /** Release database resources. */
   public void close() {
-    software.hsharp.core.util.DBKt.close(this.resultSet, this.statement);
     this.resultSet = null;
     this.statement = null;
     currentPO = null;

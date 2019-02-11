@@ -30,86 +30,70 @@ fun isPostgreSQL() = true
 fun isOracle() = false
 internal fun isPagingSupported() = true
 internal fun isQueryTimeoutSupported() = true
-internal const val SQLSTATEMENT_SEPARATOR = "; "
 internal const val NATIVE_MARKER = ""
 
 // QUERY HELPERS
-internal fun getSQLValueEx(trxName: String?, sql: String, params: List<Any?>): Int {
+internal fun getSQLValueEx(sql: String, params: List<Any?>): Int {
     val loadQuery = queryOf(sql, params).map { row -> row.intOrNull(1) }.asSingle
     return DB.current.run(loadQuery) ?: -1
 }
 
-private const val NYI = "Not yet implemented"
+const val NYI = "Not yet implemented"
 
-fun getSQLValue(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
-fun getSQLValueEx(trxName: String?, sql: String, vararg params: Any): Int = getSQLValueEx(trxName, sql, listOf(*params))
-fun getSQLValueEx(trxName: String?, sql: String): Int = getSQLValueEx(trxName, sql, listOf())
+fun getSQLValue(sql: String, vararg params: Any): Int = getSQLValueEx(sql, listOf(*params))
+fun getSQLValueEx(sql: String, vararg params: Any): Int = getSQLValueEx(sql, listOf(*params))
+fun getSQLValueEx(sql: String): Int = getSQLValueEx(sql, listOf())
 
 internal fun getSQLValueBDEx(sql: String, params: List<Any?>): BigDecimal? {
     val loadQuery = queryOf(sql, params).map { row -> row.bigDecimalOrNull(1) }.asSingle
     return DB.current.run(loadQuery)
 }
-fun getSQLValueBD(trxName: String?, sql: String, vararg params: Any): BigDecimal? = getSQLValueBDEx(sql, listOf(*params))
+fun getSQLValueBD(sql: String, vararg params: Any): BigDecimal? = getSQLValueBDEx(sql, listOf(*params))
 
-fun getSQLValueTS(trxName: String, sql: String, vararg params: Any): Timestamp? =
-    throw IllegalArgumentException(NYI)
-
-internal fun getSQLValueTSEx(trxName: String, sql: String, vararg params: Any): Timestamp? =
-    throw IllegalArgumentException(NYI)
-
-fun getSQLValueString(trxName: String?, sql: String, vararg params: Any): String? {
-    val loadQuery = queryOf(sql, listOf(*params)).map { row -> row.stringOrNull(1) }.asSingle
+fun getSQLValueTS(sql: String, vararg params: Any): Timestamp? {
+    val loadQuery = queryOf(sql, listOf(*params)).map { row -> row.sqlTimestampOrNull(1) }.asSingle
     return DB.current.run(loadQuery)
 }
 
-
-internal fun getSQLValueStringEx(trxName: String, sql: String, vararg params: Any): String? =
-    throw IllegalArgumentException(NYI)
+fun getSQLValueString(sql: String, vararg params: Any): String? {
+    val loadQuery = queryOf(sql, listOf(*params)).map { row -> row.stringOrNull(1) }.asSingle
+    return DB.current.run(loadQuery)
+}
 
 fun queryOf(statement: String, params: List<Any?>): Query {
     return Query(statement, params = params)
 }
 
-fun getSQLValueBDEx(trxName: String?, sql: String, params: Array<Any?>): BigDecimal? =
-    throw IllegalArgumentException(NYI)
+fun getSQLValueBDEx(sql: String, params: Array<Any?>): BigDecimal? =
+    getSQLValueBD(sql, params)
 
 // INSERT/UPDATE
-fun executeUpdate(sql: String, trxName: String?): Int =
+fun executeUpdate(sql: String): Int =
     convert.convert(sql).map { DB.current.run(queryOf(it, listOf()).asUpdate) }.sum()
 
 fun executeUpdate(
     sql: String,
-    params: List<Any?>,
-    ignoreError: Boolean,
-    trxName: String?
+    params: List<Any?>
 ): Int = DB.current.run(queryOf(sql, params).asUpdate)
 
 fun executeUpdate(
     sql: String,
-    params: Array<Any?>,
-    ignoreError: Boolean,
-    trxName: String?
+    params: Array<Any?>
 ): Int = DB.current.run(queryOf(sql, params.toList()).asUpdate)
 
-fun executeUpdateEx(sql: String, trxName: String?): Int =
-    executeUpdateEx(sql, arrayOf(), trxName, 0)
+fun executeUpdateEx(sql: String): Int =
+    executeUpdateEx(sql, arrayOf())
 
-fun executeUpdateEx(sql: String, trxName: String?, timeOut: Int): Int =
-    executeUpdateEx(sql, arrayOf(), trxName, timeOut)
-
-fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String?): Int =
-    executeUpdateEx(sql, objects, trxName, 0)
-
-fun executeUpdateEx(sql: String, objects: Array<Any>, trxName: String?, timeOut: Int): Int =
+fun executeUpdateEx(sql: String, objects: Array<Any>): Int =
     DB.current.run(queryOf(convert.convertAll(sql), objects.toList().map { param -> convertParameter(param) }).asUpdate)
 
-fun executeUpdateEx(sql: String, objects: List<Any>, trxName: String?, timeOut: Int): Int =
+fun executeUpdateEx(sql: String, objects: List<Any>): Int =
     DB.current.run(queryOf(convert.convertAll(sql), objects.map { param -> convertParameter(param) }).asUpdate)
 
-fun executeUpdate(sql: String, param: Int, trxName: String?): Int = executeUpdateEx(sql, listOf(param), trxName, 0)
-fun executeUpdate(sql: String, ignoreError: Boolean, trxName: String?): Int {
+fun executeUpdate(sql: String, param: Int): Int = executeUpdateEx(sql, listOf(param))
+fun executeUpdate(sql: String, ignoreError: Boolean): Int {
     return try {
-        executeUpdateEx(sql, listOf(), trxName, 0)
+        executeUpdateEx(sql, listOf())
     } catch (e: Exception) {
         if (ignoreError) {
             -1
@@ -120,19 +104,10 @@ fun executeUpdate(sql: String, ignoreError: Boolean, trxName: String?): Int {
 
 // STATEMENT
 fun prepareStatement(
-    sql: String?,
-    trxName: String?
+    sql: String?
 ): PreparedStatement? {
     return DB.current.connection.underlying.prepareStatement(sql)
 }
-fun prepareStatement(
-    sql: String?,
-    a: Int,
-    b: Int,
-    trxName: String?
-): PreparedStatement? = throw IllegalArgumentException(NYI)
-
-fun createStatement(): PreparedStatement? = throw IllegalArgumentException(NYI)
 
 internal fun convertParameter(param: Any?): Any? {
     if (param == null)
@@ -227,19 +202,7 @@ internal val convert: Convert = Convert_PostgreSQL()
 
 // CONNECTION
 
-internal fun getConnectionID(): Connection? = null
-internal fun createConnection(autoCommit: Boolean, readOnly: Boolean, trxLevel: Int): Connection? =
-    null
-
-internal fun createConnection(autoCommit: Boolean, trxLevel: Int): Connection? = null
-internal fun isConnected(createNew: Boolean): Boolean = !DB.current.connection.underlying.isClosed
-internal fun isConnected() = isConnected(false)
-
-// DUMMY
-fun close(rs: ResultSet?) {}
-
-fun close(st: Statement?) {}
-fun close(rs: ResultSet?, st: Statement?) {}
+internal fun isConnected(): Boolean = !DB.current.connection.underlying.isClosed
 
 // HELPERS
 internal fun addPagingSQL(sql: String, start: Int, end: Int): String {
@@ -266,18 +229,9 @@ internal fun getSQLException(e: Exception): Exception? {
 // SEQUENCE
 
 internal fun getNextID(name: String): Int {
-    return getSQLValueEx(null, "SELECT nextval('" + name.toLowerCase() + "')")
+    return getSQLValueEx("SELECT nextval('" + name.toLowerCase() + "')")
         ?: throw Exception("Sequence $name not found")
 }
-
-internal fun createSequence(
-    name: String,
-    increment: Int,
-    minvalue: Int,
-    maxvalue: Int,
-    start: Int,
-    trxName: String
-): Boolean = throw IllegalArgumentException(NYI)
 
 /**
  * Lock PO for update
@@ -371,9 +325,9 @@ class DB {
             }
         }
 
-        fun run(operation: () -> Unit) {
+        fun <T> run(operation: () -> T) : T {
             val session = sessionOf(ds)
-            using(session) {
+            return using(session) {
                 it.transaction { tx ->
                     context.set(tx)
                     operation()

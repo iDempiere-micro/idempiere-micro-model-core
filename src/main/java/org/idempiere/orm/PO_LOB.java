@@ -67,7 +67,7 @@ public class PO_LOB implements Serializable {
               .append(m_columnName)
               .append("=null WHERE ")
               .append(m_whereClause);
-      int no = executeUpdate(sql.toString(), trxName);
+      int no = executeUpdate(sql.toString());
       if (log.isLoggable(Level.FINE))
         log.fine("save [" + trxName + "] #" + no + " - no data - set to null - " + m_value);
       if (no == 0) log.warning("[" + trxName + "] - not updated - " + sql);
@@ -84,19 +84,11 @@ public class PO_LOB implements Serializable {
     //
 
     if (log.isLoggable(Level.FINE)) log.fine("[" + trxName + "] - Local - " + m_value);
-    //	Connection
-    Connection con = null;
-    //	Create Connection
-    if (con == null) con = createConnection(false, Connection.TRANSACTION_READ_COMMITTED);
-    if (con == null) {
-      log.log(Level.SEVERE, "Could not get Connection");
-      return false;
-    }
 
     PreparedStatement pstmt = null;
     boolean success = true;
     try {
-      pstmt = con.prepareStatement(sql.toString());
+      pstmt = prepareStatement(sql.toString());
       if (m_displayType == DisplayType.TextLong) pstmt.setString(1, (String) m_value);
       else pstmt.setBytes(1, (byte[]) m_value);
       int no = pstmt.executeUpdate();
@@ -108,7 +100,6 @@ public class PO_LOB implements Serializable {
       log.log(Level.SEVERE, "[" + trxName + "] - " + sql, e);
       success = false;
     } finally {
-      close(pstmt);
       pstmt = null;
     }
 

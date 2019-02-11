@@ -157,7 +157,7 @@ public class MOrg extends X_AD_Org {
     if (m_linkedBPartner == null) {
       int C_BPartner_ID =
           getSQLValue(
-              trxName, "SELECT C_BPartner_ID FROM C_BPartner WHERE AD_OrgBP_ID=?", getOrgId());
+              "SELECT C_BPartner_ID FROM C_BPartner WHERE AD_OrgBP_ID=?", getOrgId());
       if (C_BPartner_ID < 0) // 	not found = -1
       C_BPartner_ID = 0;
       m_linkedBPartner = new Integer(C_BPartner_ID);

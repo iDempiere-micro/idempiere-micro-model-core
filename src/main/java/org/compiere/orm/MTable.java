@@ -2,7 +2,6 @@ package org.compiere.orm;
 
 import static software.hsharp.core.orm.MBaseTableKt.getFactoryList;
 import static software.hsharp.core.orm.MBaseTableKt.getTableCache;
-import static software.hsharp.core.util.DBKt.close;
 import static software.hsharp.core.util.DBKt.prepareStatement;
 
 import java.sql.PreparedStatement;
@@ -11,7 +10,6 @@ import java.util.*;
 import java.util.logging.Level;
 import kotliquery.Row;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.POInfo;
 import software.hsharp.core.orm.MBaseTable;
 import software.hsharp.core.orm.MBaseTableKt;
@@ -149,7 +147,7 @@ public class MTable extends MBaseTable {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(SQL, null);
+      pstmt = prepareStatement(SQL);
       pstmt.setString(1, tableName);
       rs = pstmt.executeQuery();
       if (rs.next()) retValue = rs.getInt(1);
@@ -157,7 +155,6 @@ public class MTable extends MBaseTable {
       s_log.log(Level.SEVERE, SQL, e);
       retValue = -1;
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -328,7 +325,7 @@ public class MTable extends MBaseTable {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql);
       if (params != null && params.length > 0) {
         for (int i = 0; i < params.length; i++) {
           pstmt.setObject(i + 1, params[i]);
@@ -342,7 +339,6 @@ public class MTable extends MBaseTable {
       log.log(Level.SEVERE, sql, e);
       log.saveError("Error", e);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }

@@ -1,6 +1,5 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.close;
 import static software.hsharp.core.util.DBKt.prepareStatement;
 
 import java.sql.PreparedStatement;
@@ -105,14 +104,13 @@ public class MTableAccess extends X_AD_Table_Access {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setInt(1, getAD_Table_ID());
         rs = pstmt.executeQuery();
         if (rs.next()) m_tableName = rs.getString(1);
       } catch (Exception e) {
         log.log(Level.SEVERE, "getTableName", e);
       } finally {
-        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }

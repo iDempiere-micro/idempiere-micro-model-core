@@ -2,13 +2,8 @@ package org.compiere.orm;
 
 import org.idempiere.common.util.CLogger;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
-import java.util.logging.Level;
-
-import static software.hsharp.core.util.DBKt.close;
-import static software.hsharp.core.util.DBKt.prepareStatement;
 
 /**
  * (Disk) Tree Node Model Product

@@ -1,6 +1,5 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.close;
 import static software.hsharp.core.util.DBKt.prepareStatement;
 
 import java.sql.PreparedStatement;
@@ -371,14 +370,13 @@ public class MSysConfig extends MBaseSysConfig {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setString(1, getName());
         rs = pstmt.executeQuery();
         if (rs.next()) configLevel = rs.getString(1);
       } catch (SQLException e) {
         s_log.log(Level.SEVERE, "getValue", e);
       } finally {
-        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }
@@ -391,7 +389,7 @@ public class MSysConfig extends MBaseSysConfig {
           sql =
               "SELECT ConfigurationLevel FROM AD_SysConfig WHERE Name=? AND AD_Client_ID = ? AND AD_Org_ID = 0";
           try {
-            pstmt = prepareStatement(sql, null);
+            pstmt = prepareStatement(sql);
             pstmt.setString(1, getName());
             pstmt.setInt(2, getClientId());
             rs = pstmt.executeQuery();
@@ -399,7 +397,6 @@ public class MSysConfig extends MBaseSysConfig {
           } catch (SQLException e) {
             s_log.log(Level.SEVERE, "getValue", e);
           } finally {
-            close(rs, pstmt);
             rs = null;
             pstmt = null;
           }

@@ -249,7 +249,6 @@ public class MColumn extends X_AD_Column {
     if (isIdentifier()) {
       int cnt =
           getSQLValue(
-              null,
               "SELECT COUNT(*) FROM AD_Column "
                   + "WHERE AD_Table_ID=?"
                   + " AND AD_Column_ID!=?"
@@ -525,7 +524,6 @@ public class MColumn extends X_AD_Column {
       if (X_AD_Reference.VALIDATIONTYPE_TableValidation.equals(ref.getValidationType())) {
         int cnt =
             getSQLValueEx(
-                null,
                 "SELECT COUNT(*) FROM AD_Ref_Table WHERE AD_Reference_ID=?",
                 getAD_Reference_Value_ID());
         if (cnt == 1) {
@@ -575,7 +573,7 @@ public class MColumn extends X_AD_Column {
             + "       JOIN AD_Field f ON ( f.AD_Tab_ID = t.AD_Tab_ID ) "
             + "WHERE  f.AD_Column_ID = ? "
             + "       AND ( t.IsAdvancedTab = 'Y' OR f.IsAdvancedField = 'Y' )";
-    int cnt = getSQLValueEx(null, sql, getColumnId());
+    int cnt = getSQLValueEx(sql, getColumnId());
     return cnt > 0;
   }
 } //	MColumn

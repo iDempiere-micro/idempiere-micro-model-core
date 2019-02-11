@@ -1,6 +1,5 @@
 package org.compiere.orm;
 
-import static software.hsharp.core.util.DBKt.close;
 import static software.hsharp.core.util.DBKt.prepareStatement;
 
 import java.sql.PreparedStatement;
@@ -49,7 +48,7 @@ public class MRecordAccess extends X_AD_Record_Access {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, null);
+      pstmt = prepareStatement(sql);
       pstmt.setInt(1, getAD_Table_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
@@ -60,7 +59,6 @@ public class MRecordAccess extends X_AD_Record_Access {
     } catch (Exception e) {
       log.log(Level.SEVERE, sql, e);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -171,7 +169,7 @@ public class MRecordAccess extends X_AD_Record_Access {
       PreparedStatement pstmt = null;
       ResultSet rs = null;
       try {
-        pstmt = prepareStatement(sql, null);
+        pstmt = prepareStatement(sql);
         pstmt.setInt(1, getAD_Table_ID());
         rs = pstmt.executeQuery();
         if (rs.next()) {
@@ -180,7 +178,6 @@ public class MRecordAccess extends X_AD_Record_Access {
       } catch (Exception e) {
         log.log(Level.SEVERE, sql, e);
       } finally {
-        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }

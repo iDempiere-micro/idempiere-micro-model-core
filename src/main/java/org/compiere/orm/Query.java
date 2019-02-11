@@ -173,7 +173,7 @@ public class Query extends BaseQuery {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql);
       rs = createResultSet(pstmt);
       if (rs.next()) {
         id = rs.getInt(1);
@@ -184,7 +184,6 @@ public class Query extends BaseQuery {
     } catch (SQLException e) {
       throw new DBException(e, sql);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -245,7 +244,7 @@ public class Query extends BaseQuery {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, this.trxName);
+      pstmt = prepareStatement(sql);
       rs = createResultSet(pstmt);
       if (rs.next()) {
         if (returnType.isAssignableFrom(BigDecimal.class)) {
@@ -272,7 +271,6 @@ public class Query extends BaseQuery {
     } catch (SQLException e) {
       throw new DBException(e, sql);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -305,13 +303,12 @@ public class Query extends BaseQuery {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, this.trxName);
+      pstmt = prepareStatement(sql);
       rs = createResultSet(pstmt);
       if (rs.next()) return true;
     } catch (SQLException e) {
       throw new DBException(e, sql);
     } finally {
-      close(rs, pstmt);
     }
     return false;
   }
@@ -340,7 +337,7 @@ public class Query extends BaseQuery {
     ResultSet rs = null;
     List<Object[]> idList = new ArrayList<Object[]>();
     try {
-      pstmt = prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql);
       rs = createResultSet(pstmt);
       while (rs.next()) {
         Object[] ids = new Object[keys.length];
@@ -353,7 +350,6 @@ public class Query extends BaseQuery {
       log.log(Level.SEVERE, sql, e);
       throw new DBException(e, sql);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -374,7 +370,7 @@ public class Query extends BaseQuery {
     ResultSet rs = null;
     POResultSet<T> rsPO = null;
     try {
-      pstmt = prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql);
       rs = createResultSet(pstmt);
       rsPO = new POResultSet<T>(table, pstmt, rs, trxName);
       rsPO.setCloseOnError(true);
@@ -385,7 +381,6 @@ public class Query extends BaseQuery {
     } finally {
       // If there was an error, then close the statement and resultset
       if (rsPO == null) {
-        close(rs, pstmt);
         rs = null;
         pstmt = null;
       }

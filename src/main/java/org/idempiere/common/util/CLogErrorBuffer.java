@@ -140,7 +140,7 @@ public class CLogErrorBuffer extends Handler {
         // String className = record.getSourceClassName();		//	physical class
         String methodName = record.getSourceMethodName(); //
         if (methodName == null) methodName = "";
-        if (isConnected(false)
+        if (isConnected()
             && methodName != null
             && !methodName.equals("saveError")
             && !methodName.equals("get_Value")

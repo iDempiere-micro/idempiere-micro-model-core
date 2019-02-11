@@ -323,7 +323,6 @@ public class MSequence extends MBaseSequence {
                     } else {
                       String value =
                           getSQLValueString(
-                              trxName,
                               "SELECT "
                                   + columnName
                                   + " FROM "
@@ -460,21 +459,7 @@ public class MSequence extends MBaseSequence {
         MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false);
 
     if (tableID && SYSTEM_NATIVE_SEQUENCE) {
-      int next_id =
-          getSQLValueEx(
-              trxName,
-              "SELECT CurrentNext FROM AD_Sequence WHERE Name=? AND IsActive='Y' AND IsTableID='Y' AND IsAutoSequence='Y'",
-              TableName);
-      if (next_id == -1) {
-        MSequence seq = new MSequence(ctx, 0, trxName);
-        seq.setClientOrg(0, 0);
-        seq.setName(TableName);
-        seq.setDescription("Table " + TableName);
-        seq.setIsTableID(tableID);
-        seq.saveEx();
-        next_id = INIT_NO;
-      }
-      return !createSequence(TableName + "_SQ", 1, INIT_NO, Integer.MAX_VALUE, next_id, trxName);
+      throw new IllegalArgumentException(NYI);
     }
 
     MSequence seq = new MSequence(ctx, 0, trxName);
@@ -530,7 +515,7 @@ public class MSequence extends MBaseSequence {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
-      pstmt = prepareStatement(sql, trxName);
+      pstmt = prepareStatement(sql);
       pstmt.setString(1, tableName.toUpperCase());
       pstmt.setString(2, (tableID ? "Y" : "N"));
       if (!tableID) pstmt.setInt(3, Env.getClientId(Env.getCtx()));
@@ -540,7 +525,6 @@ public class MSequence extends MBaseSequence {
     } catch (Exception e) {
       throw new DBException(e);
     } finally {
-      close(rs, pstmt);
       rs = null;
       pstmt = null;
     }
@@ -557,7 +541,6 @@ public class MSequence extends MBaseSequence {
     String tableName = getName();
     int AD_Column_ID =
         getSQLValue(
-            null,
             "SELECT MAX(c.AD_Column_ID) "
                 + "FROM AD_Table t"
                 + " INNER JOIN AD_Column c ON (t.AD_Table_ID=c.AD_Table_ID) "
@@ -580,7 +563,7 @@ public class MSequence extends MBaseSequence {
     //	Current Next
     String sql = "SELECT MAX(" + tableName + "_ID) FROM " + tableName;
     if (IDRangeEnd > 0) sql += " WHERE " + tableName + "_ID < " + IDRangeEnd;
-    int maxTableID = getSQLValue(null, sql);
+    int maxTableID = getSQLValue(sql);
     if (maxTableID < INIT_NO) maxTableID = INIT_NO - 1;
     maxTableID++; //	Next
 
@@ -601,7 +584,7 @@ public class MSequence extends MBaseSequence {
             + tableName
             + "_ID < "
             + INIT_NO;
-    int maxTableSysID = getSQLValue(null, sql);
+    int maxTableSysID = getSQLValue(sql);
     if (maxTableSysID <= 0) maxTableSysID = INIT_SYS_NO;
     int currentNextSysValue = getCurrentNextSys();
     if (currentNextSysValue < maxTableSysID) {
