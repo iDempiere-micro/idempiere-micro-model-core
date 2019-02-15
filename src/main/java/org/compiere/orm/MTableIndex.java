@@ -22,8 +22,8 @@ public class MTableIndex extends X_AD_TableIndex {
    * @param AD_TableIndex_ID table index
    * @param trxName trx name
    */
-  public MTableIndex(Properties ctx, int AD_TableIndex_ID, String trxName) {
-    super(ctx, AD_TableIndex_ID, trxName);
+  public MTableIndex(Properties ctx, int AD_TableIndex_ID) {
+    super(ctx, AD_TableIndex_ID);
     if (AD_TableIndex_ID == 0) {
       setEntityType(PO.ENTITYTYPE_UserMaintained);
       setIsUnique(false);
@@ -44,8 +44,8 @@ public class MTableIndex extends X_AD_TableIndex {
         new Query(
             getCtx(),
             MIndexColumn.Table_Name,
-            MIndexColumn.COLUMNNAME_AD_TableIndex_ID + "=?",
-            null);
+            MIndexColumn.COLUMNNAME_AD_TableIndex_ID + "=?"
+        );
     query.setParameters(getAD_TableIndex_ID());
     query.setOrderBy(MIndexColumn.COLUMNNAME_SeqNo);
     List<MIndexColumn> list = query.list();

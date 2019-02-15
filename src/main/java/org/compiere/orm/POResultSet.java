@@ -33,7 +33,7 @@ public class POResultSet<T extends PO> {
    * @param rs
    * @param trxName
    */
-  public POResultSet(MTable table, PreparedStatement ps, ResultSet rs, String trxName) {
+  public POResultSet(MTable table, PreparedStatement ps, ResultSet rs) {
     this.table = table;
     this.statement = ps;
     this.resultSet = rs;
@@ -74,7 +74,7 @@ public class POResultSet<T extends PO> {
     }
     try {
       if (resultSet.next()) {
-        return (T) table.getPO(resultSet, trxName);
+        return (T) table.getPO(resultSet);
       } else {
         this.close(); // close it if there is no more data to read
         return null;

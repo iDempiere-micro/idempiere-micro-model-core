@@ -38,8 +38,8 @@ public class MClient extends X_AD_Client {
    * @param createNew create new
    * @param trxName transaction
    */
-  public MClient(Properties ctx, int AD_Client_ID, boolean createNew, String trxName) {
-    super(ctx, AD_Client_ID, trxName);
+  public MClient(Properties ctx, int AD_Client_ID, boolean createNew) {
+    super(ctx, AD_Client_ID);
     createNew = createNew;
     if (AD_Client_ID == 0) {
       if (createNew) {
@@ -65,8 +65,8 @@ public class MClient extends X_AD_Client {
    * @param AD_Client_ID id
    * @param trxName transaction
    */
-  public MClient(Properties ctx, int AD_Client_ID, String trxName) {
-    this(ctx, AD_Client_ID, false, trxName);
+  public MClient(Properties ctx, int AD_Client_ID) {
+    this(ctx, AD_Client_ID, false);
   } //	MClient
 
   /**
@@ -76,8 +76,8 @@ public class MClient extends X_AD_Client {
    * @param rs result set
    * @param trxName transaction
    */
-  public MClient(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MClient(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MClient
 
   public MClient(Properties ctx, Row row) {
@@ -90,8 +90,8 @@ public class MClient extends X_AD_Client {
    * @param ctx context
    * @param trxName transaction
    */
-  public MClient(Properties ctx, String trxName) {
-    this(ctx, Env.getClientId(ctx), trxName);
+  public MClient(Properties ctx) {
+    this(ctx, Env.getClientId(ctx));
   } //	MClient
 
   /**
@@ -115,7 +115,7 @@ public class MClient extends X_AD_Client {
     Integer key = new Integer(AD_Client_ID);
     MClient client = s_cache.get(key);
     if (client != null) return client;
-    client = new MClient(ctx, AD_Client_ID, null);
+    client = new MClient(ctx, AD_Client_ID);
     s_cache.put(key, client);
     return client;
   } //	get
@@ -139,9 +139,9 @@ public class MClient extends X_AD_Client {
    */
   public static MClient[] getAll(Properties ctx, String orderBy) {
     List<MClient> list =
-        new Query(ctx, I_AD_Client.Table_Name, null, null).setOrderBy(orderBy).list();
+        new Query(ctx, I_AD_Client.Table_Name, null).setOrderBy(orderBy).list();
     for (MClient client : list) {
-      s_cache.put(new Integer(client.getClientId()), client);
+      s_cache.put(client.getClientId(), client);
     }
     MClient[] retValue = new MClient[list.size()];
     list.toArray(retValue);
@@ -154,7 +154,7 @@ public class MClient extends X_AD_Client {
    * @return Client Info
    */
   public MClientInfo getInfo() {
-    if (m_info == null) m_info = MClientInfo.get(getCtx(), getClientId(), null);
+    if (m_info == null) m_info = MClientInfo.get(getCtx(), getClientId());
     return m_info;
   } //	getMClientInfo
 

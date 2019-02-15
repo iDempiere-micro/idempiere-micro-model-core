@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.HasName;
 import org.compiere.model.I_AD_StorageProvider;
-import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
 
 /**
@@ -19,14 +18,14 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_StorageProvider(Properties ctx, int AD_StorageProvider_ID, String trxName) {
-    super(ctx, AD_StorageProvider_ID, trxName);
+  public X_AD_StorageProvider(Properties ctx, int AD_StorageProvider_ID) {
+    super(ctx, AD_StorageProvider_ID);
     /** if (AD_StorageProvider_ID == 0) { setAD_StorageProvider_ID (0); setName (null); } */
   }
 
   /** Load Constructor */
-  public X_AD_StorageProvider(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_StorageProvider(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

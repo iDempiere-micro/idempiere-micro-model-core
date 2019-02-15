@@ -3,7 +3,6 @@ package org.compiere.orm;
 import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_AD_Record_Access;
-import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
 
 /**
@@ -18,8 +17,8 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Record_Access(Properties ctx, int AD_Record_Access_ID, String trxName) {
-    super(ctx, AD_Record_Access_ID, trxName);
+  public X_AD_Record_Access(Properties ctx, int AD_Record_Access_ID) {
+    super(ctx, AD_Record_Access_ID);
     /**
      * if (AD_Record_Access_ID == 0) { setAD_Role_ID (0); setAD_Table_ID (0); setIsDependentEntities
      * (false); // N setIsExclude (true); // Y setIsReadOnly (false); setRecord_ID (0); }
@@ -27,8 +26,8 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
   }
 
   /** Load Constructor */
-  public X_AD_Record_Access(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Record_Access(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

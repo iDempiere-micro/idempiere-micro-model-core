@@ -85,7 +85,7 @@ public class SetGetUtil {
    * @see #updateColumns(SetGetModel[], String[], ResultSet)
    */
   public static void updateColumns(
-      SetGetModel[] models, String[] columnNames, String sql, Object[] params, String trxName) {
+      SetGetModel[] models, String[] columnNames, String sql, Object[] params) {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
     try {
@@ -102,8 +102,8 @@ public class SetGetUtil {
   } //	updateColumns
 
     public static void updateColumns(
-      SetGetModel model, String[] columnNames, String sql, String trxName) {
-    updateColumns(new SetGetModel[] {model}, columnNames, sql, null, trxName);
+      SetGetModel model, String[] columnNames, String sql) {
+    updateColumns(new SetGetModel[] {model}, columnNames, sql, null);
   }
 
   /**
@@ -276,7 +276,7 @@ public class SetGetUtil {
         .append("_ID=")
         .append(from_id);
 
-    updateColumns(to, includeFields, sql.toString(), null);
+    updateColumns(to, includeFields, sql.toString());
     return true;
   }
 

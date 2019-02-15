@@ -33,6 +33,6 @@ internal fun getValue(name: String, defaultValue: String?, clientId: Int, orgId:
 open class MBaseSysConfig : X_AD_SysConfig {
     constructor(ctx: Properties, r: Row) : super(ctx, r)
 
-    constructor(ctx: Properties, AD_SysConfig_ID: Int, trxName: String) : super(ctx, AD_SysConfig_ID, trxName)
-    constructor(ctx: Properties, rs: ResultSet, trxName: String) : super(ctx, rs, trxName)
+    constructor(ctx: Properties, AD_SysConfig_ID: Int) : super(ctx, AD_SysConfig_ID)
+    constructor(ctx: Properties, rs: ResultSet) : super(ctx, rs)
 }

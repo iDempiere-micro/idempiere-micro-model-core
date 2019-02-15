@@ -19,13 +19,13 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Org(Properties ctx, int AD_Org_ID, String trxName) {
-    super(ctx, AD_Org_ID, trxName);
+  public X_AD_Org(Properties ctx, int AD_Org_ID) {
+    super(ctx, AD_Org_ID);
   }
 
   /** Load Constructor */
-  public X_AD_Org(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Org(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
   public X_AD_Org(Properties ctx, Row row) {
     super(ctx, row);

@@ -17,8 +17,8 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Sequence_No(Properties ctx, int AD_Sequence_No_ID, String trxName) {
-    super(ctx, AD_Sequence_No_ID, trxName);
+  public X_AD_Sequence_No(Properties ctx, int AD_Sequence_No_ID) {
+    super(ctx, AD_Sequence_No_ID);
     /**
      * if (AD_Sequence_No_ID == 0) { setAD_Sequence_ID (0); setCalendarYearMonth (null);
      * setCurrentNext (0); }
@@ -26,8 +26,8 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
   }
 
   /** Load Constructor */
-  public X_AD_Sequence_No(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Sequence_No(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

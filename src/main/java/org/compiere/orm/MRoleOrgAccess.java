@@ -32,8 +32,8 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @param rs result set
    * @param trxName transaction
    */
-  public MRoleOrgAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MRoleOrgAccess(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MRoleOrgAccess
 
   public MRoleOrgAccess(Properties ctx, Row row) {
@@ -47,8 +47,8 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @param ignored ignored
    * @param trxName transaction
    */
-  public MRoleOrgAccess(Properties ctx, int ignored, String trxName) {
-    super(ctx, 0, trxName);
+  public MRoleOrgAccess(Properties ctx, int ignored) {
+    super(ctx, 0);
     if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
     setIsReadOnly(false);
   } //	MRoleOrgAccess
@@ -60,7 +60,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @param AD_Role_ID role
    */
   public MRoleOrgAccess(MOrg org, int AD_Role_ID) {
-    this(org.getCtx(), 0, null);
+    this(org.getCtx(), 0);
     setClientOrg(org);
     setAD_Role_ID(AD_Role_ID);
   } //	MRoleOrgAccess
@@ -72,7 +72,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
    * @param AD_Org_ID org
    */
   public MRoleOrgAccess(MRole role, int AD_Org_ID) {
-    this(role.getCtx(), 0, null);
+    this(role.getCtx(), 0);
     setClientOrg(role.getClientId(), AD_Org_ID);
     setAD_Role_ID(role.getAD_Role_ID());
   } //	MRoleOrgAccess
@@ -104,7 +104,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
       pstmt = prepareStatement(sql);
       pstmt.setInt(1, id);
       rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new MRoleOrgAccess(ctx, rs, null));
+      while (rs.next()) list.add(new MRoleOrgAccess(ctx, rs));
     } catch (Exception e) {
       s_log.log(Level.SEVERE, "get", e);
     } finally {

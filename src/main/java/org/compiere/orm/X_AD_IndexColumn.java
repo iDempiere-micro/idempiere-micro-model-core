@@ -17,8 +17,8 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn, I_Persiste
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_IndexColumn(Properties ctx, int AD_IndexColumn_ID, String trxName) {
-    super(ctx, AD_IndexColumn_ID, trxName);
+  public X_AD_IndexColumn(Properties ctx, int AD_IndexColumn_ID) {
+    super(ctx, AD_IndexColumn_ID);
     /**
      * if (AD_IndexColumn_ID == 0) { setAD_IndexColumn_ID (0); setAD_TableIndex_ID (0);
      * setEntityType (null); // @SQL=select get_sysconfig('DEFAULT_ENTITYTYPE','U',0,0) from dual }
@@ -26,8 +26,8 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn, I_Persiste
   }
 
   /** Load Constructor */
-  public X_AD_IndexColumn(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_IndexColumn(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

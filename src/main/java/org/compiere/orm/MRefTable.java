@@ -17,8 +17,8 @@ public class MRefTable extends X_AD_Ref_Table {
    *     be used AD_Reference_Value_ID
    * @param trxName trx
    */
-  public MRefTable(Properties ctx, int AD_Reference_ID, String trxName) {
-    super(ctx, AD_Reference_ID, trxName);
+  public MRefTable(Properties ctx, int AD_Reference_ID) {
+    super(ctx, AD_Reference_ID);
     if (AD_Reference_ID == 0) {
       //	setAD_Table_ID (0);
       //	setAD_Display (0);
@@ -35,8 +35,8 @@ public class MRefTable extends X_AD_Ref_Table {
    * @param rs result set
    * @param trxName trx
    */
-  public MRefTable(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MRefTable(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MRefTable
 
   @Override

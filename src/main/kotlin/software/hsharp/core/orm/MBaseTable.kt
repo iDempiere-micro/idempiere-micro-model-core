@@ -67,8 +67,8 @@ private data class MBaseTableDetail(
 )
 
 open class MBaseTable : X_AD_Table {
-    constructor(ctx: Properties, AD_Table_ID: Int, trxName: String?) : super(ctx, AD_Table_ID, trxName)
-    constructor(ctx: Properties, rs: ResultSet?, trxName: String?) : super(ctx, rs, trxName)
+    constructor(ctx: Properties, AD_Table_ID: Int) : super(ctx, AD_Table_ID)
+    constructor(ctx: Properties, rs: ResultSet?) : super(ctx, rs)
     constructor(ctx: Properties, row: Row?) : super(ctx, row)
 
     private fun initDetail(): MBaseTableDetail {
@@ -96,7 +96,7 @@ open class MBaseTable : X_AD_Table {
 
     @Synchronized
     fun getColumns(requery: Boolean): Array<MColumn> {
-        if (m_columns != null && m_columns.isNotEmpty() && !requery) return m_columns
+        if (m_columns.isNotEmpty() && !requery) return m_columns
         return initDetail().m_columns
     } // 	getColumns
 

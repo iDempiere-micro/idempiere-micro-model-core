@@ -31,8 +31,8 @@ public class M_Element extends X_AD_Element {
    * @param AD_Element_ID element
    * @param trxName transaction
    */
-  public M_Element(Properties ctx, int AD_Element_ID, String trxName) {
-    super(ctx, AD_Element_ID, trxName);
+  public M_Element(Properties ctx, int AD_Element_ID) {
+    super(ctx, AD_Element_ID);
     if (AD_Element_ID == 0) {
       //	setColumnName (null);
       //	setEntityType (null);	// U
@@ -52,8 +52,8 @@ public class M_Element extends X_AD_Element {
    * @param rs result set
    * @param trxName transaction
    */
-  public M_Element(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public M_Element(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	M_Element
 
   /**
@@ -64,8 +64,8 @@ public class M_Element extends X_AD_Element {
    * @param EntityType entity type
    * @param trxName trx
    */
-  public M_Element(Properties ctx, String columnName, String EntityType, String trxName) {
-    super(ctx, 0, trxName);
+  public M_Element(Properties ctx, String columnName, String EntityType) {
+    super(ctx, 0);
     setColumnName(columnName);
     setName(columnName);
     setPrintName(columnName);
@@ -80,9 +80,9 @@ public class M_Element extends X_AD_Element {
    * @param trxName optional transaction name
    * @return case sensitive column name
    */
-  public static String getColumnName(String columnName, String trxName) {
+  public static String getColumnName(String columnName) {
     if (columnName == null || columnName.length() == 0) return columnName;
-    M_Element element = get(Env.getCtx(), columnName, trxName);
+    M_Element element = get(Env.getCtx(), columnName);
     if (element == null) return columnName;
     return element.getColumnName();
   } //	getColumnName
@@ -92,27 +92,16 @@ public class M_Element extends X_AD_Element {
    *
    * @param ctx context
    * @param columnName case insensitive column name
-   * @return case sensitive column name
-   */
-  public static M_Element get(Properties ctx, String columnName) {
-    return get(ctx, columnName, null);
-  }
-
-  /**
-   * Get Element
-   *
-   * @param ctx context
-   * @param columnName case insensitive column name
    * @param trxName optional transaction name
    * @return case sensitive column name
    */
-  public static M_Element get(Properties ctx, String columnName, String trxName) {
+  public static M_Element get(Properties ctx, String columnName) {
     if (columnName == null || columnName.length() == 0) return null;
     //
     // TODO: caching if trxName == null
     final String whereClause = "UPPER(ColumnName)=?";
     M_Element retValue =
-        new Query(ctx, I_AD_Element.Table_Name, whereClause, trxName)
+        new Query(ctx, I_AD_Element.Table_Name, whereClause)
             .setParameters(columnName.toUpperCase())
             .firstOnly();
     return retValue;
@@ -126,13 +115,13 @@ public class M_Element extends X_AD_Element {
    * @param trxName trx
    * @return case sensitive column name
    */
-  public static M_Element getOfColumn(Properties ctx, int AD_Column_ID, String trxName) {
+  public static M_Element getOfColumn(Properties ctx, int AD_Column_ID) {
     if (AD_Column_ID == 0) return null;
     final String whereClause =
         "EXISTS (SELECT 1 FROM AD_Column c "
             + "WHERE c.AD_Element_ID=AD_Element.AD_Element_ID AND c.AD_Column_ID=?)";
     M_Element retValue =
-        new Query(ctx, I_AD_Element.Table_Name, whereClause, trxName)
+        new Query(ctx, I_AD_Element.Table_Name, whereClause)
             .setParameters(AD_Column_ID)
             .firstOnly();
     return retValue;

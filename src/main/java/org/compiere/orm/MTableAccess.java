@@ -26,8 +26,8 @@ public class MTableAccess extends X_AD_Table_Access {
    * @param ignored ignored
    * @param trxName transaction
    */
-  public MTableAccess(Properties ctx, int ignored, String trxName) {
-    super(ctx, 0, trxName);
+  public MTableAccess(Properties ctx, int ignored) {
+    super(ctx, 0);
     if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
   } //	MTableAccess
 
@@ -38,8 +38,8 @@ public class MTableAccess extends X_AD_Table_Access {
    * @param rs result set
    * @param trxName transaction
    */
-  public MTableAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MTableAccess(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MTableAccess
 
   public MTableAccess(Properties ctx, Row row) {

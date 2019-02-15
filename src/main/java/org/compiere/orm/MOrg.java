@@ -31,8 +31,8 @@ public class MOrg extends X_AD_Org {
    * @param AD_Org_ID id
    * @param trxName transaction
    */
-  public MOrg(Properties ctx, int AD_Org_ID, String trxName) {
-    super(ctx, AD_Org_ID, trxName);
+  public MOrg(Properties ctx, int AD_Org_ID) {
+    super(ctx, AD_Org_ID);
     if (AD_Org_ID == 0) {
       //	setValue (null);
       //	setName (null);
@@ -47,8 +47,8 @@ public class MOrg extends X_AD_Org {
    * @param rs result set
    * @param trxName transaction
    */
-  public MOrg(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MOrg(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MOrg
   public MOrg(Properties ctx, Row row) {
     super(ctx, row);
@@ -61,7 +61,7 @@ public class MOrg extends X_AD_Org {
    * @param name name
    */
   public MOrg(MClient client, String value, String name) {
-    this(client.getCtx(), 0, null);
+    this(client.getCtx(), 0);
     setADClientID(client.getClientId());
     setValue(value);
     setName(name);
@@ -75,7 +75,7 @@ public class MOrg extends X_AD_Org {
    */
   public static MOrg[] getOfClient(PO po) {
     List<MOrg> list =
-        new Query(po.getCtx(), I_AD_Org.Table_Name, "AD_Client_ID=?", null)
+        new Query(po.getCtx(), I_AD_Org.Table_Name, "AD_Client_ID=?")
             .setOrderBy(I_AD_Org.COLUMNNAME_Value)
             .setOnlyActiveRecords(true)
             .setParameters(po.getClientId())
@@ -96,7 +96,7 @@ public class MOrg extends X_AD_Org {
   public static MOrg get(Properties ctx, int AD_Org_ID) {
     MOrg retValue = s_cache.get(AD_Org_ID);
     if (retValue != null) return retValue;
-    retValue = new MOrg(ctx, AD_Org_ID, null);
+    retValue = new MOrg(ctx, AD_Org_ID);
     if (retValue.getId() != 0) s_cache.put(AD_Org_ID, retValue);
     return retValue;
   } //	get
@@ -107,7 +107,7 @@ public class MOrg extends X_AD_Org {
    * @return Org Info
    */
   public MOrgInfo getInfo() {
-    return MOrgInfo.get(getCtx(), getOrgId(), null);
+    return MOrgInfo.get(getCtx(), getOrgId());
   } //	getMOrgInfo
 
   /**
@@ -126,7 +126,6 @@ public class MOrg extends X_AD_Org {
       //	Access
       MRoleOrgAccess.createForOrg(this);
       MRole role = MRole.getDefault(getCtx(), true); // 	reload
-      role.set_TrxName(null);
       role.loadAccess(true); // reload org access within transaction
       //	TreeNode
       insert_Tree(MTree_Base.TREETYPE_Organization);

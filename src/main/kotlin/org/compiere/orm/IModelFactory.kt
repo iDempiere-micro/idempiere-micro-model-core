@@ -26,7 +26,7 @@ interface IModelFactory {
      * @param trxName
      * @return PO for Record or null
      */
-    fun getPO(tableName: String, Record_ID: Int, trxName: String?): PO
+    fun getPO(tableName: String, Record_ID: Int): PO
 
     /**
      * Get PO Class Instance
@@ -36,7 +36,7 @@ interface IModelFactory {
      * @param trxName transaction
      * @return PO for Record or null
      */
-    fun getPO(tableName: String, rs: ResultSet, trxName: String?): PO
+    fun getPO(tableName: String, rs: ResultSet): PO
 
     fun <T> getPO(tableName: String, row: Row): T
 
@@ -48,5 +48,5 @@ interface IModelFactory {
      * @param trxName transaction
      * @return PO for Record or null
      */
-    fun getPO(tableName: String, rs: ResultSet, trxName: String?, columnNamePrefix: String): PO
+    fun getPO(tableName: String, rs: ResultSet, columnNamePrefix: String): PO
 }

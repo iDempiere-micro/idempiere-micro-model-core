@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.*;
-import org.idempiere.common.util.Env;
-import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
 
 /**
@@ -27,8 +25,8 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
   }
 
   /** Standard Constructor */
-  public X_AD_Column(Properties ctx, int AD_Column_ID, String trxName) {
-    super(ctx, AD_Column_ID, trxName);
+  public X_AD_Column(Properties ctx, int AD_Column_ID) {
+    super(ctx, AD_Column_ID);
     /**
      * if (AD_Column_ID == 0) { setColumnId (0); setAD_Element_ID (0); setReferenceId (0);
      * setAD_Table_ID (0); setColumnName (null); setEntityType (null); // @SQL=select
@@ -42,8 +40,8 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
   }
 
   /** Load Constructor */
-  public X_AD_Column(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Column(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**
@@ -106,7 +104,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
 
     public I_AD_Reference getReference() throws RuntimeException {
     return (I_AD_Reference)
-        MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getReferenceId(), null);
+        MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getReferenceId());
   }
 
   /**
@@ -127,7 +125,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
    */
   public void setReferenceId(int AD_Reference_ID) {
     if (AD_Reference_ID < 1) set_Value(COLUMNNAME_AD_Reference_ID, null);
-    else set_Value(COLUMNNAME_AD_Reference_ID, Integer.valueOf(AD_Reference_ID));
+    else set_Value(COLUMNNAME_AD_Reference_ID, AD_Reference_ID);
   }
 
     /**
@@ -142,7 +140,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
   }
 
     public I_AD_Table getAD_Table() throws RuntimeException {
-    return (I_AD_Table) MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getAD_Table_ID(), null);
+    return (I_AD_Table) MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getAD_Table_ID());
   }
 
   /**
@@ -163,7 +161,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
    */
   public void setAD_Table_ID(int AD_Table_ID) {
     if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
+    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, AD_Table_ID);
   }
 
     /**

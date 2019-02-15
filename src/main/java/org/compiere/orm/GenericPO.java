@@ -29,7 +29,7 @@ public class GenericPO extends PO {
    * @param ID
    */
   public GenericPO(String tableName, Properties ctx, int ID) {
-    super(new PropertiesWrapper(ctx, tableName), ID, null, null);
+    super(new PropertiesWrapper(ctx, tableName), ID, null);
   }
 
   /**
@@ -38,31 +38,11 @@ public class GenericPO extends PO {
    * @param rs
    */
   public GenericPO(String tableName, Properties ctx, ResultSet rs) {
-    super(new PropertiesWrapper(ctx, tableName), 0, null, rs);
+    super(new PropertiesWrapper(ctx, tableName), 0, rs);
   }
 
   public GenericPO(String tableName, Properties ctx, Row row) {
     super(new PropertiesWrapper(ctx, tableName), row);
-  }
-
-  /**
-   * @param tableName
-   * @param ctx
-   * @param ID
-   * @param trxName
-   */
-  public GenericPO(String tableName, Properties ctx, int ID, String trxName) {
-    super(new PropertiesWrapper(ctx, tableName), ID, trxName, null);
-  }
-
-  /**
-   * @param tableName
-   * @param ctx
-   * @param rs
-   * @param trxName
-   */
-  public GenericPO(String tableName, Properties ctx, ResultSet rs, String trxName) {
-    super(new PropertiesWrapper(ctx, tableName), 0, trxName, rs);
   }
 
   public String toString() {

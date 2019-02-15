@@ -39,8 +39,8 @@ public class MRefList extends X_AD_Ref_List {
    * @param AD_Ref_List_ID id
    * @param trxName transaction
    */
-  public MRefList(Properties ctx, int AD_Ref_List_ID, String trxName) {
-    super(ctx, AD_Ref_List_ID, trxName);
+  public MRefList(Properties ctx, int AD_Ref_List_ID) {
+    super(ctx, AD_Ref_List_ID);
     if (AD_Ref_List_ID == 0) {
       //	setReferenceId (0);
       //	setAD_Ref_List_ID (0);
@@ -57,8 +57,8 @@ public class MRefList extends X_AD_Ref_List {
    * @param rs result
    * @param trxName transaction
    */
-  public MRefList(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MRefList(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MRef_List
 
     /**

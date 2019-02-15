@@ -32,8 +32,8 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
    * @param rs result set
    * @param trxName transaction
    */
-  public MUserOrgAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MUserOrgAccess(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MUserOrgAccess
 
   /**
@@ -43,8 +43,8 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
    * @param ignored ignored
    * @param trxName transaction
    */
-  public MUserOrgAccess(Properties ctx, int ignored, String trxName) {
-    super(ctx, 0, trxName);
+  public MUserOrgAccess(Properties ctx, int ignored) {
+    super(ctx, 0);
     if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
     setIsReadOnly(false);
   } //	MUserOrgAccess
@@ -56,7 +56,7 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
    * @param AD_User_ID role
    */
   public MUserOrgAccess(MOrg org, int AD_User_ID) {
-    this(org.getCtx(), 0, null);
+    this(org.getCtx(), 0);
     setClientOrg(org);
     setAD_User_ID(AD_User_ID);
   } //	MUserOrgAccess
@@ -77,7 +77,7 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
       pstmt = prepareStatement(sql);
       pstmt.setInt(1, id);
       rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new MUserOrgAccess(ctx, rs, null));
+      while (rs.next()) list.add(new MUserOrgAccess(ctx, rs));
     } catch (Exception e) {
       s_log.log(Level.SEVERE, sql, e);
     } finally {

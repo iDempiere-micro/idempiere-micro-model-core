@@ -21,8 +21,8 @@ open class MBaseRole : X_AD_Role {
     /** List of Table Access  */
     protected val m_tableAccess: MutableList<MTableAccess> = mutableListOf()
 
-    constructor(ctx: Properties, Id: Int, trxName: String?) : super(ctx, Id, trxName)
-    constructor(ctx: Properties, rs: ResultSet, trxName: String) : super(ctx, rs, trxName)
+    constructor(ctx: Properties, Id: Int) : super(ctx, Id)
+    constructor(ctx: Properties, rs: ResultSet) : super(ctx, rs)
     constructor(ctx: Properties, row: Row) : super(ctx, row)
 
     /** Org Access Summary  */
@@ -51,12 +51,12 @@ open class MBaseRole : X_AD_Role {
         /**
          * Equals
          *
-         * @param obj object to compare
+         * @param other object to compare
          * @return true if equals
          */
-        override fun equals(obj: Any?): Boolean {
-            if (obj != null && obj is OrgAccess) {
-                val comp = obj as OrgAccess?
+        override fun equals(other: Any?): Boolean {
+            if (other != null && other is OrgAccess) {
+                val comp = other as OrgAccess?
                 return comp!!.clientId == clientId && comp.orgId == orgId
             }
             return false
@@ -109,7 +109,7 @@ open class MBaseRole : X_AD_Role {
         val org = MOrg.get(ctx, oa.orgId)
         if (!org.isSummary) return
         // 	Summary Org - Get Dependents
-        val tree = MTree_Base.get(ctx, aD_Tree_Org_ID, null)
+        val tree = MTree_Base.get(ctx, aD_Tree_Org_ID)
         val sql = ("SELECT AD_Client_ID, orgId FROM AD_Org " +
                 "WHERE IsActive='Y' AND orgId IN (SELECT Node_ID FROM " +
                 tree.nodeTableName +
@@ -120,7 +120,7 @@ open class MBaseRole : X_AD_Role {
             loadOrgAccessAdd(list, OrgAccess(AD_Client_ID, AD_Org_ID, oa.readOnly))
             true
         }.asList
-        val result = DB.current.run(loadQuery).min() ?: false
+        DB.current.run(loadQuery).min()
     } // 	loadOrgAccessAdd
 
     /**
@@ -137,7 +137,7 @@ open class MBaseRole : X_AD_Role {
 
         val sql = "SELECT * FROM AD_Role_OrgAccess " + "WHERE AD_Role_ID=? AND IsActive='Y'"
         val loadQuery = queryOf(sql, listOf(aD_Role_ID)).map { load(it) }.asList
-        val result = DB.current.run(loadQuery).min() ?: false
+        DB.current.run(loadQuery).min()
     } // 	loadOrgAccessRole
 
     /**

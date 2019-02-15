@@ -12,8 +12,8 @@ public class MStorageProvider extends X_AD_StorageProvider implements I_AD_Stora
   /** */
   private static final long serialVersionUID = -5889682671195395536L;
 
-  public MStorageProvider(Properties ctx, int AD_StorageProvider_ID, String trxName) {
-    super(ctx, AD_StorageProvider_ID, trxName);
+  public MStorageProvider(Properties ctx, int AD_StorageProvider_ID) {
+    super(ctx, AD_StorageProvider_ID);
   }
 
     public IAttachmentStore getAttachmentStore() {

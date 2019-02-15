@@ -18,14 +18,14 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Role_OrgAccess(Properties ctx, int AD_Role_OrgAccess_ID, String trxName) {
-    super(ctx, AD_Role_OrgAccess_ID, trxName);
+  public X_AD_Role_OrgAccess(Properties ctx, int AD_Role_OrgAccess_ID) {
+    super(ctx, AD_Role_OrgAccess_ID);
     /** if (AD_Role_OrgAccess_ID == 0) { setAD_Role_ID (0); setIsReadOnly (false); } */
   }
 
   /** Load Constructor */
-  public X_AD_Role_OrgAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Role_OrgAccess(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   public X_AD_Role_OrgAccess(Properties ctx, Row row) {

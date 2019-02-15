@@ -17,7 +17,7 @@ internal fun getElement(ad_language: String?, ColumnName: String?, isSOTrx: Bool
     if (AD_Language == null || AD_Language.length == 0)
         AD_Language = Language.getBaseAD_Language()
 
-    var retStr: String? = null
+    var retStr: String?
 
     fun map(r: Row): Pair<String?, String?> {
         return Pair(r.stringOrNull(1), r.stringOrNull(2))

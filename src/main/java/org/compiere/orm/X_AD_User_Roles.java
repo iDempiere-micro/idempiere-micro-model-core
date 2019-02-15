@@ -17,14 +17,14 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_User_Roles(Properties ctx, int AD_User_Roles_ID, String trxName) {
-    super(ctx, AD_User_Roles_ID, trxName);
+  public X_AD_User_Roles(Properties ctx, int AD_User_Roles_ID) {
+    super(ctx, AD_User_Roles_ID);
     /** if (AD_User_Roles_ID == 0) { setAD_Role_ID (0); setAD_User_ID (0); } */
   }
 
   /** Load Constructor */
-  public X_AD_User_Roles(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_User_Roles(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

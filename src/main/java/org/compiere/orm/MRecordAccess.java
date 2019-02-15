@@ -29,8 +29,8 @@ public class MRecordAccess extends X_AD_Record_Access {
    * @param rs result set
    * @param trxName transaction
    */
-  public MRecordAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MRecordAccess(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MRecordAccess
 
     /**

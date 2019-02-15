@@ -18,8 +18,8 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Role_Included(Properties ctx, int AD_Role_Included_ID, String trxName) {
-    super(ctx, AD_Role_Included_ID, trxName);
+  public X_AD_Role_Included(Properties ctx, int AD_Role_Included_ID) {
+    super(ctx, AD_Role_Included_ID);
     /**
      * if (AD_Role_Included_ID == 0) { setAD_Role_ID (0); setIncluded_Role_ID (0); setSeqNo (0);
      * // @SQL=SELECT NVL(MAX(SeqNo),0)+10 AS DefaultValue FROM AD_Role_Included WHERE
@@ -28,8 +28,8 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
   }
 
   /** Load Constructor */
-  public X_AD_Role_Included(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Role_Included(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
     /**

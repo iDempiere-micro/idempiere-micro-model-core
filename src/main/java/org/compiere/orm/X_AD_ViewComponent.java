@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.HasName;
 import org.compiere.model.I_AD_ViewComponent;
-import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
 
 /**
@@ -19,8 +18,8 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_ViewComponent(Properties ctx, int AD_ViewComponent_ID, String trxName) {
-    super(ctx, AD_ViewComponent_ID, trxName);
+  public X_AD_ViewComponent(Properties ctx, int AD_ViewComponent_ID) {
+    super(ctx, AD_ViewComponent_ID);
     /**
      * if (AD_ViewComponent_ID == 0) { setAD_Table_ID (0); setAD_ViewComponent_ID (0); setEntityType
      * (null); // @SQL=select get_sysconfig('DEFAULT_ENTITYTYPE','U',0,0) from dual setFromClause
@@ -29,8 +28,8 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
   }
 
   /** Load Constructor */
-  public X_AD_ViewComponent(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_ViewComponent(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

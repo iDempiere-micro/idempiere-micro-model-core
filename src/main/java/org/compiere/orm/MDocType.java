@@ -39,8 +39,8 @@ public class MDocType extends X_C_DocType {
    * @param C_DocType_ID id
    * @param trxName transaction
    */
-  public MDocType(Properties ctx, int C_DocType_ID, String trxName) {
-    super(ctx, C_DocType_ID, trxName);
+  public MDocType(Properties ctx, int C_DocType_ID) {
+    super(ctx, C_DocType_ID);
     if (C_DocType_ID == 0) {
       //	setName (null);
       //	setPrintName (null);
@@ -68,8 +68,8 @@ public class MDocType extends X_C_DocType {
    * @param rs result set
    * @param trxName transaction
    */
-  public MDocType(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MDocType(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MDocType
   public MDocType(Properties ctx, Row row) {
     super(ctx, row);
@@ -83,8 +83,8 @@ public class MDocType extends X_C_DocType {
    * @param Name name
    * @param trxName transaction
    */
-  public MDocType(Properties ctx, String DocBaseType, String Name, String trxName) {
-    this(ctx, 0, trxName);
+  public MDocType(Properties ctx, String DocBaseType, String Name) {
+    this(ctx, 0);
     setAD_Org_ID(0);
     setDocBaseType(DocBaseType);
     setName(Name);
@@ -113,7 +113,7 @@ public class MDocType extends X_C_DocType {
   public static MDocType[] getOfDocBaseType(Properties ctx, String DocBaseType) {
     final String whereClause = "AD_Client_ID=? AND DocBaseType=?";
     List<MDocType> list =
-        new Query(ctx, I_C_DocType.Table_Name, whereClause, null)
+        new Query(ctx, I_C_DocType.Table_Name, whereClause)
             .setParameters(Env.getClientId(ctx), DocBaseType)
             .setOnlyActiveRecords(true)
             .setOrderBy("IsDefault DESC, C_DocType_ID")
@@ -129,7 +129,7 @@ public class MDocType extends X_C_DocType {
    */
   public static MDocType[] getOfClient(Properties ctx) {
     List<MDocType> list =
-        new Query(ctx, I_C_DocType.Table_Name, null, null)
+        new Query(ctx, I_C_DocType.Table_Name, null)
             .setClient_ID()
             .setOnlyActiveRecords(true)
             .list();
@@ -146,7 +146,7 @@ public class MDocType extends X_C_DocType {
   public static MDocType get(Properties ctx, int C_DocType_ID) {
     MDocType retValue = s_cache.get(C_DocType_ID);
     if (retValue == null) {
-      retValue = new MDocType(ctx, C_DocType_ID, null);
+      retValue = new MDocType(ctx, C_DocType_ID);
       s_cache.put(C_DocType_ID, retValue);
     }
     return retValue;

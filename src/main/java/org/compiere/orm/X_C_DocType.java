@@ -99,13 +99,13 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_C_DocType(Properties ctx, int C_DocType_ID, String trxName) {
-    super(ctx, C_DocType_ID, trxName);
+  public X_C_DocType(Properties ctx, int C_DocType_ID) {
+    super(ctx, C_DocType_ID);
   }
 
   /** Load Constructor */
-  public X_C_DocType(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_C_DocType(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
   public X_C_DocType(Properties ctx, Row row) {
     super(ctx, row);

@@ -15,8 +15,8 @@ public class MViewColumn extends X_AD_ViewColumn {
    * @param AD_ViewColumn_ID view column
    * @param trxName trx name
    */
-  public MViewColumn(Properties ctx, int AD_ViewColumn_ID, String trxName) {
-    super(ctx, AD_ViewColumn_ID, trxName);
+  public MViewColumn(Properties ctx, int AD_ViewColumn_ID) {
+    super(ctx, AD_ViewColumn_ID);
   }
 
   /**
@@ -26,8 +26,8 @@ public class MViewColumn extends X_AD_ViewColumn {
    * @param rs result set
    * @param trxName trx name
    */
-  public MViewColumn(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MViewColumn(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**
@@ -36,7 +36,7 @@ public class MViewColumn extends X_AD_ViewColumn {
    * @param parent parent
    */
   public MViewColumn(MViewComponent parent) {
-    this(parent.getCtx(), 0, null);
+    this(parent.getCtx(), 0);
     setClientOrg(parent);
     setAD_ViewComponent_ID(parent.getAD_ViewComponent_ID());
   }

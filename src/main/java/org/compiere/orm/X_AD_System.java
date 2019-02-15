@@ -20,8 +20,8 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_System(Properties ctx, int AD_System_ID, String trxName) {
-    super(ctx, AD_System_ID, trxName);
+  public X_AD_System(Properties ctx, int AD_System_ID) {
+    super(ctx, AD_System_ID);
     /**
      * if (AD_System_ID == 0) { setAD_System_ID (0); // 0 setInfo (null); setIsAllowStatistics
      * (false); setIsAutoErrorReport (true); // Y setIsFailOnBuildDiffer (false); // N
@@ -32,8 +32,8 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
   }
 
   /** Load Constructor */
-  public X_AD_System(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_System(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

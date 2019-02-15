@@ -28,8 +28,8 @@ public class MTree_Base extends X_AD_Tree {
    * @param AD_Tree_ID id
    * @param trxName transaction
    */
-  public MTree_Base(Properties ctx, int AD_Tree_ID, String trxName) {
-    super(ctx, AD_Tree_ID, trxName);
+  public MTree_Base(Properties ctx, int AD_Tree_ID) {
+    super(ctx, AD_Tree_ID);
     if (AD_Tree_ID == 0) {
       //	setName (null);
       //	setTreeType (null);
@@ -45,8 +45,8 @@ public class MTree_Base extends X_AD_Tree {
    * @param rs result set
    * @param trxName transaction
    */
-  public MTree_Base(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MTree_Base(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MTree_Base
 
   public MTree_Base(Properties ctx, Row row) {
@@ -61,7 +61,7 @@ public class MTree_Base extends X_AD_Tree {
    * @param treeType
    */
   public MTree_Base(MClient client, String name, String treeType) {
-    this(client.getCtx(), 0, null);
+    this(client.getCtx(), 0);
     setClientOrg(client);
     setName(name);
     setTreeType(treeType);
@@ -75,8 +75,8 @@ public class MTree_Base extends X_AD_Tree {
    * @param TreeType tree type
    * @param trxName transaction
    */
-  public MTree_Base(Properties ctx, String Name, String TreeType, String trxName) {
-    super(ctx, 0, trxName);
+  public MTree_Base(Properties ctx, String Name, String TreeType) {
+    super(ctx, 0);
     setName(Name);
     setTreeType(TreeType);
     setIsAllNodes(true); // 	complete tree
@@ -151,11 +151,11 @@ public class MTree_Base extends X_AD_Tree {
    * @param trxName transaction
    * @return MTree_Base
    */
-  public static MTree_Base get(Properties ctx, int AD_Tree_ID, String trxName) {
+  public static MTree_Base get(Properties ctx, int AD_Tree_ID) {
     Integer key = new Integer(AD_Tree_ID);
     MTree_Base retValue = s_cache.get(key);
     if (retValue != null) return retValue;
-    retValue = new MTree_Base(ctx, AD_Tree_ID, trxName);
+    retValue = new MTree_Base(ctx, AD_Tree_ID);
     if (retValue.getId() != 0) s_cache.put(key, retValue);
     return retValue;
   } //	get

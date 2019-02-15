@@ -107,8 +107,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
   protected int m_idOld = 0;
   /** Custom Columns */
   protected HashMap<String, String> m_custom = null;
-  /** Optional Transaction */
-  protected String m_trxName = null;
   /** Attributes */
   private HashMap<String, Object> m_attributes = null;
   /** Trifon - Indicates that this record is created by replication functionality. */
@@ -130,30 +128,26 @@ public abstract class PO extends software.hsharp.core.orm.PO
    * @param ctx context
    */
   public PO(Properties ctx) {
-    this(ctx, 0, null, null, null);
+    this(ctx, 0, null, null);
   } //  PO
 
   /**
    * Create & Load existing Persistent Object
-   *
+   *  @param ctx context
    * @param ID The unique ID of the object
-   * @param ctx context
-   * @param trxName transaction name
    */
-  public PO(Properties ctx, int ID, String trxName) {
-    this(ctx, ID, trxName, null, null);
+  public PO(Properties ctx, int ID) {
+    this(ctx, ID, null, null);
   } //  PO
 
   /**
    * Create & Load existing Persistent Object.
-   *
-   * @param ctx context
+   *  @param ctx context
    * @param rs optional - load from current result set position (no navigation, not closed) if null,
    *     a new record is created.
-   * @param trxName transaction name
    */
-  public PO(Properties ctx, ResultSet rs, String trxName, String columnNamePrefix) {
-    this(ctx, 0, trxName, rs, columnNamePrefix);
+  public PO(Properties ctx, ResultSet rs, String columnNamePrefix) {
+    this(ctx, 0, rs, columnNamePrefix);
   } //	PO
 
   /**
@@ -162,7 +156,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
    * <pre>
    *  You load
    * 		- an existing single key record with 	new PO (ctx, Record_ID)
-   * 			or									new PO (ctx, Record_ID, trxName)
+   * 			or									new PO (ctx, Record_ID)
    * 			or									new PO (ctx, rs, null)
    * 		- a new single key record with			new PO (ctx, 0)
    * 		- an existing multi key record with		new PO (ctx, rs, null)
@@ -170,15 +164,12 @@ public abstract class PO extends software.hsharp.core.orm.PO
    *  The ID for new single key records is created automatically,
    *  you need to set the IDs for multi-key records explicitly.
    * </pre>
-   *
-   * @param ctx context
+   *  @param ctx context
    * @param ID the ID if 0, the record defaults are applied - ignored if re exists
-   * @param trxName transaction name
    * @param rs optional - load from current result set position (no navigation, not closed)
    */
-  public PO(Properties _ctx, int ID, String trxName, ResultSet rs, String _columnNamePrefix) {
+  public PO(Properties _ctx, int ID, ResultSet rs, String _columnNamePrefix) {
     super(_ctx, null, _columnNamePrefix);
-    m_trxName = trxName;
 
     POInfo p_info = super.getP_info();
     if (p_info == null || p_info.getTableName() == null)
@@ -189,12 +180,12 @@ public abstract class PO extends software.hsharp.core.orm.PO
     m_setErrors = new ValueNamePair[size];
 
     if (rs != null) load(rs); // 	will not have virtual columns
-    else load(ID, trxName);
+    else load(ID);
   } //  PO
 
     /** Returns the summary node with the corresponding value */
   public static int retrieveIdOfParentValue(
-      String value, String tableName, int AD_Client_ID, String trxName) {
+          String value, String tableName, int AD_Client_ID) {
     String sql =
         "SELECT "
             + tableName
@@ -209,11 +200,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
       pos--;
     }
     return 0; // rootID
-  }
-
-    /** PO.setTrxName - set given trxName to an array of POs As suggested by teo in [ 1854603 ] */
-  public static void set_TrxName(PO[] lines, String trxName) {
-    for (PO line : lines) line.set_TrxName(trxName);
   }
 
   /**
@@ -603,11 +589,10 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
   /**
    * ************************************************************************ Load record with ID
+   *  @param ID ID
    *
-   * @param ID ID
-   * @param trxName transaction name
    */
-  protected void load(int ID, String trxName) {
+  protected void load(int ID) {
     if (log.isLoggable(Level.FINEST)) log.finest("ID=" + ID);
     if (ID > 0) {
       setKeyInfo();
@@ -1098,7 +1083,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
   /** Returns the summary node from C_ElementValue with the corresponding value */
   protected int retrieveIdOfElementValue(
-      String value, int AD_Client_ID, int elementID, String trxName) {
+          String value, int AD_Client_ID, int elementID) {
     String sql =
         "SELECT C_ElementValue_ID FROM C_ElementValue WHERE IsSummary='Y' AND AD_Client_ID=? AND C_Element_ID=? AND Value=?";
     int pos = value.length() - 1;
@@ -1152,11 +1137,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
   /**
    * UnLock it
    *
-   * @param trxName transaction
    * @return true if unlocked (false only if unlock fails)
    */
-  public boolean unlock(String trxName) {
-    //	log.warning(trxName);
+  public boolean unlock() {
     int index = get_ProcessingIndex();
     POInfo p_info = super.getP_info();
     Object[] newValues = getNewValues();
@@ -1169,23 +1152,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
       else success = executeUpdate(sql) == 1;
       if (success) {
         if (log.isLoggable(Level.FINE))
-          log.fine("success" + (trxName == null ? "" : "[" + trxName + "]"));
+          log.fine("success" );
       } else {
-        log.log(Level.WARNING, "failed" + (trxName == null ? "" : " [" + trxName + "]"));
+        log.log(Level.WARNING, "failed" );
       }
       return success;
     }
     return true;
   } //	unlock
-
-  /**
-   * Set Trx
-   *
-   * @param trxName transaction
-   */
-  public void set_TrxName(String trxName) {
-    m_trxName = trxName;
-  } //	setTrx
 
   /** ******************************************************************* Dump Record */
   public void dump() {
@@ -1746,13 +1720,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
         set_ValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
       }
     }
-    if (m_trxName == null) {
-      if (log.isLoggable(Level.FINE))
-        log.fine(p_info.getTableName() + " - " + get_WhereClause(true));
-    } else {
-      if (log.isLoggable(Level.FINE))
-        log.fine("[" + m_trxName + "] - " + p_info.getTableName() + " - " + get_WhereClause(true));
-    }
+    if (log.isLoggable(Level.FINE))
+      log.fine(p_info.getTableName() + " - " + get_WhereClause(true));
 
     boolean ok = doInsert(isLogSQLScript());
     return saveFinish(true, ok);
@@ -1955,12 +1924,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
     //	Something changed
     if (changes) {
-      if (m_trxName == null) {
-        if (log.isLoggable(Level.FINE)) log.fine(p_info.getTableName() + "." + where);
-      } else {
-        if (log.isLoggable(Level.FINE))
-          log.fine("[" + m_trxName + "] - " + p_info.getTableName() + "." + where);
-      }
+      if (log.isLoggable(Level.FINE)) log.fine(p_info.getTableName() + "." + where);
       if (!updated) //	Updated not explicitly set
       {
         Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -2000,28 +1964,15 @@ public abstract class PO extends software.hsharp.core.orm.PO
       boolean ok = no == 1;
       if (ok) ok = lobSave();
       else {
-        if (m_trxName == null)
-          log.saveError(
-              "SaveError",
-              "Update return "
-                  + no
-                  + " instead of 1"
-                  + " - "
-                  + p_info.getTableName()
-                  + "."
-                  + where);
-        else
-          log.saveError(
-              "SaveError",
-              "Update return "
-                  + no
-                  + " instead of 1"
-                  + " - ["
-                  + m_trxName
-                  + "] - "
-                  + p_info.getTableName()
-                  + "."
-                  + where);
+        log.saveError(
+            "SaveError",
+            "Update return "
+                + no
+                + " instead of 1"
+                + " - "
+                + p_info.getTableName()
+                + "."
+                + where);
       }
       return ok;
     } else {
@@ -2085,7 +2036,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
           else sqlValues.append(saveNewSpecial(value, i));
         } catch (Exception e) {
           String msg = "";
-          if (m_trxName != null) msg = "[" + m_trxName + "] - ";
           msg +=
               p_info.toString(i)
                   + " - Value="
@@ -2157,16 +2107,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
       ok = lobSave();
       if (!load()) // 	re-read Info
       {
-        if (m_trxName == null) log.log(Level.SEVERE, "reloading");
-        else log.log(Level.SEVERE, "[" + m_trxName + "] - reloading");
+        log.log(Level.SEVERE, "reloading");
         ok = false;
       }
     } else {
       String msg = "Not inserted - ";
       if (CLogMgt.isLevelFiner()) msg += sqlInsert.toString();
       else msg += get_TableName();
-      if (m_trxName == null) log.log(Level.WARNING, msg);
-      else log.log(Level.WARNING, "[" + m_trxName + "]" + msg);
+      log.log(Level.WARNING, msg);
     }
     return ok;
   }

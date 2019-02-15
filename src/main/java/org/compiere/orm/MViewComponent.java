@@ -17,8 +17,8 @@ public class MViewComponent extends X_AD_ViewComponent {
    * @param AD_ViewComponent_ID view component
    * @param trxName trx name
    */
-  public MViewComponent(Properties ctx, int AD_ViewComponent_ID, String trxName) {
-    super(ctx, AD_ViewComponent_ID, trxName);
+  public MViewComponent(Properties ctx, int AD_ViewComponent_ID) {
+    super(ctx, AD_ViewComponent_ID);
   }
 
   /**
@@ -27,7 +27,7 @@ public class MViewComponent extends X_AD_ViewComponent {
    * @param parent parent
    */
   public MViewComponent(MTable parent) {
-    this(parent.getCtx(), 0, null);
+    this(parent.getCtx(), 0);
     setClientOrg(parent);
     setAD_Table_ID(parent.getAD_Table_ID());
   }
@@ -45,8 +45,8 @@ public class MViewComponent extends X_AD_ViewComponent {
         new Query(
             getCtx(),
             MViewColumn.Table_Name,
-            MViewColumn.COLUMNNAME_AD_ViewComponent_ID + "=?",
-            null);
+            MViewColumn.COLUMNNAME_AD_ViewComponent_ID + "=?"
+        );
     query.setParameters(getAD_ViewComponent_ID());
     query.setOrderBy("SeqNo, AD_ViewColumn_ID");
     List<MViewColumn> list = query.list();

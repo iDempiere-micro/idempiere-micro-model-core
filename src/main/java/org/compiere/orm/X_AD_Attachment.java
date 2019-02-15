@@ -3,7 +3,6 @@ package org.compiere.orm;
 import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_AD_Attachment;
-import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
 
 /**
@@ -18,8 +17,8 @@ public class X_AD_Attachment extends PO implements I_Persistent {
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Attachment(Properties ctx, int AD_Attachment_ID, String trxName) {
-    super(ctx, AD_Attachment_ID, trxName);
+  public X_AD_Attachment(Properties ctx, int AD_Attachment_ID) {
+    super(ctx, AD_Attachment_ID);
     /**
      * if (AD_Attachment_ID == 0) { setAD_Attachment_ID (0); setAD_Table_ID (0); setRecord_ID (0);
      * setTitle (null); }
@@ -27,8 +26,8 @@ public class X_AD_Attachment extends PO implements I_Persistent {
   }
 
   /** Load Constructor */
-  public X_AD_Attachment(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Attachment(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

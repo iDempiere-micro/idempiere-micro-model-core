@@ -29,8 +29,8 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_ViewColumn(Properties ctx, int AD_ViewColumn_ID, String trxName) {
-    super(ctx, AD_ViewColumn_ID, trxName);
+  public X_AD_ViewColumn(Properties ctx, int AD_ViewColumn_ID) {
+    super(ctx, AD_ViewColumn_ID);
     /**
      * if (AD_ViewColumn_ID == 0) { setAD_ViewColumn_ID (0); setAD_ViewComponent_ID (0);
      * setColumnName (null); setEntityType (null); // @SQL=select
@@ -39,8 +39,8 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn, I_Persistent
   }
 
   /** Load Constructor */
-  public X_AD_ViewColumn(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_ViewColumn(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

@@ -5,7 +5,6 @@ import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.HasName;
 import org.compiere.model.I_AD_Table;
-import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
 
 /**
@@ -32,13 +31,13 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Table(Properties ctx, int AD_Table_ID, String trxName) {
-    super(ctx, AD_Table_ID, trxName);
+  public X_AD_Table(Properties ctx, int AD_Table_ID) {
+    super(ctx, AD_Table_ID);
   }
 
   /** Load Constructor */
-  public X_AD_Table(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Table(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   public X_AD_Table(Properties ctx, Row row) {
@@ -92,7 +91,7 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
     public org.compiere.model.I_AD_Val_Rule getValRule() throws RuntimeException {
     return (org.compiere.model.I_AD_Val_Rule)
         MTable.get(getCtx(), org.compiere.model.I_AD_Val_Rule.Table_Name)
-            .getPO(getValRule_ID(), null);
+            .getPO(getValRule_ID());
   }
 
     /**

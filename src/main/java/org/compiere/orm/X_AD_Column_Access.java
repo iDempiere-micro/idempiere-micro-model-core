@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Column_Access;
-import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
 
 /**
@@ -19,8 +18,8 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Column_Access(Properties ctx, int AD_Column_Access_ID, String trxName) {
-    super(ctx, AD_Column_Access_ID, trxName);
+  public X_AD_Column_Access(Properties ctx, int AD_Column_Access_ID) {
+    super(ctx, AD_Column_Access_ID);
     /**
      * if (AD_Column_Access_ID == 0) { setColumnId (0); setAD_Role_ID (0); setIsExclude (true); // Y
      * setIsReadOnly (false); }
@@ -28,8 +27,8 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
   }
 
   /** Load Constructor */
-  public X_AD_Column_Access(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Column_Access(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   public X_AD_Column_Access(Properties ctx, Row row) {

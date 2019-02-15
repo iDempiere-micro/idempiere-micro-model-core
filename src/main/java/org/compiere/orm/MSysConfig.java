@@ -83,8 +83,8 @@ public class MSysConfig extends MBaseSysConfig {
    * @param ctx context
    * @param AD_SysConfig_ID id
    */
-  public MSysConfig(Properties ctx, int AD_SysConfig_ID, String trxName) {
-    super(ctx, AD_SysConfig_ID, trxName);
+  public MSysConfig(Properties ctx, int AD_SysConfig_ID) {
+    super(ctx, AD_SysConfig_ID);
     if (AD_SysConfig_ID == 0) {
       //	setName (null);
       //  setValue (null);
@@ -97,8 +97,8 @@ public class MSysConfig extends MBaseSysConfig {
    * @param ctx context
    * @param rs result set
    */
-  public MSysConfig(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MSysConfig(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MSysConfig
 
   /**

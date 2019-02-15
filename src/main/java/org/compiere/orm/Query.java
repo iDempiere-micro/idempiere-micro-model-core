@@ -47,7 +47,6 @@ public class Query extends BaseQuery {
 
   private String whereClause = null;
   private String orderBy = null;
-  private String trxName = null;
   private boolean applyAccessFilter = false;
   private boolean applyAccessFilterRW = false;
   private boolean applyAccessFilterFullyQualified = true;
@@ -66,36 +65,31 @@ public class Query extends BaseQuery {
   /**
    * @param table
    * @param whereClause
-   * @param trxName
-   * @deprecated Use {@link #Query(Properties, MTable, String, String)} instead because this method
+   * @deprecated Use {@link #Query(Properties, MTable, String)} instead because this method
    *     is security error prone
    */
-  public Query(MTable table, String whereClause, String trxName) {
+  public Query(MTable table, String whereClause) {
     super(table.getCtx(), table);
     this.whereClause = whereClause;
-    this.trxName = trxName;
   }
 
   /**
    * @param ctx context
    * @param table
    * @param whereClause
-   * @param trxName
    */
-  public Query(Properties ctx, MTable table, String whereClause, String trxName) {
+  public Query(Properties ctx, MTable table, String whereClause) {
     super(ctx, table);
     this.whereClause = whereClause;
-    this.trxName = trxName;
   }
 
   /**
    * @param ctx
    * @param tableName
    * @param whereClause
-   * @param trxName
    */
-  public Query(Properties ctx, String tableName, String whereClause, String trxName) {
-    this(ctx, MTable.get(ctx, tableName), whereClause, trxName);
+  public Query(Properties ctx, String tableName, String whereClause) {
+    this(ctx, MTable.get(ctx, tableName), whereClause);
     MTable table = super.getTable();
     if (table == null) throw new IllegalArgumentException("Table Name Not Found - " + tableName);
   }
@@ -353,7 +347,7 @@ public class Query extends BaseQuery {
       rs = null;
       pstmt = null;
     }
-    return new POIterator<T>(table, idList, trxName);
+    return new POIterator<T>(table, idList);
   }
 
   /**
@@ -372,7 +366,7 @@ public class Query extends BaseQuery {
     try {
       pstmt = prepareStatement(sql);
       rs = createResultSet(pstmt);
-      rsPO = new POResultSet<T>(table, pstmt, rs, trxName);
+      rsPO = new POResultSet<T>(table, pstmt, rs);
       rsPO.setCloseOnError(true);
       return rsPO;
     } catch (SQLException e) {
@@ -396,7 +390,7 @@ public class Query extends BaseQuery {
   protected final String buildSQL(StringBuilder selectClause, boolean useOrderByClause) {
     MTable table = super.getTable();
     if (selectClause == null) {
-      POInfo info = POInfo.getPOInfo(this.getCtx(), table.getAD_Table_ID(), trxName);
+      POInfo info = POInfo.getPOInfo(this.getCtx(), table.getAD_Table_ID());
       if (info == null) {
         throw new IllegalStateException(
             "No POInfo found for AD_Table_ID=" + table.getAD_Table_ID());

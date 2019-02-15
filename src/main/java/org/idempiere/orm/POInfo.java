@@ -33,20 +33,9 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
    * @param ctx context
    * @param AD_Table_ID AD_ Table_ID
    * @param baseLanguageOnly get in base language
-   */
-  protected POInfo(Properties ctx, int AD_Table_ID, boolean baseLanguageOnly) {
-    this(ctx, AD_Table_ID, baseLanguageOnly, null);
-  }
-
-  /**
-   * ************************************************************************ Create Persistent Info
-   *
-   * @param ctx context
-   * @param AD_Table_ID AD_ Table_ID
-   * @param baseLanguageOnly get in base language
    * @param trxName transaction name
    */
-  protected POInfo(Properties ctx, int AD_Table_ID, boolean baseLanguageOnly, String trxName) {
+  protected POInfo(Properties ctx, int AD_Table_ID, boolean baseLanguageOnly) {
     super(ctx, AD_Table_ID, baseLanguageOnly);
   } //  PInfo
 
@@ -58,14 +47,14 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
    * @param trxName Transaction name
    * @return POInfo
    */
-  public static synchronized POInfo getPOInfo(Properties ctx, int AD_Table_ID, String trxName) {
+  public static synchronized POInfo getPOInfo(Properties ctx, int AD_Table_ID) {
     Integer key = AD_Table_ID;
     POInfo retValue = s_cache.get(key);
     if (retValue == null) {
-      retValue = new POInfo(ctx, AD_Table_ID, false, trxName);
+      retValue = new POInfo(ctx, AD_Table_ID, false);
       if (retValue.getColumnCount() == 0)
         //	May be run before Language verification
-        retValue = new POInfo(ctx, AD_Table_ID, true, trxName);
+        retValue = new POInfo(ctx, AD_Table_ID, true);
       else s_cache.put(key, retValue);
     }
     return retValue;

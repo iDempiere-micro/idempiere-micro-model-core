@@ -25,7 +25,7 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
   }
 
   @Override
-  public PO getPO(String tableName, int Record_ID, String trxName) {
+  public PO getPO(String tableName, int Record_ID) {
     Class<?> clazz = getClass(tableName);
     if (clazz == null) {
       s_log.warning("No class for table: " + tableName + " called with Record_ID");
@@ -36,7 +36,7 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
     try {
       Constructor<?> constructor = null;
       try {
-        constructor = clazz.getDeclaredConstructor(Properties.class, int.class, String.class);
+        constructor = clazz.getDeclaredConstructor(Properties.class, int.class);
       } catch (Exception e) {
         String msg = e.getMessage();
         if (msg == null) msg = e.toString();
@@ -48,7 +48,7 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
             constructor != null
                 ? (PO)
                     constructor.newInstance(
-                        new Object[] {Env.getCtx(), new Integer(Record_ID), trxName})
+                        new Object[] {Env.getCtx(), new Integer(Record_ID)})
                 : null;
         return po;
       } catch (Exception ex) {
@@ -83,12 +83,12 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
   }
 
   @Override
-  public PO getPO(String tableName, ResultSet rs, String trxName) {
-    return getPO(tableName, rs, trxName, null);
+  public PO getPO(String tableName, ResultSet rs) {
+    return getPO(tableName, rs, null);
   }
 
   @Override
-  public PO getPO(String tableName, ResultSet rs, String trxName, String columnNamePrefix) {
+  public PO getPO(String tableName, ResultSet rs, String columnNamePrefix) {
     Class<?> clazz = getClass(tableName);
     if (clazz == null) {
       s_log.warning("PO NO CLAZZ FOR TABLE '" + tableName + "' with ResultSet");
@@ -100,16 +100,16 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
     try {
       if (columnNamePrefix == null) {
         Constructor<?> constructor =
-            clazz.getDeclaredConstructor(Properties.class, ResultSet.class, String.class);
-        PO po = (PO) constructor.newInstance(new Object[] {Env.getCtx(), rs, trxName});
+            clazz.getDeclaredConstructor(Properties.class, ResultSet.class);
+        PO po = (PO) constructor.newInstance(new Object[] {Env.getCtx(), rs});
         return po;
       } else {
         Constructor<?> constructor =
             clazz.getDeclaredConstructor(
-                Properties.class, ResultSet.class, String.class, String.class);
+                Properties.class, ResultSet.class, String.class);
         PO po =
             (PO)
-                constructor.newInstance(new Object[] {Env.getCtx(), rs, trxName, columnNamePrefix});
+                constructor.newInstance(new Object[] {Env.getCtx(), rs, columnNamePrefix});
         return po;
       }
     } catch (Exception e) {

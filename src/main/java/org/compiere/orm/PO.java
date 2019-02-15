@@ -26,20 +26,20 @@ public abstract class PO extends org.idempiere.orm.PO {
     super(ctx);
   }
 
-  public PO(Properties ctx, int ID, String trxName) {
-    super(ctx, ID, trxName);
+  public PO(Properties ctx, int ID) {
+    super(ctx, ID);
   }
 
-  public PO(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName, null);
+  public PO(Properties ctx, ResultSet rs) {
+    super(ctx, rs, null);
   }
 
-  public PO(Properties ctx, ResultSet rs, String trxName, String columnNamePrefix) {
-    super(ctx, rs, trxName, columnNamePrefix);
+  public PO(Properties ctx, ResultSet rs, String columnNamePrefix) {
+    super(ctx, rs, columnNamePrefix);
   }
 
-  public PO(Properties ctx, int ID, String trxName, ResultSet rs) {
-    super(ctx, ID, trxName, rs, null);
+  public PO(Properties ctx, int ID, ResultSet rs) {
+    super(ctx, ID, rs, null);
   }
 
   public PO(Properties ctx, Row row) {
@@ -147,7 +147,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         && getM_keyColumns()[0].endsWith("_ID")) // 	AD_Language, EntityType
     {
       int no = saveNew_getID();
-      if (no <= 0) no = MSequence.getNextID(getClientId(), p_info.getTableName(), m_trxName);
+      if (no <= 0) no = MSequence.getNextID(getClientId(), p_info.getTableName());
       // the primary key is not overwrite with the local sequence
       if (isReplication()) {
         if (getId() > 0) {
@@ -170,13 +170,8 @@ public abstract class PO extends org.idempiere.orm.PO {
         set_ValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
       }
     }
-    if (m_trxName == null) {
-      if (log.isLoggable(Level.FINE))
-        log.fine(p_info.getTableName() + " - " + get_WhereClause(true));
-    } else {
-      if (log.isLoggable(Level.FINE))
-        log.fine("[" + m_trxName + "] - " + p_info.getTableName() + " - " + get_WhereClause(true));
-    }
+    if (log.isLoggable(Level.FINE))
+      log.fine(p_info.getTableName() + " - " + get_WhereClause(true));
 
     //	Set new DocumentNo
     String columnName = "DocumentNo";
@@ -188,9 +183,9 @@ public abstract class PO extends org.idempiere.orm.PO {
         int dt = p_info.getColumnIndex("C_DocTypeTarget_ID");
         if (dt == -1) dt = p_info.getColumnIndex("C_DocType_ID");
         if (dt != -1) // 	get based on Doc Type (might return null)
-        value = MSequence.getDocumentNo(get_ValueAsInt(dt), m_trxName, false, this);
+        value = MSequence.getDocumentNo(get_ValueAsInt(dt), null, false, this);
         if (value == null) // 	not overwritten by DocType and not manually entered
-        value = MSequence.getDocumentNo(getClientId(), p_info.getTableName(), m_trxName, this);
+        value = MSequence.getDocumentNo(getClientId(), p_info.getTableName(), null, this);
         set_ValueNoCheck(columnName, value);
       }
     }
@@ -333,7 +328,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             + "_ID) WHERE tn.Parent_ID=? AND tn.AD_Tree_ID=? AND n.Value<?";
 
     List<X_AD_Tree> trees =
-        new Query(getCtx(), MTree_Base.Table_Name, whereTree, null)
+        new Query(getCtx(), MTree_Base.Table_Name, whereTree)
             .setClient_ID()
             .setOnlyActiveRecords(true)
             .setParameters(parameters)
@@ -347,10 +342,10 @@ public abstract class PO extends org.idempiere.orm.PO {
               retrieveIdOfElementValue(
                   value,
                   getClientId(),
-                  ((I_C_ElementValue) this).getC_Element().getC_Element_ID(),
-                  null);
+                  ((I_C_ElementValue) this).getC_Element().getC_Element_ID()
+              );
         } else {
-          newParentID = retrieveIdOfParentValue(value, sourceTableName, getClientId(), null);
+          newParentID = retrieveIdOfParentValue(value, sourceTableName, getClientId());
         }
         int seqNo = getSQLValueEx(selMinSeqNo, newParentID, tree.getAD_Tree_ID(), value);
         if (seqNo == -1)
@@ -406,17 +401,6 @@ public abstract class PO extends org.idempiere.orm.PO {
     }
     return no > 0;
   } //	delete_Tree
-
-  /**
-   * Update Value or create new record. To reload call load() - not updated
-   *
-   * @param trxName transaction
-   * @return true if saved
-   */
-  public boolean save(String trxName) {
-    set_TrxName(trxName);
-    return save();
-  } //	save
 
   /**
    * ************************************************************************ Delete Current Record
@@ -526,30 +510,6 @@ public abstract class PO extends org.idempiere.orm.PO {
   } //	delete
 
   /**
-   * Delete Current Record
-   *
-   * @param force delete also processed records
-   * @param trxName transaction
-   * @return true if deleted
-   */
-  public boolean delete(boolean force, String trxName) {
-    set_TrxName(trxName);
-    return delete(force);
-  } //	delete
-
-  /**
-   * Update Value or create new record.
-   *
-   * @param trxName transaction
-   * @throws AdempiereException
-   * @see #saveEx(String)
-   */
-  public void saveEx(String trxName) throws AdempiereException {
-    set_TrxName(trxName);
-    saveEx();
-  }
-
-  /**
    * Set UpdatedBy
    *
    * @param AD_User_ID user
@@ -629,19 +589,6 @@ public abstract class PO extends org.idempiere.orm.PO {
       if (msg == null || msg.length() == 0) msg = "DeleteError";
       throw new AdempiereException(msg);
     }
-  }
-
-  /**
-   * Delete Current Record
-   *
-   * @param force delete also processed records
-   * @param trxName transaction
-   * @throws AdempiereException
-   * @see {@link #deleteEx(boolean)}
-   */
-  public void deleteEx(boolean force, String trxName) throws AdempiereException {
-    set_TrxName(trxName);
-    deleteEx(force);
   }
 
     /**

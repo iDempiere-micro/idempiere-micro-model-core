@@ -19,13 +19,13 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
   private static final long serialVersionUID = 20171031L;
 
     /** Standard Constructor */
-    public X_AD_Sequence(Properties ctx, int AD_Sequence_ID, String trxName) {
-        super(ctx, AD_Sequence_ID, trxName);
+    public X_AD_Sequence(Properties ctx, int AD_Sequence_ID) {
+        super(ctx, AD_Sequence_ID);
     }
 
     /** Load Constructor */
-    public X_AD_Sequence(Properties ctx, ResultSet rs, String trxName) {
-        super(ctx, rs, trxName);
+    public X_AD_Sequence(Properties ctx, ResultSet rs) {
+        super(ctx, rs);
     }
 
     public X_AD_Sequence(Properties ctx, Row row) {

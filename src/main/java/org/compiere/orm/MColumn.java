@@ -7,7 +7,6 @@ import org.compiere.util.DisplayType;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.CCache;
-import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Util;
 import org.idempiere.orm.PO;
@@ -43,8 +42,8 @@ public class MColumn extends X_AD_Column {
    * @param AD_Column_ID
    * @param trxName transaction
    */
-  public MColumn(Properties ctx, int AD_Column_ID, String trxName) {
-    super(ctx, AD_Column_ID, trxName);
+  public MColumn(Properties ctx, int AD_Column_ID) {
+    super(ctx, AD_Column_ID);
     if (AD_Column_ID == 0) {
       //	setAD_Element_ID (0);
       //	setReferenceId (0);
@@ -71,8 +70,8 @@ public class MColumn extends X_AD_Column {
    * @param rs result set
    * @param trxName transaction
    */
-  public MColumn(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MColumn(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MColumn
 
   public MColumn(Properties ctx, Row row) {
@@ -85,15 +84,11 @@ public class MColumn extends X_AD_Column {
    * @param parent table
    */
   public MColumn(MTable parent) {
-    this(parent.getCtx(), 0, null);
+    this(parent.getCtx(), 0);
     setClientOrg(parent);
     setAD_Table_ID(parent.getAD_Table_ID());
     setEntityType(parent.getEntityType());
   } //	MColumn
-
-  public static MColumn get(Properties ctx, int AD_Column_ID) {
-    return get(ctx, AD_Column_ID, null);
-  }
 
   /**
    * Get MColumn from Cache
@@ -102,14 +97,13 @@ public class MColumn extends X_AD_Column {
    * @param AD_Column_ID id
    * @return MColumn
    */
-  public static MColumn get(Properties ctx, int AD_Column_ID, String trxName) {
+  public static MColumn get(Properties ctx, int AD_Column_ID) {
     Integer key = new Integer(AD_Column_ID);
     MColumn retValue = s_cache.get(key);
     if (retValue != null) {
-      retValue.set_TrxName(trxName);
       return retValue;
     }
-    retValue = new MColumn(ctx, AD_Column_ID, trxName);
+    retValue = new MColumn(ctx, AD_Column_ID);
     if (retValue.getId() != 0) s_cache.put(key, retValue);
     return retValue;
   } //	get
@@ -127,10 +121,6 @@ public class MColumn extends X_AD_Column {
     return table.getColumn(columnName);
   } //	get
 
-  public static String getColumnName(Properties ctx, int AD_Column_ID) {
-    return getColumnName(ctx, AD_Column_ID, null);
-  }
-
   /**
    * Get Column Name
    *
@@ -139,8 +129,8 @@ public class MColumn extends X_AD_Column {
    * @param trxName transaction
    * @return Column Name or null
    */
-  public static String getColumnName(Properties ctx, int AD_Column_ID, String trxName) {
-    MColumn col = MColumn.get(ctx, AD_Column_ID, trxName);
+  public static String getColumnName(Properties ctx, int AD_Column_ID) {
+    MColumn col = MColumn.get(ctx, AD_Column_ID);
     if (col.getId() == 0) return null;
     return col.getColumnName();
   } //	getColumnName
@@ -296,7 +286,7 @@ public class MColumn extends X_AD_Column {
 
     //	Sync Terminology
     if ((newRecord || is_ValueChanged("AD_Element_ID")) && getAD_Element_ID() != 0) {
-      M_Element element = new M_Element(getCtx(), getAD_Element_ID(), null);
+      M_Element element = new M_Element(getCtx(), getAD_Element_ID());
       setColumnName(element.getColumnName());
       setName(element.getName());
       setDescription(element.getDescription());
@@ -520,14 +510,14 @@ public class MColumn extends X_AD_Column {
         || (DisplayType.Search == refid && getAD_Reference_Value_ID() == 0)) {
       foreignTable = getColumnName().substring(0, getColumnName().length() - 3);
     } else if (DisplayType.Table == refid || DisplayType.Search == refid) {
-      X_AD_Reference ref = new X_AD_Reference(getCtx(), getAD_Reference_Value_ID(), null);
+      X_AD_Reference ref = new X_AD_Reference(getCtx(), getAD_Reference_Value_ID());
       if (X_AD_Reference.VALIDATIONTYPE_TableValidation.equals(ref.getValidationType())) {
         int cnt =
             getSQLValueEx(
                 "SELECT COUNT(*) FROM AD_Ref_Table WHERE AD_Reference_ID=?",
                 getAD_Reference_Value_ID());
         if (cnt == 1) {
-          MRefTable rt = new MRefTable(getCtx(), getAD_Reference_Value_ID(), null);
+          MRefTable rt = new MRefTable(getCtx(), getAD_Reference_Value_ID());
           if (rt != null) foreignTable = rt.getAD_Table().getTableName();
         }
       }
@@ -556,7 +546,7 @@ public class MColumn extends X_AD_Column {
 
   @Override
   public I_AD_Table getAD_Table() throws RuntimeException {
-    MTable table = MTable.get(getCtx(), getAD_Table_ID(), null);
+    MTable table = MTable.get(getCtx(), getAD_Table_ID());
     return table;
   }
 

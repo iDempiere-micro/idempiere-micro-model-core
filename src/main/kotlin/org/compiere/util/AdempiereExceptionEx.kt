@@ -7,7 +7,7 @@ private const val unknownError = "UnknownError"
 
 private fun getMessageFromLogger(): String {
     val err = CLogger.retrieveError()
-    return if (err != null) err.name ?: unknownError else unknownError
+    return err?.name ?: unknownError
 }
 
 open class AdempiereExceptionEx : AdempiereException {

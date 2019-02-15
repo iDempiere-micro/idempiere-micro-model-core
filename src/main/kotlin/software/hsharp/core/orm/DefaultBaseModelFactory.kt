@@ -144,8 +144,7 @@ abstract class DefaultBaseModelFactory : IModelFactory {
             val et = MEntityType.get(Env.getCtx(), entityType)
             val etmodelpackage = et!!.modelPackage
             if (etmodelpackage != null) {
-                var clazz: Class<*>? = null
-                clazz = getPOclass(etmodelpackage + ".M" + Util.replace(tableName, "_", ""), tableName)
+                var clazz: Class<*>? = getPOclass(etmodelpackage + ".M" + Util.replace(tableName, "_", ""), tableName)
                 if (clazz != null) {
                     s_classCache.put(tableName, clazz)
                     return clazz

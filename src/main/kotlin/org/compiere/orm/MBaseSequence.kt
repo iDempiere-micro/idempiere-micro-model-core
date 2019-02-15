@@ -19,7 +19,7 @@ fun checkClientSequences(ctx: Properties, clientId: Int): Boolean {
     """.trimIndent()
     val processTable: (row: Row) -> Boolean = {
         val tableName = it.string(1)
-        val seq = MSequence(ctx, clientId, tableName, null)
+        val seq = MSequence(ctx, clientId, tableName)
         seq.save()
     }
     val loadQuery = queryOf(sql, listOf(clientId)).map(processTable).asList

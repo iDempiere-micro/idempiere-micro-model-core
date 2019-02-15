@@ -21,8 +21,8 @@ public class MPrivateAccess extends X_AD_Private_Access {
    * @param ignored ignored
    * @param trxName transaction
    */
-  public MPrivateAccess(Properties ctx, int ignored, String trxName) {
-    super(ctx, 0, trxName);
+  public MPrivateAccess(Properties ctx, int ignored) {
+    super(ctx, 0);
     if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
   } //	MPrivateAccess
 
@@ -33,8 +33,8 @@ public class MPrivateAccess extends X_AD_Private_Access {
    * @param rs result set
    * @param trxName transaction
    */
-  public MPrivateAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MPrivateAccess(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MPrivateAccess
 
   /**
@@ -46,7 +46,7 @@ public class MPrivateAccess extends X_AD_Private_Access {
    * @param Record_ID record
    */
   public MPrivateAccess(Properties ctx, int AD_User_ID, int AD_Table_ID, int Record_ID) {
-    super(ctx, 0, null);
+    super(ctx, 0);
     setAD_User_ID(AD_User_ID);
     setAD_Table_ID(AD_Table_ID);
     setRecord_ID(Record_ID);

@@ -17,14 +17,14 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess, I_Pe
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_User_OrgAccess(Properties ctx, int AD_User_OrgAccess_ID, String trxName) {
-    super(ctx, AD_User_OrgAccess_ID, trxName);
+  public X_AD_User_OrgAccess(Properties ctx, int AD_User_OrgAccess_ID) {
+    super(ctx, AD_User_OrgAccess_ID);
     /** if (AD_User_OrgAccess_ID == 0) { setAD_User_ID (0); setIsReadOnly (false); // N } */
   }
 
   /** Load Constructor */
-  public X_AD_User_OrgAccess(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_User_OrgAccess(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

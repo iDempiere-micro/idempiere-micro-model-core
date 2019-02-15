@@ -28,8 +28,8 @@ public class MUserRoles extends X_AD_User_Roles {
    * @param ignored invalid
    * @param trxName transaction
    */
-  public MUserRoles(Properties ctx, int ignored, String trxName) {
-    super(ctx, ignored, trxName);
+  public MUserRoles(Properties ctx, int ignored) {
+    super(ctx, ignored);
     if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
   } //	MUserRoles
 
@@ -40,8 +40,8 @@ public class MUserRoles extends X_AD_User_Roles {
    * @param rs result set
    * @param trxName transaction
    */
-  public MUserRoles(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MUserRoles(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MUserRoles
 
   /**
@@ -52,8 +52,8 @@ public class MUserRoles extends X_AD_User_Roles {
    * @param AD_Role_ID role
    * @param trxName transaction
    */
-  public MUserRoles(Properties ctx, int AD_User_ID, int AD_Role_ID, String trxName) {
-    this(ctx, 0, trxName);
+  public MUserRoles(Properties ctx, int AD_User_ID, int AD_Role_ID) {
+    this(ctx, 0);
     setAD_User_ID(AD_User_ID);
     setAD_Role_ID(AD_Role_ID);
   } //	MUserRoles
@@ -68,7 +68,7 @@ public class MUserRoles extends X_AD_User_Roles {
   public static MUserRoles[] getOfRole(Properties ctx, int AD_Role_ID) {
     final String whereClause = I_AD_User_Roles.COLUMNNAME_AD_Role_ID + "=?";
     List<MUserRoles> list =
-        new Query(ctx, I_AD_User_Roles.Table_Name, whereClause, null)
+        new Query(ctx, I_AD_User_Roles.Table_Name, whereClause)
             .setParameters(AD_Role_ID)
             .list();
     MUserRoles[] retValue = new MUserRoles[list.size()];
@@ -98,14 +98,14 @@ public class MUserRoles extends X_AD_User_Roles {
   protected boolean beforeSave(boolean newRecord) {
     // IDEMPIERE-1410
     if (!MRole.getDefault().isAccessAdvanced()) {
-      MRole role = new MRole(getCtx(), getAD_Role_ID(), null);
+      MRole role = new MRole(getCtx(), getAD_Role_ID());
       if (role.isAccessAdvanced()) {
         log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
         return false;
       }
       if (!newRecord && is_ValueChanged(I_AD_User_Roles.COLUMNNAME_AD_Role_ID)) {
         MRole oldrole =
-            new MRole(getCtx(), get_ValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID), null);
+            new MRole(getCtx(), get_ValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID));
         if (oldrole.isAccessAdvanced()) {
           log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
           return false;
@@ -120,7 +120,7 @@ public class MUserRoles extends X_AD_User_Roles {
   protected boolean beforeDelete() {
     // IDEMPIERE-1410
     if (!MRole.getDefault().isAccessAdvanced()) {
-      MRole role = new MRole(getCtx(), getAD_Role_ID(), null);
+      MRole role = new MRole(getCtx(), getAD_Role_ID());
       if (role.isAccessAdvanced()) {
         log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
         return false;

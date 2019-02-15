@@ -18,16 +18,16 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_OrgInfo(Properties ctx, int AD_OrgInfo_ID, String trxName) {
-    super(ctx, AD_OrgInfo_ID, trxName);
+  public X_AD_OrgInfo(Properties ctx, int AD_OrgInfo_ID) {
+    super(ctx, AD_OrgInfo_ID);
     /**
      * if (AD_OrgInfo_ID == 0) { setDUNS (null); setReceiptFooterMsg (null); // 1 setTaxID (null); }
      */
   }
 
   /** Load Constructor */
-  public X_AD_OrgInfo(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_OrgInfo(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   public X_AD_OrgInfo(Properties ctx, Row row) {

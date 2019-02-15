@@ -12,8 +12,8 @@ public class MClientInfo extends X_AD_ClientInfo {
    * @param ignored ignored
    * @param trxName transaction
    */
-  public MClientInfo(Properties ctx, int ignored, String trxName) {
-    super(ctx, ignored, trxName);
+  public MClientInfo(Properties ctx, int ignored) {
+    super(ctx, ignored);
     if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
   } //	MClientInfo
 
@@ -24,8 +24,8 @@ public class MClientInfo extends X_AD_ClientInfo {
    * @param rs result set
    * @param trxName transaction
    */
-  public MClientInfo(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MClientInfo(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MClientInfo
 
   public MClientInfo(Properties ctx, Row row) {
@@ -55,7 +55,7 @@ public class MClientInfo extends X_AD_ClientInfo {
       int AD_Tree_Campaign_ID,
       int AD_Tree_Activity_ID,
       String trxName) {
-    super(client.getCtx(), 0, trxName);
+    super(client.getCtx(), 0);
     setADClientID(client.getClientId()); // 	to make sure
     setAD_Org_ID(0);
     setIsDiscountLineAmt(false);
@@ -73,16 +73,6 @@ public class MClientInfo extends X_AD_ClientInfo {
     setCreateNew(true);
   } //	MClientInfo
 
-  /**
-   * Get Client Info
-   *
-   * @param ctx context
-   * @param AD_Client_ID id
-   * @return Client Info
-   */
-  public static MClientInfo get(Properties ctx, int AD_Client_ID) {
-    return get(ctx, AD_Client_ID, null);
-  } //	get
 
   /**
    * Get Client Info
@@ -92,7 +82,7 @@ public class MClientInfo extends X_AD_ClientInfo {
    * @param trxName optional trx
    * @return Client Info
    */
-  public static MClientInfo get(Properties ctx, int AD_Client_ID, String trxName) {
-    return MBaseClientInfoKt.get(ctx, AD_Client_ID, trxName);
+  public static MClientInfo get(Properties ctx, int AD_Client_ID) {
+    return MBaseClientInfoKt.get(ctx, AD_Client_ID);
   } //	get
 }

@@ -97,8 +97,8 @@ public class MSequence extends MBaseSequence {
    * @param AD_Sequence_ID id
    * @param trxName transaction
    */
-  public MSequence(Properties ctx, int AD_Sequence_ID, String trxName) {
-    super(ctx, AD_Sequence_ID, trxName);
+  public MSequence(Properties ctx, int AD_Sequence_ID) {
+    super(ctx, AD_Sequence_ID);
     if (AD_Sequence_ID == 0) {
       //	setName (null);
       //
@@ -120,8 +120,8 @@ public class MSequence extends MBaseSequence {
    * @param rs result set
    * @param trxName transaction
    */
-  public MSequence(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MSequence(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MSequence
 
   public MSequence(Properties ctx, Row row) {
@@ -136,8 +136,8 @@ public class MSequence extends MBaseSequence {
    * @param tableName name
    * @param trxName transaction
    */
-  public MSequence(Properties ctx, int AD_Client_ID, String tableName, String trxName) {
-    this(ctx, 0, trxName);
+  public MSequence(Properties ctx, int AD_Client_ID, String tableName) {
+    this(ctx, 0);
     setClientOrg(AD_Client_ID, 0); // 	Client Ownership
     setName(PREFIX_DOCSEQ + tableName);
     setDescription("DocumentNo/Value for Table " + tableName);
@@ -153,8 +153,8 @@ public class MSequence extends MBaseSequence {
    * @param trxName trx
    */
   public MSequence(
-      Properties ctx, int AD_Client_ID, String sequenceName, int StartNo, String trxName) {
-    this(ctx, 0, trxName);
+      Properties ctx, int AD_Client_ID, String sequenceName, int StartNo) {
+    this(ctx, 0);
     setClientOrg(AD_Client_ID, 0); // 	Client Ownership
     setName(sequenceName);
     setDescription(sequenceName);
@@ -162,11 +162,6 @@ public class MSequence extends MBaseSequence {
     setCurrentNext(StartNo);
     setCurrentNextSys(StartNo / 10);
   } //	MSequence;
-
-  /** @deprecated please usegetNextID (int, String, String) */
-  public static int getNextID(int AD_Client_ID, String TableName) {
-    return getNextID(AD_Client_ID, TableName, null);
-  }
 
     /**
    * Get next number for Key column = 0 is Error.
@@ -177,7 +172,7 @@ public class MSequence extends MBaseSequence {
    * @return next no
    */
   @SuppressWarnings("deprecation")
-  public static int getNextID(int AD_Client_ID, String TableName, String trxName) {
+  public static int getNextID(int AD_Client_ID, String TableName) {
     boolean SYSTEM_NATIVE_SEQUENCE =
         MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false);
     //	Check AdempiereSys
@@ -189,14 +184,14 @@ public class MSequence extends MBaseSequence {
       int m_sequence_id = software.hsharp.core.util.DBKt.getNextID(TableName + "_SQ");
       if (m_sequence_id == -1) {
         // try to create the sequence and try again
-        MSequence.createTableSequence(Env.getCtx(), TableName, trxName, true);
+        MSequence.createTableSequence(Env.getCtx(), TableName, null, true);
         m_sequence_id = software.hsharp.core.util.DBKt.getNextID(TableName + "_SQ");
       }
       return m_sequence_id;
     }
 
     return MSequence.getNextIDImpl(
-        AD_Client_ID, TableName, trxName); // it is ok to call deprecated method here
+        AD_Client_ID, TableName); // it is ok to call deprecated method here
   } //	getNextID
 
   /**
@@ -210,8 +205,8 @@ public class MSequence extends MBaseSequence {
    *     to be called fromgetNextID()
    * @deprecated please usegetNextID (int, String, String)
    */
-  private static int getNextIDImpl(int AD_Client_ID, String TableName, String trxName) {
-    return doGetNextIDImpl(AD_Client_ID, TableName);
+  private static int getNextIDImpl(int AD_Client_ID, String TableName) {
+    return doGetNextIDImpl(TableName);
   } //	getNextID
 
   /**
@@ -223,8 +218,8 @@ public class MSequence extends MBaseSequence {
    * @param trxName optional Transaction Name
    * @return document no or null
    */
-  public static String getDocumentNo(int AD_Client_ID, String TableName, String trxName) {
-    return getDocumentNo(AD_Client_ID, TableName, trxName, null);
+  public static String getDocumentNo(int AD_Client_ID, String TableName) {
+    return getDocumentNo(AD_Client_ID, TableName, null, null);
   }
 
   /**
@@ -383,8 +378,8 @@ public class MSequence extends MBaseSequence {
    * @return document no or null
    * @deprecated
    */
-  public static String getDocumentNo(int C_DocType_ID, String trxName) {
-    return getDocumentNo(C_DocType_ID, trxName, false);
+  public static String getDocumentNo(int C_DocType_ID) {
+    return getDocumentNo(C_DocType_ID, null, false);
   } //	getDocumentNo
 
   /**
@@ -433,7 +428,7 @@ public class MSequence extends MBaseSequence {
       return null;
     }
     int seqID = (definite ? dt.getDefiniteSequence_ID() : dt.getDocNoSequence_ID());
-    MSequence seq = new MSequence(Env.getCtx(), seqID, trxName);
+    MSequence seq = new MSequence(Env.getCtx(), seqID);
 
     if (CLogMgt.isLevel(LOGLEVEL))
       s_log.log(LOGLEVEL, "DocType_ID=" + C_DocType_ID + " [" + trxName + "]");
@@ -441,8 +436,8 @@ public class MSequence extends MBaseSequence {
     return getDocumentNoFromSeq(seq, trxName, po);
   } //	getDocumentNo
 
-  public static boolean createTableSequence(Properties ctx, String TableName, String trxName) {
-    return createTableSequence(ctx, TableName, trxName, true);
+  public static boolean createTableSequence(Properties ctx, String TableName) {
+    return createTableSequence(ctx, TableName, null, true);
   }
 
   /**
@@ -462,7 +457,7 @@ public class MSequence extends MBaseSequence {
       throw new IllegalArgumentException(NYI);
     }
 
-    MSequence seq = new MSequence(ctx, 0, trxName);
+    MSequence seq = new MSequence(ctx, 0);
     if (tableID) seq.setClientOrg(0, 0);
     else seq.setClientOrg(Env.getClientId(Env.getCtx()), 0);
 
@@ -479,20 +474,9 @@ public class MSequence extends MBaseSequence {
     return true;
   } //	createTableSequence
 
-  /**
-   * Get Sequence
-   *
-   * @param ctx context
-   * @param tableName table name
-   * @return Sequence
-   */
-  public static MSequence get(Properties ctx, String tableName) {
-    return get(ctx, tableName, null);
-  }
-
   /* Get the tableID sequence based on the TableName */
-  public static MSequence get(Properties ctx, String tableName, String trxName) {
-    return get(ctx, tableName, trxName, true);
+  public static MSequence get(Properties ctx, String tableName) {
+    return get(ctx, tableName, null, true);
   }
 
   /**
@@ -520,7 +504,7 @@ public class MSequence extends MBaseSequence {
       pstmt.setString(2, (tableID ? "Y" : "N"));
       if (!tableID) pstmt.setInt(3, Env.getClientId(Env.getCtx()));
       rs = pstmt.executeQuery();
-      if (rs.next()) retValue = new MSequence(ctx, rs, trxName);
+      if (rs.next()) retValue = new MSequence(ctx, rs);
       if (rs.next()) s_log.log(Level.SEVERE, "More then one sequence for " + tableName);
     } catch (Exception e) {
       throw new DBException(e);
@@ -604,7 +588,7 @@ public class MSequence extends MBaseSequence {
   @Override
   public int getCurrentNext() {
     if (MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false) && isTableID()) {
-      return MSequence.getNextID(getClientId(), getName(), null);
+      return MSequence.getNextID(getClientId(), getName());
     } else {
       return super.getCurrentNext();
     }
@@ -614,7 +598,7 @@ public class MSequence extends MBaseSequence {
   public void setCurrentNext(int CurrentNext) {
     if (MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false) && isTableID()) {
       while (true) {
-        int id = MSequence.getNextID(getClientId(), getName(), null);
+        int id = MSequence.getNextID(getClientId(), getName());
         if (id < 0 || id >= (CurrentNext - 1)) break;
       }
     } else {
@@ -648,8 +632,8 @@ public class MSequence extends MBaseSequence {
     public void run() {
       for (int i = 0; i < 100; i++) {
         try {
-          int no = MSequence.getNextID(0, "Test", null);
-          s_list.add(new Integer(no));
+          int no = MSequence.getNextID(0, "Test");
+          s_list.add(no);
           //	System.out.println("#" + m_i + ": " + no);
         } catch (Exception e) {
           System.err.println(e.getMessage());

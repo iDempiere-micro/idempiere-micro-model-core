@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -47,9 +46,9 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
    * @param AD_Attachment_ID id
    * @param trxName transaction
    */
-  public MAttachment(Properties ctx, int AD_Attachment_ID, String trxName) {
-    super(ctx, AD_Attachment_ID, trxName);
-    initAttachmentStoreDetails(ctx, trxName);
+  public MAttachment(Properties ctx, int AD_Attachment_ID) {
+    super(ctx, AD_Attachment_ID);
+    initAttachmentStoreDetails(ctx);
   } //	MAttachment
 
   /**
@@ -60,13 +59,12 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
    * @param Record_ID record
    * @param trxName transaction
    */
-  public MAttachment(Properties ctx, int AD_Table_ID, int Record_ID, String trxName) {
+  public MAttachment(Properties ctx, int AD_Table_ID, int Record_ID) {
     this(
         ctx,
         MAttachment.getID(AD_Table_ID, Record_ID) > 0
             ? MAttachment.getID(AD_Table_ID, Record_ID)
-            : 0,
-        trxName);
+            : 0);
     if (getId() == 0) {
       setAD_Table_ID(AD_Table_ID);
       setRecord_ID(Record_ID);
@@ -80,20 +78,10 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
    * @param rs result set
    * @param trxName transaction
    */
-  public MAttachment(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
-    initAttachmentStoreDetails(ctx, trxName);
+  public MAttachment(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
+    initAttachmentStoreDetails(ctx);
   } //	MAttachment
-
-  /**
-   * @param ctx
-   * @param AD_Table_ID
-   * @param Record_ID
-   * @return attachment or null
-   */
-  public static MAttachment get(Properties ctx, int AD_Table_ID, int Record_ID) {
-    return get(ctx, AD_Table_ID, Record_ID, null);
-  }
 
   /**
    * Get Attachment (if there are more than one attachment it gets the first in no specific order)
@@ -104,14 +92,14 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
    * @param trxName
    * @return attachment or null
    */
-  public static MAttachment get(Properties ctx, int AD_Table_ID, int Record_ID, String trxName) {
+  public static MAttachment get(Properties ctx, int AD_Table_ID, int Record_ID) {
     final String whereClause =
         I_AD_Attachment.COLUMNNAME_AD_Table_ID
             + "=? AND "
             + I_AD_Attachment.COLUMNNAME_Record_ID
             + "=?";
     MAttachment retValue =
-        new Query(ctx, I_AD_Attachment.Table_Name, whereClause, trxName)
+        new Query(ctx, I_AD_Attachment.Table_Name, whereClause)
             .setParameters(AD_Table_ID, Record_ID)
             .first();
     return retValue;
@@ -136,9 +124,9 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
    * @param ctx
    * @param trxName
    */
-  private void initAttachmentStoreDetails(Properties ctx, String trxName) {
+  private void initAttachmentStoreDetails(Properties ctx) {
     MClientInfo clientInfo = MClientInfo.get(ctx, getClientId());
-    provider = new MStorageProvider(ctx, clientInfo.getAD_StorageProvider_ID(), trxName);
+    provider = new MStorageProvider(ctx, clientInfo.getAD_StorageProvider_ID());
   }
 
   /**
@@ -149,7 +137,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
    */
   public void setClientOrg(int AD_Client_ID, int AD_Org_ID) {
     super.setClientOrg(AD_Client_ID, AD_Org_ID);
-    initAttachmentStoreDetails(getCtx(), null);
+    initAttachmentStoreDetails(getCtx());
   } //	setClientOrg
 
     /**

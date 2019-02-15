@@ -58,13 +58,13 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Tree(Properties ctx, int AD_Tree_ID, String trxName) {
-    super(ctx, AD_Tree_ID, trxName);
+  public X_AD_Tree(Properties ctx, int AD_Tree_ID) {
+    super(ctx, AD_Tree_ID);
   }
 
   /** Load Constructor */
-  public X_AD_Tree(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Tree(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   public X_AD_Tree(Properties ctx, Row row) {

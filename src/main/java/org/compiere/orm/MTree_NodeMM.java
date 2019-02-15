@@ -22,8 +22,8 @@ public class MTree_NodeMM extends X_AD_TreeNodeMM {
    * @param rs result set
    * @param trxName transaction
    */
-  public MTree_NodeMM(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MTree_NodeMM(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MTree_NodeMM
 
   /**
@@ -33,7 +33,7 @@ public class MTree_NodeMM extends X_AD_TreeNodeMM {
    * @param Node_ID node
    */
   public MTree_NodeMM(MTree_Base tree, int Node_ID) {
-    super(tree.getCtx(), 0, null);
+    super(tree.getCtx(), 0);
     setClientOrg(tree);
     setAD_Tree_ID(tree.getAD_Tree_ID());
     setNode_ID(Node_ID);

@@ -1,7 +1,6 @@
 package org.compiere.orm;
 
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_ClientInfo;
@@ -19,8 +18,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_ClientInfo(Properties ctx, int AD_ClientInfo_ID, String trxName) {
-    super(ctx, AD_ClientInfo_ID, trxName);
+  public X_AD_ClientInfo(Properties ctx, int AD_ClientInfo_ID) {
+    super(ctx, AD_ClientInfo_ID);
     /**
      * if (AD_ClientInfo_ID == 0) { setIsConfirmOnDocClose (false); // N setIsConfirmOnDocVoid
      * (false); // N setIsDiscountLineAmt (false); }
@@ -28,8 +27,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
   }
 
   /** Load Constructor */
-  public X_AD_ClientInfo(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_ClientInfo(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   public X_AD_ClientInfo(Properties ctx, Row row) {

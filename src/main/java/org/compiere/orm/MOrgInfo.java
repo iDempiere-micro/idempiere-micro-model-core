@@ -27,7 +27,7 @@ public class MOrgInfo extends X_AD_OrgInfo {
    * @param org org
    */
   public MOrgInfo(MOrg org) {
-    super(org.getCtx(), 0, null);
+    super(org.getCtx(), 0);
     setClientOrg(org);
     setDUNS("?");
     setTaxID("?");
@@ -41,28 +41,16 @@ public class MOrgInfo extends X_AD_OrgInfo {
    *
    * @param ctx context
    * @param AD_Org_ID id
-   * @return Org Info
-   * @deprecated
-   */
-  public static MOrgInfo get(Properties ctx, int AD_Org_ID) {
-    return get(ctx, AD_Org_ID, null);
-  } //	get
-
-  /**
-   * Load Constructor
-   *
-   * @param ctx context
-   * @param AD_Org_ID id
    * @param trxName
    * @return Org Info
    */
-  public static MOrgInfo get(Properties ctx, int AD_Org_ID, String trxName) {
+  public static MOrgInfo get(Properties ctx, int AD_Org_ID) {
     MOrgInfo retValue = s_cache.get(AD_Org_ID);
     if (retValue != null) {
       return retValue;
     }
     retValue =
-        new Query(ctx, I_AD_OrgInfo.Table_Name, "AD_Org_ID=?", trxName)
+        new Query(ctx, I_AD_OrgInfo.Table_Name, "AD_Org_ID=?")
             .setParameters(AD_Org_ID)
             .firstOnly();
     if (retValue != null) {

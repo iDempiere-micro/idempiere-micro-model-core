@@ -1,7 +1,6 @@
 package org.compiere.orm;
 
 import static org.compiere.util.SystemIDs.USER_SUPERUSER;
-import static org.compiere.util.SystemIDs.USER_SYSTEM;
 import static software.hsharp.core.util.DBKt.*;
 
 import java.lang.reflect.Array;
@@ -82,8 +81,8 @@ public class MRole extends MBaseRole {
    * @param AD_Role_ID id
    * @param trxName transaction
    */
-  public MRole(Properties ctx, int AD_Role_ID, String trxName) {
-    super(ctx, AD_Role_ID, trxName);
+  public MRole(Properties ctx, int AD_Role_ID) {
+    super(ctx, AD_Role_ID);
     //	ID=0 == System Administrator
     if (AD_Role_ID == 0) {
       //	setName (null);
@@ -116,8 +115,8 @@ public class MRole extends MBaseRole {
    * @param rs result set
    * @param trxName transaction
    */
-  public MRole(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MRole(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MRole
 
   public MRole(Properties ctx, Row row) {
@@ -183,7 +182,7 @@ public class MRole extends MBaseRole {
     String key = AD_Role_ID + "_" + AD_User_ID;
     MRole role = s_roles.get(key);
     if (role == null || reload) {
-      role = new MRole(ctx, AD_Role_ID, null);
+      role = new MRole(ctx, AD_Role_ID);
       s_roles.put(key, role);
       if (AD_Role_ID == 0) {
         String trxName = null;
@@ -216,7 +215,7 @@ public class MRole extends MBaseRole {
     String trxName = null;
     if (role == null)
     {
-    	role = new MRole (ctx, AD_Role_ID, trxName);
+    	role = new MRole (ctx, AD_Role_ID);
     	s_roles.put (key, role);
     	if (AD_Role_ID == 0)	//	System Role
     	{
@@ -254,7 +253,7 @@ public class MRole extends MBaseRole {
     try {
       pstmt = prepareStatement(sql);
       rs = pstmt.executeQuery();
-      while (rs.next()) list.add(new MRole(ctx, rs, null));
+      while (rs.next()) list.add(new MRole(ctx, rs));
     } catch (Exception e) {
       s_log.log(Level.SEVERE, sql, e);
     } finally {
@@ -408,11 +407,11 @@ public class MRole extends MBaseRole {
     if (!success) return success;
     if (newRecord && success) {
       //	Add Role to SuperUser
-      MUserRoles su = new MUserRoles(getCtx(), SUPERUSER_USER_ID, getAD_Role_ID(), null);
+      MUserRoles su = new MUserRoles(getCtx(), SUPERUSER_USER_ID, getAD_Role_ID());
       su.saveEx();
       //	Add Role to User
       if (getCreatedBy() != SUPERUSER_USER_ID) {
-        MUserRoles ur = new MUserRoles(getCtx(), getCreatedBy(), getAD_Role_ID(), null);
+        MUserRoles ur = new MUserRoles(getCtx(), getCreatedBy(), getAD_Role_ID());
         ur.saveEx();
       }
       updateAccessRecords();
@@ -732,7 +731,7 @@ public class MRole extends MBaseRole {
       pstmt.setInt(1, getAD_User_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
-        MUserOrgAccess oa = new MUserOrgAccess(getCtx(), rs, null);
+        MUserOrgAccess oa = new MUserOrgAccess(getCtx(), rs);
         loadOrgAccessAdd(list, new OrgAccess(oa.getClientId(), oa.getOrgId(), oa.isReadOnly()));
       }
     } catch (Exception e) {
@@ -776,7 +775,7 @@ public class MRole extends MBaseRole {
       pstmt.setInt(1, getAD_Role_ID());
       rs = pstmt.executeQuery();
       while (rs.next()) {
-        MRecordAccess ra = new MRecordAccess(getCtx(), rs, null);
+        MRecordAccess ra = new MRecordAccess(getCtx(), rs);
         list.add(ra);
         if (ra.isDependentEntities()) dependent.add(ra);
       }
@@ -1849,7 +1848,7 @@ public class MRole extends MBaseRole {
         int idxpar = 1;
         if (role.getClientId() == 0 && role.isMasterRole()) {
           // master role on system - check options based on docbasetype and docsubtypeso
-          MDocType doc = new MDocType(getCtx(), docTypeId, null);
+          MDocType doc = new MDocType(getCtx(), docTypeId);
 
           sql =
               "SELECT DISTINCT rl.Value, a.IsActive"
@@ -2048,7 +2047,7 @@ public class MRole extends MBaseRole {
     //
     final String whereClause = X_AD_Role_Included.COLUMNNAME_AD_Role_ID + "=?";
     List<X_AD_Role_Included> list =
-        new Query(getCtx(), X_AD_Role_Included.Table_Name, whereClause, null)
+        new Query(getCtx(), X_AD_Role_Included.Table_Name, whereClause)
             .setParameters(getAD_Role_ID())
             .setOnlyActiveRecords(true)
             .setOrderBy(
@@ -2090,7 +2089,7 @@ public class MRole extends MBaseRole {
             + " AND us.Substitute_ID=?)";
 
     List<MRole> list =
-        new Query(getCtx(), I_AD_Role.Table_Name, whereClause, null)
+        new Query(getCtx(), I_AD_Role.Table_Name, whereClause)
             .setParameters(AD_User_ID)
             .setClient_ID()
             .setOrderBy(I_AD_Role.COLUMNNAME_AD_Role_ID)

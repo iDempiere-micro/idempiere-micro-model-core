@@ -24,13 +24,13 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig, I
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_SysConfig(Properties ctx, int AD_SysConfig_ID, String trxName) {
-    super(ctx, AD_SysConfig_ID, trxName);
+  public X_AD_SysConfig(Properties ctx, int AD_SysConfig_ID) {
+    super(ctx, AD_SysConfig_ID);
   }
 
   /** Load Constructor */
-  public X_AD_SysConfig(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_SysConfig(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   public X_AD_SysConfig(Properties ctx, Row r) {

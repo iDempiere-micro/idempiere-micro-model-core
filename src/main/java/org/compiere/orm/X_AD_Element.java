@@ -18,13 +18,13 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Element(Properties ctx, int AD_Element_ID, String trxName) {
-    super(ctx, AD_Element_ID, trxName);
+  public X_AD_Element(Properties ctx, int AD_Element_ID) {
+    super(ctx, AD_Element_ID);
   }
 
   /** Load Constructor */
-  public X_AD_Element(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Element(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   public X_AD_Element(Properties ctx, Row row) {

@@ -23,7 +23,7 @@ public class POIterator<T extends PO> implements Iterator<T> {
    * @param idList
    * @param trxName
    */
-  public POIterator(MTable table, List<Object[]> idList, String trxName) {
+  public POIterator(MTable table, List<Object[]> idList) {
     this.table = table;
     this.idList = idList;
     this.trxName = trxName;
@@ -58,7 +58,7 @@ public class POIterator<T extends PO> implements Iterator<T> {
     if (index <= (idList.size() - 1)) {
       Object[] ids = idList.get(index);
       if (ids.length == 1 && (ids[0] instanceof Number)) {
-        return (T) table.getPO(((Number) ids[0]).intValue(), trxName);
+        return (T) table.getPO(((Number) ids[0]).intValue());
       } else {
         if (keyWhereClause == null) {
           String[] keys = table.getKeyColumns();
@@ -69,7 +69,7 @@ public class POIterator<T extends PO> implements Iterator<T> {
           }
           keyWhereClause = sqlBuffer.toString();
         }
-        return (T) table.getPO(keyWhereClause, ids, trxName);
+        return (T) table.getPO(keyWhereClause, ids);
       }
     } else {
       return null;

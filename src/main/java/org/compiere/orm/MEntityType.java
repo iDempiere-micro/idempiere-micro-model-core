@@ -42,8 +42,8 @@ public class MEntityType extends X_AD_EntityType {
    * @param AD_EntityType_ID id
    * @param trxName transaction
    */
-  public MEntityType(Properties ctx, int AD_EntityType_ID, String trxName) {
-    super(ctx, AD_EntityType_ID, trxName);
+  public MEntityType(Properties ctx, int AD_EntityType_ID) {
+    super(ctx, AD_EntityType_ID);
   } //	MEntityType
 
   /**
@@ -53,8 +53,8 @@ public class MEntityType extends X_AD_EntityType {
    * @param rs result set
    * @param trxName transaction
    */
-  public MEntityType(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MEntityType(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MEntityType
 
   public MEntityType(Properties ctx, Row row) {
@@ -72,7 +72,7 @@ public class MEntityType extends X_AD_EntityType {
     MEntityType retValue = s_cache.get(entityType);
     if (retValue != null) return retValue;
     retValue =
-        new Query(ctx, I_AD_EntityType.Table_Name, "EntityType=?", null)
+        new Query(ctx, I_AD_EntityType.Table_Name, "EntityType=?")
             .setParameters(entityType)
             .firstOnly();
     if (retValue != null) s_cache.put(entityType, retValue);

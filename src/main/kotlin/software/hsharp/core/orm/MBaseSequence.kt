@@ -19,7 +19,7 @@ fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
     return "/sql/checkClientSequences.sql".asResource { sql ->
         val loadQuery =
             queryOf(sql, listOf(clientId))
-            .map { row -> MSequence(ctx, clientId, row.string(1), null).save() }
+            .map { row -> MSequence(ctx, clientId, row.string(1)).save() }
             .asList
         DB.current.run(loadQuery).min() ?: false
     }
@@ -35,7 +35,7 @@ private data class GetNextIDImplResult(
     )
 }
 
-fun doGetNextIDImpl(clientId: Int, tableName: String): Int {
+fun doGetNextIDImpl(tableName: String): Int {
     if (tableName.isEmpty())
         throw IllegalArgumentException("TableName missing")
 
@@ -118,7 +118,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
             next1
         } else {
             if (isUseOrgLevel || isStartNewYear) {
-                val seqno = X_AD_Sequence_No(Env.getCtx(), 0, null)
+                val seqno = X_AD_Sequence_No(Env.getCtx(), 0)
                 seqno.aD_Sequence_ID = AD_Sequence_ID
                 seqno.setAD_Org_ID(docOrg_ID)
                 seqno.setCalendarYearMonth(calendarYearMonth)
@@ -152,7 +152,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
 }
 
 open class MBaseSequence : X_AD_Sequence {
-    constructor(ctx: Properties, Id: Int, trxName: String?) : super(ctx, Id, trxName)
-    constructor(ctx: Properties, rs: ResultSet, trxName: String?) : super(ctx, rs, trxName)
+    constructor(ctx: Properties, Id: Int) : super(ctx, Id)
+    constructor(ctx: Properties, rs: ResultSet) : super(ctx, rs)
     constructor(ctx: Properties, row: Row) : super(ctx, row)
 }

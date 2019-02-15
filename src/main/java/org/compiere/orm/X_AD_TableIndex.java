@@ -17,13 +17,13 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_TableIndex(Properties ctx, int AD_TableIndex_ID, String trxName) {
-    super(ctx, AD_TableIndex_ID, trxName);
+  public X_AD_TableIndex(Properties ctx, int AD_TableIndex_ID) {
+    super(ctx, AD_TableIndex_ID);
   }
 
   /** Load Constructor */
-  public X_AD_TableIndex(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_TableIndex(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**
@@ -43,7 +43,7 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
     public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), null);
+            .getPO(getAD_Table_ID());
   }
 
   /**
@@ -64,7 +64,7 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
    */
   public void setAD_Table_ID(int AD_Table_ID) {
     if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
+    else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, AD_Table_ID);
   }
 
   /**

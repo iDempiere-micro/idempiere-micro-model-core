@@ -48,8 +48,8 @@ public class MTable extends MBaseTable {
    * @param AD_Table_ID id
    * @param trxName transaction
    */
-  public MTable(Properties ctx, int AD_Table_ID, String trxName) {
-    super(ctx, AD_Table_ID, trxName);
+  public MTable(Properties ctx, int AD_Table_ID) {
+    super(ctx, AD_Table_ID);
     if (AD_Table_ID == 0) {
       //	setName (null);
       //	setTableName (null);
@@ -71,8 +71,8 @@ public class MTable extends MBaseTable {
    * @param rs result set
    * @param trxName transaction
    */
-  public MTable(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MTable(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MTable
 
   public MTable(Properties ctx, Row row) {
@@ -84,28 +84,16 @@ public class MTable extends MBaseTable {
    *
    * @param ctx context
    * @param AD_Table_ID id
-   * @return MTable
-   */
-  public static MTable get(Properties ctx, int AD_Table_ID) {
-    return get(ctx, AD_Table_ID, null);
-  } //	get
-
-  /**
-   * Get Table from Cache
-   *
-   * @param ctx context
-   * @param AD_Table_ID id
    * @param trxName transaction
    * @return MTable
    */
-  public static MTable get(Properties ctx, int AD_Table_ID, String trxName) {
+  public static MTable get(Properties ctx, int AD_Table_ID) {
     Integer key = Integer.valueOf(AD_Table_ID);
     MTable retValue = getTableCache().get(key);
     if (retValue != null && retValue.getCtx() == ctx) {
-      if (trxName != null) retValue.set_TrxName(trxName);
       return retValue;
     }
-    retValue = new MTable(ctx, AD_Table_ID, trxName);
+    retValue = new MTable(ctx, AD_Table_ID);
     if (retValue.getId() != 0) {
       getTableCache().put(key, retValue);
     }
@@ -248,7 +236,7 @@ public class MTable extends MBaseTable {
    * @param trxName
    * @return PO for Record or null
    */
-  public org.idempiere.orm.PO getPO(int Record_ID, String trxName) {
+  public org.idempiere.orm.PO getPO(int Record_ID) {
     if (Record_ID == 0) {
       return null;
     }
@@ -263,7 +251,7 @@ public class MTable extends MBaseTable {
     IModelFactory[] factoryList = getFactoryList();
     if (factoryList != null) {
       for (IModelFactory factory : factoryList) {
-        po = factory.getPO(tableName, Record_ID, trxName);
+        po = factory.getPO(tableName, Record_ID);
         if (po != null) {
           if (po.getId() != Record_ID && Record_ID > 0) po = null;
           else break;
@@ -272,7 +260,7 @@ public class MTable extends MBaseTable {
     }
 
     if (po == null) {
-      po = new GenericPO(tableName, getCtx(), Record_ID, trxName);
+      po = new GenericPO(tableName, getCtx(), Record_ID);
       if (po.getId() != Record_ID && Record_ID > 0) po = null;
     }
 
@@ -286,20 +274,20 @@ public class MTable extends MBaseTable {
    * @param trxName transaction
    * @return PO for Record or null
    */
-  public org.idempiere.orm.PO getPO(ResultSet rs, String trxName) {
+  public org.idempiere.orm.PO getPO(ResultSet rs) {
     String tableName = getTableName();
 
     org.idempiere.orm.PO po = null;
     IModelFactory[] factoryList = getFactoryList();
     if (factoryList != null) {
       for (IModelFactory factory : factoryList) {
-        po = factory.getPO(tableName, rs, trxName);
+        po = factory.getPO(tableName, rs);
         if (po != null) break;
       }
     }
 
     if (po == null) {
-      po = new GenericPO(tableName, getCtx(), rs, trxName);
+      po = new GenericPO(tableName, getCtx(), rs);
     }
 
     return po;
@@ -313,11 +301,11 @@ public class MTable extends MBaseTable {
    * @param trxName
    * @return
    */
-  public org.idempiere.orm.PO getPO(String whereClause, Object[] params, String trxName) {
+  public org.idempiere.orm.PO getPO(String whereClause, Object[] params) {
     if (whereClause == null || whereClause.length() == 0) return null;
     //
     org.idempiere.orm.PO po = null;
-    POInfo info = POInfo.getPOInfo(getCtx(), getAD_Table_ID(), trxName);
+    POInfo info = POInfo.getPOInfo(getCtx(), getAD_Table_ID());
     if (info == null) return null;
     StringBuilder sqlBuffer = info.buildSelect();
     sqlBuffer.append(" WHERE ").append(whereClause);
@@ -333,7 +321,7 @@ public class MTable extends MBaseTable {
       }
       rs = pstmt.executeQuery();
       if (rs.next()) {
-        po = getPO(rs, trxName);
+        po = getPO(rs);
       }
     } catch (Exception e) {
       log.log(Level.SEVERE, sql, e);
@@ -370,9 +358,9 @@ public class MTable extends MBaseTable {
   protected boolean afterSave(boolean newRecord, boolean success) {
     if (!success) return success;
     //	Sync Table ID
-    MSequence seq = MSequence.get(getCtx(), getTableName(), null);
+    MSequence seq = MSequence.get(getCtx(), getTableName());
     if (seq == null || seq.getId() == 0)
-      MSequence.createTableSequence(getCtx(), getTableName(), null);
+      MSequence.createTableSequence(getCtx(), getTableName());
     else if (!seq.getName().equals(getTableName())) {
       seq.setName(getTableName());
       seq.saveEx();
@@ -388,8 +376,8 @@ public class MTable extends MBaseTable {
    * @param trxName
    * @return Query
    */
-  public Query createQuery(String whereClause, String trxName) {
-    return new Query(this.getCtx(), this, whereClause, trxName);
+  public Query createQuery(String whereClause) {
+    return new Query(this.getCtx(), this, whereClause);
   }
 
   /**
@@ -407,8 +395,8 @@ public class MTable extends MBaseTable {
         new Query(
             getCtx(),
             MViewComponent.Table_Name,
-            MViewComponent.COLUMNNAME_AD_Table_ID + "=?",
-            null);
+            MViewComponent.COLUMNNAME_AD_Table_ID + "=?"
+        );
     query.setParameters(getAD_Table_ID());
     query.setOrderBy(MViewComponent.COLUMNNAME_SeqNo);
     query.setOnlyActiveRecords(true);

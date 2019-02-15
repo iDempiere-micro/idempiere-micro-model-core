@@ -3,7 +3,6 @@ package org.compiere.orm;
 import java.sql.ResultSet;
 import java.util.Properties;
 import org.compiere.model.I_AD_Ref_Table;
-import org.idempiere.common.util.KeyNamePair;
 import org.idempiere.orm.I_Persistent;
 
 /**
@@ -18,8 +17,8 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Ref_Table(Properties ctx, int AD_Ref_Table_ID, String trxName) {
-    super(ctx, AD_Ref_Table_ID, trxName);
+  public X_AD_Ref_Table(Properties ctx, int AD_Ref_Table_ID) {
+    super(ctx, AD_Ref_Table_ID);
     /**
      * if (AD_Ref_Table_ID == 0) { setAD_Display (0); setAD_Key (0); setReferenceId (0);
      * setAD_Table_ID (0); setEntityType (null); // @SQL=select
@@ -28,8 +27,8 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
   }
 
   /** Load Constructor */
-  public X_AD_Ref_Table(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Ref_Table(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**
@@ -82,7 +81,7 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table, I_Persistent {
     public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
     return (org.compiere.model.I_AD_Table)
         MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-            .getPO(getAD_Table_ID(), null);
+            .getPO(getAD_Table_ID());
   }
 
   /**

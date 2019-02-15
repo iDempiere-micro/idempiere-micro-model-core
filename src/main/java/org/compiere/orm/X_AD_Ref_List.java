@@ -18,13 +18,13 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Ref_List(Properties ctx, int AD_Ref_List_ID, String trxName) {
-    super(ctx, AD_Ref_List_ID, trxName);
+  public X_AD_Ref_List(Properties ctx, int AD_Ref_List_ID) {
+    super(ctx, AD_Ref_List_ID);
   }
 
   /** Load Constructor */
-  public X_AD_Ref_List(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Ref_List(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

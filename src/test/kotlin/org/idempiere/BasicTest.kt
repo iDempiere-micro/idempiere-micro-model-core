@@ -90,7 +90,7 @@ class BasicTest {
     @Test
     fun `can create a new column to a table and then delete it`() {
         DB.run {
-            val table = MTable(ctx, 101, null)
+            val table = MTable(ctx, 101)
             val randomName = randomString(10)
             val column = MColumn(table)
             column.name = randomName
@@ -98,7 +98,7 @@ class BasicTest {
             column.fieldLength = 1
             column.referenceId = 13
             column.save()
-            val tableAfterSave = MTable(ctx, 101, null)
+            val tableAfterSave = MTable(ctx, 101)
             val columns = tableAfterSave.getColumns(true)
             val newColumn = columns.first { it.name == randomName }
             assert(newColumn.columnId >= 1000000)
@@ -112,7 +112,7 @@ class BasicTest {
     @Test
     fun `can run query to get data`() {
         DB.run {
-            val element = M_Element.get(ctx, "IsPrimary", null)
+            val element = M_Element.get(ctx, "IsPrimary")
             assertEquals(398, element.id)
         }
     }

@@ -17,14 +17,14 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM, I_Persistent
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_TreeNodeMM(Properties ctx, int AD_TreeNodeMM_ID, String trxName) {
-    super(ctx, AD_TreeNodeMM_ID, trxName);
+  public X_AD_TreeNodeMM(Properties ctx, int AD_TreeNodeMM_ID) {
+    super(ctx, AD_TreeNodeMM_ID);
     /** if (AD_TreeNodeMM_ID == 0) { setAD_Tree_ID (0); setNode_ID (0); } */
   }
 
   /** Load Constructor */
-  public X_AD_TreeNodeMM(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_TreeNodeMM(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   /**

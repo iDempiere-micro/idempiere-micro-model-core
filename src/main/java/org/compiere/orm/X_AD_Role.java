@@ -34,8 +34,8 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   private static final long serialVersionUID = 20171031L;
 
   /** Standard Constructor */
-  public X_AD_Role(Properties ctx, int AD_Role_ID, String trxName) {
-    super(ctx, AD_Role_ID, trxName);
+  public X_AD_Role(Properties ctx, int AD_Role_ID) {
+    super(ctx, AD_Role_ID);
     /**
      * if (AD_Role_ID == 0) { setAD_Role_ID (0); setAllow_Info_Account (true); // Y
      * setAllow_Info_Asset (true); // Y setAllow_Info_BPartner (true); // Y setAllow_Info_InOut
@@ -53,8 +53,8 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
   }
 
   /** Load Constructor */
-  public X_AD_Role(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public X_AD_Role(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   }
 
   public X_AD_Role(Properties ctx, Row row) {

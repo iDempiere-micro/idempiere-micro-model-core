@@ -24,8 +24,8 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
    * @param rs result set
    * @param trxName transaction
    */
-  public MTree_NodePR(Properties ctx, ResultSet rs, String trxName) {
-    super(ctx, rs, trxName);
+  public MTree_NodePR(Properties ctx, ResultSet rs) {
+    super(ctx, rs);
   } //	MTree_NodePR
 
   /**
@@ -35,7 +35,7 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
    * @param Node_ID node
    */
   public MTree_NodePR(MTree_Base tree, int Node_ID) {
-    super(tree.getCtx(), 0, null);
+    super(tree.getCtx(), 0);
     setClientOrg(tree);
     setAD_Tree_ID(tree.getAD_Tree_ID());
     setNode_ID(Node_ID);
