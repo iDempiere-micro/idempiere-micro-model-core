@@ -498,8 +498,6 @@ public abstract class PO extends org.idempiere.orm.PO {
     //	Reset
     if (success) {
       // osgi event handler
-      IEvent event = EventManager.newEvent(IEventTopics.PO_POST_DELETE, this);
-      EventManager.getInstance().postEvent(event);
 
       m_idOld = 0;
       int size = p_info.getColumnCount();

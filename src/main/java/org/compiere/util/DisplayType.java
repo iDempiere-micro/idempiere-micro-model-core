@@ -8,9 +8,6 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
-import org.idempiere.common.base.IServiceLocator;
-import org.idempiere.common.base.IServicesHolder;
-import org.idempiere.common.base.Service;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Language;
@@ -149,17 +146,6 @@ public final class DisplayType {
         || displayType == Chart
         || displayType == Color) return true;
 
-    IServiceLocator locator = Service.Companion.locator();
-
-    if (locator != null) {
-      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
-      if (service != null) {
-        List<IDisplayTypeFactory> factoryList = service.getServices();
-        for (IDisplayTypeFactory factory : factoryList) {
-          if (factory.isID(displayType)) return true;
-        }
-      }
-    }
     return false;
   } //	isID
 
@@ -176,18 +162,6 @@ public final class DisplayType {
         || displayType == CostPrice
         || displayType == Integer
         || displayType == Quantity) return true;
-
-    IServiceLocator locator = Service.Companion.locator();
-
-    if (locator != null) {
-      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
-      if (service != null) {
-        List<IDisplayTypeFactory> factoryList = service.getServices();
-        for (IDisplayTypeFactory factory : factoryList) {
-          if (factory.isNumeric(displayType)) return true;
-        }
-      }
-    }
 
     return false;
   } //	isNumeric
@@ -211,17 +185,6 @@ public final class DisplayType {
         || displayType == Color
         || displayType == MultipleSelectionGrid) return true;
 
-    IServiceLocator locator = Service.Companion.locator();
-
-    if (locator != null) {
-      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
-      if (service != null) {
-        List<IDisplayTypeFactory> factoryList = service.getServices();
-        for (IDisplayTypeFactory factory : factoryList) {
-          if (factory.isText(displayType)) return true;
-        }
-      }
-    }
     return false;
   } //	isText
 
@@ -233,18 +196,6 @@ public final class DisplayType {
    */
   public static boolean isDate(int displayType) {
     if (displayType == Date || displayType == DateTime || displayType == Time) return true;
-
-    IServiceLocator locator = Service.Companion.locator();
-
-    if (locator != null) {
-      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
-      if (service != null) {
-        List<IDisplayTypeFactory> factoryList = service.getServices();
-        for (IDisplayTypeFactory factory : factoryList) {
-          if (factory.isDate(displayType)) return true;
-        }
-      }
-    }
 
     return false;
   } //	isDate
@@ -261,18 +212,6 @@ public final class DisplayType {
         || displayType == TableDir
         || displayType == Search) return true;
 
-    IServiceLocator locator = Service.Companion.locator();
-
-    if (locator != null) {
-      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
-      if (service != null) {
-        List<IDisplayTypeFactory> factoryList = service.getServices();
-        for (IDisplayTypeFactory factory : factoryList) {
-          if (factory.isLookup(displayType)) return true;
-        }
-      }
-    }
-
     return false;
   } //	isLookup
 
@@ -284,18 +223,6 @@ public final class DisplayType {
    */
   public static boolean isLOB(int displayType) {
     if (displayType == Binary || displayType == TextLong) return true;
-
-    IServiceLocator locator = Service.Companion.locator();
-
-    if (locator != null) {
-      IServicesHolder<IDisplayTypeFactory> service = locator.list(IDisplayTypeFactory.class);
-      if (service != null) {
-        List<IDisplayTypeFactory> factoryList = service.getServices();
-        for (IDisplayTypeFactory factory : factoryList) {
-          if (factory.isLOB(displayType)) return true;
-        }
-      }
-    }
 
     return false;
   } //	isLOB
@@ -340,15 +267,6 @@ public final class DisplayType {
       format.setMaximumFractionDigits(MAX_FRACTION);
       format.setMinimumFractionDigits(AMOUNT_FRACTION);
     } else {
-      List<IDisplayTypeFactory> factoryList =
-          Service.Companion.locator().list(IDisplayTypeFactory.class).getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        DecimalFormat osgiFormat = factory.getNumberFormat(displayType, myLanguage, pattern);
-        if (osgiFormat != null) {
-          return osgiFormat;
-        }
-      }
-
       format.setMaximumIntegerDigits(MAX_DIGITS);
       format.setMaximumFractionDigits(MAX_FRACTION);
       format.setMinimumFractionDigits(1);
@@ -435,17 +353,6 @@ public final class DisplayType {
 
     if (displayType == DateTime) return myLanguage.getDateTimeFormat();
     else if (displayType == Time) return myLanguage.getTimeFormat();
-    else {
-      IServiceLocator locator = Service.Companion.locator();
-      if (locator != null) {
-        List<IDisplayTypeFactory> factoryList =
-            locator.list(IDisplayTypeFactory.class).getServices();
-        for (IDisplayTypeFactory factory : factoryList) {
-          SimpleDateFormat osgiFormat = factory.getDateFormat(displayType, myLanguage, pattern);
-          if (osgiFormat != null) return osgiFormat;
-        }
-      }
-    }
 
     //	else if (displayType == Date)
     return myLanguage.getDateFormat(); // 	default
@@ -490,14 +397,6 @@ public final class DisplayType {
     else if (displayType == Button) return String.class;
     else if (isLOB(displayType)) // 	CLOB is String
     return byte[].class;
-    else {
-      List<IDisplayTypeFactory> factoryList =
-          Service.Companion.locator().list(IDisplayTypeFactory.class).getServices();
-      for (IDisplayTypeFactory factory : factoryList) {
-        Class<?> osgiClass = factory.getClass(displayType, yesNoAsBoolean);
-        if (osgiClass != null) return osgiClass;
-      }
-    }
     //
     return Object.class;
   } //  getClass
@@ -546,13 +445,6 @@ public final class DisplayType {
     if (displayType == DisplayType.Button) {
       if (columnName.endsWith("_ID")) return "NUMBER(10)";
       else return "CHAR(" + fieldLength + ")";
-    }
-
-    List<IDisplayTypeFactory> factoryList =
-        Service.Companion.locator().list(IDisplayTypeFactory.class).getServices();
-    for (IDisplayTypeFactory factory : factoryList) {
-      String osgiSQLDataType = factory.getSQLDataType(displayType, columnName, fieldLength);
-      if (osgiSQLDataType != null) return osgiSQLDataType;
     }
 
     if (!DisplayType.isText(displayType)) s_log.severe("Unhandled Data Type = " + displayType);

@@ -151,6 +151,16 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
     return msg.trim();
   } //	setTextMsg
 
+  @Override
+  public ArrayList<I_AD_AttachmentEntry> getItems() {
+    return m_items;
+  }
+
+  @Override
+  public void setItems(ArrayList<I_AD_AttachmentEntry> items) {
+    m_items = items;
+  }
+
   /**
    * String Representation
    *

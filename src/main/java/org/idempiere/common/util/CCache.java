@@ -1,12 +1,10 @@
 package org.idempiere.common.util;
 
-import java.beans.VetoableChangeListener;
 import java.beans.VetoableChangeSupport;
 import java.io.Serializable;
 import java.util.*;
-import org.idempiere.common.base.IServiceHolder;
-import org.idempiere.common.base.IServiceLocator;
-import org.idempiere.common.base.Service;
+
+import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.icommon.distributed.ICacheService;
 
 /**
@@ -100,23 +98,6 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
     m_maxSize = maxSize;
     cache = CacheMgt.get().register(this, distributed);
     m_distributed = distributed;
-    if (distributed) {
-      try {
-        IServiceLocator locator = Service.Companion.locator();
-        if (locator != null) {
-          IServiceHolder<ICacheService> service =
-              Service.Companion.locator().locate(ICacheService.class);
-          if (service != null) {
-            ICacheService provider = service.getService();
-            if (provider != null) {
-              nullList = provider.getSet(name);
-            }
-          }
-        }
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }
 
     if (nullList == null) {
       nullList = Collections.synchronizedSet(new HashSet<K>());

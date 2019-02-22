@@ -135,4 +135,11 @@ public class X_AD_Attachment extends PO implements I_Persistent {
   public int getTableId() {
     return I_AD_Attachment.Table_ID;
   }
+
+  public byte[] getBinaryData ()
+  {
+    return (byte[])get_Value(I_AD_Attachment.COLUMNNAME_BinaryData);
+  }
+
+
 }

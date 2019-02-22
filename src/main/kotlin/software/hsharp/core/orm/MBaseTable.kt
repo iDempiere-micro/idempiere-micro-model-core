@@ -9,8 +9,6 @@ import org.compiere.orm.MTable
 import org.compiere.orm.X_AD_Table
 import org.compiere.orm.MColumn
 import org.compiere.orm.GenericPO
-import org.idempiere.common.base.IServicesHolder
-import org.idempiere.common.base.Service
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
 import java.sql.ResultSet
@@ -46,18 +44,7 @@ fun get(ctx: Properties, tableName: String?): MTable? {
 } // 	get
 
 fun getFactoryList(): Array<IModelFactory>? {
-    val locator = Service.locator()
-    val service: IServicesHolder<IModelFactory>? =
-        if (locator != null) {
-            locator.list(IModelFactory::class.java)
-        } else null
-    return if (service == null) {
-        arrayOf(DefaultModelFactory())
-    } else {
-        if (service.services.isEmpty()) {
-            arrayOf(DefaultModelFactory() as IModelFactory)
-        } else service.services.toTypedArray()
-    }
+    return arrayOf(DefaultModelFactory())
 }
 
 private data class MBaseTableDetail(

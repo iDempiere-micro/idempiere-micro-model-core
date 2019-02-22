@@ -1,15 +1,7 @@
 package org.idempiere.common.util;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
-import org.idempiere.common.base.IServiceHolder;
-import org.idempiere.common.base.IServiceLocator;
-import org.idempiere.common.base.Service;
-import org.idempiere.icommon.distributed.ICacheService;
-import org.idempiere.icommon.distributed.IClusterMember;
-import org.idempiere.icommon.distributed.IClusterService;
 
 /**
  * Adempiere Cache Management
@@ -73,20 +65,6 @@ public class CacheMgt {
 
     m_instances.add(instance);
     Map<K, V> map = null;
-    if (distributed) {
-      try {
-        IServiceLocator locator = Service.Companion.locator();
-        if (locator != null) {
-          IServiceHolder<ICacheService> service = locator.locate(ICacheService.class);
-          if (service != null) {
-            ICacheService provider = service.getService();
-            if (provider != null) map = provider.getMap(name);
-          }
-        }
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }
 
     if (map == null) {
       map = Collections.synchronizedMap(new MaxSizeHashMap<K, V>(instance.getMaxSize()));
@@ -112,36 +90,7 @@ public class CacheMgt {
    * @return number of deleted cache entries
    */
   private int clusterReset(String tableName, int recordId) {
-    IServiceLocator locator = Service.Companion.locator();
-    if (locator != null) {
-      IServiceHolder<IClusterService> holder = locator.locate(IClusterService.class);
-      if (holder != null) {
-        IClusterService service = holder.getService();
-        if (service != null) {
-          ResetCacheCallable callable = new ResetCacheCallable(tableName, recordId);
-          Map<IClusterMember, Future<Integer>> futureMap =
-              service.execute(callable, service.getMembers());
-          if (futureMap != null) {
-            int total = 0;
-            try {
-              Collection<Future<Integer>> results = futureMap.values();
-              for (Future<Integer> i : results) {
-                total += i.get();
-              }
-            } catch (InterruptedException e) {
-              e.printStackTrace();
-            } catch (ExecutionException e) {
-              e.printStackTrace();
-            }
-            return total;
-          } else {
-            return resetLocalCache(tableName, recordId);
-          }
-        } else {
-          return resetLocalCache(tableName, recordId);
-        }
-      } else return resetLocalCache(tableName, recordId);
-    } else return resetLocalCache(tableName, recordId);
+    return 0;
   }
 
   /**
@@ -153,21 +102,6 @@ public class CacheMgt {
    * @return number of deleted cache entries
    */
   private void clusterNewRecord(String tableName, int recordId) {
-    IServiceLocator locator = Service.Companion.locator();
-    if (locator != null) {
-      IServiceHolder<IClusterService> holder = locator.locate(IClusterService.class);
-      if (holder != null) {
-        IClusterService service = holder.getService();
-        if (service != null) {
-          CacheNewRecordCallable callable = new CacheNewRecordCallable(tableName, recordId);
-          if (service.execute(callable, service.getMembers()) == null) {
-            localNewRecord(tableName, recordId);
-          }
-        } else {
-          localNewRecord(tableName, recordId);
-        }
-      } else localNewRecord(tableName, recordId);
-    } else localNewRecord(tableName, recordId);
   }
 
   /**

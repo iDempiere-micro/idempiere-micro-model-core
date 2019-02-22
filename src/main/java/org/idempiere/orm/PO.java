@@ -1748,9 +1748,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     //	OK
     if (success) {
       // post osgi event
-      String topic = newRecord ? IEventTopics.PO_POST_CREATE : IEventTopics.PO_POST_UPADTE;
-      IEvent event = EventManager.newEvent(topic, this);
-      EventManager.getInstance().postEvent(event);
 
       if (s_docWFMgr == null) {
         try {

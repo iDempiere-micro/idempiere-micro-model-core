@@ -7,8 +7,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import javax.crypto.Cipher;
-import org.idempiere.common.base.IServiceHolder;
-import org.idempiere.common.base.Service;
 import org.idempiere.icommon.base.IKeyStore;
 
 /**
@@ -87,11 +85,7 @@ public class Secure implements SecureInterface {
 
   /** @return keystore */
   public static IKeyStore getKeyStoreService() {
-    IServiceHolder<IKeyStore> keyStoreService = Service.Companion.locator().locate(IKeyStore.class);
-    if (keyStoreService == null) {
-      return null;
-    }
-    return keyStoreService.getService();
+    return new DefaultKeyStore();
   }
 
   /** Initialize Cipher & Key */

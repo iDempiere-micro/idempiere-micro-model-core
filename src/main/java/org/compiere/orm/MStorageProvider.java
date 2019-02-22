@@ -4,9 +4,6 @@ import java.util.Properties;
 
 import org.compiere.model.IAttachmentStore;
 import org.compiere.model.I_AD_StorageProvider;
-import org.idempiere.common.base.Service;
-import org.idempiere.common.base.ServiceQuery;
-import org.idempiere.common.exceptions.AdempiereException;
 
 public class MStorageProvider extends X_AD_StorageProvider implements I_AD_StorageProvider {
   /** */
@@ -17,16 +14,7 @@ public class MStorageProvider extends X_AD_StorageProvider implements I_AD_Stora
   }
 
     public IAttachmentStore getAttachmentStore() {
-    ServiceQuery query = new ServiceQuery();
-    String method = this.getMethod();
-    if (method == null) method = "DB";
-    query.put("method", method);
-    IAttachmentStore store =
-        Service.Companion.locator().locate(IAttachmentStore.class, query).getService();
-    if (store == null) {
-      throw new AdempiereException("No attachment storage provider found");
+      return new AttachmentDBSystem();
     }
-    return store;
-  }
 
 }

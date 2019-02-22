@@ -10,7 +10,6 @@ import org.compiere.orm.M_Element
 import org.idempiere.common.util.Env
 import org.junit.Before
 import org.junit.Test
-import software.hsharp.core.orm.DummyEventManager
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.HikariCPI
 import java.sql.Timestamp
@@ -38,7 +37,6 @@ class BasicTest {
     init {
         System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE")
         HikariCPI.default(sessionUrl, "adempiere", "adempiere")
-        DummyEventManager()
         log.trace { "HelloTest initialized" }
     }
 

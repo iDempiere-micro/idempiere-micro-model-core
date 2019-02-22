@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.*;
-import org.idempiere.common.base.Service;
+
 import org.idempiere.icommon.distributed.IClusterMember;
 import org.idempiere.icommon.distributed.IClusterService;
 
@@ -422,23 +422,6 @@ public class CLogMgt {
     // thread info
     sb.append("Active Threads = " + Thread.activeCount());
     //
-    // cluster info
-    if (Env.getClientId(Env.getCtx()) == 0) {
-      IClusterService service =
-          Service.Companion.locator().locate(IClusterService.class).getService();
-      if (service != null) {
-        IClusterMember local = service.getLocalMember();
-        Collection<IClusterMember> members = service.getMembers();
-        if (!members.isEmpty()) sb.append(NL).append("Cluster Nodes:").append(NL);
-        for (IClusterMember member : members) {
-          sb.append(member.toString());
-          if (local != null && member.getId().equals(local.getId())) {
-            sb.append(" *");
-          }
-          sb.append(NL);
-        }
-      }
-    }
 
     return sb;
   } //  getInfo
