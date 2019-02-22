@@ -34,7 +34,8 @@
             </activation>
             <properties>
                 <idempiere-micro.groupId>com.github.iDempiere-micro</idempiere-micro.groupId>
-                <idempiere-micro-base-interfaces.version>${env.BASE_INTERFACES_VERSION}</idempiere-micro-base-interfaces.version>
+                <idempiere-micro-base-interfaces.version>${env.BASE_INTERFACES_VERSION}
+                </idempiere-micro-base-interfaces.version>
                 <idempiere-micro-test-support.version>${env.TEST_SUPPORT_VERSION}</idempiere-micro-test-support.version>
             </properties>
         </profile>

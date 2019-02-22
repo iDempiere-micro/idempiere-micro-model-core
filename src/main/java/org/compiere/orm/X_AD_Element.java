@@ -1,10 +1,11 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
-import java.util.Properties;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Element;
 import org.idempiere.orm.I_Persistent;
+
+import java.sql.ResultSet;
+import java.util.Properties;
 
 /**
  * Generated Model for AD_Element
@@ -14,132 +15,138 @@ import org.idempiere.orm.I_Persistent;
  */
 public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persistent {
 
-    /** */
-  private static final long serialVersionUID = 20171031L;
-
-  /** Standard Constructor */
-  public X_AD_Element(Properties ctx, int AD_Element_ID) {
-    super(ctx, AD_Element_ID);
-  }
-
-  /** Load Constructor */
-  public X_AD_Element(Properties ctx, ResultSet rs) {
-    super(ctx, rs);
-  }
-
-  public X_AD_Element(Properties ctx, Row row) {
-    super(ctx, row);
-  }
-
-  /**
-   * AccessLevel
-   *
-   * @return 4 - System
-   */
-  protected int getAccessLevel() {
-    return accessLevel.intValue();
-  }
-
-  public String toString() {
-    StringBuffer sb = new StringBuffer("X_AD_Element[").append(getId()).append("]");
-    return sb.toString();
-  }
-
-  /**
-   * Get System Element.
-   *
-   * @return System Element enables the central maintenance of column description and help.
-   */
-  public int getAD_Element_ID() {
-    Integer ii = (Integer) get_Value(COLUMNNAME_AD_Element_ID);
-    if (ii == null) return 0;
-    return ii;
-  }
+    /**
+     *
+     */
+    private static final long serialVersionUID = 20171031L;
 
     /**
-   * Get DB Column Name.
-   *
-   * @return Name of the column in the database
-   */
-  public String getColumnName() {
-    return (String) get_Value(COLUMNNAME_ColumnName);
-  }
-
-  /**
-   * Set DB Column Name.
-   *
-   * @param ColumnName Name of the column in the database
-   */
-  public void setColumnName(String ColumnName) {
-    set_Value(COLUMNNAME_ColumnName, ColumnName);
-  }
-
-  /**
-   * Get Description.
-   *
-   * @return Optional short description of the record
-   */
-  public String getDescription() {
-    return (String) get_Value(COLUMNNAME_Description);
-  }
-
-  /**
-   * Set Description.
-   *
-   * @param Description Optional short description of the record
-   */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
-  }
+     * Standard Constructor
+     */
+    public X_AD_Element(Properties ctx, int AD_Element_ID) {
+        super(ctx, AD_Element_ID);
+    }
 
     /**
-   * Set Entity Type.
-   *
-   * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
-   */
-  public void setEntityType(String EntityType) {
+     * Load Constructor
+     */
+    public X_AD_Element(Properties ctx, ResultSet rs) {
+        super(ctx, rs);
+    }
 
-    set_Value(COLUMNNAME_EntityType, EntityType);
-  }
-
-  /**
-   * Get Comment/Help.
-   *
-   * @return Comment or Hint
-   */
-  public String getHelp() {
-    return (String) get_Value(COLUMNNAME_Help);
-  }
-
-  /**
-   * Set Comment/Help.
-   *
-   * @param Help Comment or Hint
-   */
-  public void setHelp(String Help) {
-    set_Value(COLUMNNAME_Help, Help);
-  }
+    public X_AD_Element(Properties ctx, Row row) {
+        super(ctx, row);
+    }
 
     /**
-   * Get Print Text.
-   *
-   * @return The label text to be printed on a document or correspondence.
-   */
-  public String getPrintName() {
-    return (String) get_Value(COLUMNNAME_PrintName);
-  }
+     * AccessLevel
+     *
+     * @return 4 - System
+     */
+    protected int getAccessLevel() {
+        return accessLevel.intValue();
+    }
 
-  /**
-   * Set Print Text.
-   *
-   * @param PrintName The label text to be printed on a document or correspondence.
-   */
-  public void setPrintName(String PrintName) {
-    set_Value(COLUMNNAME_PrintName, PrintName);
-  }
+    public String toString() {
+        StringBuffer sb = new StringBuffer("X_AD_Element[").append(getId()).append("]");
+        return sb.toString();
+    }
 
-  @Override
-  public int getTableId() {
-    return Table_ID;
-  }
+    /**
+     * Get System Element.
+     *
+     * @return System Element enables the central maintenance of column description and help.
+     */
+    public int getAD_Element_ID() {
+        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Element_ID);
+        if (ii == null) return 0;
+        return ii;
+    }
+
+    /**
+     * Get DB Column Name.
+     *
+     * @return Name of the column in the database
+     */
+    public String getColumnName() {
+        return (String) get_Value(COLUMNNAME_ColumnName);
+    }
+
+    /**
+     * Set DB Column Name.
+     *
+     * @param ColumnName Name of the column in the database
+     */
+    public void setColumnName(String ColumnName) {
+        set_Value(COLUMNNAME_ColumnName, ColumnName);
+    }
+
+    /**
+     * Get Description.
+     *
+     * @return Optional short description of the record
+     */
+    public String getDescription() {
+        return (String) get_Value(COLUMNNAME_Description);
+    }
+
+    /**
+     * Set Description.
+     *
+     * @param Description Optional short description of the record
+     */
+    public void setDescription(String Description) {
+        set_Value(COLUMNNAME_Description, Description);
+    }
+
+    /**
+     * Set Entity Type.
+     *
+     * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
+     */
+    public void setEntityType(String EntityType) {
+
+        set_Value(COLUMNNAME_EntityType, EntityType);
+    }
+
+    /**
+     * Get Comment/Help.
+     *
+     * @return Comment or Hint
+     */
+    public String getHelp() {
+        return (String) get_Value(COLUMNNAME_Help);
+    }
+
+    /**
+     * Set Comment/Help.
+     *
+     * @param Help Comment or Hint
+     */
+    public void setHelp(String Help) {
+        set_Value(COLUMNNAME_Help, Help);
+    }
+
+    /**
+     * Get Print Text.
+     *
+     * @return The label text to be printed on a document or correspondence.
+     */
+    public String getPrintName() {
+        return (String) get_Value(COLUMNNAME_PrintName);
+    }
+
+    /**
+     * Set Print Text.
+     *
+     * @param PrintName The label text to be printed on a document or correspondence.
+     */
+    public void setPrintName(String PrintName) {
+        set_Value(COLUMNNAME_PrintName, PrintName);
+    }
+
+    @Override
+    public int getTableId() {
+        return Table_ID;
+    }
 }

@@ -15,69 +15,76 @@ import java.util.Properties;
  */
 public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent {
 
-  /** */
-  private static final long serialVersionUID = 20171031L;
-
-  /** Standard Constructor */
-  public X_AD_Org(Properties ctx, int AD_Org_ID) {
-    super(ctx, AD_Org_ID);
-  }
-
-  /** Load Constructor */
-  public X_AD_Org(Properties ctx, ResultSet rs) {
-    super(ctx, rs);
-  }
-  public X_AD_Org(Properties ctx, Row row) {
-    super(ctx, row);
-  } //	MOrg
-
-  /**
-   * AccessLevel
-   *
-   * @return 7 - System - Client - Org
-   */
-  protected int getAccessLevel() {
-    return accessLevel.intValue();
-  }
-
-  public String toString() {
-    return "X_AD_Org[" + getId() + "]";
-  }
+    /**
+     *
+     */
+    private static final long serialVersionUID = 20171031L;
 
     /**
-   * Set Description.
-   *
-   * @param Description Optional short description of the record
-   */
-  public void setDescription(String Description) {
-    set_Value(COLUMNNAME_Description, Description);
-  }
-
-  /**
-   * Set Summary Level.
-   *
-   * @param IsSummary This is a summary entity
-   */
-  public void setIsSummary(boolean IsSummary) {
-    set_Value(COLUMNNAME_IsSummary, IsSummary);
-  }
-
-  /**
-   * Get Summary Level.
-   *
-   * @return This is a summary entity
-   */
-  public boolean isSummary() {
-    Object oo = get_Value(COLUMNNAME_IsSummary);
-    if (oo != null) {
-      if (oo instanceof Boolean) return (Boolean) oo;
-      return "Y".equals(oo);
+     * Standard Constructor
+     */
+    public X_AD_Org(Properties ctx, int AD_Org_ID) {
+        super(ctx, AD_Org_ID);
     }
-    return false;
-  }
 
-  @Override
-  public int getTableId() {
-    return Table_ID;
-  }
+    /**
+     * Load Constructor
+     */
+    public X_AD_Org(Properties ctx, ResultSet rs) {
+        super(ctx, rs);
+    }
+
+    public X_AD_Org(Properties ctx, Row row) {
+        super(ctx, row);
+    } //	MOrg
+
+    /**
+     * AccessLevel
+     *
+     * @return 7 - System - Client - Org
+     */
+    protected int getAccessLevel() {
+        return accessLevel.intValue();
+    }
+
+    public String toString() {
+        return "X_AD_Org[" + getId() + "]";
+    }
+
+    /**
+     * Set Description.
+     *
+     * @param Description Optional short description of the record
+     */
+    public void setDescription(String Description) {
+        set_Value(COLUMNNAME_Description, Description);
+    }
+
+    /**
+     * Set Summary Level.
+     *
+     * @param IsSummary This is a summary entity
+     */
+    public void setIsSummary(boolean IsSummary) {
+        set_Value(COLUMNNAME_IsSummary, IsSummary);
+    }
+
+    /**
+     * Get Summary Level.
+     *
+     * @return This is a summary entity
+     */
+    public boolean isSummary() {
+        Object oo = get_Value(COLUMNNAME_IsSummary);
+        if (oo != null) {
+            if (oo instanceof Boolean) return (Boolean) oo;
+            return "Y".equals(oo);
+        }
+        return false;
+    }
+
+    @Override
+    public int getTableId() {
+        return Table_ID;
+    }
 }

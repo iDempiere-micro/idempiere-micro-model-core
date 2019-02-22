@@ -5,19 +5,25 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-/** @author hengsin */
+/**
+ * @author hengsin
+ */
 public interface IClusterService {
 
-  /** @return Collection of cluster member */
-  Collection<IClusterMember> getMembers();
-
-  /** @return Local node */
-  IClusterMember getLocalMember();
+    /**
+     * @return Collection of cluster member
+     */
+    Collection<IClusterMember> getMembers();
 
     /**
-   * @param task
-   * @param members
-   * @return Map of IClusterMember and Future
-   */
-  <V> Map<IClusterMember, Future<V>> execute(Callable<V> task, Collection<IClusterMember> members);
+     * @return Local node
+     */
+    IClusterMember getLocalMember();
+
+    /**
+     * @param task
+     * @param members
+     * @return Map of IClusterMember and Future
+     */
+    <V> Map<IClusterMember, Future<V>> execute(Callable<V> task, Collection<IClusterMember> members);
 }

@@ -4,9 +4,6 @@ import java.beans.VetoableChangeSupport;
 import java.io.Serializable;
 import java.util.*;
 
-import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.icommon.distributed.ICacheService;
-
 /**
  * Cache for table.
  *
@@ -16,318 +13,345 @@ import org.idempiere.icommon.distributed.ICacheService;
  * @version $Id: CCache.java,v 1.2 2006/07/30 00:54:35 jjanke Exp $
  */
 public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
-  /** */
-  private static final long serialVersionUID = -2268565219001179841L;
-  /** Vetoable Change Support Name */
-  private static String PROPERTYNAME = "cache";
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2268565219001179841L;
+    /**
+     * Vetoable Change Support Name
+     */
+    private static String PROPERTYNAME = "cache";
 
-  private Map<K, V> cache = null;
-  private Set<K> nullList = null;
-  private String m_tableName;
+    private Map<K, V> cache = null;
+    private Set<K> nullList = null;
+    private String m_tableName;
 
-  @SuppressWarnings("unused")
-  private boolean m_distributed;
+    @SuppressWarnings("unused")
+    private boolean m_distributed;
 
-  private int m_maxSize = 0;
-  /** Name */
-  private String m_name = null;
-  /** Expire after minutes */
-  private int m_expire = 0;
-  /** Time */
-  private volatile long m_timeExp = 0;
-  /** Just reset - not used */
-  private boolean m_justReset = true;
-  /** Vetoable Change Support */
-  private VetoableChangeSupport m_changeSupport = null;
+    private int m_maxSize = 0;
+    /**
+     * Name
+     */
+    private String m_name = null;
+    /**
+     * Expire after minutes
+     */
+    private int m_expire = 0;
+    /**
+     * Time
+     */
+    private volatile long m_timeExp = 0;
+    /**
+     * Just reset - not used
+     */
+    private boolean m_justReset = true;
+    /**
+     * Vetoable Change Support
+     */
+    private VetoableChangeSupport m_changeSupport = null;
 
-  public CCache(String name, int initialCapacity) {
-    this(name, name, initialCapacity);
-  }
-
-  public CCache(String name, int initialCapacity, int expireMinutes) {
-    this(name, initialCapacity, expireMinutes, false);
-  }
-
-  public CCache(String name, int initialCapacity, int expireMinutes, boolean distributed) {
-    this(name, name, initialCapacity, expireMinutes, distributed);
-  }
-
-  public CCache(
-      String name, int initialCapacity, int expireMinutes, boolean distributed, int maxSize) {
-    this(name, name, initialCapacity, expireMinutes, distributed, maxSize);
-  }
-
-  /**
-   * Adempiere Cache - expires after 2 hours
-   *
-   * @param name (table) name of the cache
-   * @param initialCapacity initial capacity
-   */
-  public CCache(String tableName, String name, int initialCapacity) {
-    this(tableName, name, initialCapacity, false);
-  } //	CCache
-
-  public CCache(String tableName, String name, int initialCapacity, boolean distributed) {
-    this(tableName, name, initialCapacity, 60, distributed);
-  }
-
-  public CCache(
-      String tableName, String name, int initialCapacity, int expireMinutes, boolean distributed) {
-    this(tableName, name, initialCapacity, expireMinutes, distributed, CacheMgt.MAX_SIZE);
-  }
-
-  /**
-   * Adempiere Cache
-   *
-   * @param name (table) name of the cache
-   * @param initialCapacity initial capacity
-   * @param expireMinutes expire after minutes (0=no expire)
-   * @param distributed
-   * @param maxSize ignore if distributed=true
-   */
-  public CCache(
-      String tableName,
-      String name,
-      int initialCapacity,
-      int expireMinutes,
-      boolean distributed,
-      int maxSize) {
-    m_name = name;
-    m_tableName = tableName;
-    setExpireMinutes(expireMinutes);
-    m_maxSize = maxSize;
-    cache = CacheMgt.get().register(this, distributed);
-    m_distributed = distributed;
-
-    if (nullList == null) {
-      nullList = Collections.synchronizedSet(new HashSet<K>());
+    public CCache(String name, int initialCapacity) {
+        this(name, name, initialCapacity);
     }
-  } //	CCache
 
-  /**
-   * Get (table) Name
-   *
-   * @return name
-   */
-  public String getName() {
-    return m_name;
-  } //	getName
-
-  public String getTableName() {
-    return m_tableName;
-  }
-
-  /**
-   * Get Expire Minutes
-   *
-   * @return expire minutes
-   */
-  public int getExpireMinutes() {
-    return m_expire;
-  } //	getExpireMinutes
-
-  /**
-   * Set Expire Minutes and start it
-   *
-   * @param expireMinutes minutes or 0
-   */
-  public void setExpireMinutes(int expireMinutes) {
-    if (expireMinutes > 0) {
-      m_expire = expireMinutes;
-      long addMS = 60000L * m_expire;
-      m_timeExp = System.currentTimeMillis() + addMS;
-    } else {
-      m_expire = 0;
-      m_timeExp = 0;
+    public CCache(String name, int initialCapacity, int expireMinutes) {
+        this(name, initialCapacity, expireMinutes, false);
     }
-  } //	setExpireMinutes
 
-  /**
-   * Cache was reset
-   *
-   * @return true if reset
-   */
-  public boolean isReset() {
-    return m_justReset;
-  } //	isReset
+    public CCache(String name, int initialCapacity, int expireMinutes, boolean distributed) {
+        this(name, name, initialCapacity, expireMinutes, distributed);
+    }
+
+    public CCache(
+            String name, int initialCapacity, int expireMinutes, boolean distributed, int maxSize) {
+        this(name, name, initialCapacity, expireMinutes, distributed, maxSize);
+    }
 
     /**
-   * Reset Cache
-   *
-   * @return number of items cleared
-   * @see org.compiere.util.CacheInterface#reset()
-   */
-  public int reset() {
-    int no = cache.size() + nullList.size();
-    clear();
-    return no;
-  } //	reset
+     * Adempiere Cache - expires after 2 hours
+     *
+     * @param name            (table) name of the cache
+     * @param initialCapacity initial capacity
+     */
+    public CCache(String tableName, String name, int initialCapacity) {
+        this(tableName, name, initialCapacity, false);
+    } //	CCache
 
-  /** Expire Cache if enabled */
-  private void expire() {
-    if (m_expire != 0 && m_timeExp < System.currentTimeMillis()) {
-      //	System.out.println ("------------ Expired: " + getName() + " --------------------");
-      reset();
+    public CCache(String tableName, String name, int initialCapacity, boolean distributed) {
+        this(tableName, name, initialCapacity, 60, distributed);
     }
-  } //	expire
 
-  /**
-   * String Representation
-   *
-   * @return info
-   */
-  public String toString() {
-    return "CCache[" + m_name + ",Exp=" + getExpireMinutes() + ", #" + cache.size() + "]";
-  } //	toString
-
-  /**
-   * Clear cache and calculate new expiry time
-   *
-   * @see java.util.Map#clear()
-   */
-  public void clear() {
-    if (m_changeSupport != null) {
-      try {
-        m_changeSupport.fireVetoableChange(PROPERTYNAME, cache.size(), 0);
-      } catch (Exception e) {
-        System.out.println("CCache.clear - " + e);
-        return;
-      }
+    public CCache(
+            String tableName, String name, int initialCapacity, int expireMinutes, boolean distributed) {
+        this(tableName, name, initialCapacity, expireMinutes, distributed, CacheMgt.MAX_SIZE);
     }
-    //	Clear
-    cache.clear();
-    nullList.clear();
-    if (m_expire != 0) {
-      long addMS = 60000L * m_expire;
-      m_timeExp = System.currentTimeMillis() + addMS;
+
+    /**
+     * Adempiere Cache
+     *
+     * @param name            (table) name of the cache
+     * @param initialCapacity initial capacity
+     * @param expireMinutes   expire after minutes (0=no expire)
+     * @param distributed
+     * @param maxSize         ignore if distributed=true
+     */
+    public CCache(
+            String tableName,
+            String name,
+            int initialCapacity,
+            int expireMinutes,
+            boolean distributed,
+            int maxSize) {
+        m_name = name;
+        m_tableName = tableName;
+        setExpireMinutes(expireMinutes);
+        m_maxSize = maxSize;
+        cache = CacheMgt.get().register(this, distributed);
+        m_distributed = distributed;
+
+        if (nullList == null) {
+            nullList = Collections.synchronizedSet(new HashSet<K>());
+        }
+    } //	CCache
+
+    /**
+     * Get (table) Name
+     *
+     * @return name
+     */
+    public String getName() {
+        return m_name;
+    } //	getName
+
+    public String getTableName() {
+        return m_tableName;
     }
-    m_justReset = true;
-  } //	clear
 
-  /** @see java.util.Map#containsKey(java.lang.Object) */
-  public boolean containsKey(Object key) {
-    expire();
-    return cache.containsKey(key) || nullList.contains(key);
-  } //	containsKey
+    /**
+     * Get Expire Minutes
+     *
+     * @return expire minutes
+     */
+    public int getExpireMinutes() {
+        return m_expire;
+    } //	getExpireMinutes
 
-  /** @see java.util.Map#containsValue(java.lang.Object) */
-  public boolean containsValue(Object value) {
-    expire();
-    return cache.containsValue(value);
-  } //	containsValue
+    /**
+     * Set Expire Minutes and start it
+     *
+     * @param expireMinutes minutes or 0
+     */
+    public void setExpireMinutes(int expireMinutes) {
+        if (expireMinutes > 0) {
+            m_expire = expireMinutes;
+            long addMS = 60000L * m_expire;
+            m_timeExp = System.currentTimeMillis() + addMS;
+        } else {
+            m_expire = 0;
+            m_timeExp = 0;
+        }
+    } //	setExpireMinutes
 
-  /**
-   * The return entry set exclude entries that contains null value
-   *
-   * @see java.util.Map#entrySet()
-   */
-  public Set<Map.Entry<K, V>> entrySet() {
-    expire();
-    return cache.entrySet();
-  } //	entrySet
+    /**
+     * Cache was reset
+     *
+     * @return true if reset
+     */
+    public boolean isReset() {
+        return m_justReset;
+    } //	isReset
 
-  /** @see java.util.Map#get(java.lang.Object) */
-  public V get(Object key) {
-    expire();
-    return cache.get(key);
-  } //	get
+    /**
+     * Reset Cache
+     *
+     * @return number of items cleared
+     * @see org.compiere.util.CacheInterface#reset()
+     */
+    public int reset() {
+        int no = cache.size() + nullList.size();
+        clear();
+        return no;
+    } //	reset
 
-  /**
-   * Put value
-   *
-   * @param key key
-   * @param value value
-   * @return previous value
-   */
-  public V put(K key, V value) {
-    expire();
-    m_justReset = false;
-    if (value == null) {
-      cache.remove(key);
-      nullList.add(key);
-      return null;
-    } else if (!nullList.isEmpty()) {
-      nullList.remove(key);
-    }
-    return cache.put(key, value);
-  } // put
+    /**
+     * Expire Cache if enabled
+     */
+    private void expire() {
+        if (m_expire != 0 && m_timeExp < System.currentTimeMillis()) {
+            //	System.out.println ("------------ Expired: " + getName() + " --------------------");
+            reset();
+        }
+    } //	expire
 
-  /**
-   * Put All
-   *
-   * @param m map
-   */
-  public void putAll(Map<? extends K, ? extends V> m) {
-    expire();
-    m_justReset = false;
-    cache.putAll(m);
-  } //	putAll
+    /**
+     * String Representation
+     *
+     * @return info
+     */
+    public String toString() {
+        return "CCache[" + m_name + ",Exp=" + getExpireMinutes() + ", #" + cache.size() + "]";
+    } //	toString
 
-  /** @see java.util.Map#isEmpty() */
-  public boolean isEmpty() {
-    expire();
-    return cache.isEmpty() && nullList.isEmpty();
-  } // isEmpty
+    /**
+     * Clear cache and calculate new expiry time
+     *
+     * @see java.util.Map#clear()
+     */
+    public void clear() {
+        if (m_changeSupport != null) {
+            try {
+                m_changeSupport.fireVetoableChange(PROPERTYNAME, cache.size(), 0);
+            } catch (Exception e) {
+                System.out.println("CCache.clear - " + e);
+                return;
+            }
+        }
+        //	Clear
+        cache.clear();
+        nullList.clear();
+        if (m_expire != 0) {
+            long addMS = 60000L * m_expire;
+            m_timeExp = System.currentTimeMillis() + addMS;
+        }
+        m_justReset = true;
+    } //	clear
 
-  /**
-   * The return key set excludes key that map to null value
-   *
-   * @see java.util.Map#keySet()
-   */
-  public Set<K> keySet() {
-    expire();
-    return cache.keySet();
-  } //	keySet
+    /**
+     * @see java.util.Map#containsKey(java.lang.Object)
+     */
+    public boolean containsKey(Object key) {
+        expire();
+        return cache.containsKey(key) || nullList.contains(key);
+    } //	containsKey
 
-  /** @see java.util.Map#size() */
-  public int size() {
-    expire();
-    return cache.size() + nullList.size();
-  } //	size
+    /**
+     * @see java.util.Map#containsValue(java.lang.Object)
+     */
+    public boolean containsValue(Object value) {
+        expire();
+        return cache.containsValue(value);
+    } //	containsValue
 
-  /**
-   * Get Size w/o Expire
-   *
-   * @return size
-   * @see java.util.Map#size()
-   */
-  public int sizeNoExpire() {
-    return cache.size() + nullList.size();
-  } //	size
+    /**
+     * The return entry set exclude entries that contains null value
+     *
+     * @see java.util.Map#entrySet()
+     */
+    public Set<Map.Entry<K, V>> entrySet() {
+        expire();
+        return cache.entrySet();
+    } //	entrySet
 
-  /**
-   * The return values collection exclude null value entries
-   *
-   * @see java.util.Map#values()
-   */
-  public Collection<V> values() {
-    expire();
-    return cache.values();
-  } //	values
+    /**
+     * @see java.util.Map#get(java.lang.Object)
+     */
+    public V get(Object key) {
+        expire();
+        return cache.get(key);
+    } //	get
+
+    /**
+     * Put value
+     *
+     * @param key   key
+     * @param value value
+     * @return previous value
+     */
+    public V put(K key, V value) {
+        expire();
+        m_justReset = false;
+        if (value == null) {
+            cache.remove(key);
+            nullList.add(key);
+            return null;
+        } else if (!nullList.isEmpty()) {
+            nullList.remove(key);
+        }
+        return cache.put(key, value);
+    } // put
+
+    /**
+     * Put All
+     *
+     * @param m map
+     */
+    public void putAll(Map<? extends K, ? extends V> m) {
+        expire();
+        m_justReset = false;
+        cache.putAll(m);
+    } //	putAll
+
+    /**
+     * @see java.util.Map#isEmpty()
+     */
+    public boolean isEmpty() {
+        expire();
+        return cache.isEmpty() && nullList.isEmpty();
+    } // isEmpty
+
+    /**
+     * The return key set excludes key that map to null value
+     *
+     * @see java.util.Map#keySet()
+     */
+    public Set<K> keySet() {
+        expire();
+        return cache.keySet();
+    } //	keySet
+
+    /**
+     * @see java.util.Map#size()
+     */
+    public int size() {
+        expire();
+        return cache.size() + nullList.size();
+    } //	size
+
+    /**
+     * Get Size w/o Expire
+     *
+     * @return size
+     * @see java.util.Map#size()
+     */
+    public int sizeNoExpire() {
+        return cache.size() + nullList.size();
+    } //	size
+
+    /**
+     * The return values collection exclude null value entries
+     *
+     * @see java.util.Map#values()
+     */
+    public Collection<V> values() {
+        expire();
+        return cache.values();
+    } //	values
 
     @Override
-  public V remove(Object key) {
-    if (!nullList.isEmpty()) {
-      if (nullList.remove(key)) return null;
+    public V remove(Object key) {
+        if (!nullList.isEmpty()) {
+            if (nullList.remove(key)) return null;
+        }
+        return cache.remove(key);
     }
-    return cache.remove(key);
-  }
 
-  @Override
-  public int reset(int recordId) {
-    if (recordId <= 0) return reset();
+    @Override
+    public int reset(int recordId) {
+        if (recordId <= 0) return reset();
 
-    if (!nullList.isEmpty()) {
-      if (nullList.remove(recordId)) return 1;
+        if (!nullList.isEmpty()) {
+            if (nullList.remove(recordId)) return 1;
+        }
+        V removed = cache.remove(recordId);
+        return removed != null ? 1 : 0;
     }
-    V removed = cache.remove(recordId);
-    return removed != null ? 1 : 0;
-  }
 
-  @Override
-  public void newRecord(int record_ID) {}
+    @Override
+    public void newRecord(int record_ID) {
+    }
 
-  public int getMaxSize() {
-    return m_maxSize;
-  }
+    public int getMaxSize() {
+        return m_maxSize;
+    }
 } //	CCache

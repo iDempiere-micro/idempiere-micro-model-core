@@ -13,7 +13,9 @@ import org.idempiere.common.exceptions.AdempiereException
 import org.idempiere.common.exceptions.DBException
 import org.idempiere.icommon.model.IPO
 import java.math.BigDecimal
-import java.sql.*
+import java.sql.PreparedStatement
+import java.sql.SQLException
+import java.sql.Timestamp
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import javax.sql.RowSet
@@ -48,6 +50,7 @@ internal fun getSQLValueBDEx(sql: String, params: List<Any?>): BigDecimal? {
     val loadQuery = queryOf(sql, params).map { row -> row.bigDecimalOrNull(1) }.asSingle
     return DB.current.run(loadQuery)
 }
+
 fun getSQLValueBD(sql: String, vararg params: Any): BigDecimal? = getSQLValueBDEx(sql, listOf(*params))
 
 fun getSQLValueTS(sql: String, vararg params: Any): Timestamp? {
@@ -171,6 +174,7 @@ fun TO_DATE(time: Timestamp?, dayOnly: Boolean): String {
     }
     return dateString.toString()
 }
+
 fun TO_DATE(time: Timestamp?): String = TO_DATE(time, true)
 
 /** Quote  */
@@ -197,6 +201,7 @@ fun TO_STRING(txt: String?, maxLength: Int): String {
     //
     return out.toString()
 }
+
 fun TO_STRING(txt: String?): String = TO_STRING(txt, 0)
 internal val convert: Convert = Convert_PostgreSQL()
 
@@ -262,7 +267,7 @@ fun forUpdate(po: IPO, timeout: Int): Boolean {
         parameters[i] = parameter
     }
 
-    val loadQuery =  queryOf(sqlBuffer.toString(), parameters.toList()).map { 1 }.asSingle
+    val loadQuery = queryOf(sqlBuffer.toString(), parameters.toList()).map { 1 }.asSingle
     val result = DB.current.run(loadQuery)
 
     return result != null
@@ -325,7 +330,7 @@ class DB {
             }
         }
 
-        fun <T> run(operation: () -> T) : T {
+        fun <T> run(operation: () -> T): T {
             val session = sessionOf(ds)
             return using(session) {
                 it.transaction { tx ->

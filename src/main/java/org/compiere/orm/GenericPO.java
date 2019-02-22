@@ -20,50 +20,52 @@ import java.util.Properties;
  */
 public class GenericPO extends PO {
 
-    /** */
-  private static final long serialVersionUID = -6558017105997010172L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6558017105997010172L;
 
     /**
-   * @param tableName
-   * @param ctx
-   * @param ID
-   */
-  public GenericPO(String tableName, Properties ctx, int ID) {
-    super(new PropertiesWrapper(ctx, tableName), ID, null);
-  }
+     * @param tableName
+     * @param ctx
+     * @param ID
+     */
+    public GenericPO(String tableName, Properties ctx, int ID) {
+        super(new PropertiesWrapper(ctx, tableName), ID, null);
+    }
 
-  /**
-   * @param tableName
-   * @param ctx
-   * @param rs
-   */
-  public GenericPO(String tableName, Properties ctx, ResultSet rs) {
-    super(new PropertiesWrapper(ctx, tableName), 0, rs);
-  }
+    /**
+     * @param tableName
+     * @param ctx
+     * @param rs
+     */
+    public GenericPO(String tableName, Properties ctx, ResultSet rs) {
+        super(new PropertiesWrapper(ctx, tableName), 0, rs);
+    }
 
-  public GenericPO(String tableName, Properties ctx, Row row) {
-    super(new PropertiesWrapper(ctx, tableName), row);
-  }
+    public GenericPO(String tableName, Properties ctx, Row row) {
+        super(new PropertiesWrapper(ctx, tableName), row);
+    }
 
-  public String toString() {
-    StringBuffer sb =
-        new StringBuffer("GenericPO[Table=")
-            .append("" + getTableId() + ",ID=")
-            .append(getId())
-            .append("]");
-    return sb.toString();
-  }
+    public String toString() {
+        StringBuffer sb =
+                new StringBuffer("GenericPO[Table=")
+                        .append("" + getTableId() + ",ID=")
+                        .append(getId())
+                        .append("]");
+        return sb.toString();
+    }
 
     @Override
-  protected int getAccessLevel() {
-    POInfo p_info = super.getP_info();
-    return Integer.parseInt(p_info.getAccessLevel());
-  }
+    protected int getAccessLevel() {
+        POInfo p_info = super.getP_info();
+        return Integer.parseInt(p_info.getAccessLevel());
+    }
 
-  @Override
-  public int getTableId() {
-    return 0;
-  }
+    @Override
+    public int getTableId() {
+        return 0;
+    }
 } // GenericPO
 
 /**
@@ -74,8 +76,10 @@ public class GenericPO extends PO {
  * @author Low Heng Sin
  */
 class PropertiesWrapper extends Properties {
-  /** */
-  private static final long serialVersionUID = 8887531951501323594L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8887531951501323594L;
 
     PropertiesWrapper(Properties source, String tableName) {
     }

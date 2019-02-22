@@ -19,8 +19,8 @@ fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
     return "/sql/checkClientSequences.sql".asResource { sql ->
         val loadQuery =
             queryOf(sql, listOf(clientId))
-            .map { row -> MSequence(ctx, clientId, row.string(1)).save() }
-            .asList
+                .map { row -> MSequence(ctx, clientId, row.string(1)).save() }
+                .asList
         DB.current.run(loadQuery).min() ?: false
     }
 }
@@ -39,17 +39,16 @@ fun doGetNextIDImpl(tableName: String): Int {
     if (tableName.isEmpty())
         throw IllegalArgumentException("TableName missing")
 
-    return "/sql/getNextIDImpl.sql".asResource {
-        sql ->
-            val loadQuery = queryOf(sql, listOf(tableName)).map { GetNextIDImplResult(it) }.asSingle
-            val seq = DB.current.run(loadQuery)
-            if (seq != null) {
-                "/sql/updateNextIDImpl.sql".asResource { updateCmd ->
-                    val updateQuery = queryOf(updateCmd, listOf(seq.incrementNo, seq.sequenceId)).asUpdate
-                    DB.current.run(updateQuery)
-                }
-                seq.retValue
-            } else -1
+    return "/sql/getNextIDImpl.sql".asResource { sql ->
+        val loadQuery = queryOf(sql, listOf(tableName)).map { GetNextIDImplResult(it) }.asSingle
+        val seq = DB.current.run(loadQuery)
+        if (seq != null) {
+            "/sql/updateNextIDImpl.sql".asResource { updateCmd ->
+                val updateQuery = queryOf(updateCmd, listOf(seq.incrementNo, seq.sequenceId)).asUpdate
+                DB.current.run(updateQuery)
+            }
+            seq.retValue
+        } else -1
     }
 }
 
@@ -94,21 +93,25 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
 
     val next1 = DB.current.run(
         if (isStartNewYear || isUseOrgLevel) {
-            "/sql/getDocumentNoFromSeqNY.sql".asResource {
-                sql -> queryOf(sql, listOf(AD_Sequence_ID, calendarYearMonth, docOrg_ID)).map { it.int(1) }.asSingle
+            "/sql/getDocumentNoFromSeqNY.sql".asResource { sql ->
+                queryOf(sql, listOf(AD_Sequence_ID, calendarYearMonth, docOrg_ID)).map { it.int(1) }.asSingle
             }
         } else {
-            "/sql/getDocumentNoFromSeq.sql".asResource {
-                sql -> queryOf(sql, listOf(AD_Sequence_ID)).map { it.int(1) }.asSingle
+            "/sql/getDocumentNoFromSeq.sql".asResource { sql ->
+                queryOf(sql, listOf(AD_Sequence_ID)).map { it.int(1) }.asSingle
             }
         }
     )
     val next =
         (if (next1 != null) {
             if (isStartNewYear || isUseOrgLevel) {
-                "/sql/updateDocumentNoFromSeqNY.sql".asResource {
-                        sql ->
-                    DB.current.run(queryOf(sql, listOf(incrementNo, AD_Sequence_ID, calendarYearMonth, docOrg_ID)).asUpdate)
+                "/sql/updateDocumentNoFromSeqNY.sql".asResource { sql ->
+                    DB.current.run(
+                        queryOf(
+                            sql,
+                            listOf(incrementNo, AD_Sequence_ID, calendarYearMonth, docOrg_ID)
+                        ).asUpdate
+                    )
                 }
             } else {
                 "/sql/updateDocumentNoFromSeq.sql".asResource { sql ->

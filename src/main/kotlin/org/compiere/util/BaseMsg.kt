@@ -25,13 +25,13 @@ internal fun getElement(ad_language: String?, ColumnName: String?, isSOTrx: Bool
 
     val loadQuery =
         if (AD_Language == null || AD_Language.length == 0 || Env.isBaseLanguage(AD_Language, "AD_Element")) {
-                "/sql/getElementBase.sql".asResource { sql ->
-                    queryOf(sql, listOf(ColumnName.toUpperCase())).map { map(it) }.asSingle
-                }
-            } else {
-                "/sql/getElement.sql".asResource { sql ->
-                    queryOf(sql, listOf(ColumnName.toUpperCase(), AD_Language)).map { map(it) }.asSingle
-                }
+            "/sql/getElementBase.sql".asResource { sql ->
+                queryOf(sql, listOf(ColumnName.toUpperCase())).map { map(it) }.asSingle
+            }
+        } else {
+            "/sql/getElement.sql".asResource { sql ->
+                queryOf(sql, listOf(ColumnName.toUpperCase(), AD_Language)).map { map(it) }.asSingle
+            }
         }
 
     val res = DB.current.run(loadQuery)
