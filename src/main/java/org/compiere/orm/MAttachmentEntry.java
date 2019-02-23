@@ -22,10 +22,6 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
      */
     private static long s_seed = System.currentTimeMillis();
     /**
-     * Random Number
-     */
-    private static Random s_random = new Random(s_seed);
-    /**
      * Logger
      */
     protected CLogger log = CLogger.getCLogger(getClass());
@@ -54,7 +50,6 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
             if (s_seed + 3600000l < now) // 	older then 1 hour
             {
                 s_seed = now;
-                s_random = new Random(s_seed);
             }
         }
     } //	MAttachmentItem
@@ -135,25 +130,6 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
         sb.append(" - ").append(getContentType());
         return sb.toString();
     } //	toStringX
-
-    /**
-     * Get File
-     *
-     * @param file out file
-     * @return file
-     */
-    public File getFile(File file) {
-        if (m_data == null || m_data.length == 0) return null;
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(m_data);
-            fos.close();
-        } catch (IOException ioe) {
-            log.log(Level.SEVERE, "getFile", ioe);
-            throw new RuntimeException(ioe);
-        }
-        return file;
-    } //	getFile
 
     /**
      * Get Content (Mime) Type
