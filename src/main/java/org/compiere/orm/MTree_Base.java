@@ -182,7 +182,7 @@ public class MTree_Base extends X_AD_Tree {
     public String getSourceTableName(boolean tableNameOnly) {
         String tableName = getSourceTableName(getTreeType());
         if (tableName == null) {
-            if (getAD_Table_ID() > 0) tableName = MTable.getTableName(getCtx(), getAD_Table_ID());
+            if (getTreeTableId() > 0) tableName = MTable.getDbTableName(getCtx(), getTreeTableId());
         }
         if (tableNameOnly) return tableName;
         if ("M_Product".equals(tableName))
@@ -224,13 +224,13 @@ public class MTree_Base extends X_AD_Tree {
 
         String tableName = getSourceTableName(true);
         MTable table = MTable.get(getCtx(), tableName);
-        if (table.getColumnIndex("IsSummary") < 0) {
+        if (table.getDbColumnIndex("IsSummary") < 0) {
             // IsSummary is mandatory column to have a tree
             log.saveError("Error", "IsSummary column required for tree tables");
             return false;
         }
         if (isTreeDrivenByValue()) {
-            if (table.getColumnIndex("Value") < 0) {
+            if (table.getDbColumnIndex("Value") < 0) {
                 // Value is mandatory column to have a tree driven by Value
                 setIsTreeDrivenByValue(false);
             }

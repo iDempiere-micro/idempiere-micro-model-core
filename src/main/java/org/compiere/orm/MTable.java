@@ -128,8 +128,8 @@ public class MTable extends MBaseTable {
      * @param AD_Table_ID table
      * @return tavle name
      */
-    public static String getTableName(Properties ctx, int AD_Table_ID) {
-        return MTable.get(ctx, AD_Table_ID).getTableName();
+    public static String getDbTableName(Properties ctx, int AD_Table_ID) {
+        return MTable.get(ctx, AD_Table_ID).getDbTableName();
     } //	getTableName
 
     /**
@@ -200,7 +200,7 @@ public class MTable extends MBaseTable {
      * @param ColumnName column name
      * @return index of column with ColumnName or -1 if not found
      */
-    public synchronized int getColumnIndex(String ColumnName) {
+    public synchronized int getDbColumnIndex(String ColumnName) {
         MColumn[] m_columns = super.getM_columns();
         if (m_columns == null) getColumns(false);
         Integer i = getM_columnNameMap().get(ColumnName.toUpperCase());
@@ -215,7 +215,7 @@ public class MTable extends MBaseTable {
      * @return true if table has single key column
      */
     public boolean isSingleKey() {
-        String[] keys = getKeyColumns();
+        String[] keys = getTableKeyColumns();
         return keys.length == 1;
     } //	isSingleKey
 
@@ -224,7 +224,7 @@ public class MTable extends MBaseTable {
      *
      * @return key columns
      */
-    public String[] getKeyColumns() {
+    public String[] getTableKeyColumns() {
         MColumn[] m_columns = getColumns(false);
         ArrayList<String> list = new ArrayList<String>();
         //
@@ -250,7 +250,7 @@ public class MTable extends MBaseTable {
             return null;
         }
 
-        String tableName = getTableName();
+        String tableName = getDbTableName();
         if (Record_ID != 0 && !isSingleKey()) {
             log.log(Level.WARNING, "(id) - Multi-Key " + tableName);
             return null;
@@ -284,7 +284,7 @@ public class MTable extends MBaseTable {
      * @return PO for Record or null
      */
     public org.idempiere.orm.PO getPO(ResultSet rs) {
-        String tableName = getTableName();
+        String tableName = getDbTableName();
 
         org.idempiere.orm.PO po = null;
         IModelFactory[] factoryList = getFactoryList();
@@ -314,7 +314,7 @@ public class MTable extends MBaseTable {
         if (whereClause == null || whereClause.length() == 0) return null;
         //
         org.idempiere.orm.PO po = null;
-        POInfo info = POInfo.getPOInfo(getCtx(), getAD_Table_ID());
+        POInfo info = POInfo.getPOInfo(getCtx(), getTableTableId());
         if (info == null) return null;
         StringBuilder sqlBuffer = info.buildSelect();
         sqlBuffer.append(" WHERE ").append(whereClause);
@@ -350,7 +350,7 @@ public class MTable extends MBaseTable {
      * @return true
      */
     protected boolean beforeSave(boolean newRecord) {
-        if (isView() && isDeleteable()) setIsDeleteable(false);
+        if (isView() && isDeletable()) setIsDeleteable(false);
         //
         return true;
     } //	beforeSave
@@ -367,11 +367,11 @@ public class MTable extends MBaseTable {
     protected boolean afterSave(boolean newRecord, boolean success) {
         if (!success) return success;
         //	Sync Table ID
-        MSequence seq = MSequence.get(getCtx(), getTableName());
+        MSequence seq = MSequence.get(getCtx(), getDbTableName());
         if (seq == null || seq.getId() == 0)
-            MSequence.createTableSequence(getCtx(), getTableName());
-        else if (!seq.getName().equals(getTableName())) {
-            seq.setName(getTableName());
+            MSequence.createTableSequence(getCtx(), getDbTableName());
+        else if (!seq.getName().equals(getDbTableName())) {
+            seq.setName(getDbTableName());
             seq.saveEx();
         }
 
@@ -406,7 +406,7 @@ public class MTable extends MBaseTable {
                         MViewComponent.Table_Name,
                         MViewComponent.COLUMNNAME_AD_Table_ID + "=?"
                 );
-        query.setParameters(getAD_Table_ID());
+        query.setParameters(getTableTableId());
         query.setOrderBy(MViewComponent.COLUMNNAME_SeqNo);
         query.setOnlyActiveRecords(true);
         List<MTableIndex> list = query.list();
@@ -423,7 +423,7 @@ public class MTable extends MBaseTable {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder("MTable[");
-        sb.append(getId()).append("-").append(getTableName()).append("]");
+        sb.append(getId()).append("-").append(getDbTableName()).append("]");
         return sb.toString();
     } //	toString
 } //	MTable

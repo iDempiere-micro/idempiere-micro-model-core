@@ -98,23 +98,6 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
         return sb.toString();
     }
 
-    /** */
-    public ArhRuntimeException addInfo(String name) {
-        return addInfo(name, "");
-    }
-
-    /** */
-    public ArhRuntimeException addInfo(String name, Object value) {
-        if (name == null) return this;
-        m_info.put(name, value);
-        return this;
-    }
-
-    /** */
-    public boolean hasInfo() {
-        return !m_info.isEmpty();
-    }
-
     /**
      * Translated string representation of the provided value
      *

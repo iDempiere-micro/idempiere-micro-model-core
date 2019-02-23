@@ -23,7 +23,7 @@ public class MRefTable extends X_AD_Ref_Table {
     public MRefTable(Properties ctx, int AD_Reference_ID) {
         super(ctx, AD_Reference_ID);
         if (AD_Reference_ID == 0) {
-            //	setAD_Table_ID (0);
+            //	setColumnTableId (0);
             //	setAD_Display (0);
             //	setAD_Key (0);
             setEntityType(PO.ENTITYTYPE_UserMaintained); // U
@@ -43,8 +43,8 @@ public class MRefTable extends X_AD_Ref_Table {
     } //	MRefTable
 
     @Override
-    public I_AD_Table getAD_Table() throws RuntimeException {
-        MTable table = MTable.get(getCtx(), getAD_Table_ID());
+    public I_AD_Table getTable() throws RuntimeException {
+        MTable table = MTable.get(getCtx(), getRefTableId());
         return table;
     }
 } //	MRefTable

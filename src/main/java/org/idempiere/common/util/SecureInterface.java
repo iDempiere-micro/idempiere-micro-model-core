@@ -56,14 +56,6 @@ public interface SecureInterface {
     String decrypt(String value, int AD_Client_ID);
 
     /**
-     * Convert String to Digest. JavaScript version see - http://pajhome.org.uk/crypt/md5/index.html
-     *
-     * @param value message
-     * @return HexString of message (length = 32 characters)
-     */
-    String getDigest(String value);
-
-    /**
      * Convert String and salt to SHA-512 hash with iterations
      * https://www.owasp.org/index.php/Hashing_Java
      *

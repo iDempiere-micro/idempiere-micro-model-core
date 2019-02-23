@@ -122,12 +122,4 @@ public class AttachmentDBSystem implements IAttachmentStore {
         return true;
     }
 
-    @Override
-    public boolean deleteEntry(I_AD_Attachment attach, I_AD_StorageProvider provider, int index) {
-        ArrayList<I_AD_AttachmentEntry> m_items = attach.getItems();
-
-        m_items.remove(index);
-        return true;
-    }
-
 }

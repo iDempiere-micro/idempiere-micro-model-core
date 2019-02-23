@@ -70,7 +70,7 @@ public class MOrg extends X_AD_Org {
     public MOrg(MClient client, String value, String name) {
         this(client.getCtx(), 0);
         setADClientID(client.getClientId());
-        setValue(value);
+        setSearchKey(value);
         setName(name);
     } //	MOrg
 

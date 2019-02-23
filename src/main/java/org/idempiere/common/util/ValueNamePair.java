@@ -6,7 +6,7 @@ package org.idempiere.common.util;
  * @author Jorg Janke
  * @version $Id: ValueNamePair.java,v 1.2 2006/07/30 00:52:23 jjanke Exp $
  */
-public final class ValueNamePair extends NamePair {
+public final class ValueNamePair extends HasName {
     /**
      * The Value
      */

@@ -49,7 +49,7 @@ public class MColumn extends X_AD_Column {
     public MColumn(Properties ctx, int AD_Column_ID) {
         super(ctx, AD_Column_ID);
         if (AD_Column_ID == 0) {
-            //	setAD_Element_ID (0);
+            //	setElementId (0);
             //	setReferenceId (0);
             //	setColumnName (null);
             //	setName (null);
@@ -90,7 +90,7 @@ public class MColumn extends X_AD_Column {
     public MColumn(MTable parent) {
         this(parent.getCtx(), 0);
         setClientOrg(parent);
-        setAD_Table_ID(parent.getAD_Table_ID());
+        setColumnTableId(parent.getTableTableId());
         setEntityType(parent.getEntityType());
     } //	MColumn
 
@@ -162,7 +162,7 @@ public class MColumn extends X_AD_Column {
      * @return true for UUID column
      */
     public boolean isUUIDColumn() {
-        return getColumnName().equals(PO.getUUIDColumnName(getAD_Table().getTableName()));
+        return getColumnName().equals(PO.getUUIDColumnName(getColumnTable().getDbTableName()));
     }
 
     /**
@@ -248,7 +248,7 @@ public class MColumn extends X_AD_Column {
                                     + " AND AD_Column_ID!=?"
                                     + " AND IsIdentifier='Y'"
                                     + " AND SeqNo=?",
-                            getAD_Table_ID(),
+                            getColumnTableId(),
                             getColumnId(),
                             getSeqNo());
             if (cnt > 0) {
@@ -289,8 +289,8 @@ public class MColumn extends X_AD_Column {
         }
 
         //	Sync Terminology
-        if ((newRecord || is_ValueChanged("AD_Element_ID")) && getAD_Element_ID() != 0) {
-            M_Element element = new M_Element(getCtx(), getAD_Element_ID());
+        if ((newRecord || is_ValueChanged("AD_Element_ID")) && getElementId() != 0) {
+            M_Element element = new M_Element(getCtx(), getElementId());
             setColumnName(element.getColumnName());
             setName(element.getName());
             setDescription(element.getDescription());
@@ -366,50 +366,6 @@ public class MColumn extends X_AD_Column {
     } //	afterSave
 
     /**
-     * Get SQL DDL
-     *
-     * @return columnName datataype ..
-     */
-    public String getSQLDDL() {
-        if (isVirtualColumn()) return null;
-
-        StringBuilder sql =
-                new StringBuilder().append(getColumnName()).append(" ").append(getSQLDataType());
-
-        //	Default
-        String defaultValue = getDefaultValue();
-        if (defaultValue != null
-                && defaultValue.length() > 0
-                && defaultValue.indexOf('@') == -1 // 	no variables
-                && (!(DisplayType.isID(getReferenceId())
-                && defaultValue.equals("-1")))) // not for ID's with default -1
-        {
-            if (DisplayType.isText(getReferenceId())
-                    || getReferenceId() == DisplayType.List
-                    || getReferenceId() == DisplayType.YesNo
-                    // Two special columns: Defined as Table but DB Type is String
-                    || getColumnName().equals("EntityType")
-                    || getColumnName().equals("AD_Language")
-                    || (getReferenceId() == DisplayType.Button && !(getColumnName().endsWith("_ID")))) {
-                if (!defaultValue.startsWith("'") && !defaultValue.endsWith("'"))
-                    defaultValue = TO_STRING(defaultValue);
-            }
-            sql.append(" DEFAULT ").append(defaultValue);
-        } else {
-            if (!isMandatory()) sql.append(" DEFAULT NULL ");
-            defaultValue = null;
-        }
-
-        //	Inline Constraint
-        if (getReferenceId() == DisplayType.YesNo)
-            sql.append(" CHECK (").append(getColumnName()).append(" IN ('Y','N'))");
-
-        //	Null
-        if (isMandatory()) sql.append(" NOT NULL");
-        return sql.toString();
-    } //	getSQLDDL
-
-    /**
      * Get SQL Data Type
      *
      * @return e.g. NVARCHAR2(60)
@@ -453,50 +409,6 @@ public class MColumn extends X_AD_Column {
     } //	getSQLDataType
 
     /**
-     * Get Table Constraint
-     *
-     * @param tableName table name
-     * @return table constraint
-     */
-    public String getConstraint(String tableName) {
-        if (isKey()) {
-            StringBuilder constraintName;
-            if (tableName.length() > 26)
-                // Oracle restricts object names to 30 characters
-                constraintName = new StringBuilder(tableName.substring(0, 26)).append("_Key");
-            else constraintName = new StringBuilder(tableName).append("_Key");
-            StringBuilder msgreturn =
-                    new StringBuilder("CONSTRAINT ")
-                            .append(constraintName)
-                            .append(" PRIMARY KEY (")
-                            .append(getColumnName())
-                            .append(")");
-            return msgreturn.toString();
-        }
-        /**
-         * if (getReferenceId() == DisplayType.TableDir || getReferenceId() == DisplayType.Search)
-         * return "CONSTRAINT " ADTable_ADTableTrl + " FOREIGN KEY (" + getColumnName() + ") REFERENCES
-         * " + AD_Table(AD_Table_ID) ON DELETE CASCADE
-         */
-        // IDEMPIERE-965
-        if (getColumnName().equals(PO.getUUIDColumnName(tableName))) {
-            StringBuilder indexName = new StringBuilder().append(getColumnName()).append("_idx");
-            if (indexName.length() > 30) {
-                indexName = new StringBuilder().append(getColumnName(), 0, 25);
-                indexName.append("uuidx");
-            }
-            StringBuilder msgreturn =
-                    new StringBuilder("CONSTRAINT ")
-                            .append(indexName)
-                            .append(" UNIQUE (")
-                            .append(getColumnName())
-                            .append(")");
-            return msgreturn.toString();
-        }
-        return "";
-    } //	getConstraint
-
-    /**
      * String Representation
      *
      * @return info
@@ -511,18 +423,18 @@ public class MColumn extends X_AD_Column {
         String foreignTable = null;
         int refid = getReferenceId();
         if (DisplayType.TableDir == refid
-                || (DisplayType.Search == refid && getAD_Reference_Value_ID() == 0)) {
+                || (DisplayType.Search == refid && getReferenceValueId() == 0)) {
             foreignTable = getColumnName().substring(0, getColumnName().length() - 3);
         } else if (DisplayType.Table == refid || DisplayType.Search == refid) {
-            X_AD_Reference ref = new X_AD_Reference(getCtx(), getAD_Reference_Value_ID());
+            X_AD_Reference ref = new X_AD_Reference(getCtx(), getReferenceValueId());
             if (X_AD_Reference.VALIDATIONTYPE_TableValidation.equals(ref.getValidationType())) {
                 int cnt =
                         getSQLValueEx(
                                 "SELECT COUNT(*) FROM AD_Ref_Table WHERE AD_Reference_ID=?",
-                                getAD_Reference_Value_ID());
+                                getReferenceValueId());
                 if (cnt == 1) {
-                    MRefTable rt = new MRefTable(getCtx(), getAD_Reference_Value_ID());
-                    if (rt != null) foreignTable = rt.getAD_Table().getTableName();
+                    MRefTable rt = new MRefTable(getCtx(), getReferenceValueId());
+                    if (rt != null) foreignTable = rt.getTable().getDbTableName();
                 }
             }
         } else if (DisplayType.List == refid || DisplayType.Payment == refid) {
@@ -549,8 +461,8 @@ public class MColumn extends X_AD_Column {
     }
 
     @Override
-    public I_AD_Table getAD_Table() throws RuntimeException {
-        MTable table = MTable.get(getCtx(), getAD_Table_ID());
+    public I_AD_Table getColumnTable() throws RuntimeException {
+        MTable table = MTable.get(getCtx(), getColumnTableId());
         return table;
     }
 

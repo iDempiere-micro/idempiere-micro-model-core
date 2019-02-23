@@ -18,12 +18,4 @@ public class DefaultContextProvider implements ContextProvider {
         return s_ctx;
     }
 
-    public void showURL(String url) {
-        try {
-            java.net.URI uri = new java.net.URI(url);
-            java.awt.Desktop.getDesktop().browse(uri);
-        } catch (Exception e) {
-            s_log.warning(e.getLocalizedMessage());
-        }
-    }
 }

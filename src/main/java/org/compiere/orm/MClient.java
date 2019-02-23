@@ -50,7 +50,7 @@ public class MClient extends X_AD_Client {
             if (createNew) {
                 //	setValue (null);
                 //	setName (null);
-                setAD_Org_ID(0);
+                setOrgId(0);
                 setIsMultiLingualDocument(false);
                 setIsSmtpAuthorization(false);
                 setIsUseBetaFunctions(true);
@@ -165,7 +165,7 @@ public class MClient extends X_AD_Client {
 
     public boolean isClientAccountingImmediate() {
         String ca =
-                MSysConfig.getValue(
+                MSysConfig.getConfigValue(
                         MSysConfig.CLIENT_ACCOUNTING,
                         CLIENT_ACCOUNTING_QUEUE, // default
                         Env.getClientId(Env.getCtx()));
@@ -173,10 +173,6 @@ public class MClient extends X_AD_Client {
     }
 
     public boolean sendEMail(String to, String subject, String message, File attachment) {
-        return true;
-    }
-
-    public boolean sendEMail(int AD_User_ID, String subject, String message, File attachment) {
         return true;
     }
 

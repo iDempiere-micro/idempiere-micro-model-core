@@ -22,10 +22,6 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
      */
     private static long s_seed = System.currentTimeMillis();
     /**
-     * Random Number
-     */
-    private static Random s_random = new Random(s_seed);
-    /**
      * Logger
      */
     protected CLogger log = CLogger.getCLogger(getClass());
@@ -37,10 +33,6 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
      * The Data
      */
     private byte[] m_data = null;
-    /**
-     * Index
-     */
-    private int m_index = 0;
 
     /**
      * Attachment Entry
@@ -53,15 +45,12 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
         super();
         setName(name);
         setData(data);
-        if (index > 0) m_index = index;
-        else {
+        if (index <= 0) {
             long now = System.currentTimeMillis();
             if (s_seed + 3600000l < now) // 	older then 1 hour
             {
                 s_seed = now;
-                s_random = new Random(s_seed);
             }
-            m_index = s_random.nextInt();
         }
     } //	MAttachmentItem
 
@@ -105,7 +94,6 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
     } //	setName
 
     public void setIndex(int index) {
-        m_index = index;
     }
 
     /**
@@ -142,36 +130,6 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
         sb.append(" - ").append(getContentType());
         return sb.toString();
     } //	toStringX
-
-    /**
-     * Get File with name
-     *
-     * @param fileName optional file name
-     * @return file
-     */
-    public File getFile(String fileName) {
-        if (fileName == null || fileName.length() == 0) fileName = getName();
-        return getFile(new File(System.getProperty("java.io.tmpdir") + File.separator + fileName));
-    } //	getFile
-
-    /**
-     * Get File
-     *
-     * @param file out file
-     * @return file
-     */
-    public File getFile(File file) {
-        if (m_data == null || m_data.length == 0) return null;
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(m_data);
-            fos.close();
-        } catch (IOException ioe) {
-            log.log(Level.SEVERE, "getFile", ioe);
-            throw new RuntimeException(ioe);
-        }
-        return file;
-    } //	getFile
 
     /**
      * Get Content (Mime) Type

@@ -20,13 +20,4 @@ public class ServerContextProvider implements ContextProvider {
         return context;
     }
 
-    /**
-     * Show url at zk desktop
-     */
-    public void showURL(String url) {
-        ServerContextURLHandler handler =
-                (ServerContextURLHandler)
-                        getContext().get(ServerContextURLHandler.SERVER_CONTEXT_URL_HANDLER);
-        if (handler != null) handler.showURL(url);
-    }
 }

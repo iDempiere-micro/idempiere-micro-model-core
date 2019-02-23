@@ -1,7 +1,6 @@
 package org.idempiere.orm;
 
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.NamePair;
 
 import javax.swing.*;
 import java.io.Serializable;
@@ -39,18 +38,6 @@ public abstract class Lookup extends AbstractListModel<Object>
      * Temporary Data
      */
     private Object[] m_tempData = null;
-    /**
-     * Display Type
-     */
-    private int m_displayType;
-    /**
-     * Window No
-     */
-    private int m_WindowNo;
-
-    private boolean m_mandatory;
-    private boolean m_loaded;
-    private boolean m_shortList; // IDEMPIERE 90
 
     /**
      * Lookup
@@ -59,8 +46,6 @@ public abstract class Lookup extends AbstractListModel<Object>
      * @param windowNo    window no
      */
     public Lookup(int displayType, int windowNo) {
-        m_displayType = displayType;
-        m_WindowNo = windowNo;
     } //  Lookup
 
     /**
@@ -163,80 +148,6 @@ public abstract class Lookup extends AbstractListModel<Object>
     } //  removeItem
 
     /**
-     * Fill ComboBox with lookup data (async using Worker). - try to maintain selected item
-     *
-     * @param mandatory     has mandatory data only (i.e. no "null" selection)
-     * @param onlyValidated only validated
-     * @param onlyActive    onlt active
-     * @param temporary     save current values - restore via fillComboBox (true)
-     */
-    public void fillComboBox(
-            boolean mandatory,
-            boolean onlyValidated,
-            boolean onlyActive,
-            boolean temporary,
-            boolean shortList) // IDEMPIERE 90
-    {
-        long startTime = System.currentTimeMillis();
-        m_loaded = false;
-        //  Save current data
-        if (temporary) {
-            int size = p_data.size();
-            m_tempData = new Object[size];
-            //  We need to do a deep copy, so store it in Array
-            p_data.toArray(m_tempData);
-            //	for (int i = 0; i < size; i++)
-            //		m_tempData[i] = p_data.get(i);
-        }
-
-        Object obj = m_selectedObject;
-        p_data.clear();
-
-        //  may cause delay *** The Actual Work ***
-        p_data = getData(mandatory, onlyValidated, onlyActive, temporary, shortList); // IDEMPIERE 90
-
-        //  Selected Object changed
-        if (obj != m_selectedObject) {
-            if (log.isLoggable(Level.FINEST))
-                log.finest(getColumnName() + ": SelectedValue Changed=" + obj + "->" + m_selectedObject);
-            obj = m_selectedObject;
-        }
-
-        // comment next code because of bug [ 2053140 ] Mandatory lookup fields autofilled (badly)
-        //  if nothing selected & mandatory, select first
-        // if (obj == null && mandatory  && p_data.size() > 0)
-        // {
-        // 	obj = p_data.get(0);
-        // 	m_selectedObject = obj;
-        // 	log.finest(getColumnName() + ": SelectedValue SetToFirst=" + obj);
-        // //	fireContentsChanged(this, -1, -1);
-        // }
-
-        m_loaded = true;
-        fireContentsChanged(this, 0, p_data.size());
-        if (p_data.size() == 0) {
-            if (log.isLoggable(Level.FINE))
-                log.fine(getColumnName() + ": #0 - ms=" + (System.currentTimeMillis() - startTime));
-        } else {
-            if (log.isLoggable(Level.FINE))
-                log.fine(
-                        getColumnName()
-                                + ": #"
-                                + p_data.size()
-                                + " - ms="
-                                + (System.currentTimeMillis() - startTime));
-        }
-    } //  fillComboBox
-
-    /**
-     * Get Object of Key Value
-     *
-     * @param key key
-     * @return Object or null
-     */
-    public abstract NamePair get(Object key);
-
-    /**
      * Fill ComboBox with Data (Value/KeyNamePair)
      *
      * @param mandatory     has mandatory data only (i.e. no "null" selection)
@@ -273,15 +184,6 @@ public abstract class Lookup extends AbstractListModel<Object>
      * @return Zoom Query
      *     <p>public MQuery getZoomQuery() { return null; } // getZoomQuery
      */
-
-    /**
-     * Is lookup model mandatory
-     *
-     * @return boolean
-     */
-    public boolean isMandatory() {
-        return m_mandatory;
-    }
 
     // IDEMPIERE 90
 } //	Lookup

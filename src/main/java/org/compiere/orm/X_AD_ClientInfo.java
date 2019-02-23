@@ -61,19 +61,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @return Storage Provider
      */
-    public int getAD_StorageProvider_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_StorageProvider_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
-     * Get Activity Tree.
-     *
-     * @return Trees are used for (financial) reporting
-     */
-    public int getAD_Tree_Activity_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_Activity_ID);
+    public int getStorageProviderId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_StorageProvider_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -83,20 +72,9 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @param AD_Tree_Activity_ID Trees are used for (financial) reporting
      */
-    public void setAD_Tree_Activity_ID(int AD_Tree_Activity_ID) {
+    public void setTreeActivityId(int AD_Tree_Activity_ID) {
         if (AD_Tree_Activity_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, Integer.valueOf(AD_Tree_Activity_ID));
-    }
-
-    /**
-     * Get BPartner Tree.
-     *
-     * @return Trees are used for (financial) reporting
-     */
-    public int getAD_Tree_BPartner_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_BPartner_ID);
-        if (ii == null) return 0;
-        return ii;
     }
 
     /**
@@ -104,20 +82,9 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @param AD_Tree_BPartner_ID Trees are used for (financial) reporting
      */
-    public void setAD_Tree_BPartner_ID(int AD_Tree_BPartner_ID) {
+    public void setTreeBPartnerId(int AD_Tree_BPartner_ID) {
         if (AD_Tree_BPartner_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, Integer.valueOf(AD_Tree_BPartner_ID));
-    }
-
-    /**
-     * Get Campaign Tree.
-     *
-     * @return Trees are used for (financial) reporting
-     */
-    public int getAD_Tree_Campaign_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_Campaign_ID);
-        if (ii == null) return 0;
-        return ii;
     }
 
     /**
@@ -125,20 +92,9 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @param AD_Tree_Campaign_ID Trees are used for (financial) reporting
      */
-    public void setAD_Tree_Campaign_ID(int AD_Tree_Campaign_ID) {
+    public void setTreeCampaignId(int AD_Tree_Campaign_ID) {
         if (AD_Tree_Campaign_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, Integer.valueOf(AD_Tree_Campaign_ID));
-    }
-
-    /**
-     * Get Menu Tree.
-     *
-     * @return Tree of the menu
-     */
-    public int getAD_Tree_Menu_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_Menu_ID);
-        if (ii == null) return 0;
-        return ii;
     }
 
     /**
@@ -146,7 +102,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @param AD_Tree_Menu_ID Tree of the menu
      */
-    public void setAD_Tree_Menu_ID(int AD_Tree_Menu_ID) {
+    public void setTreeMenuId(int AD_Tree_Menu_ID) {
         if (AD_Tree_Menu_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, Integer.valueOf(AD_Tree_Menu_ID));
     }
@@ -156,8 +112,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @return Trees are used for (financial) reporting and security access (via role)
      */
-    public int getAD_Tree_Org_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_Org_ID);
+    public int getTreeOrgId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Tree_Org_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -167,20 +123,9 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @param AD_Tree_Org_ID Trees are used for (financial) reporting and security access (via role)
      */
-    public void setAD_Tree_Org_ID(int AD_Tree_Org_ID) {
+    public void setTreeOrgId(int AD_Tree_Org_ID) {
         if (AD_Tree_Org_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, Integer.valueOf(AD_Tree_Org_ID));
-    }
-
-    /**
-     * Get Product Tree.
-     *
-     * @return Trees are used for (financial) reporting
-     */
-    public int getAD_Tree_Product_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_Product_ID);
-        if (ii == null) return 0;
-        return ii;
     }
 
     /**
@@ -188,20 +133,9 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @param AD_Tree_Product_ID Trees are used for (financial) reporting
      */
-    public void setAD_Tree_Product_ID(int AD_Tree_Product_ID) {
+    public void setTreeProductId(int AD_Tree_Product_ID) {
         if (AD_Tree_Product_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, Integer.valueOf(AD_Tree_Product_ID));
-    }
-
-    /**
-     * Get Project Tree.
-     *
-     * @return Trees are used for (financial) reporting
-     */
-    public int getAD_Tree_Project_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_Project_ID);
-        if (ii == null) return 0;
-        return ii;
     }
 
     /**
@@ -209,20 +143,9 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @param AD_Tree_Project_ID Trees are used for (financial) reporting
      */
-    public void setAD_Tree_Project_ID(int AD_Tree_Project_ID) {
+    public void setTreeProjectId(int AD_Tree_Project_ID) {
         if (AD_Tree_Project_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, Integer.valueOf(AD_Tree_Project_ID));
-    }
-
-    /**
-     * Get Sales Region Tree.
-     *
-     * @return Trees are used for (financial) reporting
-     */
-    public int getAD_Tree_SalesRegion_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_SalesRegion_ID);
-        if (ii == null) return 0;
-        return ii;
     }
 
     /**
@@ -230,7 +153,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @param AD_Tree_SalesRegion_ID Trees are used for (financial) reporting
      */
-    public void setAD_Tree_SalesRegion_ID(int AD_Tree_SalesRegion_ID) {
+    public void setTreeSalesRegionId(int AD_Tree_SalesRegion_ID) {
         if (AD_Tree_SalesRegion_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_SalesRegion_ID, null);
         else
             set_ValueNoCheck(COLUMNNAME_AD_Tree_SalesRegion_ID, Integer.valueOf(AD_Tree_SalesRegion_ID));
@@ -241,8 +164,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @return Primary rules for accounting
      */
-    public int getC_AcctSchema1_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_AcctSchema1_ID);
+    public int getAcctSchema1Id() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_AcctSchema1_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -252,8 +175,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @return Business Partner used for creating new Business Partners on the fly
      */
-    public int getC_BPartnerCashTrx_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_BPartnerCashTrx_ID);
+    public int getBPartnerCashTrxId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_BPartnerCashTrx_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -263,8 +186,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @return Accounting Calendar Name
      */
-    public int getC_Calendar_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_Calendar_ID);
+    public int getCalendarId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_Calendar_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -274,8 +197,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @return Charge for Freight
      */
-    public int getC_ChargeFreight_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_ChargeFreight_ID);
+    public int getChargeFreightId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_ChargeFreight_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -285,8 +208,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @return Standard Unit of Measure for Length
      */
-    public int getC_UOM_Length_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Length_ID);
+    public int getUOMLengthId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_UOM_Length_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -296,8 +219,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @return Standard Unit of Measure for Weight
      */
-    public int getC_UOM_Weight_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_UOM_Weight_ID);
+    public int getUOMWeightId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_UOM_Weight_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -316,19 +239,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo, I_Persistent
      *
      * @return Product for Freight
      */
-    public int getM_ProductFreight_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_M_ProductFreight_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
-     * Get Archive Store.
-     *
-     * @return Archive Store
-     */
-    public int getStorageArchive_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_StorageArchive_ID);
+    public int getProductFreightId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_M_ProductFreight_ID);
         if (ii == null) return 0;
         return ii;
     }

@@ -65,7 +65,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return Language for this entity
      */
     public String getADLanguage() {
-        return (String) get_Value(COLUMNNAME_AD_Language);
+        return (String) getValue(COLUMNNAME_AD_Language);
     }
 
     /**
@@ -76,15 +76,6 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
     public void setADLanguage(String AD_Language) {
 
         set_Value(COLUMNNAME_AD_Language, AD_Language);
-    }
-
-    /**
-     * Get Auto Archive.
-     *
-     * @return Enable and level of automatic Archive of documents
-     */
-    public String getAutoArchive() {
-        return (String) get_Value(COLUMNNAME_AutoArchive);
     }
 
     /**
@@ -112,7 +103,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return Documents are Multi Lingual
      */
     public boolean isMultiLingualDocument() {
-        Object oo = get_Value(COLUMNNAME_IsMultiLingualDocument);
+        Object oo = getValue(COLUMNNAME_IsMultiLingualDocument);
         if (oo != null) {
             if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
@@ -135,7 +126,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return Use SSL/TLS for SMTP
      */
     public boolean isSecureSMTP() {
-        Object oo = get_Value(COLUMNNAME_IsSecureSMTP);
+        Object oo = getValue(COLUMNNAME_IsSecureSMTP);
         if (oo != null) {
             if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
@@ -167,7 +158,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return Your mail server requires Authentication
      */
     public boolean isSmtpAuthorization() {
-        Object oo = get_Value(COLUMNNAME_IsSmtpAuthorization);
+        Object oo = getValue(COLUMNNAME_IsSmtpAuthorization);
         if (oo != null) {
             if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
@@ -181,7 +172,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return IsUseASP
      */
     public boolean isUseASP() {
-        Object oo = get_Value(COLUMNNAME_IsUseASP);
+        Object oo = getValue(COLUMNNAME_IsUseASP);
         if (oo != null) {
             if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
@@ -204,7 +195,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return Enable the use of Beta Functionality
      */
     public boolean isUseBetaFunctions() {
-        Object oo = get_Value(COLUMNNAME_IsUseBetaFunctions);
+        Object oo = getValue(COLUMNNAME_IsUseBetaFunctions);
         if (oo != null) {
             if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
@@ -218,7 +209,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return Material Movement Policy
      */
     public String getMMPolicy() {
-        return (String) get_Value(COLUMNNAME_MMPolicy);
+        return (String) getValue(COLUMNNAME_MMPolicy);
     }
 
     /**
@@ -237,7 +228,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return List of data model validation classes separated by ;
      */
     public String getModelValidationClasses() {
-        return (String) get_Value(COLUMNNAME_ModelValidationClasses);
+        return (String) getValue(COLUMNNAME_ModelValidationClasses);
     }
 
     /**
@@ -247,7 +238,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * (fully qualified)
      */
     public String getRequestEMail() {
-        return (String) get_Value(COLUMNNAME_RequestEMail);
+        return (String) getValue(COLUMNNAME_RequestEMail);
     }
 
     /**
@@ -256,7 +247,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return User Name (ID) of the email owner
      */
     public String getRequestUser() {
-        return (String) get_Value(COLUMNNAME_RequestUser);
+        return (String) getValue(COLUMNNAME_RequestUser);
     }
 
     /**
@@ -265,7 +256,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return Password of the user name (ID) for mail processing
      */
     public String getRequestUserPW() {
-        return (String) get_Value(COLUMNNAME_RequestUserPW);
+        return (String) getValue(COLUMNNAME_RequestUserPW);
     }
 
     /**
@@ -274,7 +265,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return Hostname of Mail Server for SMTP and IMAP
      */
     public String getSMTPHost() {
-        return (String) get_Value(COLUMNNAME_SMTPHost);
+        return (String) getValue(COLUMNNAME_SMTPHost);
     }
 
     /**
@@ -283,7 +274,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client, I_Persi
      * @return SMTP Port Number
      */
     public int getSMTPPort() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_SMTPPort);
+        Integer ii = (Integer) getValue(COLUMNNAME_SMTPPort);
         if (ii == null) return 0;
         return ii;
     }

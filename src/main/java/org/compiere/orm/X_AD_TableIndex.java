@@ -47,31 +47,15 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
         return sb.toString();
     }
 
-    public org.compiere.model.I_AD_Table getAD_Table() throws RuntimeException {
-        return (org.compiere.model.I_AD_Table)
-                MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
-                        .getPO(getAD_Table_ID());
-    }
-
     /**
      * Get Table.
      *
      * @return Database Table information
      */
-    public int getAD_Table_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    public int getIndexTableId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
-    }
-
-    /**
-     * Set Table.
-     *
-     * @param AD_Table_ID Database Table information
-     */
-    public void setAD_Table_ID(int AD_Table_ID) {
-        if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, AD_Table_ID);
     }
 
     /**
@@ -79,8 +63,8 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
      *
      * @return Table Index
      */
-    public int getAD_TableIndex_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_TableIndex_ID);
+    public int getTableIndexId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_TableIndex_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -110,7 +94,7 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
      * @return Create Constraint
      */
     public boolean isCreateConstraint() {
-        Object oo = get_Value(COLUMNNAME_IsCreateConstraint);
+        Object oo = getValue(COLUMNNAME_IsCreateConstraint);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -124,7 +108,7 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
      * @return This column is the key in this table
      */
     public boolean isKey() {
-        Object oo = get_Value(COLUMNNAME_IsKey);
+        Object oo = getValue(COLUMNNAME_IsKey);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -147,7 +131,7 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex, I_Pe
      * @return Unique
      */
     public boolean isUnique() {
-        Object oo = get_Value(COLUMNNAME_IsUnique);
+        Object oo = getValue(COLUMNNAME_IsUnique);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);

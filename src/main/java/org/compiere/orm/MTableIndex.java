@@ -1,7 +1,5 @@
 package org.compiere.orm;
 
-import org.compiere.util.Msg;
-import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.orm.PO;
 
 import java.util.List;
@@ -16,10 +14,6 @@ public class MTableIndex extends X_AD_TableIndex {
      * Lines
      */
     private MIndexColumn[] m_columns = null;
-    /**
-     * Index Create DDL
-     */
-    private String m_ddl = null;
 
     /**
      * Standard constructor
@@ -52,7 +46,7 @@ public class MTableIndex extends X_AD_TableIndex {
                         MIndexColumn.Table_Name,
                         MIndexColumn.COLUMNNAME_AD_TableIndex_ID + "=?"
                 );
-        query.setParameters(getAD_TableIndex_ID());
+        query.setParameters(getTableIndexId());
         query.setOrderBy(MIndexColumn.COLUMNNAME_SeqNo);
         List<MIndexColumn> list = query.list();
 
@@ -66,56 +60,9 @@ public class MTableIndex extends X_AD_TableIndex {
      *
      * @return table name
      */
-    public String getTableName() {
-        int AD_Table_ID = getAD_Table_ID();
-        return MTable.getTableName(getCtx(), AD_Table_ID);
-    }
-
-    /**
-     * Get SQL DDL
-     *
-     * @return DDL
-     */
-    private String createDDL() {
-        StringBuilder sql = null;
-        if (!isCreateConstraint()) {
-            sql = new StringBuilder("CREATE ");
-            if (isUnique()) sql.append("UNIQUE ");
-            sql.append("INDEX ").append(getName()).append(" ON ").append(getTableName()).append(" (");
-            //
-            getColumns(false);
-            for (int i = 0; i < m_columns.length; i++) {
-                MIndexColumn ic = m_columns[i];
-                if (i > 0) sql.append(",");
-                sql.append(ic.getColumnName());
-            }
-
-            sql.append(")");
-        } else if (isUnique()) {
-            sql =
-                    new StringBuilder("ALTER TABLE ")
-                            .append(getTableName())
-                            .append(" ADD CONSTRAINT ")
-                            .append(getName());
-            if (isKey()) sql.append(" PRIMARY KEY (");
-            else sql.append(" UNIQUE (");
-            getColumns(false);
-            for (int i = 0; i < m_columns.length; i++) {
-                MIndexColumn ic = m_columns[i];
-                if (i > 0) sql.append(",");
-                sql.append(ic.getColumnName());
-            }
-
-            sql.append(")");
-        } else {
-            String errMsg =
-                    Msg.getMsg(
-                            getCtx(), "NeitherTableIndexNorUniqueConstraint", new Object[]{getTableName()});
-            log.severe(errMsg);
-            throw new AdempiereException(errMsg);
-        }
-
-        return sql.toString();
+    public String getDbTableName() {
+        int AD_Table_ID = getIndexTableId();
+        return MTable.getDbTableName(getCtx(), AD_Table_ID);
     }
 
     /**
@@ -130,7 +77,7 @@ public class MTableIndex extends X_AD_TableIndex {
                 .append("-")
                 .append(getName())
                 .append(",AD_Table_ID=")
-                .append(getAD_Table_ID())
+                .append(getIndexTableId())
                 .append("]");
         return sb.toString();
     }

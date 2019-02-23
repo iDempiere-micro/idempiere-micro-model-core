@@ -24,7 +24,7 @@ public class X_AD_TreeNodeBP extends PO implements I_AD_TreeNodeBP, I_Persistent
      */
     public X_AD_TreeNodeBP(Properties ctx, int AD_TreeNodeBP_ID) {
         super(ctx, AD_TreeNodeBP_ID);
-        /** if (AD_TreeNodeBP_ID == 0) { setAD_Tree_ID (0); setNode_ID (0); } */
+        /** if (AD_TreeNodeBP_ID == 0) { setTreeId (0); setNodeId (0); } */
     }
 
     /**
@@ -49,22 +49,11 @@ public class X_AD_TreeNodeBP extends PO implements I_AD_TreeNodeBP, I_Persistent
     }
 
     /**
-     * Get Tree.
-     *
-     * @return Identifies a Tree
-     */
-    public int getAD_Tree_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
      * Set Tree.
      *
      * @param AD_Tree_ID Identifies a Tree
      */
-    public void setAD_Tree_ID(int AD_Tree_ID) {
+    public void setTreeId(int AD_Tree_ID) {
         if (AD_Tree_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Tree_ID, Integer.valueOf(AD_Tree_ID));
     }
@@ -74,7 +63,7 @@ public class X_AD_TreeNodeBP extends PO implements I_AD_TreeNodeBP, I_Persistent
      *
      * @param Node_ID Node
      */
-    public void setNode_ID(int Node_ID) {
+    public void setNodeId(int Node_ID) {
         if (Node_ID < 0) set_ValueNoCheck(COLUMNNAME_Node_ID, null);
         else set_ValueNoCheck(COLUMNNAME_Node_ID, Integer.valueOf(Node_ID));
     }
@@ -84,7 +73,7 @@ public class X_AD_TreeNodeBP extends PO implements I_AD_TreeNodeBP, I_Persistent
      *
      * @param Parent_ID Parent of Entity
      */
-    public void setParent_ID(int Parent_ID) {
+    public void setParentId(int Parent_ID) {
         if (Parent_ID < 1) set_Value(COLUMNNAME_Parent_ID, null);
         else set_Value(COLUMNNAME_Parent_ID, Integer.valueOf(Parent_ID));
     }

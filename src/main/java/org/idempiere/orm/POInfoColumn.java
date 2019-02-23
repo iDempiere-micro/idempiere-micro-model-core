@@ -50,10 +50,6 @@ public class POInfoColumn implements Serializable {
      */
     public boolean IsMandatory;
     /**
-     * Default Value
-     */
-    public String DefaultLogic;
-    /**
      * Updateable
      */
     public boolean IsUpdateable;
@@ -81,14 +77,6 @@ public class POInfoColumn implements Serializable {
      * Encrypted
      */
     public boolean IsEncrypted;
-    /**
-     * Allow Logging
-     */
-    public boolean IsAllowLogging;
-    /**
-     * Allow Copy
-     */
-    public boolean IsAllowCopy;
     /**
      * Field Length
      */
@@ -172,7 +160,6 @@ public class POInfoColumn implements Serializable {
         } else ColumnClass = org.compiere.util.DisplayType.getClass(displayType, true);
         IsMandatory = isMandatory;
         IsUpdateable = isUpdateable;
-        DefaultLogic = defaultLogic;
         ColumnLabel = columnLabel;
         ColumnDescription = columnDescription;
         IsKey = isKey;
@@ -194,8 +181,6 @@ public class POInfoColumn implements Serializable {
         }
         IsTranslated = isTranslated;
         IsEncrypted = isEncrypted;
-        IsAllowLogging = isAllowLogging;
-        IsAllowCopy = isAllowCopy;
     } //  Column
 
     /**

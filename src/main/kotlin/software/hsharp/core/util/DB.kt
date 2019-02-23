@@ -246,9 +246,9 @@ internal fun getNextID(name: String): Int {
  * @return true if lock is granted
  */
 fun forUpdate(po: IPO, timeout: Int): Boolean {
-    val keyColumns = po._KeyColumns
+    val keyColumns = po.keyColumns
     val sqlBuffer = StringBuilder(" SELECT ")
-    sqlBuffer.append(keyColumns[0]).append(" FROM ").append(po._TableName).append(" WHERE ")
+    sqlBuffer.append(keyColumns[0]).append(" FROM ").append(po.tableName).append(" WHERE ")
     for (i in keyColumns.indices) {
         if (i > 0) sqlBuffer.append(" AND ")
         sqlBuffer.append(keyColumns[i]).append("=?")
@@ -257,7 +257,7 @@ fun forUpdate(po: IPO, timeout: Int): Boolean {
 
     val parameters = arrayOfNulls<Any>(keyColumns.size)
     for (i in keyColumns.indices) {
-        var parameter: Any? = po.get_Value(keyColumns[i])
+        var parameter: Any? = po.getValue(keyColumns[i])
         if (parameter != null && parameter is Boolean) {
             if ((parameter as Boolean?)!!)
                 parameter = "Y"

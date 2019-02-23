@@ -19,7 +19,6 @@ public class POResultSet<T extends PO> {
     private String trxName;
     private ResultSet resultSet;
     private MTable table;
-    private PreparedStatement statement;
     /**
      * Current fetched PO
      */
@@ -40,7 +39,6 @@ public class POResultSet<T extends PO> {
      */
     public POResultSet(MTable table, PreparedStatement ps, ResultSet rs) {
         this.table = table;
-        this.statement = ps;
         this.resultSet = rs;
         this.trxName = trxName;
         this.closeOnError = false;
@@ -114,7 +112,6 @@ public class POResultSet<T extends PO> {
      */
     public void close() {
         this.resultSet = null;
-        this.statement = null;
         currentPO = null;
     }
 }

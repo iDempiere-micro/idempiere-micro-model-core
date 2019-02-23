@@ -65,42 +65,16 @@ public class MColumnAccess extends X_AD_Column_Access {
     public String toString() {
         StringBuilder sb = new StringBuilder("MColumnAccess[");
         sb.append("AD_Role_ID=")
-                .append(getAD_Role_ID())
+                .append(getRoleId())
                 .append(",AD_Table_ID=")
-                .append(getAD_Table_ID())
+                .append(getColumnTableId())
                 .append(",AD_Column_ID=")
-                .append(getAD_Column_ID())
+                .append(getColumnId())
                 .append(",Exclude=")
                 .append(isExclude());
         sb.append("]");
         return sb.toString();
     } //	toString
-
-    /**
-     * Extended String Representation.
-     *
-     * @param ctx context
-     * @return extended info
-     */
-    public String toStringX(Properties ctx) {
-        String in = Msg.getMsg(ctx, "Include");
-        String ex = Msg.getMsg(ctx, "Exclude");
-        StringBuilder sb = new StringBuilder();
-        sb.append(Msg.translate(ctx, "AD_Table_ID"))
-                .append("=")
-                .append(getTableName(ctx))
-                .append(", ")
-                .append(Msg.translate(ctx, "AD_Column_ID"))
-                .append("=")
-                .append(getColumnName(ctx))
-                .append(" (")
-                .append(Msg.translate(ctx, "IsReadOnly"))
-                .append("=")
-                .append(isReadOnly())
-                .append(") - ")
-                .append(isExclude() ? ex : in);
-        return sb.toString();
-    } //	toStringX
 
     /**
      * Get Table Name
@@ -129,16 +103,16 @@ public class MColumnAccess extends X_AD_Column_Access {
             ResultSet rs = null;
             try {
                 pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getAD_Column_ID());
+                pstmt.setInt(1, getColumnId());
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
                     m_tableName = rs.getString(1);
                     m_columnName = rs.getString(2);
-                    if (rs.getInt(3) != getAD_Table_ID())
+                    if (rs.getInt(3) != getColumnTableId())
                         log.log(
                                 Level.SEVERE,
                                 "AD_Table_ID inconsistent - Access="
-                                        + getAD_Table_ID()
+                                        + getColumnTableId()
                                         + " - Table="
                                         + rs.getInt(3));
                 }

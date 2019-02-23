@@ -42,7 +42,6 @@ import static software.hsharp.core.util.DBKt.*;
  */
 public class Query extends BaseQuery {
     public static final String AGGREGATE_COUNT = "COUNT";
-    public static final String AGGREGATE_SUM = "SUM";
 
     private static CLogger log = CLogger.getCLogger(Query.class);
 
@@ -61,7 +60,6 @@ public class Query extends BaseQuery {
      * Limit current query rows return.
      */
     private int pageSize;
-
     /**
      * Number of pages will be skipped on query run.
      */
@@ -157,15 +155,15 @@ public class Query extends BaseQuery {
 
     private int firstId(boolean assumeOnlyOneResult) throws DBException {
         MTable table = super.getTable();
-        String[] keys = table.getKeyColumns();
+        String[] keys = table.getTableKeyColumns();
         if (keys.length != 1) {
             throw new DBException("Table " + table + " has 0 or more than 1 key columns");
         }
 
         StringBuilder selectClause = new StringBuilder("SELECT ");
-        if (!joinClauseList.isEmpty()) selectClause.append(table.getTableName()).append(".");
+        if (!joinClauseList.isEmpty()) selectClause.append(table.getDbTableName()).append(".");
         selectClause.append(keys[0]);
-        selectClause.append(" FROM ").append(table.getTableName());
+        selectClause.append(" FROM ").append(table.getDbTableName());
         String sql = buildSQL(selectClause, true);
 
         int id = -1;
@@ -234,7 +232,7 @@ public class Query extends BaseQuery {
                         .append(sqlExpression)
                         .append(")")
                         .append(" FROM ")
-                        .append(table.getTableName());
+                        .append(table.getDbTableName());
 
         T value = null;
         T defaultValue = null;
@@ -298,7 +296,7 @@ public class Query extends BaseQuery {
      */
     public boolean match() throws DBException {
         MTable table = super.getTable();
-        String sql = buildSQL(new StringBuilder("SELECT 1 FROM ").append(table.getTableName()), false);
+        String sql = buildSQL(new StringBuilder("SELECT 1 FROM ").append(table.getDbTableName()), false);
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
@@ -322,14 +320,14 @@ public class Query extends BaseQuery {
      */
     public <T extends PO> Iterator<T> iterate() throws DBException {
         MTable table = super.getTable();
-        String[] keys = table.getKeyColumns();
+        String[] keys = table.getTableKeyColumns();
         StringBuilder sqlBuffer = new StringBuilder(" SELECT ");
         for (int i = 0; i < keys.length; i++) {
             if (i > 0) sqlBuffer.append(", ");
-            if (!joinClauseList.isEmpty()) sqlBuffer.append(table.getTableName()).append(".");
+            if (!joinClauseList.isEmpty()) sqlBuffer.append(table.getDbTableName()).append(".");
             sqlBuffer.append(keys[i]);
         }
-        sqlBuffer.append(" FROM ").append(table.getTableName());
+        sqlBuffer.append(" FROM ").append(table.getDbTableName());
         String sql = buildSQL(sqlBuffer, true);
 
         PreparedStatement pstmt = null;
@@ -395,10 +393,10 @@ public class Query extends BaseQuery {
     protected final String buildSQL(StringBuilder selectClause, boolean useOrderByClause) {
         MTable table = super.getTable();
         if (selectClause == null) {
-            POInfo info = POInfo.getPOInfo(this.getCtx(), table.getAD_Table_ID());
+            POInfo info = POInfo.getPOInfo(this.getCtx(), table.getTableTableId());
             if (info == null) {
                 throw new IllegalStateException(
-                        "No POInfo found for AD_Table_ID=" + table.getAD_Table_ID());
+                        "No POInfo found for AD_Table_ID=" + table.getTableTableId());
             }
             selectClause = info.buildSelect(!joinClauseList.isEmpty(), noVirtualColumn);
         }
@@ -416,18 +414,18 @@ public class Query extends BaseQuery {
         boolean onlyActiveRecords = super.getOnlyActiveRecords();
         if (onlyActiveRecords) {
             if (whereBuffer.length() > 0) whereBuffer.append(" AND ");
-            if (!joinClauseList.isEmpty()) whereBuffer.append(table.getTableName()).append(".");
+            if (!joinClauseList.isEmpty()) whereBuffer.append(table.getDbTableName()).append(".");
             whereBuffer.append("IsActive=?");
         }
         boolean onlyClient_ID = super.getOnlyClient_ID();
         if (onlyClient_ID) // red1
         {
             if (whereBuffer.length() > 0) whereBuffer.append(" AND ");
-            if (!joinClauseList.isEmpty()) whereBuffer.append(table.getTableName()).append(".");
+            if (!joinClauseList.isEmpty()) whereBuffer.append(table.getDbTableName()).append(".");
             whereBuffer.append("AD_Client_ID=?");
         }
         if (this.onlySelection_ID > 0) {
-            String[] keys = table.getKeyColumns();
+            String[] keys = table.getTableKeyColumns();
             if (keys.length != 1) {
                 throw new DBException("Table " + table + " has 0 or more than 1 key columns");
             }
@@ -436,7 +434,7 @@ public class Query extends BaseQuery {
             whereBuffer.append(
                     " EXISTS (SELECT 1 FROM T_Selection s WHERE s.AD_PInstance_ID=?"
                             + " AND s.T_Selection_ID="
-                            + table.getTableName()
+                            + table.getDbTableName()
                             + "."
                             + keys[0]
                             + ")");
@@ -454,11 +452,11 @@ public class Query extends BaseQuery {
             MRole role = MRole.getDefault(this.getCtx(), false);
             sql =
                     role.addAccessSQL(
-                            sql, table.getTableName(), applyAccessFilterFullyQualified, applyAccessFilterRW);
+                            sql, table.getDbTableName(), applyAccessFilterFullyQualified, applyAccessFilterRW);
         }
         if (forUpdate) {
             sql = sql + " FOR UPDATE";
-            if (isPostgreSQL()) sql = sql + " OF " + table.getTableName();
+            if (isPostgreSQL()) sql = sql + " OF " + table.getDbTableName();
         }
 
         // If have pagination
@@ -469,7 +467,7 @@ public class Query extends BaseQuery {
         if (log.isLoggable(Level.FINEST))
             log.finest(
                     "TableName = "
-                            + table.getTableName()
+                            + table.getDbTableName()
                             + "... SQL = "
                             + sql); // red1 - to assist in debugging SQL
 

@@ -38,8 +38,8 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
     public X_AD_Column(Properties ctx, int AD_Column_ID) {
         super(ctx, AD_Column_ID);
         /**
-         * if (AD_Column_ID == 0) { setColumnId (0); setAD_Element_ID (0); setReferenceId (0);
-         * setAD_Table_ID (0); setColumnName (null); setEntityType (null); // @SQL=select
+         * if (AD_Column_ID == 0) { setColumnId (0); setElementId (0); setReferenceId (0);
+         * setColumnTableId (0); setColumnName (null); setEntityType (null); // @SQL=select
          * get_sysconfig('DEFAULT_ENTITYTYPE','U',0,0) from dual setIsAllowCopy (true); // Y
          * setIsAlwaysUpdateable (false); // N setIsAutocomplete (false); // N setIsEncrypted (null); //
          * N setIsIdentifier (false); setIsKey (false); setIsMandatory (false); setIsParent (false);
@@ -76,7 +76,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Column in the table
      */
     public int getColumnId() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Column_ID);
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Column_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -86,8 +86,8 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      *
      * @return System Element enables the central maintenance of column description and help.
      */
-    public int getAD_Element_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Element_ID);
+    public int getElementId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Element_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -98,7 +98,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @param AD_Element_ID System Element enables the central maintenance of column description and
      *                      help.
      */
-    public void setAD_Element_ID(int AD_Element_ID) {
+    public void setElementId(int AD_Element_ID) {
         if (AD_Element_ID < 1) set_Value(COLUMNNAME_AD_Element_ID, null);
         else set_Value(COLUMNNAME_AD_Element_ID, Integer.valueOf(AD_Element_ID));
     }
@@ -108,8 +108,8 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      *
      * @return Process or Report
      */
-    public int getAD_Process_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Process_ID);
+    public int getProcessId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Process_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -125,7 +125,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return System Reference and Validation
      */
     public int getReferenceId() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Reference_ID);
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Reference_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -145,14 +145,14 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      *
      * @return Required to specify, if data type is Table or List
      */
-    public int getAD_Reference_Value_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Reference_Value_ID);
+    public int getReferenceValueId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Reference_Value_ID);
         if (ii == null) return 0;
         return ii;
     }
 
-    public I_AD_Table getAD_Table() throws RuntimeException {
-        return (I_AD_Table) MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getAD_Table_ID());
+    public I_AD_Table getColumnTable() throws RuntimeException {
+        return (I_AD_Table) MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getColumnTableId());
     }
 
     /**
@@ -160,8 +160,8 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      *
      * @return Database Table information
      */
-    public int getAD_Table_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    public int getColumnTableId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -171,20 +171,9 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      *
      * @param AD_Table_ID Database Table information
      */
-    public void setAD_Table_ID(int AD_Table_ID) {
+    public void setColumnTableId(int AD_Table_ID) {
         if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, AD_Table_ID);
-    }
-
-    /**
-     * Get Dynamic Validation.
-     *
-     * @return Dynamic Validation Rule
-     */
-    public int getValRule_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Val_Rule_ID);
-        if (ii == null) return 0;
-        return ii;
     }
 
     /**
@@ -193,7 +182,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Name of the column in the database
      */
     public String getColumnName() {
-        return (String) get_Value(COLUMNNAME_ColumnName);
+        return (String) getValue(COLUMNNAME_ColumnName);
     }
 
     /**
@@ -211,7 +200,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Virtual Column (r/o)
      */
     public String getColumnSQL() {
-        return (String) get_Value(COLUMNNAME_ColumnSQL);
+        return (String) getValue(COLUMNNAME_ColumnSQL);
     }
 
     /**
@@ -220,7 +209,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Default value hierarchy, separated by ;
      */
     public String getDefaultValue() {
-        return (String) get_Value(COLUMNNAME_DefaultValue);
+        return (String) getValue(COLUMNNAME_DefaultValue);
     }
 
     /**
@@ -248,7 +237,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Length of the column in the database
      */
     public int getFieldLength() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_FieldLength);
+        Integer ii = (Integer) getValue(COLUMNNAME_FieldLength);
         if (ii == null) return 0;
         return ii;
     }
@@ -268,7 +257,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return The pattern used to format a number or date.
      */
     public String getFormatPattern() {
-        return (String) get_Value(COLUMNNAME_FormatPattern);
+        return (String) getValue(COLUMNNAME_FormatPattern);
     }
 
     /**
@@ -304,7 +293,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Determine if a column must be copied when pushing the button to copy record
      */
     public boolean isAllowCopy() {
-        Object oo = get_Value(COLUMNNAME_IsAllowCopy);
+        Object oo = getValue(COLUMNNAME_IsAllowCopy);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -328,7 +317,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return The column is always updateable, even if the record is not active or processed
      */
     public boolean isAlwaysUpdateable() {
-        Object oo = get_Value(COLUMNNAME_IsAlwaysUpdateable);
+        Object oo = getValue(COLUMNNAME_IsAlwaysUpdateable);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -342,7 +331,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Display or Storage is encrypted
      */
     public String getIsEncrypted() {
-        return (String) get_Value(COLUMNNAME_IsEncrypted);
+        return (String) getValue(COLUMNNAME_IsEncrypted);
     }
 
     /**
@@ -370,7 +359,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return This column is part of the record identifier
      */
     public boolean isIdentifier() {
-        Object oo = get_Value(COLUMNNAME_IsIdentifier);
+        Object oo = getValue(COLUMNNAME_IsIdentifier);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -393,7 +382,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return This column is the key in this table
      */
     public boolean isKey() {
-        Object oo = get_Value(COLUMNNAME_IsKey);
+        Object oo = getValue(COLUMNNAME_IsKey);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -416,7 +405,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Data entry is required in this column
      */
     public boolean isMandatory() {
-        Object oo = get_Value(COLUMNNAME_IsMandatory);
+        Object oo = getValue(COLUMNNAME_IsMandatory);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -441,7 +430,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * key columns
      */
     public boolean isParent() {
-        Object oo = get_Value(COLUMNNAME_IsParent);
+        Object oo = getValue(COLUMNNAME_IsParent);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -455,7 +444,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Defines whether content must be treated as secure
      */
     public boolean isSecure() {
-        Object oo = get_Value(COLUMNNAME_IsSecure);
+        Object oo = getValue(COLUMNNAME_IsSecure);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -478,7 +467,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Show the button on the toolbar, the window, or both
      */
     public String getIsToolbarButton() {
-        return (String) get_Value(COLUMNNAME_IsToolbarButton);
+        return (String) getValue(COLUMNNAME_IsToolbarButton);
     }
 
     /**
@@ -506,7 +495,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return This column is translated
      */
     public boolean isTranslated() {
-        Object oo = get_Value(COLUMNNAME_IsTranslated);
+        Object oo = getValue(COLUMNNAME_IsTranslated);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -529,7 +518,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Determines, if the field can be updated
      */
     public boolean isUpdateable() {
-        Object oo = get_Value(COLUMNNAME_IsUpdateable);
+        Object oo = getValue(COLUMNNAME_IsUpdateable);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -543,7 +532,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Alphanumeric identifier of the entity
      */
     public String getName() {
-        return (String) get_Value(HasName.Companion.getCOLUMNNAME_Name());
+        return (String) getValue(HasName.Companion.getCOLUMNNAME_Name());
     }
 
     /**
@@ -561,7 +550,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Method of ordering records; lowest number comes first
      */
     public int getSeqNo() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_SeqNo);
+        Integer ii = (Integer) getValue(COLUMNNAME_SeqNo);
         if (ii == null) return 0;
         return ii;
     }
@@ -572,7 +561,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Maximum Value for a field
      */
     public String getValueMax() {
-        return (String) get_Value(COLUMNNAME_ValueMax);
+        return (String) getValue(COLUMNNAME_ValueMax);
     }
 
     /**
@@ -581,7 +570,7 @@ public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
      * @return Minimum Value for a field
      */
     public String getValueMin() {
-        return (String) get_Value(COLUMNNAME_ValueMin);
+        return (String) getValue(COLUMNNAME_ValueMin);
     }
 
     /**

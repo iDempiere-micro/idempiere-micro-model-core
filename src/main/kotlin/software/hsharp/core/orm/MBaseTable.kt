@@ -22,7 +22,7 @@ internal val tableCache = CCache<Int, MTable>(I_AD_Table.Table_Name, 20)
 fun get(ctx: Properties, tableName: String?): MTable? {
     if (tableName == null) return null
     for (retValue in tableCache.values) {
-        if (tableName.equals(retValue.getTableName(), ignoreCase = true) && retValue.ctx === ctx) {
+        if (tableName.equals(retValue.getDbTableName(), ignoreCase = true) && retValue.ctx === ctx) {
             return retValue
         }
     }
@@ -32,7 +32,7 @@ fun get(ctx: Properties, tableName: String?): MTable? {
     val retValue = DB.current.run(loadQuery)
 
     if (retValue != null) {
-        val key = retValue.aD_Table_ID
+        val key = retValue.tableTableId
         tableCache.put(key, retValue)
     }
     return retValue
@@ -83,7 +83,7 @@ open class MBaseTable : X_AD_Table {
     } // 	getColumns
 
     fun getPO(row: Row): org.idempiere.orm.PO {
-        val tableName = tableName
+        val tableName = dbTableName
 
         var po: org.idempiere.orm.PO? = null
         val factoryList = getFactoryList()
@@ -102,7 +102,7 @@ open class MBaseTable : X_AD_Table {
     } // 	getPO
 
     fun <T> getPO(row: Row): T? {
-        val tableName = tableName
+        val tableName = dbTableName
 
         val factoryList = getFactoryList()
         return factoryList?.map { it.getPO<T>(tableName, row) }?.first()

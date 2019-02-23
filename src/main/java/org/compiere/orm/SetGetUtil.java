@@ -54,7 +54,7 @@ public class SetGetUtil {
                         obj = ((BigDecimal) obj).intValue();
                     }
                     //
-                    ok = model.set_AttrValue(columnName, obj);
+                    ok = model.setAttrValue(columnName, obj);
                     if (s_log.isLoggable(Level.FINEST))
                         s_log.finest(
                                 "columnName="
@@ -218,7 +218,7 @@ public class SetGetUtil {
                 continue;
             }
 
-            int idx_to = to.get_ColumnIndex(colName);
+            int idx_to = to.getColumnIndex(colName);
             if (idx_to < 0) {
                 if (s_log.isLoggable(Level.FINEST)) s_log.finest("Field " + colName + " [SKIP:idx_to < 0]");
                 continue;
@@ -229,7 +229,7 @@ public class SetGetUtil {
                 continue;
             }
 
-            Object value = from.get_Value(idx_from);
+            Object value = from.getValue(idx_from);
             to.set_Value(idx_to, value);
 
             if (!trackOnlyChanges || from.is_ValueChanged(idx_from)) {
@@ -287,23 +287,10 @@ public class SetGetUtil {
      * @return int value
      */
     public static int get_AttrValueAsInt(SetGetModel model, String name) {
-        Object o = model.get_AttrValue(name);
+        Object o = model.getAttrValue(name);
         if (o instanceof Number) return ((Number) o).intValue();
         return 0;
     } //	get_AttrValueAsInt
-
-    /**
-     * Get Value as Timestamp
-     *
-     * @param model
-     * @param name
-     * @return Timestamp value
-     */
-    public static Timestamp get_AttrValueAsDate(SetGetModel model, String name) {
-        Object o = model.get_AttrValue(name);
-        if (o instanceof Timestamp) return (Timestamp) o;
-        return null;
-    } //	get_AttrValueAsDate
 
     /**
      * Get Value as BigDecimal
@@ -313,24 +300,10 @@ public class SetGetUtil {
      * @return BigDecimal or {@link BigDecimal#ZERO}
      */
     public static BigDecimal get_AttrValueAsBigDecimal(SetGetModel model, String name) {
-        Object o = model.get_AttrValue(name);
+        Object o = model.getAttrValue(name);
         if (o instanceof BigDecimal) return (BigDecimal) o;
         return BigDecimal.ZERO;
     } //	get_AttrValueAsBigDecimal
-
-    /**
-     * Get Value as String
-     *
-     * @param model
-     * @param name
-     * @param valueIfNull value that will be returned if the value is null
-     * @return String value
-     */
-    public static String get_AttrValueAsString(SetGetModel model, String name, String valueIfNull) {
-        Object o = model.get_AttrValue(name);
-        if (o == null) return valueIfNull;
-        return o.toString();
-    }
 
     /**
      * Check if given object is persistent object
@@ -356,11 +329,11 @@ public class SetGetUtil {
         } else if (o instanceof PO) {
             final PO po = (PO) o;
             return new SetGetModel() {
-                public boolean set_AttrValue(String name, Object value) {
+                public boolean setAttrValue(String name, Object value) {
                     return po.set_Value(name, value);
                 }
 
-                public boolean is_AttrValueChanged(String ColumnName) {
+                public boolean isAttrValueChanged(String ColumnName) {
                     return po.is_ValueChanged(ColumnName);
                 }
 
@@ -368,12 +341,12 @@ public class SetGetUtil {
                     return po.getTableId();
                 }
 
-                public String get_TableName() {
-                    return po.get_TableName();
+                public String getTableName() {
+                    return po.getTableName();
                 }
 
-                public Object get_AttrValue(String name) {
-                    return po.get_Value(name);
+                public Object getAttrValue(String name) {
+                    return po.getValue(name);
                 }
 
                 public Properties getCtx() {

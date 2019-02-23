@@ -25,7 +25,7 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
      */
     public X_AD_Role_OrgAccess(Properties ctx, int AD_Role_OrgAccess_ID) {
         super(ctx, AD_Role_OrgAccess_ID);
-        /** if (AD_Role_OrgAccess_ID == 0) { setAD_Role_ID (0); setIsReadOnly (false); } */
+        /** if (AD_Role_OrgAccess_ID == 0) { setRoleId (0); setIsReadOnly (false); } */
     }
 
     /**
@@ -58,8 +58,8 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
      *
      * @return Responsibility Role
      */
-    public int getAD_Role_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Role_ID);
+    public int getRoleId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -69,7 +69,7 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
      *
      * @param AD_Role_ID Responsibility Role
      */
-    public void setAD_Role_ID(int AD_Role_ID) {
+    public void setRoleId(int AD_Role_ID) {
         if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
     }
@@ -89,7 +89,7 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess, I_Pe
      * @return Field is read only
      */
     public boolean isReadOnly() {
-        Object oo = get_Value(COLUMNNAME_IsReadOnly);
+        Object oo = getValue(COLUMNNAME_IsReadOnly);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);

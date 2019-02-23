@@ -77,20 +77,6 @@ public class M_Element extends X_AD_Element {
     } //	M_Element
 
     /**
-     * Get case sensitive Column Name
-     *
-     * @param columnName case insensitive column name
-     * @param trxName    optional transaction name
-     * @return case sensitive column name
-     */
-    public static String getColumnName(String columnName) {
-        if (columnName == null || columnName.length() == 0) return columnName;
-        M_Element element = get(Env.getCtx(), columnName);
-        if (element == null) return columnName;
-        return element.getColumnName();
-    } //	getColumnName
-
-    /**
      * Get Element
      *
      * @param ctx        context
@@ -106,26 +92,6 @@ public class M_Element extends X_AD_Element {
         M_Element retValue =
                 new Query(ctx, I_AD_Element.Table_Name, whereClause)
                         .setParameters(columnName.toUpperCase())
-                        .firstOnly();
-        return retValue;
-    } //	get
-
-    /**
-     * Get Element
-     *
-     * @param ctx        context
-     * @param columnName case insensitive column name
-     * @param trxName    trx
-     * @return case sensitive column name
-     */
-    public static M_Element getOfColumn(Properties ctx, int AD_Column_ID) {
-        if (AD_Column_ID == 0) return null;
-        final String whereClause =
-                "EXISTS (SELECT 1 FROM AD_Column c "
-                        + "WHERE c.AD_Element_ID=AD_Element.AD_Element_ID AND c.AD_Column_ID=?)";
-        M_Element retValue =
-                new Query(ctx, I_AD_Element.Table_Name, whereClause)
-                        .setParameters(AD_Column_ID)
                         .firstOnly();
         return retValue;
     } //	get

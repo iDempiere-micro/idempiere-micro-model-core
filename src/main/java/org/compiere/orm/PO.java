@@ -60,7 +60,7 @@ public abstract class PO extends org.idempiere.orm.PO {
     public static void copyValues(PO from, PO to, int AD_Client_ID, int AD_Org_ID) {
         Companion.copyValues(from, to);
         to.setADClientID(AD_Client_ID);
-        to.setAD_Org_ID(AD_Org_ID);
+        to.setOrgId(AD_Org_ID);
     } //	copyValues
 
     /**
@@ -73,27 +73,20 @@ public abstract class PO extends org.idempiere.orm.PO {
         Companion.copyValues(from, to);
     } //	copyValues
 
-    public static <T> T as(Class<T> clazz, Object o) {
-        if (clazz.isInstance(o)) {
-            return clazz.cast(o);
-        }
-        return null;
-    }
-
     /**
      * Is new record
      *
      * @return true if new
      */
-    public boolean is_new() {
+    public boolean isNew() {
         if (getCreateNew()) return true;
         //
         for (int i = 0; i < getIds().length; i++) {
             if (getIds()[i].equals(I_ZERO) || getIds()[i] == Null.NULL) continue;
             return false; //	one value is non-zero
         }
-        return !MTable.isZeroIDTable(get_TableName());
-    } //	is_new
+        return !MTable.isZeroIDTable(getTableName());
+    } //	isNew
 
     /**
      * Overwrite Client Org if different
@@ -103,7 +96,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      */
     protected void setClientOrg(int AD_Client_ID, int AD_Org_ID) {
         if (AD_Client_ID != getClientId()) setADClientID(AD_Client_ID);
-        if (AD_Org_ID != getOrgId()) setAD_Org_ID(AD_Org_ID);
+        if (AD_Org_ID != getOrgId()) setOrgId(AD_Org_ID);
     } //	setClientOrg
 
     /**
@@ -167,7 +160,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         // uuid secondary key
         int uuidIndex = p_info.getColumnIndex(getUUIDColumnName());
         if (uuidIndex >= 0) {
-            String value = (String) get_Value(uuidIndex);
+            String value = (String) getValue(uuidIndex);
             if (p_info.getColumn(uuidIndex).FieldLength == 36 && (value == null || value.length() == 0)) {
                 UUID uuid = UUID.randomUUID();
                 set_ValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
@@ -180,7 +173,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         String columnName = "DocumentNo";
         int index = p_info.getColumnIndex(columnName);
         if (index != -1) {
-            String value = (String) get_Value(index);
+            String value = (String) getValue(index);
             if (value != null && value.startsWith("<") && value.endsWith(">")) value = null;
             if (value == null || value.length() == 0) {
                 int dt = p_info.getColumnIndex("C_DocTypeTarget_ID");
@@ -285,11 +278,11 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @return true if inserted
      */
     public void update_Tree(String treeType) {
-        int idxValueCol = get_ColumnIndex("Value");
+        int idxValueCol = getColumnIndex("Value");
         if (idxValueCol < 0) return;
-        int idxValueIsSummary = get_ColumnIndex("IsSummary");
+        int idxValueIsSummary = getColumnIndex("IsSummary");
         if (idxValueIsSummary < 0) return;
-        String value = get_Value(idxValueCol).toString();
+        String value = getValue(idxValueCol).toString();
         if (value == null) return;
 
         String tableName = MTree_Base.getNodeTableName(treeType);
@@ -297,7 +290,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         String whereTree;
         Object[] parameters;
         if (MTree_Base.TREETYPE_CustomTable.equals(treeType)) {
-            sourceTableName = this.get_TableName();
+            sourceTableName = this.getTableName();
             whereTree = "TreeType=? AND AD_Table_ID=?";
             parameters = new Object[]{treeType, this.getTableId()};
         } else {
@@ -305,7 +298,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             if (MTree_Base.TREETYPE_ElementValue.equals(treeType) && this instanceof I_C_ElementValue) {
                 whereTree = "TreeType=? AND AD_Tree_ID=?";
                 parameters =
-                        new Object[]{treeType, ((I_C_ElementValue) this).getC_Element().getAD_Tree_ID()};
+                        new Object[]{treeType, ((I_C_ElementValue) this).getElement().getTreeId()};
             } else {
                 whereTree = "TreeType=?";
                 parameters = new Object[]{treeType};
@@ -345,17 +338,17 @@ public abstract class PO extends org.idempiere.orm.PO {
                             retrieveIdOfElementValue(
                                     value,
                                     getClientId(),
-                                    ((I_C_ElementValue) this).getC_Element().getC_Element_ID()
+                                    ((I_C_ElementValue) this).getElement().getElementId()
                             );
                 } else {
                     newParentID = retrieveIdOfParentValue(value, sourceTableName, getClientId());
                 }
-                int seqNo = getSQLValueEx(selMinSeqNo, newParentID, tree.getAD_Tree_ID(), value);
+                int seqNo = getSQLValueEx(selMinSeqNo, newParentID, tree.getTreeId(), value);
                 if (seqNo == -1)
-                    seqNo = getSQLValueEx(selMaxSeqNo, newParentID, tree.getAD_Tree_ID(), value);
-                executeUpdateEx(updateSeqNo, new Object[]{newParentID, seqNo, tree.getAD_Tree_ID()});
+                    seqNo = getSQLValueEx(selMaxSeqNo, newParentID, tree.getTreeId(), value);
+                executeUpdateEx(updateSeqNo, new Object[]{newParentID, seqNo, tree.getTreeId()});
                 executeUpdateEx(
-                        update, new Object[]{seqNo, newParentID, getId(), tree.getAD_Tree_ID()});
+                        update, new Object[]{seqNo, newParentID, getId(), tree.getTreeId()});
             }
         }
     } //	update_Tree
@@ -414,15 +407,15 @@ public abstract class PO extends org.idempiere.orm.PO {
     public boolean delete(boolean force) {
         checkValidContext();
         CLogger.resetLast();
-        if (is_new()) return true;
+        if (isNew()) return true;
         POInfo p_info = super.getP_info();
         int AD_Table_ID = p_info.getAD_Table_ID();
         int Record_ID = getId();
 
         if (!force) {
-            int iProcessed = get_ColumnIndex("Processed");
+            int iProcessed = getColumnIndex("Processed");
             if (iProcessed != -1) {
-                Boolean processed = (Boolean) get_Value(iProcessed);
+                Boolean processed = (Boolean) getValue(iProcessed);
                 if (processed != null && processed.booleanValue()) {
                     log.warning("Record processed"); // 	CannotDeleteTrx
                     log.saveError("Processed", "Processed", false);
@@ -451,7 +444,7 @@ public abstract class PO extends org.idempiere.orm.PO {
 
         try {
             //
-            if (get_ColumnIndex("IsSummary") >= 0) {
+            if (getColumnIndex("IsSummary") >= 0) {
                 delete_Tree(MTree_Base.TREETYPE_CustomTable);
             }
 
@@ -517,7 +510,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      */
     protected void setUpdatedBy(int AD_User_ID) {
         set_ValueNoCheck("UpdatedBy", new Integer(AD_User_ID));
-    } //	setAD_User_ID
+    } //	setUserId
 
     /**
      * Set value of Column
@@ -591,19 +584,6 @@ public abstract class PO extends org.idempiere.orm.PO {
             throw new AdempiereException(msg);
         }
     }
-
-    /**
-     * Get Attachments
-     *
-     * @param requery requery
-     * @return Attachment or null
-     */
-    public MAttachment getAttachment(boolean requery) {
-        POInfo p_info = super.getP_info();
-        if (m_attachment == null || requery)
-            m_attachment = MAttachment.get(getCtx(), p_info.getAD_Table_ID(), getId());
-        return m_attachment;
-    } //	getAttachment
 
     /**
      * Insert Accounting Records

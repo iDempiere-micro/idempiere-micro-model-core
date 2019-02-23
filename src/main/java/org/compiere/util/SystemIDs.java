@@ -50,7 +50,6 @@ public class SystemIDs {
     public static final int REFERENCE_DATATYPE_URL = 40;
     public static final int REFERENCE_DATATYPE_YES_NO = 20;
     public static final int REFERENCE_DATATYPE_CHART = 53370;
-    public static final int REFERENCE_DATATYPE_DASHBOARD_CONTENT = 200122;
     public static final int REFERENCE_DATATYPE_SINGLE_SELECTION_GRID = 200127;
     public static final int REFERENCE_DATATYPE_MULTIPLE_SELECTION_GRID = 200128;
 
@@ -58,7 +57,6 @@ public class SystemIDs {
     public static final int REFERENCE_WFINSTANCE_STATE = 305;
 
     public static final int USER_SUPERUSER = 100;
-    public static final int USER_SYSTEM = 0;
 
     public static final int SYSCONFIG_USER_HASH_PASSWORD = 200013;
 

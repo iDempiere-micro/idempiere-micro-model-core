@@ -58,7 +58,6 @@ public final class Env {
      */
     public static final String NL = System.getProperty("line.separator");
 
-    private static List<IEnvEventListener> eventListeners = new ArrayList<IEnvEventListener>();
     /**
      * Logger
      */
@@ -132,23 +131,6 @@ public final class Env {
     } //	setContext
 
     /**
-     * Set Context for Window to Value
-     *
-     * @param ctx      context
-     * @param WindowNo window no
-     * @param context  context key
-     * @param value    context value
-     */
-    public static void setContext(Properties ctx, int WindowNo, String context, String value) {
-        if (ctx == null || context == null) return;
-        if (log.isLoggable(Level.FINER))
-            log.finer("Context(" + WindowNo + ") " + context + "==" + value);
-        //
-        if (value == null || value.equals("")) ctx.remove(WindowNo + "|" + context);
-        else ctx.setProperty(WindowNo + "|" + context, value);
-    } //	setContext
-
-    /**
      * Set Context for Window to int Value
      *
      * @param ctx      context
@@ -167,29 +149,6 @@ public final class Env {
     private static String convert(boolean value) {
         return value ? "Y" : "N";
     }
-
-    /**
-     * Set Context for Window & Tab to Value
-     *
-     * @param ctx      context
-     * @param WindowNo window no
-     * @param TabNo    tab no
-     * @param context  context key
-     * @param value    context value
-     */
-    public static void setContext(
-            Properties ctx, int WindowNo, int TabNo, String context, String value) {
-        if (ctx == null || context == null) return;
-        if (log.isLoggable(Level.FINEST))
-            log.finest("Context(" + WindowNo + "," + TabNo + ") " + context + "==" + value);
-        //
-        if (value == null)
-            if (context.endsWith("_ID"))
-                // TODO: Research potential problems with tables with Record_ID=0
-                value = "0";
-            else value = "";
-        ctx.setProperty(WindowNo + "|" + TabNo + "|" + context, value);
-    } //	setContext
 
     /**
      * Set Auto Commit
@@ -271,26 +230,6 @@ public final class Env {
      * @param WindowNo window no
      * @param TabNo    tab no
      * @param context  context key
-     * @return value or ""
-     */
-    public static String getContext(Properties ctx, int WindowNo, int TabNo, String context) {
-        if (ctx == null || context == null) throw new IllegalArgumentException("Require Context");
-        String s = ctx.getProperty(WindowNo + "|" + TabNo + "|" + context);
-        // If TAB_INFO, don't check Window and Global context - teo_sarca BF [ 2017987 ]
-        if (TAB_INFO == TabNo) return s != null ? s : "";
-        //
-        if (Util.isEmpty(s)) return getContext(ctx, WindowNo, context, false);
-        return s;
-    } //	getContext
-
-    /**
-     * Get Value of Context for Window & Tab, if not found global context if available. If TabNo is
-     * TAB_INFO only tab's context will be checked.
-     *
-     * @param ctx      context
-     * @param WindowNo window no
-     * @param TabNo    tab no
-     * @param context  context key
      * @param onlyTab  if true, no window value is searched
      * @return value or ""
      */
@@ -348,50 +287,6 @@ public final class Env {
         }
         return 0;
     } //	getContextAsInt
-
-    /**
-     * Get Context and convert it to an integer (0 if error)
-     *
-     * @param ctx      context
-     * @param WindowNo window no
-     * @param context  context key
-     * @return value or 0
-     */
-    public static int getContextAsInt(Properties ctx, int WindowNo, String context) {
-        String s = getContext(ctx, WindowNo, context, false);
-        if (s.length() == 0) return 0;
-        //
-        try {
-            return Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            log.log(Level.SEVERE, "(" + context + ") = " + s, e);
-        }
-        return 0;
-    } //	getContextAsInt
-
-    /**
-     * Is AutoCommit
-     *
-     * @param ctx context
-     * @return true if auto commit
-     */
-    public static boolean isAutoCommit(Properties ctx) {
-        if (ctx == null) throw new IllegalArgumentException("Require Context");
-        String s = getContext(ctx, "AutoCommit");
-        return s != null && s.equals("Y");
-    } //	isAutoCommit
-
-    /**
-     * Is Auto New Record
-     *
-     * @param ctx context
-     * @return true if auto new
-     */
-    public static boolean isAutoNew(Properties ctx) {
-        if (ctx == null) throw new IllegalArgumentException("Require Context");
-        String s = getContext(ctx, "AutoNew");
-        return s != null && s.equals("Y");
-    } //	isAutoNew
 
     /**
      * Is Sales Order Trx
@@ -488,7 +383,7 @@ public final class Env {
      */
     public static int getAD_User_ID(Properties ctx) {
         return Env.getContextAsInt(ctx, AD_USER_ID);
-    } //	getAD_User_ID
+    } //	getUserId
 
     /**
      * Get Login AD_Role_ID
@@ -498,7 +393,7 @@ public final class Env {
      */
     public static int getAD_Role_ID(Properties ctx) {
         return Env.getContextAsInt(ctx, AD_ROLE_ID);
-    } //	getAD_Role_ID
+    } //	getRoleId
 
     /**
      * Check Base Language
@@ -622,75 +517,6 @@ public final class Env {
             }
 
             String ctxInfo = getContext(ctx, WindowNo, token, onlyWindow); // get context
-            if (ctxInfo.length() == 0 && (token.startsWith("#") || token.startsWith("$")))
-                ctxInfo = getContext(ctx, token); // get global context
-
-            if (ctxInfo.length() == 0 && defaultV != null) ctxInfo = defaultV;
-
-            if (ctxInfo.length() == 0) {
-                if (log.isLoggable(Level.CONFIG))
-                    log.config("No Context Win=" + WindowNo + " for: " + token);
-                if (!ignoreUnparsable) return ""; // 	token not found
-            } else outStr.append(ctxInfo); // replace context with Context
-
-            inStr = inStr.substring(j + 1); // from second @
-            i = inStr.indexOf('@');
-        }
-        outStr.append(inStr); // add the rest of the string
-
-        return outStr.toString();
-    } //	parseContext
-
-    /**
-     * Parse Context replaces global or Window context @tag@ with actual value.
-     *
-     * @param ctx              context
-     * @param WindowNo         Number of Window
-     * @param tabNo            Number of Tab
-     * @param value            Message to be parsed
-     * @param onlyTab          if true, no defaults are used
-     * @param ignoreUnparsable if true, unsuccessful @return parsed String or "" if not successful and
-     *                         ignoreUnparsable
-     * @return parsed context
-     * @tag@ are ignored otherwise "" is returned
-     */
-    public static String parseContext(
-            Properties ctx,
-            int WindowNo,
-            int tabNo,
-            String value,
-            boolean onlyTab,
-            boolean ignoreUnparsable) {
-        if (value == null || value.length() == 0) return "";
-
-        String token;
-        String inStr = value;
-        StringBuilder outStr = new StringBuilder();
-
-        int i = inStr.indexOf('@');
-        while (i != -1) {
-            outStr.append(inStr, 0, i); // up to @
-            inStr = inStr.substring(i + 1); // from first @
-
-            int j = inStr.indexOf('@'); // next @
-            if (j < 0) {
-                if (log.isLoggable(Level.INFO)) log.log(Level.INFO, "No second tag: " + inStr);
-                // not context variable, add back @ and break
-                outStr.append("@");
-                break;
-            }
-
-            token = inStr.substring(0, j);
-
-            // IDEMPIERE-194 Handling null context variable
-            String defaultV = null;
-            int idx = token.indexOf(":"); // 	or clause
-            if (idx >= 0) {
-                defaultV = token.substring(idx + 1);
-                token = token.substring(0, idx);
-            }
-
-            String ctxInfo = getContext(ctx, WindowNo, tabNo, token, onlyTab); // get context
             if (ctxInfo.length() == 0 && (token.startsWith("#") || token.startsWith("$")))
                 ctxInfo = getContext(ctx, token); // get global context
 

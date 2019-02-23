@@ -57,8 +57,8 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
      *
      * @return System Element enables the central maintenance of column description and help.
      */
-    public int getAD_Element_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Element_ID);
+    public int getElementId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Element_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -69,7 +69,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
      * @return Name of the column in the database
      */
     public String getColumnName() {
-        return (String) get_Value(COLUMNNAME_ColumnName);
+        return (String) getValue(COLUMNNAME_ColumnName);
     }
 
     /**
@@ -87,7 +87,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
      * @return Optional short description of the record
      */
     public String getDescription() {
-        return (String) get_Value(COLUMNNAME_Description);
+        return (String) getValue(COLUMNNAME_Description);
     }
 
     /**
@@ -115,7 +115,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
      * @return Comment or Hint
      */
     public String getHelp() {
-        return (String) get_Value(COLUMNNAME_Help);
+        return (String) getValue(COLUMNNAME_Help);
     }
 
     /**
@@ -133,7 +133,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element, I_Persiste
      * @return The label text to be printed on a document or correspondence.
      */
     public String getPrintName() {
-        return (String) get_Value(COLUMNNAME_PrintName);
+        return (String) getValue(COLUMNNAME_PrintName);
     }
 
     /**

@@ -48,9 +48,9 @@ public class MPrivateAccess extends X_AD_Private_Access {
      */
     public MPrivateAccess(Properties ctx, int AD_User_ID, int AD_Table_ID, int Record_ID) {
         super(ctx, 0);
-        setAD_User_ID(AD_User_ID);
-        setAD_Table_ID(AD_Table_ID);
-        setRecord_ID(Record_ID);
+        setUserId(AD_User_ID);
+        setTableId(AD_Table_ID);
+        setRecordId(Record_ID);
     } //	MPrivateAccess
 
     /**

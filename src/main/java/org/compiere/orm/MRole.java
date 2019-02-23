@@ -12,7 +12,6 @@ import software.hsharp.core.orm.MBaseRoleKt;
 import java.lang.reflect.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -189,7 +188,7 @@ public class MRole extends MBaseRole {
         if (reload || defaultRole == null) {
             defaultRole = get(ctx, AD_Role_ID, AD_User_ID, reload);
             setDefaultRole(defaultRole);
-        } else if (defaultRole.getAD_Role_ID() != AD_Role_ID
+        } else if (defaultRole.getRoleId() != AD_Role_ID
                 || defaultRole.getAD_User_ID() != AD_User_ID) {
             defaultRole = get(ctx, AD_Role_ID, AD_User_ID, reload);
             setDefaultRole(defaultRole);
@@ -338,7 +337,7 @@ public class MRole extends MBaseRole {
                 } else if (o1 instanceof MTableAccess) {
                     final MTableAccess ta1 = (MTableAccess) o1;
                     final MTableAccess ta2 = (MTableAccess) o2;
-                    found = ta1.getAD_Table_ID() == ta2.getAD_Table_ID();
+                    found = ta1.getAccessTableId() == ta2.getAccessTableId();
                     if (found && override) {
                         // stronger permissions first
                         if (!ta2.isExclude()) ta1.setIsExclude(false);
@@ -346,7 +345,7 @@ public class MRole extends MBaseRole {
                 } else if (o1 instanceof MColumnAccess) {
                     final MColumnAccess ca1 = (MColumnAccess) o1;
                     final MColumnAccess ca2 = (MColumnAccess) o2;
-                    found = ca1.getAD_Column_ID() == ca2.getAD_Column_ID();
+                    found = ca1.getColumnId() == ca2.getColumnId();
                     if (found && override) {
                         // stronger permissions first
                         if (!ca2.isReadOnly()) ca1.setIsReadOnly(false);
@@ -356,8 +355,8 @@ public class MRole extends MBaseRole {
                     final MRecordAccess ra1 = (MRecordAccess) o1;
                     final MRecordAccess ra2 = (MRecordAccess) o2;
                     found =
-                            ra1.getAD_Table_ID() == ra2.getAD_Table_ID()
-                                    && ra1.getRecord_ID() == ra2.getRecord_ID();
+                            ra1.getRecordTableId() == ra2.getRecordTableId()
+                                    && ra1.getRecordId() == ra2.getRecordId();
                     if (found && override) {
                         // stronger permissions first
                         if (!ra2.isReadOnly()) ra1.setIsReadOnly(false);
@@ -447,11 +446,11 @@ public class MRole extends MBaseRole {
         if (!success) return success;
         if (newRecord && success) {
             //	Add Role to SuperUser
-            MUserRoles su = new MUserRoles(getCtx(), SUPERUSER_USER_ID, getAD_Role_ID());
+            MUserRoles su = new MUserRoles(getCtx(), SUPERUSER_USER_ID, getRoleId());
             su.saveEx();
             //	Add Role to User
             if (getCreatedBy() != SUPERUSER_USER_ID) {
-                MUserRoles ur = new MUserRoles(getCtx(), getCreatedBy(), getAD_Role_ID());
+                MUserRoles ur = new MUserRoles(getCtx(), getCreatedBy(), getRoleId());
                 ur.saveEx();
             }
             updateAccessRecords();
@@ -496,7 +495,7 @@ public class MRole extends MBaseRole {
         if (isManual()) return "-";
 
         String roleClientOrgUser =
-                getAD_Role_ID()
+                getRoleId()
                         + ","
                         + getClientId()
                         + ","
@@ -518,7 +517,7 @@ public class MRole extends MBaseRole {
                         + " INNER JOIN AD_Table tt ON (t.AD_Table_ID=tt.AD_Table_ID) "
                         + " LEFT JOIN AD_Window_Access wa ON "
                         + "(wa.AD_Role_ID="
-                        + getAD_Role_ID()
+                        + getRoleId()
                         + " AND w.AD_Window_ID = wa.AD_Window_ID) "
                         + "WHERE wa.AD_Window_ID IS NULL AND t.SeqNo=(SELECT MIN(SeqNo) FROM AD_Tab xt " // only
                         // check first tab
@@ -533,7 +532,7 @@ public class MRole extends MBaseRole {
                         + roleClientOrgUser
                         + "FROM AD_Process p LEFT JOIN AD_Process_Access pa ON "
                         + "(pa.AD_Role_ID="
-                        + getAD_Role_ID()
+                        + getRoleId()
                         + " AND p.AD_Process_ID = pa.AD_Process_ID) "
                         + "WHERE pa.AD_Process_ID IS NULL AND AccessLevel IN ";
 
@@ -545,7 +544,7 @@ public class MRole extends MBaseRole {
                         + roleClientOrgUser
                         + "FROM AD_Form f LEFT JOIN AD_Form_Access fa ON "
                         + "(fa.AD_Role_ID="
-                        + getAD_Role_ID()
+                        + getRoleId()
                         + " AND f.AD_Form_ID = fa.AD_Form_ID) "
                         + "WHERE fa.AD_Form_ID IS NULL AND AccessLevel IN ";
 
@@ -557,7 +556,7 @@ public class MRole extends MBaseRole {
                         + roleClientOrgUser
                         + "FROM AD_WorkFlow w LEFT JOIN AD_WorkFlow_Access wa ON "
                         + "(wa.AD_Role_ID="
-                        + getAD_Role_ID()
+                        + getRoleId()
                         + " AND w.AD_WorkFlow_ID = wa.AD_WorkFlow_ID) "
                         + "WHERE w.AD_Client_ID IN (0,"
                         + getClientId()
@@ -579,10 +578,10 @@ public class MRole extends MBaseRole {
                         + "INNER JOIN AD_Ref_List action ON (action.AD_Reference_ID=135) "
                         + "INNER JOIN AD_Role rol ON (rol.AD_Client_ID=client.AD_Client_ID "
                         + "AND rol.AD_Role_ID="
-                        + getAD_Role_ID()
+                        + getRoleId()
                         + ") LEFT JOIN AD_Document_Action_Access da ON "
                         + "(da.AD_Role_ID="
-                        + getAD_Role_ID()
+                        + getRoleId()
                         + " AND da.C_DocType_ID=doctype.C_DocType_ID AND da.AD_Ref_List_ID=action.AD_Ref_List_ID) "
                         + "WHERE (da.C_DocType_ID IS NULL AND da.AD_Ref_List_ID IS NULL)) ";
 
@@ -591,7 +590,7 @@ public class MRole extends MBaseRole {
                         + "(AD_InfoWindow_ID, AD_Role_ID,"
                         + " AD_Client_ID,AD_Org_ID,IsActive,Created,CreatedBy,Updated,UpdatedBy) "
                         + "SELECT i.AD_InfoWindow_ID,"
-                        + getAD_Role_ID()
+                        + getRoleId()
                         + ","
                         + getClientId()
                         + ","
@@ -602,7 +601,7 @@ public class MRole extends MBaseRole {
                         + getUpdatedBy()
                         + " FROM AD_InfoWindow i LEFT JOIN AD_InfoWindow_Access ia ON "
                         + "(ia.AD_Role_ID="
-                        + getAD_Role_ID()
+                        + getRoleId()
                         + " AND i.AD_InfoWindow_ID = ia.AD_InfoWindow_ID) "
                         + "WHERE i.AD_Client_ID IN (0,"
                         + getClientId()
@@ -656,7 +655,7 @@ public class MRole extends MBaseRole {
      * Delete Access Records of the role after the role was (successfully) deleted.
      */
     private void deleteAccessRecords() {
-        String whereDel = " WHERE AD_Role_ID=" + getAD_Role_ID();
+        String whereDel = " WHERE AD_Role_ID=" + getRoleId();
         //
         int winDel = executeUpdateEx("DELETE FROM AD_Window_Access" + whereDel);
         int procDel = executeUpdateEx("DELETE FROM AD_Process_Access" + whereDel);
@@ -688,7 +687,7 @@ public class MRole extends MBaseRole {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder("MRole[");
-        sb.append(getAD_Role_ID())
+        sb.append(getRoleId())
                 .append(",")
                 .append(getName())
                 .append(",UserLevel=")
@@ -708,7 +707,7 @@ public class MRole extends MBaseRole {
      */
     public int getAD_User_ID() {
         return m_AD_User_ID;
-    } //	getAD_User_ID
+    } //	getUserId
 
     /**
      * Set Logged in user
@@ -717,7 +716,7 @@ public class MRole extends MBaseRole {
      */
     public void setAD_User_ID(int AD_User_ID) {
         m_AD_User_ID = AD_User_ID;
-    } //	setAD_User_ID
+    } //	setUserId
 
     /**
      * ************************************************************************ Load Access Info
@@ -814,7 +813,7 @@ public class MRole extends MBaseRole {
                         + "WHERE AD_Role_ID=? AND IsActive='Y' ORDER BY AD_Table_ID";
         try {
             pstmt = prepareStatement(sql);
-            pstmt.setInt(1, getAD_Role_ID());
+            pstmt.setInt(1, getRoleId());
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 MRecordAccess ra = new MRecordAccess(getCtx(), rs);
@@ -945,71 +944,6 @@ public class MRole extends MBaseRole {
     } //	getOrgWhereValue
 
     /**
-     * Access to Org
-     *
-     * @param AD_Org_ID org
-     * @param rw        read write access
-     * @return true if access
-     */
-    public boolean isOrgAccess(int AD_Org_ID, boolean rw) {
-        if (isAccessAllOrgs()) return true;
-        if (AD_Org_ID == 0 && !rw) // 	can always read common org
-            return true;
-        loadOrgAccess(false);
-
-        //	Positive List
-        for (int i = 0; i < m_orgAccess.length; i++) {
-            if (m_orgAccess[i].getOrgId() == AD_Org_ID) {
-                if (!rw) return true;
-                // 	rw
-                return !m_orgAccess[i].getReadOnly();
-            }
-        }
-        return false;
-    } //	isOrgAccess
-
-    /**
-     * Can Report on table
-     *
-     * @param AD_Table_ID table
-     * @return true if access
-     */
-    public boolean isCanReport(int AD_Table_ID) {
-        if (!isCanReport()) //	Role Level block
-        {
-            log.warning("Role denied");
-            return false;
-        }
-        if (!isTableAccess(AD_Table_ID, true)) // 	No R/O Access to Table
-            return false;
-
-        // default to negative list, can report on all tables
-        boolean canReport = true;
-        MTableAccess[] m_tableAccess = loadTableAccess(false);
-        for (int i = 0; i < m_tableAccess.length; i++) {
-            if (!X_AD_Table_Access.ACCESSTYPERULE_Reporting.equals(m_tableAccess[i].getAccessTypeRule()))
-                continue;
-            if (m_tableAccess[i].isExclude()) // 	Exclude
-            {
-                if (m_tableAccess[i].getAD_Table_ID() == AD_Table_ID) {
-                    if (log.isLoggable(Level.FINE)) log.fine("Exclude " + AD_Table_ID);
-                    return false;
-                }
-            } else //	Include
-            {
-                // positive list, can report ONLY on included tables
-                canReport = false;
-                if (m_tableAccess[i].getAD_Table_ID() == AD_Table_ID) {
-                    if (log.isLoggable(Level.FINE)) log.fine("Include " + AD_Table_ID);
-                    return true;
-                }
-            }
-        } //	for all Table Access
-        if (log.isLoggable(Level.FINE)) log.fine(AD_Table_ID + " - " + canReport);
-        return canReport;
-    } //	isCanReport
-
-    /**
      * Access to Table
      *
      * @param AD_Table_ID table
@@ -1030,7 +964,7 @@ public class MRole extends MBaseRole {
             //	If you Exclude Access to a table and select Read Only,
             //	you can only read data (otherwise no access).
             {
-                if (m_tableAccess[i].getAD_Table_ID() == AD_Table_ID) {
+                if (m_tableAccess[i].getAccessTableId() == AD_Table_ID) {
                     if (ro) hasAccess = m_tableAccess[i].isReadOnly();
                     else hasAccess = false;
                     if (log.isLoggable(Level.FINE))
@@ -1051,7 +985,7 @@ public class MRole extends MBaseRole {
             {
                 // positive list, can access ONLY on included tables
                 hasAccess = false;
-                if (m_tableAccess[i].getAD_Table_ID() == AD_Table_ID) {
+                if (m_tableAccess[i].getAccessTableId() == AD_Table_ID) {
                     if (!ro) //	rw only if not r/o
                         hasAccess = !m_tableAccess[i].isReadOnly();
                     else hasAccess = true;
@@ -1121,46 +1055,6 @@ public class MRole extends MBaseRole {
     } //	isTableAccessLevel
 
     /**
-     * Access to Record (no check of table)
-     *
-     * @param AD_Table_ID table
-     * @param Record_ID   record
-     * @param ro          read only
-     * @return boolean
-     */
-    public boolean isRecordAccess(int AD_Table_ID, int Record_ID, boolean ro) {
-        //	if (!isTableAccess(AD_Table_ID, ro))		//	No Access to Table
-        //		return false;
-        loadRecordAccess(false);
-        boolean negativeList = true;
-        for (int i = 0; i < m_recordAccess.length; i++) {
-            MRecordAccess ra = m_recordAccess[i];
-            if (ra.getAD_Table_ID() != AD_Table_ID) continue;
-
-            if (ra.isExclude()) // 	Exclude
-            //	If you Exclude Access to a column and select Read Only,
-            //	you can only read data (otherwise no access).
-            {
-                if (ra.getRecord_ID() == Record_ID) {
-                    if (ro) return ra.isReadOnly();
-                    else return false;
-                }
-            } else //	Include
-            //	If you Include Access to a column and select Read Only,
-            //	you can only read data (otherwise full access).
-            {
-                negativeList = false; // 	has to be defined
-                if (ra.getRecord_ID() == Record_ID) {
-                    if (!ro) return !ra.isReadOnly();
-                    else //	ro
-                        return true;
-                }
-            }
-        } //	for all Table Access
-        return negativeList;
-    } //	isRecordAccess
-
-    /**
      * Get Window Access
      *
      * @param AD_Window_ID window
@@ -1219,7 +1113,7 @@ public class MRole extends MBaseRole {
             HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
             try {
                 pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getAD_Role_ID());
+                pstmt.setInt(1, getRoleId());
                 rs = pstmt.executeQuery();
                 while (rs.next()) {
                     Integer winId = new Integer(rs.getInt(1));
@@ -1302,7 +1196,7 @@ public class MRole extends MBaseRole {
             HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
             try {
                 pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getAD_Role_ID());
+                pstmt.setInt(1, getRoleId());
                 rs = pstmt.executeQuery();
                 while (rs.next()) {
                     Integer procId = new Integer(rs.getInt(1));
@@ -1379,7 +1273,7 @@ public class MRole extends MBaseRole {
             HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
             try {
                 pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getAD_Role_ID());
+                pstmt.setInt(1, getRoleId());
                 rs = pstmt.executeQuery();
                 while (rs.next()) {
                     Integer taskId = new Integer(rs.getInt(1));
@@ -1455,7 +1349,7 @@ public class MRole extends MBaseRole {
             HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
             try {
                 pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getAD_Role_ID());
+                pstmt.setInt(1, getRoleId());
                 rs = pstmt.executeQuery();
                 while (rs.next()) {
                     Integer formId = new Integer(rs.getInt(1));
@@ -1531,7 +1425,7 @@ public class MRole extends MBaseRole {
             HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
             try {
                 pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getAD_Role_ID());
+                pstmt.setInt(1, getRoleId());
                 rs = pstmt.executeQuery();
                 while (rs.next()) {
                     Integer formId = new Integer(rs.getInt(1));
@@ -1680,17 +1574,17 @@ public class MRole extends MBaseRole {
                 if (!(charCheck == ',' || charCheck == ' ' || charCheck == ')')) continue;
             }
 
-            if (AD_Table_ID != 0 && AD_Table_ID != m_recordDependentAccess[i].getAD_Table_ID())
+            if (AD_Table_ID != 0 && AD_Table_ID != m_recordDependentAccess[i].getRecordTableId())
                 retSQL.append(getDependentAccess(whereColumnName, includes, excludes));
 
-            AD_Table_ID = m_recordDependentAccess[i].getAD_Table_ID();
+            AD_Table_ID = m_recordDependentAccess[i].getRecordTableId();
             //	*** we found the column in the main query
             if (m_recordDependentAccess[i].isExclude()) {
-                excludes.add(m_recordDependentAccess[i].getRecord_ID());
+                excludes.add(m_recordDependentAccess[i].getRecordId());
                 if (log.isLoggable(Level.FINE))
                     log.fine("Exclude " + columnName + " - " + m_recordDependentAccess[i]);
             } else if (!rw || !m_recordDependentAccess[i].isReadOnly()) {
-                includes.add(m_recordDependentAccess[i].getRecord_ID());
+                includes.add(m_recordDependentAccess[i].getRecordId());
                 if (log.isLoggable(Level.FINE))
                     log.fine("Include " + columnName + " - " + m_recordDependentAccess[i]);
             }
@@ -1770,25 +1664,6 @@ public class MRole extends MBaseRole {
     } //	getDependentRecordWhereColumn
 
     /**
-     * Returns clear text String of TableLevel
-     *
-     * @param AD_Language language
-     * @param TableLevel  level
-     * @return info
-     */
-    private String getTableLevelString(String AD_Language, String TableLevel) {
-        String level = TableLevel + "??";
-        if (TableLevel.equals("1")) level = "AccessOrg";
-        else if (TableLevel.equals("2")) level = "AccessClient";
-        else if (TableLevel.equals("3")) level = "AccessClientOrg";
-        else if (TableLevel.equals("4")) level = "AccessSystem";
-        else if (TableLevel.equals("6")) level = "AccessSystemClient";
-        else if (TableLevel.equals("7")) level = "AccessShared";
-
-        return Msg.getMsg(AD_Language, level);
-    } //	getTableLevelString
-
-    /**
      * Get Table ID from name
      *
      * @param tableName table name
@@ -1798,9 +1673,9 @@ public class MRole extends MBaseRole {
         loadTableInfo(false);
         Integer ii = getM_tableName().get(tableName);
         if (ii != null) return ii;
-        //	log.log(Level.WARNING,"getAD_Table_ID - not found (" + tableName + ")");
+        //	log.log(Level.WARNING,"getColumnTableId - not found (" + tableName + ")");
         return 0;
-    } //	getAD_Table_ID
+    } //	getColumnTableId
 
     /**
      * Return Where clause for Record Access
@@ -1817,21 +1692,21 @@ public class MRole extends MBaseRole {
         StringBuffer sbExclude = new StringBuffer();
         //	Role Access
         for (int i = 0; i < m_recordAccess.length; i++) {
-            if (m_recordAccess[i].getAD_Table_ID() == AD_Table_ID) {
+            if (m_recordAccess[i].getRecordTableId() == AD_Table_ID) {
                 //	NOT IN (x)
                 if (m_recordAccess[i].isExclude()) {
                     if (sbExclude.length() == 0) {
                         sbExclude.append("(").append(keyColumnName).append(" IS NULL OR ");
                         sbExclude.append(keyColumnName).append(" NOT IN (");
                     } else sbExclude.append(",");
-                    sbExclude.append(m_recordAccess[i].getRecord_ID());
+                    sbExclude.append(m_recordAccess[i].getRecordId());
                 }
                 //	IN (x)
                 else if (!rw || !m_recordAccess[i].isReadOnly()) // 	include
                 {
                     if (sbInclude.length() == 0) sbInclude.append(keyColumnName).append(" IN (");
                     else sbInclude.append(",");
-                    sbInclude.append(m_recordAccess[i].getRecord_ID());
+                    sbInclude.append(m_recordAccess[i].getRecordId());
                 }
             }
         } //	for all Table Access
@@ -1857,118 +1732,6 @@ public class MRole extends MBaseRole {
     } //	getRecordWhere
 
     /**
-     * Checks the access rights of the given role/client for the given document actions.
-     *
-     * @param clientId
-     * @param docTypeId
-     * @param options
-     * @param maxIndex
-     * @return number of valid actions in the String[] options
-     * @see metas-2009_0021_AP1_G94
-     */
-    public int checkActionAccess(int clientId, int docTypeId, String[] options, int maxIndex) {
-        if (maxIndex <= 0) return maxIndex;
-        //
-        final ArrayList<String> validOptions = new ArrayList<String>();
-        final List<Object> optionParams = new ArrayList<Object>();
-        //
-        final StringBuffer sql_values = new StringBuffer();
-        for (int i = 0; i < maxIndex; i++) {
-            if (sql_values.length() > 0) sql_values.append(",");
-            sql_values.append("?");
-            optionParams.add(options[i]);
-        }
-        //
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        List<MRole> roles = getIncludedRoles(true);
-        roles.add(this); // add current role to the list of included roles
-        String sql = null;
-        try {
-            for (MRole role : roles) {
-                int idxpar = 1;
-                if (role.getClientId() == 0 && role.isMasterRole()) {
-                    // master role on system - check options based on docbasetype and docsubtypeso
-                    MDocType doc = new MDocType(getCtx(), docTypeId);
-
-                    sql =
-                            "SELECT DISTINCT rl.Value, a.IsActive"
-                                    + " FROM AD_Document_Action_Access a"
-                                    + " INNER JOIN AD_Ref_List rl ON (rl.AD_Reference_ID=135 and rl.AD_Ref_List_ID=a.AD_Ref_List_ID)"
-                                    + " INNER JOIN AD_Role ro ON (a.AD_Role_ID=ro.AD_Role_ID)"
-                                    + " INNER JOIN C_Doctype ty ON (a.C_Doctype_ID=ty.C_Doctype_ID)"
-                                    + " WHERE ro.AD_Role_ID=?"
-                                    + " AND ty.DocBaseType=?"
-                                    + (MDocType.DOCBASETYPE_SalesOrder.equals(doc.getDocBaseType())
-                                    ? " AND ty.DocSubTypeSO=?"
-                                    : "")
-                                    + (MDocType.DOCBASETYPE_PurchaseOrder.equals(doc.getDocBaseType())
-                                    && doc.getDocSubTypeSO() != null
-                                    ? " AND ty.DocSubTypeSO=?"
-                                    : "")
-                                    + (MDocType.DOCBASETYPE_MaterialPhysicalInventory.equals(doc.getDocBaseType())
-                                    ? " AND ty.DocSubTypeInv=?"
-                                    : "")
-                                    + " AND rl.Value IN ("
-                                    + sql_values
-                                    + ")";
-
-                    pstmt = prepareStatement(sql);
-                    pstmt.setInt(idxpar++, role.getAD_Role_ID());
-                    pstmt.setString(idxpar++, doc.getDocBaseType());
-                    if (MDocType.DOCBASETYPE_SalesOrder.equals(doc.getDocBaseType()))
-                        pstmt.setString(idxpar++, doc.getDocSubTypeSO());
-                    else if (MDocType.DOCBASETYPE_PurchaseOrder.equals(doc.getDocBaseType())
-                            && doc.getDocSubTypeSO() != null) pstmt.setString(idxpar++, doc.getDocSubTypeSO());
-                    else if (MDocType.DOCBASETYPE_MaterialPhysicalInventory.equals(doc.getDocBaseType()))
-                        pstmt.setString(idxpar++, doc.getDocSubTypeInv());
-                } else {
-                    // master role on tenant - check options based on doctypeid
-                    sql =
-                            "SELECT DISTINCT rl.Value, a.IsActive"
-                                    + " FROM AD_Document_Action_Access a"
-                                    + " INNER JOIN AD_Ref_List rl ON (rl.AD_Reference_ID=135 and rl.AD_Ref_List_ID=a.AD_Ref_List_ID)"
-                                    + " WHERE a.AD_Client_ID=? AND a.C_DocType_ID=?" // #1,2
-                                    + " AND a.AD_Role_ID=?"
-                                    + " AND rl.Value IN ("
-                                    + sql_values
-                                    + ")";
-                    pstmt = prepareStatement(sql);
-                    pstmt.setInt(idxpar++, clientId);
-                    pstmt.setInt(idxpar++, docTypeId);
-                    pstmt.setInt(idxpar++, role.getAD_Role_ID());
-                }
-                for (Object param : optionParams) pstmt.setObject(idxpar++, param);
-
-                rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    String op = rs.getString(1);
-                    String active = rs.getString(2);
-                    if ("N".equals(active)) {
-                        validOptions.remove(op);
-                    } else {
-                        if (!validOptions.contains(op)) {
-                            validOptions.add(op);
-                        }
-                    }
-                }
-
-            }
-
-            validOptions.toArray(options);
-        } catch (SQLException e) {
-            log.log(Level.SEVERE, sql, e);
-        } finally {
-            rs = null;
-            pstmt = null;
-        }
-        //
-        int newMaxIndex = validOptions.size();
-        return newMaxIndex;
-    }
-
-    /**
      * Include role permissions
      *
      * @param role
@@ -1976,14 +1739,14 @@ public class MRole extends MBaseRole {
      * @see metas-2009_0021_AP1_G94
      */
     private void includeRole(MRole role, int seqNo) {
-        if (this.getAD_Role_ID() == role.getAD_Role_ID()) {
+        if (this.getRoleId() == role.getRoleId()) {
             return;
         }
         if (this.m_includedRoles == null) {
             m_includedRoles = new ArrayList<MRole>();
         }
         for (MRole r : this.m_includedRoles) {
-            if (r.getAD_Role_ID() == role.getAD_Role_ID()) {
+            if (r.getRoleId() == role.getRoleId()) {
                 return;
             }
         }
@@ -2090,7 +1853,7 @@ public class MRole extends MBaseRole {
         final String whereClause = X_AD_Role_Included.COLUMNNAME_AD_Role_ID + "=?";
         List<X_AD_Role_Included> list =
                 new Query(getCtx(), X_AD_Role_Included.Table_Name, whereClause)
-                        .setParameters(getAD_Role_ID())
+                        .setParameters(getRoleId())
                         .setOnlyActiveRecords(true)
                         .setOrderBy(
                                 X_AD_Role_Included.COLUMNNAME_SeqNo
@@ -2098,7 +1861,7 @@ public class MRole extends MBaseRole {
                                         + X_AD_Role_Included.COLUMNNAME_Included_Role_ID)
                         .list();
         for (X_AD_Role_Included includedRole : list) {
-            MRole role = MRole.get(getCtx(), includedRole.getIncluded_Role_ID());
+            MRole role = MRole.get(getCtx(), includedRole.getIncludedRoleId());
             includeRole(role, includedRole.getSeqNo());
         }
     }
@@ -2261,7 +2024,7 @@ public class MRole extends MBaseRole {
             HashMap<Integer, Boolean> directAccess = new HashMap<Integer, Boolean>(100);
             try {
                 pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getAD_Role_ID());
+                pstmt.setInt(1, getRoleId());
                 rs = pstmt.executeQuery();
                 while (rs.next()) {
                     Integer infoId = new Integer(rs.getInt(1));

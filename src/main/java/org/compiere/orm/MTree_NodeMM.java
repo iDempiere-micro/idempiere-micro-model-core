@@ -35,10 +35,10 @@ public class MTree_NodeMM extends X_AD_TreeNodeMM {
     public MTree_NodeMM(MTree_Base tree, int Node_ID) {
         super(tree.getCtx(), 0);
         setClientOrg(tree);
-        setAD_Tree_ID(tree.getAD_Tree_ID());
-        setNode_ID(Node_ID);
+        setTreeId(tree.getTreeId());
+        setNodeId(Node_ID);
         //	Add to root
-        setParent_ID(0);
+        setParentId(0);
         setSeqNo(0);
     } //	MTree_NodeMM
 } //	MTree_NodeMM

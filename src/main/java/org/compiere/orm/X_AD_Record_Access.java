@@ -25,8 +25,8 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
     public X_AD_Record_Access(Properties ctx, int AD_Record_Access_ID) {
         super(ctx, AD_Record_Access_ID);
         /**
-         * if (AD_Record_Access_ID == 0) { setAD_Role_ID (0); setAD_Table_ID (0); setIsDependentEntities
-         * (false); // N setIsExclude (true); // Y setIsReadOnly (false); setRecord_ID (0); }
+         * if (AD_Record_Access_ID == 0) { setRoleId (0); setColumnTableId (0); setIsDependentEntities
+         * (false); // N setIsExclude (true); // Y setIsReadOnly (false); setRecordId (0); }
          */
     }
 
@@ -56,20 +56,10 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
      *
      * @return Responsibility Role
      */
-    public int getAD_Role_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Role_ID);
+    public int getRoleId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
-    }
-
-    /**
-     * Set Role.
-     *
-     * @param AD_Role_ID Responsibility Role
-     */
-    public void setAD_Role_ID(int AD_Role_ID) {
-        if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
     }
 
     /**
@@ -77,20 +67,10 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
      *
      * @return Database Table information
      */
-    public int getAD_Table_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    public int getRecordTableId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
-    }
-
-    /**
-     * Set Table.
-     *
-     * @param AD_Table_ID Database Table information
-     */
-    public void setAD_Table_ID(int AD_Table_ID) {
-        if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
     }
 
     /**
@@ -108,7 +88,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
      * @return Also check access in dependent entities
      */
     public boolean isDependentEntities() {
-        Object oo = get_Value(COLUMNNAME_IsDependentEntities);
+        Object oo = getValue(COLUMNNAME_IsDependentEntities);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -131,7 +111,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
      * @return Exclude access to the data - if not selected Include access to the data
      */
     public boolean isExclude() {
-        Object oo = get_Value(COLUMNNAME_IsExclude);
+        Object oo = getValue(COLUMNNAME_IsExclude);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -154,7 +134,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
      * @return Field is read only
      */
     public boolean isReadOnly() {
-        Object oo = get_Value(COLUMNNAME_IsReadOnly);
+        Object oo = getValue(COLUMNNAME_IsReadOnly);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -167,20 +147,10 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access, I_Pers
      *
      * @return Direct internal record ID
      */
-    public int getRecord_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_Record_ID);
+    public int getRecordId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_Record_ID);
         if (ii == null) return 0;
         return ii;
-    }
-
-    /**
-     * Set Record ID.
-     *
-     * @param Record_ID Direct internal record ID
-     */
-    public void setRecord_ID(int Record_ID) {
-        if (Record_ID < 0) set_ValueNoCheck(COLUMNNAME_Record_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
     }
 
     @Override

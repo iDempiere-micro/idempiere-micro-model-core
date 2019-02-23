@@ -55,7 +55,7 @@ fun doGetNextIDImpl(tableName: String): Int {
 private const val NoYearNorMonth = "-"
 
 internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
-    val AD_Sequence_ID = seq.aD_Sequence_ID
+    val AD_Sequence_ID = seq.sequenceId
     val isStartNewYear = seq.isStartNewYear
     val isStartNewMonth = seq.isStartNewMonth
     val dateColumn = seq.dateColumn
@@ -76,7 +76,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
                     SimpleDateFormat("yyyy")
 
             if (po != null && dateColumn != null && dateColumn.length > 0) {
-                val docDate = po.get_Value(dateColumn) as Date
+                val docDate = po.getValue(dateColumn) as Date
                 sdf.format(docDate)
             } else {
                 sdf.format(Date())
@@ -122,8 +122,8 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
         } else {
             if (isUseOrgLevel || isStartNewYear) {
                 val seqno = X_AD_Sequence_No(Env.getCtx(), 0)
-                seqno.aD_Sequence_ID = AD_Sequence_ID
-                seqno.setAD_Org_ID(docOrg_ID)
+                seqno.setSequenceId(AD_Sequence_ID)
+                seqno.setOrgId(docOrg_ID)
                 seqno.setCalendarYearMonth(calendarYearMonth)
                 seqno.setCurrentNext(startNo + incrementNo)
                 seqno.saveEx()

@@ -48,17 +48,6 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List, I_P
     }
 
     /**
-     * Get Reference.
-     *
-     * @return System Reference and Validation
-     */
-    public int getReferenceId() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Reference_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
      * Set Entity Type.
      *
      * @param EntityType Dictionary Entity Type; Determines ownership and synchronization

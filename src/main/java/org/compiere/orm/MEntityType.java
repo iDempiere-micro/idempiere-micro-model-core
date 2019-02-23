@@ -94,7 +94,7 @@ public class MEntityType extends X_AD_EntityType {
      * @return true if D/C/U/CUST/A/EXT/XX (ID < 1000000)
      */
     public boolean isSystemMaintained() {
-        int id = getAD_EntityType_ID();
+        int id = getEntityTypeId();
         return id < s_maxAD_EntityType_ID;
     } //	isSystemMaintained
 
@@ -106,7 +106,7 @@ public class MEntityType extends X_AD_EntityType {
      */
     protected boolean beforeSave(boolean newRecord) {
         if (!newRecord) {
-            int id = getAD_EntityType_ID();
+            int id = getEntityTypeId();
             boolean systemMaintained =
                     (id == ENTITYTYPE_DICTIONARY || id == ENTITYTYPE_ADEMPIERE); // 	C/D
             if (systemMaintained) {

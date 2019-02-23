@@ -89,10 +89,6 @@ public final class DisplayType {
      */
     public static final int Account = SystemIDs.REFERENCE_DATATYPE_ACCOUNT;
     /**
-     * Display Type 26 RowID
-     */
-    public static final int RowID = SystemIDs.REFERENCE_DATATYPE_ROWID;
-    /**
      * Display Type 27 Color
      */
     public static final int Color = SystemIDs.REFERENCE_DATATYPE_COLOR;

@@ -93,17 +93,6 @@ public final class Msg extends BaseMsg {
     /**
      * Get translated text message for AD_Message
      *
-     * @param language   Language
-     * @param AD_Message - Message Key
-     * @return translated text
-     */
-    public static String getMsg(Language language, String AD_Message) {
-        return getMsg(language.getADLanguage(), AD_Message);
-    } //  getMeg
-
-    /**
-     * Get translated text message for AD_Message
-     *
      * @param ad_language - Language
      * @param AD_Message  - Message Key
      * @param getText     if true only return Text, if false only return Tip

@@ -75,7 +75,7 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org, I_Persistent 
      * @return This is a summary entity
      */
     public boolean isSummary() {
-        Object oo = get_Value(COLUMNNAME_IsSummary);
+        Object oo = getValue(COLUMNNAME_IsSummary);
         if (oo != null) {
             if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);

@@ -48,17 +48,6 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log, I_Pers
         return sb.toString();
     }
 
-    /**
-     * Get Table.
-     *
-     * @return Database Table information
-     */
-    public int getAD_Table_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
     @Override
     public int getTableId() {
         return Table_ID;
