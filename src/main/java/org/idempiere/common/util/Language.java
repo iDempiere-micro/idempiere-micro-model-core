@@ -392,8 +392,6 @@ public class Language implements Serializable {
      * @param size media size
      */
     public void setMediaSize(MediaSize size) {
-        if (size != null) {
-        }
     } //	setMediaSize
 
     /**

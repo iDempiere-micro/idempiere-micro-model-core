@@ -49,9 +49,7 @@ public class MAttachmentEntry implements I_AD_AttachmentEntry {
         super();
         setName(name);
         setData(data);
-        if (index > 0) {
-        }
-        else {
+        if (index <= 0) {
             long now = System.currentTimeMillis();
             if (s_seed + 3600000l < now) // 	older then 1 hour
             {
