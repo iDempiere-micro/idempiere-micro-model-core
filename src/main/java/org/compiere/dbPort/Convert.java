@@ -36,52 +36,6 @@ public abstract class Convert {
      */
     protected static KLogger log = getLogger();
 
-    private static String[] dontLogTables =
-            new String[]{
-                    "AD_ACCESSLOG",
-                    "AD_ALERTPROCESSORLOG",
-                    "AD_CHANGELOG",
-                    "AD_DOCUMENT_ACTION_ACCESS",
-                    "AD_FORM_ACCESS",
-                    "AD_INFOWINDOW_ACCESS",
-                    "AD_ISSUE",
-                    "AD_LDAPPROCESSORLOG",
-                    "AD_PACKAGE_IMP",
-                    "AD_PACKAGE_IMP_BACKUP",
-                    "AD_PACKAGE_IMP_DETAIL",
-                    "AD_PACKAGE_IMP_INST",
-                    "AD_PACKAGE_IMP_PROC",
-                    "AD_PINSTANCE",
-                    "AD_PINSTANCE_LOG",
-                    "AD_PINSTANCE_PARA",
-                    "AD_PREFERENCE",
-                    "AD_PROCESS_ACCESS",
-                    "AD_RECENTITEM",
-                    "AD_REPLICATION_LOG",
-                    "AD_SCHEDULERLOG",
-                    "AD_SESSION",
-                    "AD_WINDOW_ACCESS",
-                    "AD_WORKFLOW_ACCESS",
-                    "AD_WORKFLOWPROCESSORLOG",
-                    "CM_WEBACCESSLOG",
-                    "C_ACCTPROCESSORLOG",
-                    "K_INDEXLOG",
-                    "R_REQUESTPROCESSORLOG",
-                    "T_AGING",
-                    "T_ALTER_COLUMN",
-                    "T_DISTRIBUTIONRUNDETAIL",
-                    "T_INVENTORYVALUE",
-                    "T_INVOICEGL",
-                    "T_REPLENISH",
-                    "T_REPORT",
-                    "T_REPORTSTATEMENT",
-                    "T_SELECTION",
-                    "T_SELECTION2",
-                    "T_SPOOL",
-                    "T_TRANSACTION",
-                    "T_TRIALBALANCE"
-            };
-    private static String m_oldprm_COMMENT = "";
     /**
      * Last Conversion Error
      */
