@@ -24,7 +24,7 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
      */
     public X_AD_User_Roles(Properties ctx, int AD_User_Roles_ID) {
         super(ctx, AD_User_Roles_ID);
-        /** if (AD_User_Roles_ID == 0) { setAD_Role_ID (0); setAD_User_ID (0); } */
+        /** if (AD_User_Roles_ID == 0) { setRoleId (0); setUserId (0); } */
     }
 
     /**
@@ -53,8 +53,8 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
      *
      * @return Responsibility Role
      */
-    public int getAD_Role_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Role_ID);
+    public int getRoleId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -64,7 +64,7 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
      *
      * @param AD_Role_ID Responsibility Role
      */
-    public void setAD_Role_ID(int AD_Role_ID) {
+    public void setRoleId(int AD_Role_ID) {
         if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
     }
@@ -74,8 +74,8 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
      *
      * @return User within the system - Internal or Business Partner Contact
      */
-    public int getAD_User_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_User_ID);
+    public int getUserId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_User_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -85,7 +85,7 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent
      *
      * @param AD_User_ID User within the system - Internal or Business Partner Contact
      */
-    public void setAD_User_ID(int AD_User_ID) {
+    public void setUserId(int AD_User_ID) {
         if (AD_User_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_User_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
     }

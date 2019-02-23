@@ -120,49 +120,6 @@ public class ZipUtil {
     } //	getManifest
 
     /**
-     * Get Manifest
-     *
-     * @param fileName jar file
-     * @param jarEntry jar entry
-     * @return Manifest
-     */
-    public static JarEntry getJarEntry(String fileName, String jarEntry) {
-        if (fileName == null) return null;
-        JarFile jar = getJar(fileName);
-        if (jar == null) return null;
-        return jar.getJarEntry(jarEntry);
-    } //	getManifest
-
-    /**
-     * Dump Manifest to
-     *
-     * @param fileName zip/jar file
-     */
-    public static void dumpManifest(String fileName) {
-        Manifest mf = getManifest(fileName);
-        if (mf == null) {
-            System.out.println("No Jar file: " + fileName);
-            return;
-        }
-        //
-        System.out.println(mf.getEntries());
-    } //	dumpManifest
-
-    /**
-     * Get Zip Entry time
-     *
-     * @param fileName  zip file
-     * @param entryName entry
-     * @return Time as String or null
-     */
-    public static String getEntryTime(String fileName, String entryName) {
-        ZipEntry entry = getEntry(fileName, entryName);
-        if (entry == null) return null;
-        Timestamp ts = new Timestamp(entry.getTime());
-        return ts.toString();
-    } //	getEntryTime
-
-    /**
      * Get Fill name of jarfile in path
      *
      * @param jarFile name
@@ -242,15 +199,6 @@ public class ZipUtil {
     } //	isOpen
 
     /**
-     * Is it a Jar
-     *
-     * @return true if yes
-     */
-    public boolean isJar() {
-        return (m_zipFile != null && m_zipFile instanceof JarFile);
-    } //	isJar
-
-    /**
      * Get it as Jar if it is a Jar
      *
      * @return jar or null if not a jar
@@ -269,24 +217,6 @@ public class ZipUtil {
         if (m_zipFile != null) return m_zipFile.toString();
         return "ZipUtil";
     } //	toString
-
-    /**
-     * ************************************************************************ Get Content as sorted
-     * String Array
-     *
-     * @return content
-     */
-    public String[] getContent() {
-        if (!isOpen()) return null;
-        Enumeration<? extends ZipEntry> e = m_zipFile.entries();
-        ArrayList<ZipEntry> list = new ArrayList<ZipEntry>();
-        while (e.hasMoreElements()) list.add(e.nextElement());
-        //	return sorted array
-        String[] retValue = new String[list.size()];
-        for (int i = 0; i < retValue.length; i++) retValue[i] = list.get(i).getName();
-        Arrays.sort(retValue);
-        return retValue;
-    } //	getContent
 
     /**
      * Get ZipEntries as Enumeration
@@ -309,35 +239,4 @@ public class ZipUtil {
         return m_zipFile.getEntry(name);
     } //	getEntry
 
-    /**
-     * Get File Info
-     *
-     * @param name name
-     * @return time and size
-     */
-    public String getEntryInfo(String name) {
-        StringBuilder sb = new StringBuilder(name);
-        ZipEntry e = getEntry(name);
-        if (e == null) sb.append(": -");
-        else {
-            Timestamp ts = new Timestamp(e.getTime());
-            sb.append(": ").append(ts).append(" - ").append(e.getSize());
-        }
-        return sb.toString();
-    } //	getEntryInfo
-
-    /**
-     * Get Manifest if a Jar
-     *
-     * @return Manifest if exists or null
-     */
-    public Manifest getManifest() {
-        try {
-            JarFile jar = getJar();
-            if (jar != null) return jar.getManifest();
-        } catch (IOException ex) {
-            System.err.println("ZipUtil.getManifest - " + ex);
-        }
-        return null;
-    } //	getManifest
 } //	ZipUtil

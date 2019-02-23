@@ -59,8 +59,8 @@ public class MUserRoles extends X_AD_User_Roles {
      */
     public MUserRoles(Properties ctx, int AD_User_ID, int AD_Role_ID) {
         this(ctx, 0);
-        setAD_User_ID(AD_User_ID);
-        setAD_Role_ID(AD_Role_ID);
+        setUserId(AD_User_ID);
+        setRoleId(AD_Role_ID);
     } //	MUserRoles
 
     /**
@@ -86,24 +86,24 @@ public class MUserRoles extends X_AD_User_Roles {
      *
      * @param AD_User_ID user
      */
-    public void setAD_User_ID(int AD_User_ID) {
+    public void setUserId(int AD_User_ID) {
         set_ValueNoCheck("AD_User_ID", new Integer(AD_User_ID));
-    } //	setAD_User_ID
+    } //	setUserId
 
     /**
      * Set Role. Responsibility Role
      *
      * @param AD_Role_ID role
      */
-    public void setAD_Role_ID(int AD_Role_ID) {
+    public void setRoleId(int AD_Role_ID) {
         set_ValueNoCheck("AD_Role_ID", new Integer(AD_Role_ID));
-    } //	setAD_Role_ID
+    } //	setRoleId
 
     @Override
     protected boolean beforeSave(boolean newRecord) {
         // IDEMPIERE-1410
         if (!MRole.getDefault().isAccessAdvanced()) {
-            MRole role = new MRole(getCtx(), getAD_Role_ID());
+            MRole role = new MRole(getCtx(), getRoleId());
             if (role.isAccessAdvanced()) {
                 log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
                 return false;
@@ -125,7 +125,7 @@ public class MUserRoles extends X_AD_User_Roles {
     protected boolean beforeDelete() {
         // IDEMPIERE-1410
         if (!MRole.getDefault().isAccessAdvanced()) {
-            MRole role = new MRole(getCtx(), getAD_Role_ID());
+            MRole role = new MRole(getCtx(), getRoleId());
             if (role.isAccessAdvanced()) {
                 log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
                 return false;

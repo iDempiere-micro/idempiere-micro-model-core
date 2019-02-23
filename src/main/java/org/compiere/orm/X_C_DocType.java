@@ -217,8 +217,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @return Document type for generating in dispute Shipments
      */
-    public int getC_DocTypeDifference_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_DocTypeDifference_ID);
+    public int getDocTypeDifferenceId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_DocTypeDifference_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -228,8 +228,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @return Document type or rules
      */
-    public int getC_DocType_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_DocType_ID);
+    public int getDocTypeId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_DocType_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -239,8 +239,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @return Document type used for invoices generated from this sales document
      */
-    public int getC_DocTypeInvoice_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_DocTypeInvoice_ID);
+    public int getDocTypeInvoiceId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_DocTypeInvoice_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -250,20 +250,9 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @param C_DocTypeInvoice_ID Document type used for invoices generated from this sales document
      */
-    public void setC_DocTypeInvoice_ID(int C_DocTypeInvoice_ID) {
+    public void setDocTypeInvoiceId(int C_DocTypeInvoice_ID) {
         if (C_DocTypeInvoice_ID < 1) set_Value(COLUMNNAME_C_DocTypeInvoice_ID, null);
         else set_Value(COLUMNNAME_C_DocTypeInvoice_ID, Integer.valueOf(C_DocTypeInvoice_ID));
-    }
-
-    /**
-     * Get Document Type for ProForma.
-     *
-     * @return Document type used for pro forma invoices generated from this sales document
-     */
-    public int getC_DocTypeProforma_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_DocTypeProforma_ID);
-        if (ii == null) return 0;
-        return ii;
     }
 
     /**
@@ -271,8 +260,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @return Document type used for shipments generated from this sales document
      */
-    public int getC_DocTypeShipment_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_DocTypeShipment_ID);
+    public int getDocTypeShipmentId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_DocTypeShipment_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -282,7 +271,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @param C_DocTypeShipment_ID Document type used for shipments generated from this sales document
      */
-    public void setC_DocTypeShipment_ID(int C_DocTypeShipment_ID) {
+    public void setDocTypeShipmentId(int C_DocTypeShipment_ID) {
         if (C_DocTypeShipment_ID < 1) set_Value(COLUMNNAME_C_DocTypeShipment_ID, null);
         else set_Value(COLUMNNAME_C_DocTypeShipment_ID, Integer.valueOf(C_DocTypeShipment_ID));
     }
@@ -292,8 +281,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @return Definite Sequence
      */
-    public int getDefiniteSequence_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_DefiniteSequence_ID);
+    public int getDefiniteSequenceId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_DefiniteSequence_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -304,7 +293,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Logical type of document
      */
     public String getDocBaseType() {
-        return (String) get_Value(COLUMNNAME_DocBaseType);
+        return (String) getValue(COLUMNNAME_DocBaseType);
     }
 
     /**
@@ -322,8 +311,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @return Document sequence determines the numbering of documents
      */
-    public int getDocNoSequence_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_DocNoSequence_ID);
+    public int getDocNoSequenceId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_DocNoSequence_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -333,7 +322,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @param DocNoSequence_ID Document sequence determines the numbering of documents
      */
-    public void setDocNoSequence_ID(int DocNoSequence_ID) {
+    public void setDocNoSequenceId(int DocNoSequence_ID) {
         if (DocNoSequence_ID < 1) set_Value(COLUMNNAME_DocNoSequence_ID, null);
         else set_Value(COLUMNNAME_DocNoSequence_ID, Integer.valueOf(DocNoSequence_ID));
     }
@@ -344,7 +333,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Inventory Sub Type
      */
     public String getDocSubTypeInv() {
-        return (String) get_Value(COLUMNNAME_DocSubTypeInv);
+        return (String) getValue(COLUMNNAME_DocSubTypeInv);
     }
 
     /**
@@ -363,7 +352,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Sales Order Sub Type
      */
     public String getDocSubTypeSO() {
-        return (String) get_Value(COLUMNNAME_DocSubTypeSO);
+        return (String) getValue(COLUMNNAME_DocSubTypeSO);
     }
 
     /**
@@ -390,8 +379,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @return General Ledger Category
      */
-    public int getGL_Category_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_GL_Category_ID);
+    public int getGLCategoryId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_GL_Category_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -401,7 +390,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      *
      * @param GL_Category_ID General Ledger Category
      */
-    public void setGL_Category_ID(int GL_Category_ID) {
+    public void setGLCategoryId(int GL_Category_ID) {
         if (GL_Category_ID < 1) set_Value(COLUMNNAME_GL_Category_ID, null);
         else set_Value(COLUMNNAME_GL_Category_ID, Integer.valueOf(GL_Category_ID));
     }
@@ -421,7 +410,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Mandatory Charge or Product
      */
     public boolean isChargeOrProductMandatory() {
-        Object oo = get_Value(COLUMNNAME_IsChargeOrProductMandatory);
+        Object oo = getValue(COLUMNNAME_IsChargeOrProductMandatory);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -444,7 +433,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Create Counter Document
      */
     public boolean isCreateCounter() {
-        Object oo = get_Value(COLUMNNAME_IsCreateCounter);
+        Object oo = getValue(COLUMNNAME_IsCreateCounter);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -467,7 +456,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Default value
      */
     public boolean isDefault() {
-        Object oo = get_Value(COLUMNNAME_IsDefault);
+        Object oo = getValue(COLUMNNAME_IsDefault);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -490,7 +479,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return The document type is the default counter document type
      */
     public boolean isDefaultCounterDoc() {
-        Object oo = get_Value(COLUMNNAME_IsDefaultCounterDoc);
+        Object oo = getValue(COLUMNNAME_IsDefaultCounterDoc);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -513,7 +502,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return The document has a document sequence
      */
     public boolean isDocNoControlled() {
-        Object oo = get_Value(COLUMNNAME_IsDocNoControlled);
+        Object oo = getValue(COLUMNNAME_IsDocNoControlled);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -536,7 +525,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Movement is in transit
      */
     public boolean isInTransit() {
-        Object oo = get_Value(COLUMNNAME_IsInTransit);
+        Object oo = getValue(COLUMNNAME_IsInTransit);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -550,7 +539,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Overwrite Date on Complete
      */
     public boolean isOverwriteDateOnComplete() {
-        Object oo = get_Value(COLUMNNAME_IsOverwriteDateOnComplete);
+        Object oo = getValue(COLUMNNAME_IsOverwriteDateOnComplete);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -564,7 +553,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Overwrite Sequence on Complete
      */
     public boolean isOverwriteSeqOnComplete() {
-        Object oo = get_Value(COLUMNNAME_IsOverwriteSeqOnComplete);
+        Object oo = getValue(COLUMNNAME_IsOverwriteSeqOnComplete);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -587,7 +576,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Require Pick or QA Confirmation before processing
      */
     public boolean isPickQAConfirm() {
-        Object oo = get_Value(COLUMNNAME_IsPickQAConfirm);
+        Object oo = getValue(COLUMNNAME_IsPickQAConfirm);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -601,7 +590,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Prepare generated split shipment/receipt document
      */
     public boolean isPrepareSplitDocument() {
-        Object oo = get_Value(COLUMNNAME_IsPrepareSplitDocument);
+        Object oo = getValue(COLUMNNAME_IsPrepareSplitDocument);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -624,7 +613,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Require Ship or Receipt Confirmation before processing
      */
     public boolean isShipConfirm() {
-        Object oo = get_Value(COLUMNNAME_IsShipConfirm);
+        Object oo = getValue(COLUMNNAME_IsShipConfirm);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -647,7 +636,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return This is a Sales Transaction
      */
     public boolean isSOTrx() {
-        Object oo = get_Value(COLUMNNAME_IsSOTrx);
+        Object oo = getValue(COLUMNNAME_IsSOTrx);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -670,7 +659,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return Split document when there is a difference
      */
     public boolean isSplitWhenDifference() {
-        Object oo = get_Value(COLUMNNAME_IsSplitWhenDifference);
+        Object oo = getValue(COLUMNNAME_IsSplitWhenDifference);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -684,7 +673,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent
      * @return The label text to be printed on a document or correspondence.
      */
     public String getPrintName() {
-        return (String) get_Value(COLUMNNAME_PrintName);
+        return (String) getValue(COLUMNNAME_PrintName);
     }
 
     /**

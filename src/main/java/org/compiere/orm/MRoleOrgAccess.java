@@ -67,7 +67,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     public MRoleOrgAccess(MOrg org, int AD_Role_ID) {
         this(org.getCtx(), 0);
         setClientOrg(org);
-        setAD_Role_ID(AD_Role_ID);
+        setRoleId(AD_Role_ID);
     } //	MRoleOrgAccess
 
     /**
@@ -79,7 +79,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     public MRoleOrgAccess(MRole role, int AD_Org_ID) {
         this(role.getCtx(), 0);
         setClientOrg(role.getClientId(), AD_Org_ID);
-        setAD_Role_ID(role.getAD_Role_ID());
+        setRoleId(role.getRoleId());
     } //	MRoleOrgAccess
 
     /**
@@ -132,7 +132,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
         MRole[] roles = MRole.getOfClient(org.getCtx());
         for (int i = 0; i < roles.length; i++) {
             if (!roles[i].isManual()) {
-                MRoleOrgAccess orgAccess = new MRoleOrgAccess(org, roles[i].getAD_Role_ID());
+                MRoleOrgAccess orgAccess = new MRoleOrgAccess(org, roles[i].getRoleId());
                 if (orgAccess.save()) counter++;
             }
         }
@@ -148,7 +148,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     public String toString() {
         StringBuilder sb = new StringBuilder("MRoleOrgAccess[");
         sb.append("AD_Role_ID=")
-                .append(getAD_Role_ID())
+                .append(getRoleId())
                 .append(",AD_Client_ID=")
                 .append(getClientId())
                 .append(",AD_Org_ID=")
@@ -190,13 +190,4 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
         return m_clientName;
     } //	getClientName
 
-    /**
-     * Get Client Name
-     *
-     * @return name
-     */
-    public String getOrgName() {
-        if (m_orgName == null) getClientName();
-        return m_orgName;
-    } //	getOrgName
 } //	MRoleOrgAccess

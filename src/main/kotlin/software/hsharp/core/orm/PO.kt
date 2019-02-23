@@ -104,7 +104,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     } // 	decrypt
 
     override val clientId: Int
-        get() = get_Value("AD_Client_ID") as Int? ?: 0
+        get() = getValue("AD_Client_ID") as Int? ?: 0
 
     /**
      * ************************************************************************
@@ -281,14 +281,14 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
                 val ColumnName = p_info.getColumnName(i)
                 m_keyColumns = arrayOf(ColumnName)
                 if (p_info.getColumnName(i)!!.endsWith("_ID")) {
-                    val ii = get_Value(i) as Int?
+                    val ii = getValue(i) as Int?
                     if (ii == null)
                         ids = arrayOf(I_ZERO)
                     else
                         ids = arrayOf(ii)
                     log.trace { "(PK) $ColumnName=$ii" }
                 } else {
-                    val oo = get_Value(i)
+                    val oo = getValue(i)
                     if (oo == null)
                         ids = arrayOf(null)
                     else
@@ -316,7 +316,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
                 if (keyColumn.endsWith("_ID")) {
                     val ii: Int? =
                         try {
-                            get_Value(keyColumn) as Int?
+                            getValue(keyColumn) as Int?
                         } catch (e: Exception) {
                             log.error(e) { "" }
                             null
@@ -324,7 +324,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
 
                     if (ii != null) ids[i] = ii
                 } else
-                    ids[i] = get_Value(keyColumn)
+                    ids[i] = getValue(keyColumn)
             }
             log.trace { "(FK) " + keyColumn + "=" + ids[i] }
         }
@@ -369,7 +369,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      */
     fun getUpdatedBy(): Int {
         @Suppress("UNCHECKED_CAST")
-        return get_Value("UpdatedBy") as Int? ?: return 0
+        return getValue("UpdatedBy") as Int? ?: return 0
     } // 	getUpdatedBy
 
     protected fun insertAccounting(acctTable: String, acctBaseTable: String, whereClause: String?): Boolean {
@@ -438,7 +438,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      * @return int value or 0
      */
     fun get_ValueAsInt(index: Int): Int {
-        val value = get_Value(index) ?: return 0
+        val value = getValue(index) ?: return 0
         if (value is Int) return value
         try {
             return Integer.parseInt(value.toString())
@@ -455,7 +455,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      * @return int value
      */
     fun get_ValueAsInt(columnName: String): Int {
-        val idx = get_ColumnIndex(columnName)
+        val idx = getColumnIndex(columnName)
         return if (idx < 0) {
             0
         } else get_ValueAsInt(idx)

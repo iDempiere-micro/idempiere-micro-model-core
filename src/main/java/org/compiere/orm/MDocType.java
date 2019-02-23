@@ -49,7 +49,7 @@ public class MDocType extends X_C_DocType {
             //	setName (null);
             //	setPrintName (null);
             //	setDocBaseType (null);
-            //	setGL_Category_ID (0);
+            //	setGLCategoryId (0);
             setDocumentCopies(0);
             setHasCharges(false);
             setIsDefault(false);
@@ -90,7 +90,7 @@ public class MDocType extends X_C_DocType {
      */
     public MDocType(Properties ctx, String DocBaseType, String Name) {
         this(ctx, 0);
-        setAD_Org_ID(0);
+        setOrgId(0);
         setDocBaseType(DocBaseType);
         setName(Name);
         setPrintName(Name);
@@ -166,8 +166,8 @@ public class MDocType extends X_C_DocType {
                         + " WHERE AD_Client_ID=?"
                         + " ORDER BY IsDefault DESC, GL_Category_ID";
         int GL_Category_ID = getSQLValue(sql, getClientId());
-        setGL_Category_ID(GL_Category_ID);
-    } //	setGL_Category_ID
+        setGLCategoryId(GL_Category_ID);
+    } //	setGLCategoryId
 
     /**
      * Set SOTrx based on document base type
@@ -191,7 +191,7 @@ public class MDocType extends X_C_DocType {
                 .append("-")
                 .append(getName())
                 .append(",DocNoSequence_ID=")
-                .append(getDocNoSequence_ID())
+                .append(getDocNoSequenceId())
                 .append("]");
         return sb.toString();
     } //	toString
@@ -236,7 +236,7 @@ public class MDocType extends X_C_DocType {
      */
     protected boolean beforeSave(boolean newRecord) {
     /*if (getOrgId() != 0)
-    setAD_Org_ID(0);*/
+    setOrgId(0);*/
         return true;
     } //	beforeSave
 

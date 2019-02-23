@@ -24,7 +24,7 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess, I_Pe
      */
     public X_AD_User_OrgAccess(Properties ctx, int AD_User_OrgAccess_ID) {
         super(ctx, AD_User_OrgAccess_ID);
-        /** if (AD_User_OrgAccess_ID == 0) { setAD_User_ID (0); setIsReadOnly (false); // N } */
+        /** if (AD_User_OrgAccess_ID == 0) { setUserId (0); setIsReadOnly (false); // N } */
     }
 
     /**
@@ -53,8 +53,8 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess, I_Pe
      *
      * @return User within the system - Internal or Business Partner Contact
      */
-    public int getAD_User_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_User_ID);
+    public int getUserId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_User_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -64,7 +64,7 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess, I_Pe
      *
      * @param AD_User_ID User within the system - Internal or Business Partner Contact
      */
-    public void setAD_User_ID(int AD_User_ID) {
+    public void setUserId(int AD_User_ID) {
         if (AD_User_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_User_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
     }
@@ -84,7 +84,7 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess, I_Pe
      * @return Field is read only
      */
     public boolean isReadOnly() {
-        Object oo = get_Value(COLUMNNAME_IsReadOnly);
+        Object oo = getValue(COLUMNNAME_IsReadOnly);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);

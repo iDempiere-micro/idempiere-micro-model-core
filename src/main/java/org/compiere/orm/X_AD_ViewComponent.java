@@ -26,7 +26,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     public X_AD_ViewComponent(Properties ctx, int AD_ViewComponent_ID) {
         super(ctx, AD_ViewComponent_ID);
         /**
-         * if (AD_ViewComponent_ID == 0) { setAD_Table_ID (0); setAD_ViewComponent_ID (0); setEntityType
+         * if (AD_ViewComponent_ID == 0) { setColumnTableId (0); setViewComponentId (0); setEntityType
          * (null); // @SQL=select get_sysconfig('DEFAULT_ENTITYTYPE','U',0,0) from dual setFromClause
          * (null); setName (null); }
          */
@@ -54,22 +54,11 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     }
 
     /**
-     * Get Table.
-     *
-     * @return Database Table information
-     */
-    public int getAD_Table_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
      * Set Table.
      *
      * @param AD_Table_ID Database Table information
      */
-    public void setAD_Table_ID(int AD_Table_ID) {
+    public void setViewTableId(int AD_Table_ID) {
         if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
     }
@@ -79,8 +68,8 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
      *
      * @return Database View Component
      */
-    public int getAD_ViewComponent_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_ViewComponent_ID);
+    public int getViewComponentId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_ViewComponent_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -91,7 +80,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
      * @return Dictionary Entity Type; Determines ownership and synchronization
      */
     public String getEntityType() {
-        return (String) get_Value(COLUMNNAME_EntityType);
+        return (String) getValue(COLUMNNAME_EntityType);
     }
 
     /**
@@ -105,50 +94,12 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent, I_Pers
     }
 
     /**
-     * Get Sql FROM.
-     *
-     * @return SQL FROM clause
-     */
-    public String getFromClause() {
-        return (String) get_Value(COLUMNNAME_FromClause);
-    }
-
-    /**
      * Get Name.
      *
      * @return Alphanumeric identifier of the entity
      */
     public String getName() {
-        return (String) get_Value(HasName.Companion.getCOLUMNNAME_Name());
-    }
-
-    /**
-     * Get Other SQL Clause.
-     *
-     * @return Other SQL Clause
-     */
-    public String getOtherClause() {
-        return (String) get_Value(COLUMNNAME_OtherClause);
-    }
-
-    /**
-     * Get Referenced Table.
-     *
-     * @return Referenced Table
-     */
-    public int getReferenced_Table_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_Referenced_Table_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
-     * Get Sql WHERE.
-     *
-     * @return Fully qualified SQL WHERE clause
-     */
-    public String getWhereClause() {
-        return (String) get_Value(COLUMNNAME_WhereClause);
+        return (String) getValue(HasName.Companion.getCOLUMNNAME_Name());
     }
 
     @Override

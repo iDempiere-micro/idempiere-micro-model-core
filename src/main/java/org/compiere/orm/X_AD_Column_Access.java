@@ -26,7 +26,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
     public X_AD_Column_Access(Properties ctx, int AD_Column_Access_ID) {
         super(ctx, AD_Column_Access_ID);
         /**
-         * if (AD_Column_Access_ID == 0) { setColumnId (0); setAD_Role_ID (0); setIsExclude (true); // Y
+         * if (AD_Column_Access_ID == 0) { setColumnId (0); setRoleId (0); setIsExclude (true); // Y
          * setIsReadOnly (false); }
          */
     }
@@ -61,8 +61,8 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
      *
      * @return Column in the table
      */
-    public int getAD_Column_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Column_ID);
+    public int getColumnId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Column_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -72,8 +72,8 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
      *
      * @return Responsibility Role
      */
-    public int getAD_Role_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Role_ID);
+    public int getRoleId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -83,8 +83,8 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
      *
      * @return Database Table information
      */
-    public int getAD_Table_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    public int getColumnTableId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -104,7 +104,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
      * @return Exclude access to the data - if not selected Include access to the data
      */
     public boolean isExclude() {
-        Object oo = get_Value(COLUMNNAME_IsExclude);
+        Object oo = getValue(COLUMNNAME_IsExclude);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -127,7 +127,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access, I_Pers
      * @return Field is read only
      */
     public boolean isReadOnly() {
-        Object oo = get_Value(COLUMNNAME_IsReadOnly);
+        Object oo = getValue(COLUMNNAME_IsReadOnly);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);

@@ -33,7 +33,7 @@ public class MViewComponent extends X_AD_ViewComponent {
     public MViewComponent(MTable parent) {
         this(parent.getCtx(), 0);
         setClientOrg(parent);
-        setAD_Table_ID(parent.getAD_Table_ID());
+        setViewTableId(parent.getTableTableId());
     }
 
     /**
@@ -51,7 +51,7 @@ public class MViewComponent extends X_AD_ViewComponent {
                         MViewColumn.Table_Name,
                         MViewColumn.COLUMNNAME_AD_ViewComponent_ID + "=?"
                 );
-        query.setParameters(getAD_ViewComponent_ID());
+        query.setParameters(getViewComponentId());
         query.setOrderBy("SeqNo, AD_ViewColumn_ID");
         List<MViewColumn> list = query.list();
 

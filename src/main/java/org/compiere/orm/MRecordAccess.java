@@ -54,7 +54,7 @@ public class MRecordAccess extends X_AD_Record_Access {
         ResultSet rs = null;
         try {
             pstmt = prepareStatement(sql);
-            pstmt.setInt(1, getAD_Table_ID());
+            pstmt.setInt(1, getRecordTableId());
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 String s = rs.getString(1);
@@ -115,11 +115,11 @@ public class MRecordAccess extends X_AD_Record_Access {
     public String toString() {
         StringBuffer sb =
                 new StringBuffer("MRecordAccess[AD_Role_ID=")
-                        .append(getAD_Role_ID())
+                        .append(getRoleId())
                         .append(",AD_Table_ID=")
-                        .append(getAD_Table_ID())
+                        .append(getRecordTableId())
                         .append(",Record_ID=")
-                        .append(getRecord_ID())
+                        .append(getRecordId())
                         .append(",Active=")
                         .append(isActive())
                         .append(",Exclude=")
@@ -131,36 +131,6 @@ public class MRecordAccess extends X_AD_Record_Access {
                         .append("]");
         return sb.toString();
     } //	toString
-
-    /**
-     * Extended String Representation
-     *
-     * @param ctx context
-     * @return extended info
-     */
-    public String toStringX(Properties ctx) {
-        String in = Msg.getMsg(ctx, "Include");
-        String ex = Msg.getMsg(ctx, "Exclude");
-        StringBuilder sb = new StringBuilder();
-        sb.append(Msg.translate(ctx, "AD_Table_ID"))
-                .append("=")
-                .append(getTableName(ctx))
-                .append(", ")
-                .append(Msg.translate(ctx, "Record_ID"))
-                .append("=")
-                .append(getRecord_ID())
-                .append(" - ")
-                .append(Msg.translate(ctx, "IsDependentEntities"))
-                .append("=")
-                .append(isDependentEntities())
-                .append(" (")
-                .append(Msg.translate(ctx, "IsReadOnly"))
-                .append("=")
-                .append(super.isReadOnly())
-                .append(") - ")
-                .append(isExclude() ? ex : in);
-        return sb.toString();
-    } //	toStringX
 
     /**
      * Get Table Name
@@ -175,7 +145,7 @@ public class MRecordAccess extends X_AD_Record_Access {
             ResultSet rs = null;
             try {
                 pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getAD_Table_ID());
+                pstmt.setInt(1, getRecordTableId());
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
                     m_tableName = rs.getString(1);

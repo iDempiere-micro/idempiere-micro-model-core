@@ -40,7 +40,7 @@ public class MViewColumn extends X_AD_ViewColumn {
     public MViewColumn(MViewComponent parent) {
         this(parent.getCtx(), 0);
         setClientOrg(parent);
-        setAD_ViewComponent_ID(parent.getAD_ViewComponent_ID());
+        setViewComponentId(parent.getViewComponentId());
     }
 
     /**

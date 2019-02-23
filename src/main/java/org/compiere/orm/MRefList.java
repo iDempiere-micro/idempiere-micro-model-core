@@ -128,55 +128,6 @@ public class MRefList extends X_AD_Ref_List {
     } //	getListName
 
     /**
-     * Get Reference List Value Description (cached)
-     *
-     * @param Language
-     * @param ListName reference
-     * @param Value    value
-     * @return List or null
-     */
-    public static String getListDescription(String AD_Language, String ListName, String Value) {
-        String key = AD_Language + "_" + ListName + "_" + Value;
-        String retValue = s_cache.get(key);
-        if (retValue != null) return retValue;
-
-        boolean isBaseLanguage = Env.isBaseLanguage(AD_Language, "AD_Ref_List");
-        String sql =
-                isBaseLanguage
-                        ? "SELECT a.Description FROM AD_Ref_List a, AD_Reference b"
-                        + " WHERE b.Name=? AND a.Value=?"
-                        + " AND a.AD_Reference_ID = b.AD_Reference_ID"
-                        : "SELECT t.Description FROM AD_Reference r"
-                        + " INNER JOIN AD_Ref_List rl ON (r.AD_Reference_ID=rl.AD_Reference_ID)"
-                        + " INNER JOIN AD_Ref_List_Trl t ON (t.AD_Ref_List_ID=rl.AD_Ref_List_ID)"
-                        + " WHERE r.Name=? AND rl.Value=? AND t.AD_Language=?";
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            pstmt = prepareStatement(sql);
-            pstmt.setString(1, ListName);
-            pstmt.setString(2, Value);
-            if (!isBaseLanguage) pstmt.setString(3, AD_Language);
-            rs = pstmt.executeQuery();
-            if (rs.next()) retValue = rs.getString(1);
-        } catch (SQLException ex) {
-            s_log.log(Level.SEVERE, sql + " -- " + key, ex);
-        } finally {
-            rs = null;
-            pstmt = null;
-        }
-
-        //	Save into Cache
-        if (retValue == null) {
-            retValue = "";
-            if (s_log.isLoggable(Level.INFO)) s_log.info("getListDescription - Not found " + key);
-        }
-        s_cache.put(key, retValue);
-        //
-        return retValue;
-    } //	getListDescription
-
-    /**
      * String Representation
      *
      * @return Name

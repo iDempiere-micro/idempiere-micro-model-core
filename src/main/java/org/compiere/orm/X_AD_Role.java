@@ -26,10 +26,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      */
     public static final String PREFERENCETYPE_Organization = "O";
     /**
-     * None = N
-     */
-    public static final String PREFERENCETYPE_None = "N";
-    /**
      * System = S
      */
     public static final String USERLEVEL_System = "S  ";
@@ -56,7 +52,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
     public X_AD_Role(Properties ctx, int AD_Role_ID) {
         super(ctx, AD_Role_ID);
         /**
-         * if (AD_Role_ID == 0) { setAD_Role_ID (0); setAllow_Info_Account (true); // Y
+         * if (AD_Role_ID == 0) { setRoleId (0); setAllow_Info_Account (true); // Y
          * setAllow_Info_Asset (true); // Y setAllow_Info_BPartner (true); // Y setAllow_Info_InOut
          * (true); // Y setAllow_Info_Invoice (true); // Y setAllow_Info_Order (true); // Y
          * setAllow_Info_Payment (true); // Y setAllow_Info_Product (true); // Y setAllow_Info_Resource
@@ -101,19 +97,8 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      *
      * @return Responsibility Role
      */
-    public int getAD_Role_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Role_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
-     * Get Menu Tree.
-     *
-     * @return Tree of the menu
-     */
-    public int getAD_Tree_Menu_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_Menu_ID);
+    public int getRoleId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -123,8 +108,8 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      *
      * @return Trees are used for (financial) reporting and security access (via role)
      */
-    public int getAD_Tree_Org_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_Org_ID);
+    public int getTreeOrgId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Tree_Org_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -135,7 +120,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return The approval amount limit for this role
      */
     public BigDecimal getAmtApproval() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_AmtApproval);
+        BigDecimal bd = (BigDecimal) getValue(COLUMNNAME_AmtApproval);
         if (bd == null) return Env.ZERO;
         return bd;
     }
@@ -146,7 +131,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return The approval amount limit for this role accumulated on a period
      */
     public BigDecimal getAmtApprovalAccum() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_AmtApprovalAccum);
+        BigDecimal bd = (BigDecimal) getValue(COLUMNNAME_AmtApprovalAccum);
         if (bd == null) return Env.ZERO;
         return bd;
     }
@@ -156,8 +141,8 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      *
      * @return The Currency for this record
      */
-    public int getC_Currency_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_Currency_ID);
+    public int getCurrencyId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_Currency_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -168,7 +153,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return Require Confirmation if more records will be returned by the query (If not defined 500)
      */
     public int getConfirmQueryRecords() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_ConfirmQueryRecords);
+        Integer ii = (Integer) getValue(COLUMNNAME_ConfirmQueryRecords);
         if (ii == null) return 0;
         return ii;
     }
@@ -190,7 +175,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * approval amount.
      */
     public int getDaysApprovalAccum() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_DaysApprovalAccum);
+        Integer ii = (Integer) getValue(COLUMNNAME_DaysApprovalAccum);
         if (ii == null) return 0;
         return ii;
     }
@@ -210,7 +195,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return Access Advanced
      */
     public boolean isAccessAdvanced() {
-        Object oo = get_Value(COLUMNNAME_IsAccessAdvanced);
+        Object oo = getValue(COLUMNNAME_IsAccessAdvanced);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -233,7 +218,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return Access all Organizations (no org access control) of the client
      */
     public boolean isAccessAllOrgs() {
-        Object oo = get_Value(COLUMNNAME_IsAccessAllOrgs);
+        Object oo = getValue(COLUMNNAME_IsAccessAllOrgs);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -247,7 +232,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return Users with this role can approve their own documents
      */
     public boolean isCanApproveOwnDoc() {
-        Object oo = get_Value(COLUMNNAME_IsCanApproveOwnDoc);
+        Object oo = getValue(COLUMNNAME_IsCanApproveOwnDoc);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -265,20 +250,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
     }
 
     /**
-     * Get Can Export.
-     *
-     * @return Users with this role can export data
-     */
-    public boolean isCanExport() {
-        Object oo = get_Value(COLUMNNAME_IsCanExport);
-        if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-            return "Y".equals(oo);
-        }
-        return false;
-    }
-
-    /**
      * Set Can Report.
      *
      * @param IsCanReport Users with this role can create reports
@@ -293,7 +264,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return Users with this role can create reports
      */
     public boolean isCanReport() {
-        Object oo = get_Value(COLUMNNAME_IsCanReport);
+        Object oo = getValue(COLUMNNAME_IsCanReport);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -325,7 +296,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return This is a manual process
      */
     public boolean isManual() {
-        Object oo = get_Value(COLUMNNAME_IsManual);
+        Object oo = getValue(COLUMNNAME_IsManual);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -340,7 +311,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * option and documents and inherit to other roles
      */
     public boolean isMasterRole() {
-        Object oo = get_Value(COLUMNNAME_IsMasterRole);
+        Object oo = getValue(COLUMNNAME_IsMasterRole);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -354,7 +325,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return If ticked, the menu is automatically expanded
      */
     public boolean isMenuAutoExpand() {
-        Object oo = get_Value(COLUMNNAME_IsMenuAutoExpand);
+        Object oo = getValue(COLUMNNAME_IsMenuAutoExpand);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -377,7 +348,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return Allow access to all personal records
      */
     public boolean isPersonalAccess() {
-        Object oo = get_Value(COLUMNNAME_IsPersonalAccess);
+        Object oo = getValue(COLUMNNAME_IsPersonalAccess);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -418,24 +389,12 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return Use Org Access defined by user instead of Role Org Access
      */
     public boolean isUseUserOrgAccess() {
-        Object oo = get_Value(COLUMNNAME_IsUseUserOrgAccess);
+        Object oo = getValue(COLUMNNAME_IsUseUserOrgAccess);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
         }
         return false;
-    }
-
-    /**
-     * Get Max Query Records.
-     *
-     * @return If defined, you cannot query more records as defined - the query criteria needs to be
-     * changed to query less records
-     */
-    public int getMaxQueryRecords() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_MaxQueryRecords);
-        if (ii == null) return 0;
-        return ii;
     }
 
     /**
@@ -454,7 +413,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return Overwrite Price Limit if the Price List enforces the Price Limit
      */
     public boolean isOverwritePriceLimit() {
-        Object oo = get_Value(COLUMNNAME_OverwritePriceLimit);
+        Object oo = getValue(COLUMNNAME_OverwritePriceLimit);
         if (oo != null) {
             if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
@@ -469,15 +428,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      */
     public void setOverwritePriceLimit(boolean OverwritePriceLimit) {
         set_Value(COLUMNNAME_OverwritePriceLimit, OverwritePriceLimit);
-    }
-
-    /**
-     * Get Preference Level.
-     *
-     * @return Determines what preferences the user can set
-     */
-    public String getPreferenceType() {
-        return (String) get_Value(COLUMNNAME_PreferenceType);
     }
 
     /**
@@ -496,7 +446,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role, I_Persistent {
      * @return System Client Organization
      */
     public String getUserLevel() {
-        return (String) get_Value(COLUMNNAME_UserLevel);
+        return (String) getValue(COLUMNNAME_UserLevel);
     }
 
     /**

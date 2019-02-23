@@ -25,8 +25,6 @@ public class DBException extends AdempiereException {
      */
     private static final long serialVersionUID = 4264201718343118625L;
 
-    private String m_sql = null;
-
     /**
      * Create a new DBException based on a SQLException
      *
@@ -47,7 +45,6 @@ public class DBException extends AdempiereException {
      */
     public DBException(SQLException e, String sql) {
         this(e);
-        m_sql = sql;
     }
 
     /**

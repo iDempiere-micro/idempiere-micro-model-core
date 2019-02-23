@@ -189,37 +189,6 @@ public class Secure implements SecureInterface {
     } //	decrypt
 
     /**
-     * Convert String to Digest. JavaScript version see - http://pajhome.org.uk/crypt/md5/index.html
-     *
-     * @param value message
-     * @return HexString of message (length = 32 characters)
-     */
-    public String getDigest(String value) {
-        if (m_md == null) {
-            try {
-                m_md = MessageDigest.getInstance("MD5");
-                //	m_md = MessageDigest.getInstance("SHA-1");
-            } catch (NoSuchAlgorithmException nsae) {
-                nsae.printStackTrace();
-            }
-        }
-        //	Convert String to array of bytes
-        byte[] input = value.getBytes();
-        byte[] output = null;
-        //	Reset MessageDigest object
-        if (m_md != null) {
-            m_md.reset();
-            //	feed this array of bytes to the MessageDigest object
-            m_md.update(input);
-            //	 Get the resulting bytes after the encryption process
-            output = m_md.digest();
-            m_md.reset();
-            //
-        }
-        return convertToHexString(output);
-    } //	getDigest
-
-    /**
      * Convert String and salt to SHA-512 hash with iterations
      * https://www.owasp.org/index.php/Hashing_Java
      *

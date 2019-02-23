@@ -134,7 +134,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
      */
     private void initAttachmentStoreDetails(Properties ctx) {
         MClientInfo clientInfo = MClientInfo.get(ctx, getClientId());
-        provider = new MStorageProvider(ctx, clientInfo.getAD_StorageProvider_ID());
+        provider = new MStorageProvider(ctx, clientInfo.getStorageProviderId());
     }
 
     /**
@@ -147,17 +147,6 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
         super.setClientOrg(AD_Client_ID, AD_Org_ID);
         initAttachmentStoreDetails(getCtx());
     } //	setClientOrg
-
-    /**
-     * Get Text Msg
-     *
-     * @return trimmed message
-     */
-    public String getTextMsg() {
-        String msg = super.getTextMsg();
-        if (msg == null) return null;
-        return msg.trim();
-    } //	setTextMsg
 
     @Override
     public ArrayList<I_AD_AttachmentEntry> getItems() {
@@ -388,18 +377,8 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
         return false;
     } //	beforeDelete
 
-    /**
-     * Update existing entry
-     *
-     * @param i
-     * @param data
-     * @return true if success, false otherwise
-     */
-    public boolean updateEntry(int i, byte[] data) {
-        MAttachmentEntry entry = getEntry(i);
-        if (entry == null) return false;
-        entry.setData(data);
-        return true;
+    public byte[] getBinaryData() {
+        return (byte[]) getValue(I_AD_Attachment.COLUMNNAME_BinaryData);
     }
 
 } //	MAttachment

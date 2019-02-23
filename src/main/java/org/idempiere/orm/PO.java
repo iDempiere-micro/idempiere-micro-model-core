@@ -99,10 +99,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     public static final int ACCESSLEVEL_CLIENTORG = 3;
     /**
-     * default timeout, 300 seconds *
-     */
-    protected static final int QUERY_TIME_OUT = 300;
-    /**
      * Table ID Attribute
      */
     protected static final String XML_ATTRIBUTE_AD_Table_ID = "AD_Table_ID";
@@ -143,10 +139,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * Custom Columns
      */
     protected HashMap<String, String> m_custom = null;
-    /**
-     * Attributes
-     */
-    private HashMap<String, Object> m_attributes = null;
     /**
      * Trifon - Indicates that this record is created by replication functionality.
      */
@@ -315,15 +307,15 @@ public abstract class PO extends software.hsharp.core.orm.PO
         //	same class
         Collator collator = Collator.getInstance();
         if (o1.getClass().equals(o2.getClass())) {
-            int index = get_ColumnIndex("DocumentNo");
-            if (index == -1) index = get_ColumnIndex("Value");
-            if (index == -1) index = get_ColumnIndex("Name");
-            if (index == -1) index = get_ColumnIndex("Description");
+            int index = getColumnIndex("DocumentNo");
+            if (index == -1) index = getColumnIndex("Value");
+            if (index == -1) index = getColumnIndex("Name");
+            if (index == -1) index = getColumnIndex("Description");
             if (index != -1) {
                 PO po1 = (PO) o1;
-                Object comp1 = po1.get_Value(index);
+                Object comp1 = po1.getValue(index);
                 PO po2 = (PO) o2;
-                Object comp2 = po2.get_Value(index);
+                Object comp2 = po2.getValue(index);
                 if (comp1 == null) return -1;
                 else if (comp2 == null) return 1;
                 return collator.compare(comp1.toString(), comp2.toString());
@@ -337,19 +329,19 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @return table name
      */
-    public String get_TableName() {
+    public String getTableName() {
         POInfo p_info = super.getP_info();
         return p_info.getTableName();
-    } //  get_TableName
+    } //  getTableName
 
     /**
      * Get Key Columns.
      *
      * @return table name
      */
-    public String[] get_KeyColumns() {
+    public String[] getKeyColumns() {
         return super.getM_keyColumns();
-    } //  get_KeyColumns
+    } //  getKeyColumns
 
     /**
      * Return Single Key Record ID
@@ -372,21 +364,12 @@ public abstract class PO extends software.hsharp.core.orm.PO
     } //  getID
 
     /**
-     * Get Logger
-     *
-     * @return logger
-     */
-    public CLogger get_Logger() {
-        return log;
-    } //	getLogger
-
-    /**
      * ************************************************************************ Get Value
      *
      * @param index index
      * @return value
      */
-    public final Object get_Value(int index) {
+    public final Object getValue(int index) {
         if (index < 0 || index >= get_ColumnCount()) {
             log.log(Level.WARNING, "Index invalid - " + index);
             return null;
@@ -406,14 +389,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param columnName column name
      * @return value or null
      */
-    public final Object get_Value(String columnName) {
-        int index = get_ColumnIndex(columnName);
+    public final Object getValue(String columnName) {
+        int index = getColumnIndex(columnName);
         if (index < 0) {
             log.log(Level.WARNING, "Column not found - " + columnName);
             Trace.printStack();
             return null;
         }
-        return get_Value(index);
+        return getValue(index);
     } //  get_Value
 
     /**
@@ -423,7 +406,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return value or ""
      */
     public String get_ValueAsString(String variableName) {
-        Object value = get_Value(variableName);
+        Object value = getValue(variableName);
         if (value == null) return "";
         return value.toString();
     } //	get_ValueAsString
@@ -434,14 +417,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param AD_Column_ID column
      * @return value or null
      */
-    public final Object get_ValueOfColumn(int AD_Column_ID) {
+    public final Object getValueOfColumn(int AD_Column_ID) {
         POInfo p_info = super.getP_info();
         int index = p_info.getColumnIndex(AD_Column_ID);
         if (index < 0) {
             log.log(Level.WARNING, "Not found - AD_Column_ID=" + AD_Column_ID);
             return null;
         }
-        return get_Value(index);
+        return getValue(index);
     } //  get_ValueOfColumn
 
     /**
@@ -465,7 +448,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return value or null
      */
     public final Object get_ValueOld(String columnName) {
-        int index = get_ColumnIndex(columnName);
+        int index = getColumnIndex(columnName);
         if (index < 0) {
             log.log(Level.WARNING, "Column not found - " + columnName);
             return null;
@@ -515,45 +498,13 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return true if changed
      */
     public final boolean is_ValueChanged(String columnName) {
-        int index = get_ColumnIndex(columnName);
+        int index = getColumnIndex(columnName);
         if (index < 0) {
             log.log(Level.WARNING, "Column not found - " + columnName);
             return false;
         }
         return is_ValueChanged(index);
     } //  is_ValueChanged
-
-    /**
-     * Return new - old. - New Value if Old Value is null - New Value - Old Value if Number -
-     * otherwise null
-     *
-     * @param index index
-     * @return new - old or null if not appropriate or not changed
-     */
-    public final Object get_ValueDifference(int index) {
-        if (index < 0 || index >= get_ColumnCount()) {
-            log.log(Level.WARNING, "Index invalid - " + index);
-            return null;
-        }
-        Object[] newValues = getNewValues();
-        Object nValue = newValues[index];
-        //	No new Value or NULL
-        if (nValue == null || nValue == Null.NULL) return null;
-        //
-        Object oValue = getOldValues()[index];
-        if (oValue == null || oValue == Null.NULL) return nValue;
-        if (nValue instanceof BigDecimal) {
-            BigDecimal obd = (BigDecimal) oValue;
-            return ((BigDecimal) nValue).subtract(obd);
-        } else if (nValue instanceof Integer) {
-            int result = (Integer) nValue;
-            result -= (Integer) oValue;
-            return result;
-        }
-        //
-        log.warning("Invalid type - New=" + nValue);
-        return null;
-    } //  get_ValueDifference
 
     /**
      * Set (numeric) Key Value
@@ -608,31 +559,11 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param columnName column name
      * @return index of column with ColumnName or -1 if not found
      */
-    public final int get_ColumnIndex(String columnName) {
+    public final int getColumnIndex(String columnName) {
 
         POInfo p_info = super.getP_info();
         return p_info.getColumnIndex(columnName);
     } //  getColumnIndex
-
-    /**
-     * Get Display Value of value
-     *
-     * @param columnName   columnName
-     * @param currentValue current value
-     * @return String value with "./." as null
-     */
-    public String get_DisplayValue(String columnName, boolean currentValue) {
-        Object value = currentValue ? get_Value(columnName) : get_ValueOld(columnName);
-        if (value == null) return "./.";
-        String retValue = value.toString();
-        int index = get_ColumnIndex(columnName);
-        if (index < 0) return retValue;
-        int dt = get_ColumnDisplayType(index);
-        if (DisplayType.isText(dt) || DisplayType.YesNo == dt) return retValue;
-        //	Lookup
-        //	Other
-        return retValue;
-    } //	get_DisplayValue
 
     /**
      * ************************************************************************ Load record with ID
@@ -858,7 +789,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return AD_Org_ID
      */
     public int getOrgId() {
-        Integer ii = (Integer) get_Value("AD_Org_ID");
+        Integer ii = (Integer) getValue("AD_Org_ID");
         if (ii == null) return 0;
         return ii;
     } //	getOrgId
@@ -869,7 +800,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return is active
      */
     public final boolean isActive() {
-        Boolean bb = (Boolean) get_Value("IsActive");
+        Boolean bb = (Boolean) getValue("IsActive");
         if (bb != null) return bb;
         return false;
     } //	isActive
@@ -880,7 +811,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return created
      */
     public final Timestamp getCreated() {
-        return (Timestamp) get_Value("Created");
+        return (Timestamp) getValue("Created");
     } //	getCreated
 
     /**
@@ -889,7 +820,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return updated
      */
     public final Timestamp getUpdated() {
-        return (Timestamp) get_Value("Updated");
+        return (Timestamp) getValue("Updated");
     } //	getUpdated
 
     /**
@@ -898,7 +829,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return AD_User_ID
      */
     public final int getCreatedBy() {
-        Integer ii = (Integer) get_Value("CreatedBy");
+        Integer ii = (Integer) getValue("CreatedBy");
         if (ii == null) return 0;
         return ii;
     } //	getCreateddBy
@@ -948,7 +879,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             //
             // Check if NOT base language and column is translated => load trl from db
             POInfo p_info = super.getP_info();
-            if (!Env.isBaseLanguage(AD_Language, get_TableName())
+            if (!Env.isBaseLanguage(AD_Language, getTableName())
                     && p_info.isColumnTranslated(p_info.getColumnIndex(columnName))) {
                 // Load translation from database
                 int ID = (Integer) getIds()[0];
@@ -967,7 +898,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         //
         // If no translation found or not translated, fallback to original:
         if (retValue == null && fallback) {
-            Object val = get_Value(columnName);
+            Object val = getValue(columnName);
             retValue = (val != null ? val.toString() : null);
         }
         trl_cache.put(key, retValue);
@@ -979,7 +910,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * Return the key used in the translation cache
      */
     protected String getTrlCacheKey(String columnName, String AD_Language) {
-        return get_TableName() + "." + columnName + "|" + getId() + "|" + AD_Language;
+        return getTableName() + "." + columnName + "|" + getId() + "|" + AD_Language;
     }
 
     /**
@@ -1152,33 +1083,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     }
 
     /**
-     * ************************************************************************ Lock it.
-     *
-     * @return true if locked
-     */
-    public boolean lock() {
-        int index = get_ProcessingIndex();
-        POInfo p_info = super.getP_info();
-        Object[] newValues = getNewValues();
-        if (index != -1) {
-            newValues[index] = Boolean.TRUE; // 	direct
-            String sql =
-                    "UPDATE "
-                            + p_info.getTableName()
-                            + " SET Processing='Y' WHERE (Processing='N' OR Processing IS NULL) AND "
-                            + get_WhereClause(true);
-            boolean success = false;
-            if (isUseTimeoutForUpdate())
-                success = executeUpdateEx(sql) == 1; // 	outside trx
-            else success = executeUpdate(sql) == 1; // 	outside trx
-            if (success) log.fine("success");
-            else log.log(Level.WARNING, "failed");
-            return success;
-        }
-        return false;
-    } //	lock
-
-    /**
      * Get the Column Processing index
      *
      * @return index or -1
@@ -1188,33 +1092,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         POInfo p_info = super.getP_info();
         return p_info.getColumnIndex("Processing");
     } //	getProcessingIndex
-
-    /**
-     * UnLock it
-     *
-     * @return true if unlocked (false only if unlock fails)
-     */
-    public boolean unlock() {
-        int index = get_ProcessingIndex();
-        POInfo p_info = super.getP_info();
-        Object[] newValues = getNewValues();
-        if (index != -1) {
-            newValues[index] = Boolean.FALSE; // 	direct
-            String sql =
-                    "UPDATE " + p_info.getTableName() + " SET Processing='N' WHERE " + get_WhereClause(true);
-            boolean success = false;
-            if (isUseTimeoutForUpdate()) success = executeUpdateEx(sql) == 1;
-            else success = executeUpdate(sql) == 1;
-            if (success) {
-                if (log.isLoggable(Level.FINE))
-                    log.fine("success");
-            } else {
-                log.log(Level.WARNING, "failed");
-            }
-            return success;
-        }
-        return true;
-    } //	unlock
 
     /**
      * ****************************************************************** Dump Record
@@ -1344,7 +1221,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             log.log(Level.SEVERE, "", e);
         }
         //	Root
-        Element root = document.createElement(get_TableName());
+        Element root = document.createElement(getTableName());
         root.setAttribute(XML_ATTRIBUTE_AD_Table_ID, String.valueOf(getTableId()));
         root.setAttribute(XML_ATTRIBUTE_Record_ID, String.valueOf(getId()));
         document.appendChild(root);
@@ -1356,7 +1233,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
             Element col = document.createElement(p_info.getColumnName(i));
             //
-            Object value = get_Value(i);
+            Object value = getValue(i);
             //	Display Type
             int dt = p_info.getColumnDisplayType(i);
             //  Based on class of definition, not class of value
@@ -1411,7 +1288,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return boolean value
      */
     public boolean get_ValueAsBoolean(String columnName) {
-        Object oo = get_Value(columnName);
+        Object oo = getValue(columnName);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -1423,7 +1300,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return uuid column name
      */
     public String getUUIDColumnName() {
-        return PO.getUUIDColumnName(get_TableName());
+        return PO.getUUIDColumnName(getTableName());
     }
 
   /*
@@ -1497,8 +1374,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
             //
             // globalqss -- Bug 1618469 - is throwing not updateable even on new records
             // if (!p_info.isColumnUpdateable(index))
-            if ((!p_info.isColumnUpdateable(index)) && (!is_new())) {
-                colInfo += " - NewValue=" + value + " - OldValue=" + get_Value(index);
+            if ((!p_info.isColumnUpdateable(index)) && (!isNew())) {
+                colInfo += " - NewValue=" + value + " - OldValue=" + getValue(index);
                 log.log(Level.WARNING, "Column not updateable" + colInfo);
                 log.saveError("ColumnReadonly", "Column not updateable" + colInfo);
                 m_setErrors[index] = new ValueNamePair("ColumnReadonly", "Column not updateable" + colInfo);
@@ -1611,7 +1488,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 && value.toString().toUpperCase().contains("=NULL"))
             log.warning("Invalid Null Value - " + ColumnName + "=" + value);
 
-        int index = get_ColumnIndex(ColumnName);
+        int index = getColumnIndex(ColumnName);
         if (index < 0) {
             log.log(Level.SEVERE, "Column not found - " + ColumnName);
             log.saveError("ColumnNotFound", "Column not found - " + ColumnName);
@@ -1655,9 +1532,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @param AD_Org_ID org
      */
-    public void setAD_Org_ID(int AD_Org_ID) {
+    public void setOrgId(int AD_Org_ID) {
         set_ValueNoCheck("AD_Org_ID", AD_Org_ID);
-    } //	setAD_Org_ID
+    } //	setOrgId
 
     /**
      * Set Value w/o check (update, r/o, ..). Used when Column is R/O Required for key and parent
@@ -1689,7 +1566,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         checkValidContext();
         CLogger.resetLast();
         POInfo p_info = super.getP_info();
-        boolean newRecord = is_new(); // 	save locally as load resets
+        boolean newRecord = isNew(); // 	save locally as load resets
         if (!newRecord && !is_Changed()) {
             if (log.isLoggable(Level.FINE)) log.fine("Nothing changed - " + p_info.getTableName());
             return true;
@@ -1723,7 +1600,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             }
             if (reset) {
                 log.warning("Set Org to 0");
-                setAD_Org_ID(0);
+                setOrgId(0);
             }
         }
 
@@ -1775,7 +1652,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         // uuid secondary key
         int uuidIndex = p_info.getColumnIndex(getUUIDColumnName());
         if (uuidIndex >= 0) {
-            String value = (String) get_Value(uuidIndex);
+            String value = (String) getValue(uuidIndex);
             if (p_info.getColumn(uuidIndex).FieldLength == 36 && (value == null || value.length() == 0)) {
                 UUID uuid = UUID.randomUUID();
                 set_ValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
@@ -2053,7 +1930,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         int size = get_ColumnCount();
         boolean doComma = false;
         for (int i = 0; i < size; i++) {
-            Object value = get_Value(i);
+            Object value = getValue(i);
             //	Don't insert NULL values (allows Database defaults)
             if (value == null || p_info.isVirtualColumn(i)) continue;
 
@@ -2171,7 +2048,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         } else {
             String msg = "Not inserted - ";
             if (CLogMgt.isLevelFiner()) msg += sqlInsert.toString();
-            else msg += get_TableName();
+            else msg += getTableName();
             log.log(Level.WARNING, msg);
         }
         return ok;

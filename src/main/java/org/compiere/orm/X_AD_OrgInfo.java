@@ -60,7 +60,7 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
      *
      * @param AD_OrgType_ID Organization Type
      */
-    public void setAD_OrgType_ID(int AD_OrgType_ID) {
+    public void setOrgTypeId(int AD_OrgType_ID) {
         if (AD_OrgType_ID < 1) set_Value(COLUMNNAME_AD_OrgType_ID, null);
         else set_Value(COLUMNNAME_AD_OrgType_ID, Integer.valueOf(AD_OrgType_ID));
     }
@@ -70,8 +70,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
      *
      * @return Accounting Calendar Name
      */
-    public int getC_Calendar_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_Calendar_ID);
+    public int getCalendarId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_Calendar_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -81,8 +81,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
      *
      * @return Location or Address
      */
-    public int getC_Location_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_C_Location_ID);
+    public int getLocationId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_C_Location_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -92,7 +92,7 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
      *
      * @param C_Location_ID Location or Address
      */
-    public void setC_Location_ID(int C_Location_ID) {
+    public void setLocationId(int C_Location_ID) {
         if (C_Location_ID < 1) set_Value(COLUMNNAME_C_Location_ID, null);
         else set_Value(COLUMNNAME_C_Location_ID, Integer.valueOf(C_Location_ID));
     }
@@ -102,8 +102,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
      *
      * @return The (logical) warehouse to use for recording drop ship receipts and shipments.
      */
-    public int getDropShip_Warehouse_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_DropShip_Warehouse_ID);
+    public int getDropShipWarehouseId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_DropShip_Warehouse_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -140,8 +140,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
      *
      * @return Storage Warehouse and Service Point
      */
-    public int getM_Warehouse_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_M_Warehouse_ID);
+    public int getWarehouseId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_M_Warehouse_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -151,7 +151,7 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
      *
      * @param M_Warehouse_ID Storage Warehouse and Service Point
      */
-    public void setM_Warehouse_ID(int M_Warehouse_ID) {
+    public void setWarehouseId(int M_Warehouse_ID) {
         if (M_Warehouse_ID < 1) set_Value(COLUMNNAME_M_Warehouse_ID, null);
         else set_Value(COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
     }
@@ -161,8 +161,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
      *
      * @return Parent (superior) Organization
      */
-    public int getParent_Org_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_Parent_Org_ID);
+    public int getParentOrgId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_Parent_Org_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -190,8 +190,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo, I_Persistent {
      *
      * @return Supervisor for this user/organization - used for escalation and approval
      */
-    public int getSupervisor_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_Supervisor_ID);
+    public int getSupervisorId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_Supervisor_ID);
         if (ii == null) return 0;
         return ii;
     }

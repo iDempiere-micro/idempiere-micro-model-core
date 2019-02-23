@@ -44,18 +44,6 @@ public class Trace {
     } //  getCallerClasses
 
     /**
-     * Get Caller with nest Level
-     *
-     * @param nestLevel Nesting Level - 0=calling method, 1=previous, ..
-     * @return class name and line info of nesting level or "" if not exist
-     */
-    public static String getCallerClass(int nestLevel) {
-        String[] array = getCallerClasses(null, nestLevel);
-        if (array.length < nestLevel) return "";
-        return array[nestLevel];
-    } //  getCallerClass
-
-    /**
      * Print Stack Trace Info (raw) idempiereOnly - first9only
      */
     public static void printStack() {

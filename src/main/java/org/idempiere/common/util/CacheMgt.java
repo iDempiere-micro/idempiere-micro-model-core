@@ -237,24 +237,6 @@ public class CacheMgt {
     }
 
     /**
-     * Total Cached Elements
-     *
-     * @return count
-     */
-    public int getElementCount() {
-        int total = 0;
-        CacheInterface[] instances = getInstancesAsArray();
-        for (CacheInterface stored : instances) {
-            if (stored != null && stored.size() > 0) {
-                if (log.isLoggable(Level.FINE)) log.fine(stored.toString());
-                if (stored instanceof CCache) total += ((CCache<?, ?>) stored).sizeNoExpire();
-                else total += stored.size();
-            }
-        }
-        return total;
-    } //	getElementCount
-
-    /**
      * String Representation
      *
      * @return info

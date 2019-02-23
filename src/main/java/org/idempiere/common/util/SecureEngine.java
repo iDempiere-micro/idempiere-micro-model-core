@@ -76,16 +76,6 @@ public class SecureEngine {
     } //	init
 
     /**
-     * Get Class Name
-     *
-     * @return class name
-     */
-    public static String getClassName() {
-        if (s_engine == null) return null;
-        return s_engine.implementation.getClass().getName();
-    } //	getClassName
-
-    /**
      * Convert String and salt to SHA-512 hash with iterations
      * https://www.owasp.org/index.php/Hashing_Java
      *

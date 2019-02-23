@@ -137,8 +137,8 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
      *
      * @return Database Table information
      */
-    public int getAD_Table_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    public int getTreeTableId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -148,8 +148,8 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
      *
      * @return Identifies a Tree
      */
-    public int getAD_Tree_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Tree_ID);
+    public int getTreeId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Tree_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -160,7 +160,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
      * @return Optional short description of the record
      */
     public String getDescription() {
-        return (String) get_Value(COLUMNNAME_Description);
+        return (String) getValue(COLUMNNAME_Description);
     }
 
     /**
@@ -178,7 +178,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
      * @return All Nodes are included (Complete Tree)
      */
     public boolean isAllNodes() {
-        Object oo = get_Value(COLUMNNAME_IsAllNodes);
+        Object oo = getValue(COLUMNNAME_IsAllNodes);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -210,7 +210,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
      * @return Driven by Search Key
      */
     public boolean isTreeDrivenByValue() {
-        Object oo = get_Value(COLUMNNAME_IsTreeDrivenByValue);
+        Object oo = getValue(COLUMNNAME_IsTreeDrivenByValue);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -224,7 +224,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree, I_Persistent {
      * @return Element this tree is built on (i.e Product, Business Partner)
      */
     public String getTreeType() {
-        return (String) get_Value(COLUMNNAME_TreeType);
+        return (String) getValue(COLUMNNAME_TreeType);
     }
 
     /**

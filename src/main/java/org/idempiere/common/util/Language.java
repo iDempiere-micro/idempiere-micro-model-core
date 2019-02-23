@@ -73,9 +73,7 @@ public class Language implements Serializable {
     private Locale m_locale;
     //
     private Boolean m_decimalPoint;
-    private Boolean m_leftToRight;
     private SimpleDateFormat m_dateFormat;
-    private MediaSize m_mediaSize = MediaSize.ISO.A4;
     private boolean m_fromDB = false;
 
     /**
@@ -239,16 +237,6 @@ public class Language implements Serializable {
     } //  getBase
 
     /**
-     * Get Supported Locale
-     *
-     * @param langInfo either language (en) or locale (en-US) or display name
-     * @return Supported Locale
-     */
-    public static Locale getLocale(String langInfo) {
-        return getLanguage(langInfo).getLocale();
-    } //  getLocale
-
-    /**
      * ************************************************************************ Get Current Login
      * Language
      *
@@ -306,15 +294,6 @@ public class Language implements Serializable {
         }
         return m_decimalPoint.booleanValue();
     } //  isDecimalPoint
-
-    /**
-     * Is This the Base Language
-     *
-     * @return true if base Language
-     */
-    public boolean isBaseLanguage() {
-        return this.equals(getBaseLanguage());
-    } //	isBaseLanguage
 
     public static void setBaseLanguage(String baselang) {
         Language lang = getLanguage(baselang);
@@ -413,7 +392,8 @@ public class Language implements Serializable {
      * @param size media size
      */
     public void setMediaSize(MediaSize size) {
-        if (size != null) m_mediaSize = size;
+        if (size != null) {
+        }
     } //	setMediaSize
 
     /**

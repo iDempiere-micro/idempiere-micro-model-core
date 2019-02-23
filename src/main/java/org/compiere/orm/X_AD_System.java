@@ -62,32 +62,9 @@ public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent
      * @return End if the ID Range used
      */
     public BigDecimal getIDRangeEnd() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_IDRangeEnd);
+        BigDecimal bd = (BigDecimal) getValue(COLUMNNAME_IDRangeEnd);
         if (bd == null) return Env.ZERO;
         return bd;
-    }
-
-    /**
-     * Get Fail on Missing Model Validator.
-     *
-     * @return Fail on Missing Model Validator
-     */
-    public boolean isFailOnMissingModelValidator() {
-        Object oo = get_Value(COLUMNNAME_IsFailOnMissingModelValidator);
-        if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-            return "Y".equals(oo);
-        }
-        return false;
-    }
-
-    /**
-     * Set Internal Users.
-     *
-     * @param SupportUnits Number of Internal Users for iDempiere Support
-     */
-    public void setSupportUnits(int SupportUnits) {
-        set_ValueNoCheck(COLUMNNAME_SupportUnits, Integer.valueOf(SupportUnits));
     }
 
     @Override

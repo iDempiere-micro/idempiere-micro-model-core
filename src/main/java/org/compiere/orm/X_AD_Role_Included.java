@@ -25,7 +25,7 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
     public X_AD_Role_Included(Properties ctx, int AD_Role_Included_ID) {
         super(ctx, AD_Role_Included_ID);
         /**
-         * if (AD_Role_Included_ID == 0) { setAD_Role_ID (0); setIncluded_Role_ID (0); setSeqNo (0);
+         * if (AD_Role_Included_ID == 0) { setRoleId (0); setIncluded_Role_ID (0); setSeqNo (0);
          * // @SQL=SELECT NVL(MAX(SeqNo),0)+10 AS DefaultValue FROM AD_Role_Included WHERE
          * AD_Role_ID=@AD_Role_ID@ }
          */
@@ -53,23 +53,12 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
     }
 
     /**
-     * Get Role.
-     *
-     * @return Responsibility Role
-     */
-    public int getAD_Role_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Role_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
      * Get Included Role.
      *
      * @return Included Role
      */
-    public int getIncluded_Role_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_Included_Role_ID);
+    public int getIncludedRoleId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_Included_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -80,7 +69,7 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included, I_Pers
      * @return Method of ordering records; lowest number comes first
      */
     public int getSeqNo() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_SeqNo);
+        Integer ii = (Integer) getValue(COLUMNNAME_SeqNo);
         if (ii == null) return 0;
         return ii;
     }

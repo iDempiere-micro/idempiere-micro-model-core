@@ -42,51 +42,6 @@ public class Util {
     } //	replace
 
     /**
-     * Mask HTML content. i.e. replace characters with &values;
-     *
-     * @param content content
-     * @param maskCR  convert CR into <br>
-     * @return masked content or null if the <code>content</code> is null
-     */
-    public static String maskHTML(String content, boolean maskCR) {
-        // If the content is null, then return null - teo_sarca [ 1748346 ]
-        if (content == null) return content;
-        //
-        StringBuilder out = new StringBuilder();
-        char[] chars = content.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-            switch (c) {
-                case '<':
-                    out.append("&lt;");
-                    break;
-                case '>':
-                    out.append("&gt;");
-                    break;
-                case '&':
-                    out.append("&amp;");
-                    break;
-                case '"':
-                    out.append("&quot;");
-                    break;
-                case '\'':
-                    out.append("&#039;");
-                    break;
-                case '\n':
-                    if (maskCR) out.append("<br>");
-                    //
-                default:
-                    int ii = (int) c;
-                    if (ii > 255) // 	Write Unicode
-                        out.append("&#").append(ii).append(";");
-                    else out.append(c);
-                    break;
-            }
-        }
-        return out.toString();
-    } //	maskHTML
-
-    /**
      * Is String Empty
      *
      * @param str string
@@ -174,22 +129,6 @@ public class Util {
         }
         return -1;
     } //  findIndexOf
-
-    /**
-     * ************************************************************************ Return Hex String
-     * representation of byte b
-     *
-     * @param b byte
-     * @return Hex
-     */
-    public static String toHex(byte b) {
-        char[] hexDigit = {
-                '0', '1', '2', '3', '4', '5', '6', '7',
-                '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
-        };
-        char[] array = {hexDigit[(b >> 4) & 0x0f], hexDigit[b & 0x0f]};
-        return new String(array);
-    }
 
     /**
      * Clean Ampersand (used to indicate shortcut)

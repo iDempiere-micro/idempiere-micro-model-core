@@ -13,7 +13,7 @@ abstract class BasePOName : PO {
     constructor(ctx: Properties, r: Row) : super(ctx, r)
 
     open var name: String
-        get() = get_Value(HasName.COLUMNNAME_Name) as String
+        get() = getValue(HasName.COLUMNNAME_Name) as String
         set(Name) {
             set_Value(HasName.COLUMNNAME_Name, Name)
         }

@@ -15,14 +15,14 @@ abstract class BasePONameValue : BasePOName {
      * @param Value
      * Search key for the record in the format required - must be unique
      */
-    open fun setValue(Value: String) {
+    open fun setSearchKey(Value: String) {
         set_Value(COLUMNNAME_Value, Value)
     }
 
     /** Get Search Key.
      * @return Search key for the record in the format required - must be unique
      */
-    open fun getValue(): String {
-        return get_Value(COLUMNNAME_Value) as String
+    open fun getSearchKey(): String {
+        return getValue(COLUMNNAME_Value) as String
     }
 }

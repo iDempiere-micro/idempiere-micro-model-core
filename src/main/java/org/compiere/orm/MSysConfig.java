@@ -27,7 +27,6 @@ import static software.hsharp.core.util.DBKt.prepareStatement;
  * globalqss - [ 1800371 ] System Configurator Enhancements
  */
 public class MSysConfig extends MBaseSysConfig {
-    public static final String ALLOCATION_DESCRIPTION = "ALLOCATION_DESCRIPTION";
     public static final String ALLOW_OVER_APPLIED_PAYMENT = "ALLOW_OVER_APPLIED_PAYMENT";
     public static final String CASH_AS_PAYMENT = "CASH_AS_PAYMENT";
     public static final String CHECK_CREDIT_ON_CASH_POS_ORDER = "CHECK_CREDIT_ON_CASH_POS_ORDER";
@@ -39,7 +38,6 @@ public class MSysConfig extends MBaseSysConfig {
     public static final String IBAN_VALIDATION = "IBAN_VALIDATION";
     public static final String IDENTIFIER_SEPARATOR = "IDENTIFIER_SEPARATOR";
     public static final String Invoice_ReverseUseNewNumber = "Invoice_ReverseUseNewNumber";
-    public static final String LASTRUN_RECORD_COUNT = "LASTRUN_RECORD_COUNT";
     public static final String LOCATION_MAPS_DESTINATION_ADDRESS =
             "LOCATION_MAPS_DESTINATION_ADDRESS";
     public static final String LOCATION_MAPS_ROUTE_PREFIX = "LOCATION_MAPS_ROUTE_PREFIX";
@@ -113,8 +111,8 @@ public class MSysConfig extends MBaseSysConfig {
      * @param defaultValue
      * @return String
      */
-    public static String getValue(String Name, String defaultValue) {
-        return getValue(Name, defaultValue, 0, 0);
+    public static String getConfigValue(String Name, String defaultValue) {
+        return getConfigValue(Name, defaultValue, 0, 0);
     }
 
     /**
@@ -123,8 +121,8 @@ public class MSysConfig extends MBaseSysConfig {
      * @param Name
      * @return String
      */
-    public static String getValue(String Name) {
-        return getValue(Name, null);
+    public static String getConfigValue(String Name) {
+        return getConfigValue(Name, null);
     }
 
     /**
@@ -135,7 +133,7 @@ public class MSysConfig extends MBaseSysConfig {
      * @return double
      */
     public static double getDoubleValue(String Name, double defaultValue) {
-        String s = getValue(Name);
+        String s = getConfigValue(Name);
         if (s == null || s.length() == 0) return defaultValue;
         //
         try {
@@ -154,7 +152,7 @@ public class MSysConfig extends MBaseSysConfig {
      * @return boolean
      */
     public static boolean getBooleanValue(String Name, boolean defaultValue) {
-        String s = getValue(Name);
+        String s = getConfigValue(Name);
         if (s == null || s.length() == 0) return defaultValue;
 
         if ("Y".equalsIgnoreCase(s)) return true;
@@ -170,8 +168,8 @@ public class MSysConfig extends MBaseSysConfig {
      * @param Client       ID
      * @return String
      */
-    public static String getValue(String Name, String defaultValue, int AD_Client_ID) {
-        return getValue(Name, defaultValue, AD_Client_ID, 0);
+    public static String getConfigValue(String Name, String defaultValue, int AD_Client_ID) {
+        return getConfigValue(Name, defaultValue, AD_Client_ID, 0);
     }
 
     /**
@@ -181,8 +179,8 @@ public class MSysConfig extends MBaseSysConfig {
      * @param Client ID
      * @return String
      */
-    public static String getValue(String Name, int AD_Client_ID) {
-        return (getValue(Name, null, AD_Client_ID));
+    public static String getConfigValue(String Name, int AD_Client_ID) {
+        return (getConfigValue(Name, null, AD_Client_ID));
     }
 
     /**
@@ -194,7 +192,7 @@ public class MSysConfig extends MBaseSysConfig {
      * @return int
      */
     public static int getIntValue(String Name, int defaultValue, int AD_Client_ID) {
-        String s = getValue(Name, AD_Client_ID);
+        String s = getConfigValue(Name, AD_Client_ID);
         if (s == null) return defaultValue;
 
         if (s.length() == 0) return defaultValue;
@@ -216,7 +214,7 @@ public class MSysConfig extends MBaseSysConfig {
      * @return boolean
      */
     public static boolean getBooleanValue(String Name, boolean defaultValue, int AD_Client_ID) {
-        String s = getValue(Name, AD_Client_ID);
+        String s = getConfigValue(Name, AD_Client_ID);
         if (s == null || s.length() == 0) return defaultValue;
 
         if ("Y".equalsIgnoreCase(s)) return true;
@@ -233,7 +231,7 @@ public class MSysConfig extends MBaseSysConfig {
      * @param Organization ID
      * @return String
      */
-    public static String getValue(String Name, String defaultValue, int AD_Client_ID, int AD_Org_ID) {
+    public static String getConfigValue(String Name, String defaultValue, int AD_Client_ID, int AD_Org_ID) {
         return MBaseSysConfigKt.getValue(Name, defaultValue, AD_Client_ID, AD_Org_ID);
     }
 
@@ -245,8 +243,8 @@ public class MSysConfig extends MBaseSysConfig {
      * @param Organization ID
      * @return String
      */
-    public static String getValue(String Name, int AD_Client_ID, int AD_Org_ID) {
-        return getValue(Name, null, AD_Client_ID, AD_Org_ID);
+    public static String getConfigValue(String Name, int AD_Client_ID, int AD_Org_ID) {
+        return getConfigValue(Name, null, AD_Client_ID, AD_Org_ID);
     }
 
     /**
@@ -259,7 +257,7 @@ public class MSysConfig extends MBaseSysConfig {
      * @return int
      */
     public static int getIntValue(String Name, int defaultValue, int AD_Client_ID, int AD_Org_ID) {
-        String s = getValue(Name, AD_Client_ID, AD_Org_ID);
+        String s = getConfigValue(Name, AD_Client_ID, AD_Org_ID);
         if (s == null) return defaultValue;
 
         if (s.length() == 0) return defaultValue;
@@ -283,23 +281,12 @@ public class MSysConfig extends MBaseSysConfig {
      */
     public static boolean getBooleanValue(
             String Name, boolean defaultValue, int AD_Client_ID, int AD_Org_ID) {
-        String s = getValue(Name, AD_Client_ID, AD_Org_ID);
+        String s = getConfigValue(Name, AD_Client_ID, AD_Org_ID);
         if (s == null || s.length() == 0) return defaultValue;
 
         if ("Y".equalsIgnoreCase(s)) return true;
         else if ("N".equalsIgnoreCase(s)) return false;
         else return Boolean.valueOf(s).booleanValue();
-    }
-
-    /**
-     * Get system configuration property of type Timestamp
-     *
-     * @param Name
-     * @param defaultValue
-     * @return Timestamp
-     */
-    public static Timestamp getTimestampValue(String Name, Timestamp defaultValue) {
-        return getTimestampValue(Name, defaultValue, 0);
     }
 
     /**
@@ -325,7 +312,7 @@ public class MSysConfig extends MBaseSysConfig {
      */
     public static Timestamp getTimestampValue(
             String Name, Timestamp defaultValue, int AD_Client_ID, int AD_Org_ID) {
-        String text = getValue(Name, null, AD_Client_ID, AD_Org_ID);
+        String text = getConfigValue(Name, null, AD_Client_ID, AD_Org_ID);
         if (text != null) return convertStringToTimestamp(text);
 
         return defaultValue;
@@ -453,7 +440,7 @@ public class MSysConfig extends MBaseSysConfig {
                 + ", "
                 + getName()
                 + "="
-                + getValue()
+                + getSearchKey()
                 + ", ConfigurationLevel="
                 + getConfigurationLevel()
                 + ", Client|Org="

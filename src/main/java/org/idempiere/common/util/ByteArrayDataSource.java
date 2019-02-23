@@ -16,10 +16,6 @@ import java.io.OutputStream;
  */
 public class ByteArrayDataSource implements DataSource {
     /**
-     * Logger
-     */
-    private static CLogger log = CLogger.getCLogger(ByteArrayDataSource.class);
-    /**
      * Data *
      */
     private byte[] m_data = null;

@@ -65,46 +65,6 @@ public class MSequence extends MBaseSequence {
      */
     private static Vector<Integer> s_list = null;
 
-    private static String[] dontUseCentralized =
-            new String[]{
-                    "AD_ACCESSLOG",
-                    "AD_ALERTPROCESSORLOG",
-                    "AD_CHANGELOG",
-                    "AD_ISSUE",
-                    "AD_LDAPPROCESSORLOG",
-                    "AD_PACKAGE_IMP",
-                    "AD_PACKAGE_IMP_BACKUP",
-                    "AD_PACKAGE_IMP_DETAIL",
-                    "AD_PACKAGE_IMP_INST",
-                    "AD_PACKAGE_IMP_PROC",
-                    "AD_PINSTANCE",
-                    "AD_PINSTANCE_LOG",
-                    "AD_PINSTANCE_PARA",
-                    "AD_PREFERENCE",
-                    "AD_RECENTITEM",
-                    "AD_REPLICATION_LOG",
-                    "AD_SCHEDULERLOG",
-                    "AD_SESSION",
-                    "AD_WORKFLOWPROCESSORLOG",
-                    "CM_WEBACCESSLOG",
-                    "C_ACCTPROCESSORLOG",
-                    "K_INDEXLOG",
-                    "R_REQUESTPROCESSORLOG",
-                    "T_AGING",
-                    "T_ALTER_COLUMN",
-                    "T_DISTRIBUTIONRUNDETAIL",
-                    "T_INVENTORYVALUE",
-                    "T_INVOICEGL",
-                    "T_REPLENISH",
-                    "T_REPORT",
-                    "T_REPORTSTATEMENT",
-                    "T_SELECTION",
-                    "T_SELECTION2",
-                    "T_SPOOL",
-                    "T_TRANSACTION",
-                    "T_TRIALBALANCE"
-            };
-
     /**
      * ************************************************************************ Standard Constructor
      *
@@ -226,19 +186,6 @@ public class MSequence extends MBaseSequence {
 
     /**
      * ************************************************************************ Get Document No from
-     * table
-     *
-     * @param AD_Client_ID client
-     * @param TableName    table name
-     * @param trxName      optional Transaction Name
-     * @return document no or null
-     */
-    public static String getDocumentNo(int AD_Client_ID, String TableName) {
-        return getDocumentNo(AD_Client_ID, TableName, null, null);
-    }
-
-    /**
-     * ************************************************************************ Get Document No from
      * table (when the document doesn't have a c_doctype)
      *
      * @param AD_Client_ID client
@@ -312,9 +259,9 @@ public class MSequence extends MBaseSequence {
                 }
             } else if (po != null) {
                 // take from po
-                if (po.get_ColumnIndex(token) >= 0) {
-                    Object v = po.get_Value(token);
-                    MColumn colToken = MColumn.get(ctx, po.get_TableName(), token);
+                if (po.getColumnIndex(token) >= 0) {
+                    Object v = po.getValue(token);
+                    MColumn colToken = MColumn.get(ctx, po.getTableName(), token);
                     String foreignTable = colToken.getReferenceTableName();
                     if (v != null) {
                         if (format != null && format.length() > 0) {
@@ -434,15 +381,15 @@ public class MSequence extends MBaseSequence {
             s_log.warning("DocType_ID=" + C_DocType_ID + " Not Sequence Overwrite on Complete");
             return null;
         }
-        if (dt == null || dt.getDocNoSequence_ID() == 0) {
+        if (dt == null || dt.getDocNoSequenceId() == 0) {
             s_log.warning("No Sequence for DocType - " + dt);
             return null;
         }
-        if (definite && dt.getDefiniteSequence_ID() == 0) {
+        if (definite && dt.getDefiniteSequenceId() == 0) {
             s_log.warning("No Definite Sequence for DocType - " + dt);
             return null;
         }
-        int seqID = (definite ? dt.getDefiniteSequence_ID() : dt.getDocNoSequence_ID());
+        int seqID = (definite ? dt.getDefiniteSequenceId() : dt.getDocNoSequenceId());
         MSequence seq = new MSequence(Env.getCtx(), seqID);
 
         if (CLogMgt.isLevel(LOGLEVEL))

@@ -57,7 +57,7 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference, I_Pers
      * @return Different method of validating data
      */
     public String getValidationType() {
-        return (String) get_Value(COLUMNNAME_ValidationType);
+        return (String) getValue(COLUMNNAME_ValidationType);
     }
 
     @Override

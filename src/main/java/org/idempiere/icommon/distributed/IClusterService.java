@@ -10,20 +10,4 @@ import java.util.concurrent.Future;
  */
 public interface IClusterService {
 
-    /**
-     * @return Collection of cluster member
-     */
-    Collection<IClusterMember> getMembers();
-
-    /**
-     * @return Local node
-     */
-    IClusterMember getLocalMember();
-
-    /**
-     * @param task
-     * @param members
-     * @return Map of IClusterMember and Future
-     */
-    <V> Map<IClusterMember, Future<V>> execute(Callable<V> task, Collection<IClusterMember> members);
 }

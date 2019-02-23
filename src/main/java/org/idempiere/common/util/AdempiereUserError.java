@@ -47,13 +47,6 @@ public class AdempiereUserError extends RuntimeException {
     } //	AdempiereUserError
 
     /**
-     * @return Returns the fixHint.
-     */
-    public String getFixHint() {
-        return m_fixHint;
-    } //	getFixHint
-
-    /**
      * Set Fix Hint
      *
      * @param fixHint fix hint

@@ -25,7 +25,7 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
     public X_AD_Sequence_No(Properties ctx, int AD_Sequence_No_ID) {
         super(ctx, AD_Sequence_No_ID);
         /**
-         * if (AD_Sequence_No_ID == 0) { setAD_Sequence_ID (0); setCalendarYearMonth (null);
+         * if (AD_Sequence_No_ID == 0) { setSequenceId (0); setCalendarYearMonth (null);
          * setCurrentNext (0); }
          */
     }
@@ -52,22 +52,11 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No, I_Persiste
     }
 
     /**
-     * Get Sequence.
-     *
-     * @return Document Sequence
-     */
-    public int getAD_Sequence_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Sequence_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
      * Set Sequence.
      *
      * @param AD_Sequence_ID Document Sequence
      */
-    public void setAD_Sequence_ID(int AD_Sequence_ID) {
+    public void setSequenceId(int AD_Sequence_ID) {
         if (AD_Sequence_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, null);
         else set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
     }

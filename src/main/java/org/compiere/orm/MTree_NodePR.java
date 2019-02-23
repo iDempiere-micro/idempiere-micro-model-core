@@ -1,7 +1,5 @@
 package org.compiere.orm;
 
-import org.idempiere.common.util.CLogger;
-
 import java.sql.ResultSet;
 import java.util.Properties;
 
@@ -16,10 +14,6 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
      *
      */
     private static final long serialVersionUID = 7949499593365182416L;
-    /**
-     * Static Logger
-     */
-    private static CLogger s_log = CLogger.getCLogger(MTree_NodePR.class);
 
     /**
      * Load Constructor
@@ -41,10 +35,10 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
     public MTree_NodePR(MTree_Base tree, int Node_ID) {
         super(tree.getCtx(), 0);
         setClientOrg(tree);
-        setAD_Tree_ID(tree.getAD_Tree_ID());
-        setNode_ID(Node_ID);
+        setTreeId(tree.getTreeId());
+        setNodeId(Node_ID);
         //	Add to root
-        setParent_ID(0);
+        setParentId(0);
         setSeqNo(0);
     } //	MTree_NodePR
 

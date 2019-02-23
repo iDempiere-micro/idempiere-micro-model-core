@@ -9,5 +9,4 @@ public interface ContextProvider {
 
     Properties getContext();
 
-    void showURL(String url);
 }

@@ -83,7 +83,7 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      * @return Access Level required
      */
     public String getTableAccessLevel() {
-        return (String) get_Value(COLUMNNAME_AccessLevel);
+        return (String) getValue(COLUMNNAME_AccessLevel);
     }
 
     /**
@@ -101,8 +101,8 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      *
      * @return Database Table information
      */
-    public int getAD_Table_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Table_ID);
+    public int getTableTableId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -110,7 +110,7 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
     public org.compiere.model.I_AD_Val_Rule getValRule() throws RuntimeException {
         return (org.compiere.model.I_AD_Val_Rule)
                 MTable.get(getCtx(), org.compiere.model.I_AD_Val_Rule.Table_Name)
-                        .getPO(getValRule_ID());
+                        .getPO(getValRuleId());
     }
 
     /**
@@ -118,8 +118,8 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      *
      * @return Dynamic Validation Rule
      */
-    public int getValRule_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Val_Rule_ID);
+    public int getValRuleId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Val_Rule_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -130,7 +130,7 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      * @return Optional short description of the record
      */
     public String getDescription() {
-        return (String) get_Value(COLUMNNAME_Description);
+        return (String) getValue(COLUMNNAME_Description);
     }
 
     /**
@@ -139,7 +139,7 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      * @return Dictionary Entity Type; Determines ownership and synchronization
      */
     public String getEntityType() {
-        return (String) get_Value(COLUMNNAME_EntityType);
+        return (String) getValue(COLUMNNAME_EntityType);
     }
 
     /**
@@ -158,7 +158,7 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      * @return Comment or Hint
      */
     public String getHelp() {
-        return (String) get_Value(COLUMNNAME_Help);
+        return (String) getValue(COLUMNNAME_Help);
     }
 
     /**
@@ -184,8 +184,8 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      *
      * @return Indicates if records can be deleted from the database
      */
-    public boolean isDeleteable() {
-        Object oo = get_Value(COLUMNNAME_IsDeleteable);
+    public boolean isDeletable() {
+        Object oo = getValue(COLUMNNAME_IsDeleteable);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -227,7 +227,7 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      * @return This is a view
      */
     public boolean isView() {
-        Object oo = get_Value(COLUMNNAME_IsView);
+        Object oo = getValue(COLUMNNAME_IsView);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -241,7 +241,7 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      * @return Alphanumeric identifier of the entity
      */
     public String getName() {
-        return (String) get_Value(HasName.Companion.getCOLUMNNAME_Name());
+        return (String) getValue(HasName.Companion.getCOLUMNNAME_Name());
     }
 
     /**
@@ -259,8 +259,8 @@ public class X_AD_Table extends PO implements I_AD_Table, I_Persistent {
      *
      * @return Name of the table in the database
      */
-    public String getTableName() {
-        return (String) get_Value(COLUMNNAME_TableName);
+    public String getDbTableName() {
+        return (String) getValue(COLUMNNAME_TableName);
     }
 
     @Override

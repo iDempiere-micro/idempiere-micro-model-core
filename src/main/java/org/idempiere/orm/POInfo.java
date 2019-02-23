@@ -93,7 +93,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      */
     public int getAD_Table_ID() {
         return getTableId();
-    } //  getAD_Table_ID
+    } //  getColumnTableId
 
     /**
      * ************************************************************************ Get ColumnCount
@@ -192,30 +192,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     } //  isVirtualColumn
 
     /**
-     * Get Column Label
-     *
-     * @param index index
-     * @return column label
-     */
-    public String getColumnLabel(int index) {
-        POInfoColumn[] columns = getColumns();
-        if (index < 0 || index >= columns.length) return null;
-        return columns[index].ColumnLabel;
-    } //  getColumnLabel
-
-    /**
-     * Get Column Description
-     *
-     * @param index index
-     * @return column description
-     */
-    public String getColumnDescription(int index) {
-        POInfoColumn[] columns = getColumns();
-        if (index < 0 || index >= columns.length) return null;
-        return columns[index].ColumnDescription;
-    } //  getColumnDescription
-
-    /**
      * Get Column Class
      *
      * @param index index
@@ -264,18 +240,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     } //  isUpdateable
 
     /**
-     * Set Column Updateable
-     *
-     * @param index      index
-     * @param updateable column updateable
-     */
-    public void setColumnUpdateable(int index, boolean updateable) {
-        POInfoColumn[] columns = getColumns();
-        if (index < 0 || index >= columns.length) return;
-        columns[index].IsUpdateable = updateable;
-    } //	setColumnUpdateable
-
-    /**
      * Set all columns updateable
      *
      * @param updateable updateable
@@ -320,25 +284,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
         if (index < 0 || index >= columns.length) return false;
         return columns[index].IsTranslated;
     } //  isColumnTranslated
-
-    /**
-     * Is Table Translated
-     *
-     * @return true if table is translated
-     */
-    public synchronized boolean isTranslated() {
-        POInfoColumn[] columns = getColumns();
-        if (m_IsTranslated == null) {
-            m_IsTranslated = Boolean.FALSE;
-            for (int i = 0; i < columns.length; i++) {
-                if (columns[i].IsTranslated) {
-                    m_IsTranslated = Boolean.TRUE;
-                    break;
-                }
-            }
-        }
-        return m_IsTranslated.booleanValue();
-    } //  isTranslated
 
     /**
      * Is Column (data) Encrypted

@@ -54,18 +54,6 @@ public class CLogMgt {
         testLog();
     }
 
-    private static synchronized void reInit() {
-        CLogMgt.initialize(false);
-        if (!levelMap.isEmpty()) {
-            for (String key : levelMap.keySet()) {
-                setLevel(key, levelMap.get(key));
-            }
-        }
-        if (fileHandler != null) {
-            fileHandler.reopen();
-        }
-    }
-
     /**
      * Initialize Logging
      *
@@ -156,17 +144,6 @@ public class CLogMgt {
         // mgr.removePropertyChangeListener(listener);
         // mgr.addPropertyChangeListener(listener);
     } //	initialize
-
-    /**
-     * Get Handlers
-     *
-     * @return handlers
-     */
-    protected static Handler[] getHandlers() {
-        Logger rootLogger = getRootLogger();
-        Handler[] handlers = rootLogger.getHandlers();
-        return handlers;
-    } //	getHandlers
 
     /**
      * Add Handler (to root logger)
@@ -273,24 +250,6 @@ public class CLogMgt {
     } //	getLevel
 
     /**
-     * Set Level for all handlers
-     *
-     * @param level log level
-     */
-    public static void setLevel(Level level) {
-        setLevel(null, level);
-    }
-
-    /**
-     * Set Level
-     *
-     * @param levelString string representation of level
-     */
-    public static void setLevel(String levelString) {
-        setLevel(null, levelString);
-    } //	setLevel
-
-    /**
      * Get logging Level of handlers
      *
      * @return logging level
@@ -356,79 +315,6 @@ public class CLogMgt {
         return Level.INFO.intValue() >= getLevelAsInt();
     } //	isLevelFine
 
-    /**
-     * Get Adempiere System Info
-     *
-     * @param sb buffer to append or null
-     * @return Info as multiple Line String
-     */
-    public static StringBuffer getInfo(StringBuffer sb) {
-        if (sb == null) sb = new StringBuffer();
-        final String eq = " = ";
-        sb.append(getMsg("Database")).append(eq).append(getDatabaseInfo()).append(NL);
-        //
-        sb.append(getMsg("AD_User_ID"))
-                .append(eq)
-                .append(Env.getContext(Env.getCtx(), "#AD_User_Name"))
-                .append(NL);
-        sb.append(getMsg("AD_Role_ID"))
-                .append(eq)
-                .append(Env.getContext(Env.getCtx(), "#AD_Role_Name"))
-                .append(NL);
-        //
-        sb.append(getMsg("AD_Client_ID"))
-                .append(eq)
-                .append(Env.getContext(Env.getCtx(), "#AD_Client_Name"))
-                .append(NL);
-        sb.append(getMsg("AD_Org_ID"))
-                .append(eq)
-                .append(Env.getContext(Env.getCtx(), "#AD_Org_Name"))
-                .append(NL);
-        //
-        sb.append(getMsg("Date")).append(eq).append(Env.getContext(Env.getCtx(), "#Date")).append(NL);
-        sb.append(getMsg("Printer"))
-                .append(eq)
-                .append(Env.getContext(Env.getCtx(), "#Printer"))
-                .append(NL);
-        //
-        Manifest mf = ZipUtil.getManifest("CClient.jar");
-        if (mf == null) mf = ZipUtil.getManifest("CTools.jar");
-        if (mf != null) {
-            Attributes atts = mf.getMainAttributes();
-            if (atts != null) {
-                Iterator<?> it = atts.keySet().iterator();
-                while (it.hasNext()) {
-                    Object key = it.next();
-                    if (key.toString().startsWith("Impl") || key.toString().startsWith("Spec"))
-                        sb.append(key).append(eq).append(atts.get(key)).append(NL);
-                }
-            }
-        }
-        //
-        sb.append(Env.getLanguage(Env.getCtx())).append(NL);
-        sb.append("BaseLanguage = ")
-                .append(Env.isBaseLanguage(Env.getCtx(), "AD_Window"))
-                .append("/")
-                .append(Env.isBaseLanguage(Env.getCtx(), "C_UOM"))
-                .append(NL);
-        sb.append("java.io.tmpdir=" + System.getProperty("java.io.tmpdir")).append(NL);
-
-        // report memory info
-        Runtime runtime = Runtime.getRuntime();
-        // max heap size
-        sb.append("Max Heap = " + formatMemoryInfo(runtime.maxMemory())).append(NL);
-        // allocated heap size
-        sb.append("Allocated Heap = " + formatMemoryInfo(runtime.totalMemory())).append(NL);
-        // free heap size
-        sb.append("Free Heap = " + formatMemoryInfo(runtime.freeMemory())).append(NL);
-        //
-        // thread info
-        sb.append("Active Threads = " + Thread.activeCount());
-        //
-
-        return sb;
-    } //  getInfo
-
     private static String formatMemoryInfo(long amount) {
         String unit = "";
         long size = amount / 1024;
@@ -440,42 +326,6 @@ public class CLogMgt {
         }
         return size + unit;
     }
-
-    /**
-     * Create System Info
-     *
-     * @param sb  Optional string buffer
-     * @param ctx Environment
-     * @return System Info
-     */
-    public static StringBuffer getInfoDetail(StringBuffer sb, Properties ctx) {
-        if (sb == null) sb = new StringBuffer();
-        if (ctx == null) ctx = Env.getCtx();
-        //  Envoronment
-        sb.append(NL)
-                .append(NL)
-                .append("=== Environment === ")
-                .append(NL)
-                .append(getLocalHost())
-                .append(NL);
-
-        //  Context
-        sb.append(NL).append("=== Context ===").append(NL);
-        String[] context = Env.getEntireContext(ctx);
-        Arrays.sort(context);
-        for (int i = 0; i < context.length; i++) sb.append(context[i]).append(NL);
-        //  System
-        sb.append(NL).append("=== System ===").append(NL);
-        Object[] pp = System.getProperties().keySet().toArray();
-        Arrays.sort(pp);
-        for (int i = 0; i < pp.length; i++) {
-            String key = pp[i].toString();
-            String value = System.getProperty(key);
-            sb.append(key).append("=").append(value).append(NL);
-        }
-
-        return sb;
-    } //  getInfoDetail
 
     /**
      * Get translated Message, if DB connection exists

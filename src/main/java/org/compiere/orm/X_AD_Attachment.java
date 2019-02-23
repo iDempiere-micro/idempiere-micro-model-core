@@ -25,7 +25,7 @@ public class X_AD_Attachment extends PO implements I_Persistent {
     public X_AD_Attachment(Properties ctx, int AD_Attachment_ID) {
         super(ctx, AD_Attachment_ID);
         /**
-         * if (AD_Attachment_ID == 0) { setAD_Attachment_ID (0); setAD_Table_ID (0); setRecord_ID (0);
+         * if (AD_Attachment_ID == 0) { setAD_Attachment_ID (0); setColumnTableId (0); setRecordId (0);
          * setTitle (null); }
          */
     }
@@ -57,18 +57,7 @@ public class X_AD_Attachment extends PO implements I_Persistent {
      * @return Attachment for the document
      */
     public int getAD_Attachment_ID() {
-        Integer ii = (Integer) get_Value(I_AD_Attachment.COLUMNNAME_AD_Attachment_ID);
-        if (ii == null) return 0;
-        return ii;
-    }
-
-    /**
-     * Get Table.
-     *
-     * @return Database Table information
-     */
-    public int getAD_Table_ID() {
-        Integer ii = (Integer) get_Value(I_AD_Attachment.COLUMNNAME_AD_Table_ID);
+        Integer ii = (Integer) getValue(I_AD_Attachment.COLUMNNAME_AD_Attachment_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -94,15 +83,6 @@ public class X_AD_Attachment extends PO implements I_Persistent {
     }
 
     /**
-     * Get Text Message.
-     *
-     * @return Text Message
-     */
-    public String getTextMsg() {
-        return (String) get_Value(I_AD_Attachment.COLUMNNAME_TextMsg);
-    }
-
-    /**
      * Set Text Message.
      *
      * @param TextMsg Text Message
@@ -117,7 +97,7 @@ public class X_AD_Attachment extends PO implements I_Persistent {
      * @return Name this entity is referred to as
      */
     public String getTitle() {
-        return (String) get_Value(I_AD_Attachment.COLUMNNAME_Title);
+        return (String) getValue(I_AD_Attachment.COLUMNNAME_Title);
     }
 
     /**
@@ -132,10 +112,6 @@ public class X_AD_Attachment extends PO implements I_Persistent {
     @Override
     public int getTableId() {
         return I_AD_Attachment.Table_ID;
-    }
-
-    public byte[] getBinaryData() {
-        return (byte[]) get_Value(I_AD_Attachment.COLUMNNAME_BinaryData);
     }
 
     /**

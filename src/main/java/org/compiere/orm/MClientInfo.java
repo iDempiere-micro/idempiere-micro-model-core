@@ -58,18 +58,18 @@ public class MClientInfo extends X_AD_ClientInfo {
             String trxName) {
         super(client.getCtx(), 0);
         setADClientID(client.getClientId()); // 	to make sure
-        setAD_Org_ID(0);
+        setOrgId(0);
         setIsDiscountLineAmt(false);
         //
-        setAD_Tree_Menu_ID(10); // 	HARDCODED
+        setTreeMenuId(10); // 	HARDCODED
         //
-        setAD_Tree_Org_ID(AD_Tree_Org_ID);
-        setAD_Tree_BPartner_ID(AD_Tree_BPartner_ID);
-        setAD_Tree_Project_ID(AD_Tree_Project_ID);
-        setAD_Tree_SalesRegion_ID(AD_Tree_SalesRegion_ID);
-        setAD_Tree_Product_ID(AD_Tree_Product_ID);
-        setAD_Tree_Campaign_ID(AD_Tree_Campaign_ID);
-        setAD_Tree_Activity_ID(AD_Tree_Activity_ID);
+        setTreeOrgId(AD_Tree_Org_ID);
+        setTreeBPartnerId(AD_Tree_BPartner_ID);
+        setTreeProjectId(AD_Tree_Project_ID);
+        setTreeSalesRegionId(AD_Tree_SalesRegion_ID);
+        setTreeProductId(AD_Tree_Product_ID);
+        setTreeCampaignId(AD_Tree_Campaign_ID);
+        setTreeActivityId(AD_Tree_Activity_ID);
         //
         setCreateNew(true);
     } //	MClientInfo

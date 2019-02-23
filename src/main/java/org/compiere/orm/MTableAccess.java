@@ -59,9 +59,9 @@ public class MTableAccess extends X_AD_Table_Access {
     public String toString() {
         StringBuilder sb = new StringBuilder("MTableAccess[");
         sb.append("AD_Role_ID=")
-                .append(getAD_Role_ID())
+                .append(getRoleId())
                 .append(",AD_Table_ID=")
-                .append(getAD_Table_ID())
+                .append(getAccessTableId())
                 .append(",Exclude=")
                 .append(isExclude())
                 .append(",Type=")
@@ -77,27 +77,6 @@ public class MTableAccess extends X_AD_Table_Access {
     } //	toString
 
     /**
-     * Extended String Representation
-     *
-     * @param ctx context
-     * @return extended info
-     */
-    public String toStringX(Properties ctx) {
-        String in = Msg.getMsg(ctx, "Include");
-        String ex = Msg.getMsg(ctx, "Exclude");
-        StringBuilder sb = new StringBuilder();
-        sb.append(Msg.translate(ctx, "AD_Table_ID")).append("=").append(getTableName(ctx));
-        if (X_AD_Table_Access.ACCESSTYPERULE_Accessing.equals(getAccessTypeRule()))
-            sb.append(" - ").append(Msg.translate(ctx, "IsReadOnly")).append("=").append(isReadOnly());
-        else if (X_AD_Table_Access.ACCESSTYPERULE_Exporting.equals(getAccessTypeRule()))
-            sb.append(" - ").append(Msg.translate(ctx, "CanExport")).append("=").append(!isExclude());
-        else if (X_AD_Table_Access.ACCESSTYPERULE_Reporting.equals(getAccessTypeRule()))
-            sb.append(" - ").append(Msg.translate(ctx, "CanReport")).append("=").append(!isExclude());
-        sb.append(" - ").append(isExclude() ? ex : in);
-        return sb.toString();
-    } //	toStringX
-
-    /**
      * Get Table Name
      *
      * @param ctx context
@@ -110,7 +89,7 @@ public class MTableAccess extends X_AD_Table_Access {
             ResultSet rs = null;
             try {
                 pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getAD_Table_ID());
+                pstmt.setInt(1, getAccessTableId());
                 rs = pstmt.executeQuery();
                 if (rs.next()) m_tableName = rs.getString(1);
             } catch (Exception e) {

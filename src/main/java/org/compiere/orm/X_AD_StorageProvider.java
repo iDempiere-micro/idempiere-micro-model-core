@@ -1,6 +1,5 @@
 package org.compiere.orm;
 
-import org.compiere.model.HasName;
 import org.compiere.model.I_AD_StorageProvider;
 import org.idempiere.orm.I_Persistent;
 
@@ -55,16 +54,7 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider, I_
      * @return Method
      */
     public String getMethod() {
-        return (String) get_Value(COLUMNNAME_Method);
-    }
-
-    /**
-     * Get Name.
-     *
-     * @return Alphanumeric identifier of the entity
-     */
-    public String getName() {
-        return (String) get_Value(HasName.Companion.getCOLUMNNAME_Name());
+        return (String) getValue(COLUMNNAME_Method);
     }
 
     @Override

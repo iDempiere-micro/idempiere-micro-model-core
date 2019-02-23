@@ -105,16 +105,16 @@ open class MBaseRole : X_AD_Role {
         if (list.contains(oa)) return
         list.add(oa)
         // 	Do we look for trees?
-        if (aD_Tree_Org_ID == 0) return
+        if (treeOrgId == 0) return
         val org = MOrg.get(ctx, oa.orgId)
         if (!org.isSummary) return
         // 	Summary Org - Get Dependents
-        val tree = MTree_Base.get(ctx, aD_Tree_Org_ID)
+        val tree = MTree_Base.get(ctx, treeOrgId)
         val sql = ("SELECT AD_Client_ID, orgId FROM AD_Org " +
                 "WHERE IsActive='Y' AND orgId IN (SELECT Node_ID FROM " +
                 tree.nodeTableName +
                 " WHERE AD_Tree_ID=? AND Parent_ID=? AND IsActive='Y')")
-        val loadQuery = queryOf(sql, listOf(tree.aD_Tree_ID, org.orgId)).map {
+        val loadQuery = queryOf(sql, listOf(tree.treeId, org.orgId)).map {
             val AD_Client_ID = it.int(1)
             val AD_Org_ID = it.int(2)
             loadOrgAccessAdd(list, OrgAccess(AD_Client_ID, AD_Org_ID, oa.readOnly))
@@ -136,7 +136,7 @@ open class MBaseRole : X_AD_Role {
         }
 
         val sql = "SELECT * FROM AD_Role_OrgAccess " + "WHERE AD_Role_ID=? AND IsActive='Y'"
-        val loadQuery = queryOf(sql, listOf(aD_Role_ID)).map { load(it) }.asList
+        val loadQuery = queryOf(sql, listOf(roleId)).map { load(it) }.asList
         DB.current.run(loadQuery).min()
     } // 	loadOrgAccessRole
 
@@ -148,7 +148,7 @@ open class MBaseRole : X_AD_Role {
     protected fun loadTableAccess(reload: Boolean): Array<MTableAccess> {
         if (m_tableAccess.isNotEmpty() && !reload) return m_tableAccess.toTypedArray()
         val sql = "SELECT * FROM AD_Table_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
-        val loadQuery = queryOf(sql, listOf(aD_Role_ID)).map { MTableAccess(ctx, it) }.asList
+        val loadQuery = queryOf(sql, listOf(roleId)).map { MTableAccess(ctx, it) }.asList
         val result = DB.current.run(loadQuery)
         m_tableAccess.clear()
         m_tableAccess.addAll(result)
@@ -224,7 +224,7 @@ open class MBaseRole : X_AD_Role {
     protected fun loadColumnAccess(reload: Boolean): Array<MColumnAccess> {
         if (m_columnAccess.isNotEmpty() && !reload) return m_columnAccess.toTypedArray()
         val sql = "SELECT * FROM AD_Column_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
-        val loadQuery = queryOf(sql, listOf(aD_Role_ID)).map { MColumnAccess(ctx, it) }.asList
+        val loadQuery = queryOf(sql, listOf(roleId)).map { MColumnAccess(ctx, it) }.asList
         val result = DB.current.run(loadQuery)
         m_columnAccess.clear()
         m_columnAccess.addAll(result)

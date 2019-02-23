@@ -1,15 +1,7 @@
 package org.compiere.dbPort;
 
 import mu.KLogger;
-import org.compiere.orm.MSysConfig;
-import org.compiere.util.DisplayType;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Writer;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -44,10 +36,6 @@ public abstract class Convert {
      */
     protected static KLogger log = getLogger();
 
-    private static FileOutputStream tempFileOr = null;
-    private static Writer writerOr;
-    private static FileOutputStream tempFilePg = null;
-    private static Writer writerPg;
     private static String[] dontLogTables =
             new String[]{
                     "AD_ACCESSLOG",
@@ -95,90 +83,13 @@ public abstract class Convert {
             };
     private static String m_oldprm_COMMENT = "";
     /**
-     * Statement used
-     */
-    protected Statement m_stmt = null;
-    /**
      * Last Conversion Error
      */
     protected String m_conversionError = null;
     /**
-     * Last Execution Error
-     */
-    protected Exception m_exception = null;
-    /**
      * Verbose Messages
      */
     protected boolean m_verbose = true;
-
-    private static boolean dontLog(String statement) {
-        // Do not log *Access records - teo_Sarca BF [ 2782095 ]
-        // IDEMPIERE-323 Migration script log AD_Document_Action_Access (nmicoud / CarlosRuiz_globalqss)
-
-        String uppStmt = statement.toUpperCase().trim();
-        // don't log selects
-        if (uppStmt.startsWith("SELECT ")) return true;
-        // don't log update to statistic process
-        if (uppStmt.startsWith("UPDATE AD_PROCESS SET STATISTIC_")) return true;
-        if (uppStmt.startsWith("UPDATE C_ACCTPROCESSOR SET DATENEXTRUN")) return true;
-        if (uppStmt.startsWith("UPDATE R_REQUESTPROCESSOR SET DATELASTRUN")) return true;
-        // Don't log DELETE FROM Some_Table WHERE AD_Table_ID=? AND Record_ID=?
-        if (uppStmt.startsWith("DELETE FROM ")
-                && uppStmt.endsWith(" WHERE AD_TABLE_ID=? AND RECORD_ID=?")) return true;
-        // Don't log trl related statements - those will be created/maintained using synchronize
-        // terminology
-        if (uppStmt.matches("UPDATE .*_TRL SET .*")) return true;
-        if (uppStmt.matches("INSERT INTO .*_TRL .*")) return true;
-        // Don't log tree custom table statements (not present in core)
-        if (uppStmt.startsWith("INSERT INTO AD_TREENODE ")
-                && uppStmt.contains(" AND T.TREETYPE='TL' AND T.AD_TABLE_ID=")) return true;
-        for (int i = 0; i < dontLogTables.length; i++) {
-            if (uppStmt.startsWith("INSERT INTO " + dontLogTables[i] + " ")) return true;
-            if (uppStmt.startsWith("DELETE FROM " + dontLogTables[i] + " ")) return true;
-            if (uppStmt.startsWith("DELETE " + dontLogTables[i] + " ")) return true;
-            if (uppStmt.startsWith("UPDATE " + dontLogTables[i] + " ")) return true;
-            if (uppStmt.startsWith("INSERT INTO " + dontLogTables[i] + "(")) return true;
-        }
-
-        // don't log selects or insert/update for exception tables (i.e. AD_Issue, AD_ChangeLog)
-        return false;
-    }
-
-    private static void writeLogMigrationScript(Writer w, String statement) throws IOException {
-        boolean isUseCentralizedID =
-                "Y"
-                        .equals(
-                                MSysConfig.getValue(
-                                        MSysConfig.DICTIONARY_ID_USE_CENTRALIZED_ID, "Y")); // defaults to Y
-        boolean isUseProjectCentralizedID =
-                "Y"
-                        .equals(
-                                MSysConfig.getValue(
-                                        MSysConfig.PROJECT_ID_USE_CENTRALIZED_ID, "N")); // defaults to N
-        String prm_COMMENT;
-        if (!isUseCentralizedID && isUseProjectCentralizedID)
-            prm_COMMENT = MSysConfig.getValue(MSysConfig.PROJECT_ID_COMMENTS);
-        else prm_COMMENT = MSysConfig.getValue(MSysConfig.DICTIONARY_ID_COMMENTS);
-        if (prm_COMMENT != null && !m_oldprm_COMMENT.equals(prm_COMMENT)) {
-            // log sysconfig comment
-            w.append("-- ");
-            w.append(prm_COMMENT);
-            w.append("\n");
-            if (w == writerPg) m_oldprm_COMMENT = prm_COMMENT;
-        }
-        // log time and date
-        SimpleDateFormat format = DisplayType.getDateFormat(DisplayType.DateTime);
-        String dateTimeText = format.format(new Timestamp(System.currentTimeMillis()));
-        w.append("-- ");
-        w.append(dateTimeText);
-        w.append("\n");
-        // log statement
-        w.append(statement);
-        // close statement
-        w.append("\n;\n\n");
-        // flush stream - teo_sarca BF [ 1894474 ]
-        w.flush();
-    }
 
     /**
      * Convert SQL Statement (stops at first error). Statements are delimited by / If an error occured
@@ -376,7 +287,6 @@ public abstract class Convert {
             sqlStatement = applyConvertMap(cleanUpStatement(sqlStatement));
         } catch (RuntimeException e) {
             log.warn(e.getLocalizedMessage());
-            m_exception = e;
         }
 
         return sqlStatement;

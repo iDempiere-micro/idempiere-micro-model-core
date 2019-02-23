@@ -42,8 +42,8 @@ public class MIndexColumn extends X_AD_IndexColumn {
     public MIndexColumn(MTableIndex parent, MColumn column, int seqNo) {
         this(parent.getCtx(), 0);
         setClientOrg(parent);
-        setAD_TableIndex_ID(parent.getAD_TableIndex_ID());
-        setAD_Column_ID(column.getColumnId());
+        setTableIndexId(parent.getTableIndexId());
+        setColumnId(column.getColumnId());
         setSeqNo(seqNo);
     }
 
@@ -55,7 +55,7 @@ public class MIndexColumn extends X_AD_IndexColumn {
     public String getColumnName() {
         String sql = getColumnSQL(); // Function Index
         if (sql != null && sql.length() > 0) return sql;
-        int AD_Column_ID = getAD_Column_ID();
+        int AD_Column_ID = getColumnId();
         return MColumn.getColumnName(getCtx(), AD_Column_ID);
     }
 
@@ -67,7 +67,7 @@ public class MIndexColumn extends X_AD_IndexColumn {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("MIndexColumn[");
-        sb.append(getId()).append("-").append(getAD_Column_ID()).append("]");
+        sb.append(getId()).append("-").append(getColumnId()).append("]");
         return sb.toString();
     }
 }

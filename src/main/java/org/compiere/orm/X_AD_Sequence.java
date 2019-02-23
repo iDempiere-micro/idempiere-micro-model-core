@@ -57,8 +57,8 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      *
      * @return Document Sequence
      */
-    public int getAD_Sequence_ID() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_AD_Sequence_ID);
+    public int getSequenceId() {
+        Integer ii = (Integer) getValue(COLUMNNAME_AD_Sequence_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -69,7 +69,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return The next number to be used
      */
     public int getCurrentNext() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_CurrentNext);
+        Integer ii = (Integer) getValue(COLUMNNAME_CurrentNext);
         if (ii == null) return 0;
         return ii;
     }
@@ -89,7 +89,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return Next sequence for system use
      */
     public int getCurrentNextSys() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_CurrentNextSys);
+        Integer ii = (Integer) getValue(COLUMNNAME_CurrentNextSys);
         if (ii == null) return 0;
         return ii;
     }
@@ -109,7 +109,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return Fully qualified date column
      */
     public String getDateColumn() {
-        return (String) get_Value(COLUMNNAME_DateColumn);
+        return (String) getValue(COLUMNNAME_DateColumn);
     }
 
     /**
@@ -118,7 +118,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return Java Decimal Pattern
      */
     public String getDecimalPattern() {
-        return (String) get_Value(COLUMNNAME_DecimalPattern);
+        return (String) getValue(COLUMNNAME_DecimalPattern);
     }
 
     /**
@@ -136,7 +136,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return The number to increment the last document number by
      */
     public int getIncrementNo() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_IncrementNo);
+        Integer ii = (Integer) getValue(COLUMNNAME_IncrementNo);
         if (ii == null) return 0;
         return ii;
     }
@@ -174,7 +174,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return This sequence can be defined for each organization
      */
     public boolean isOrgLevelSequence() {
-        Object oo = get_Value(COLUMNNAME_IsOrgLevelSequence);
+        Object oo = getValue(COLUMNNAME_IsOrgLevelSequence);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -197,7 +197,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return The document number will be used as the record key
      */
     public boolean isTableID() {
-        Object oo = get_Value(COLUMNNAME_IsTableID);
+        Object oo = getValue(COLUMNNAME_IsTableID);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -211,7 +211,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return Fully qualified Organization column (AD_Org_ID)
      */
     public String getOrgColumn() {
-        return (String) get_Value(COLUMNNAME_OrgColumn);
+        return (String) getValue(COLUMNNAME_OrgColumn);
     }
 
     /**
@@ -220,7 +220,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return Prefix before the sequence number
      */
     public String getPrefix() {
-        return (String) get_Value(COLUMNNAME_Prefix);
+        return (String) getValue(COLUMNNAME_Prefix);
     }
 
     /**
@@ -229,7 +229,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return Restart sequence every month
      */
     public boolean isStartNewMonth() {
-        Object oo = get_Value(COLUMNNAME_StartNewMonth);
+        Object oo = getValue(COLUMNNAME_StartNewMonth);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -252,7 +252,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return Restart the sequence with Start on every 1/1
      */
     public boolean isStartNewYear() {
-        Object oo = get_Value(COLUMNNAME_StartNewYear);
+        Object oo = getValue(COLUMNNAME_StartNewYear);
         if (oo != null) {
             if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
             return "Y".equals(oo);
@@ -275,7 +275,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return Starting number/position
      */
     public int getStartNo() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_StartNo);
+        Integer ii = (Integer) getValue(COLUMNNAME_StartNo);
         if (ii == null) return 0;
         return ii;
     }
@@ -295,7 +295,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence, I_Persis
      * @return Suffix after the number
      */
     public String getSuffix() {
-        return (String) get_Value(COLUMNNAME_Suffix);
+        return (String) getValue(COLUMNNAME_Suffix);
     }
 
     @Override
