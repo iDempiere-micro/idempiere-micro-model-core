@@ -50,16 +50,6 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access {
     }
 
     /**
-     * Set Table.
-     *
-     * @param AD_Table_ID Database Table information
-     */
-    public void setTableId(int AD_Table_ID) {
-        if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
-    }
-
-    /**
      * Set User/Contact.
      *
      * @param AD_User_ID User within the system - Internal or Business Partner Contact
@@ -82,5 +72,15 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access {
     @Override
     public int getTableId() {
         return Table_ID;
+    }
+
+    /**
+     * Set Table.
+     *
+     * @param AD_Table_ID Database Table information
+     */
+    public void setTableId(int AD_Table_ID) {
+        if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
+        else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
     }
 }

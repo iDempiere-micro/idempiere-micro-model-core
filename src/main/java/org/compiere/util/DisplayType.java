@@ -204,7 +204,7 @@ public final class DisplayType {
      * @return true if ID
      */
     public static boolean isID(int displayType) {
-        if (displayType == ID
+        return displayType == ID
                 || displayType == Table
                 || displayType == TableDir
                 || displayType == Search
@@ -215,9 +215,8 @@ public final class DisplayType {
                 || displayType == PAttribute
                 || displayType == Image
                 || displayType == Chart
-                || displayType == Color) return true;
+                || displayType == Color;
 
-        return false;
     } //	isID
 
     /**
@@ -228,13 +227,12 @@ public final class DisplayType {
      * @return true if numeric
      */
     public static boolean isNumeric(int displayType) {
-        if (displayType == Amount
+        return displayType == Amount
                 || displayType == Number
                 || displayType == CostPrice
                 || displayType == Integer
-                || displayType == Quantity) return true;
+                || displayType == Quantity;
 
-        return false;
     } //	isNumeric
 
     /**
@@ -244,7 +242,7 @@ public final class DisplayType {
      * @return true if text
      */
     public static boolean isText(int displayType) {
-        if (displayType == String
+        return displayType == String
                 || displayType == Text
                 || displayType == TextLong
                 || displayType == Memo
@@ -254,9 +252,8 @@ public final class DisplayType {
                 || displayType == PrinterName
                 || displayType == SingleSelectionGrid
                 || displayType == Color
-                || displayType == MultipleSelectionGrid) return true;
+                || displayType == MultipleSelectionGrid;
 
-        return false;
     } //	isText
 
     /**
@@ -266,9 +263,8 @@ public final class DisplayType {
      * @return true if date
      */
     public static boolean isDate(int displayType) {
-        if (displayType == Date || displayType == DateTime || displayType == Time) return true;
+        return displayType == Date || displayType == DateTime || displayType == Time;
 
-        return false;
     } //	isDate
 
     /**
@@ -278,12 +274,11 @@ public final class DisplayType {
      * @return true if Lookup
      */
     public static boolean isLookup(int displayType) {
-        if (displayType == List
+        return displayType == List
                 || displayType == Table
                 || displayType == TableDir
-                || displayType == Search) return true;
+                || displayType == Search;
 
-        return false;
     } //	isLookup
 
     /**
@@ -293,9 +288,8 @@ public final class DisplayType {
      * @return true if LOB
      */
     public static boolean isLOB(int displayType) {
-        if (displayType == Binary || displayType == TextLong) return true;
+        return displayType == Binary || displayType == TextLong;
 
-        return false;
     } //	isLOB
 
     /**

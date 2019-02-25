@@ -7,7 +7,10 @@ import org.idempiere.common.util.Util;
 
 import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
 

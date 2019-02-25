@@ -1,7 +1,6 @@
 package org.idempiere.orm;
 
 import org.compiere.model.I_AD_Table;
-import org.compiere.util.DisplayType;
 import org.idempiere.common.util.CCache;
 
 import java.io.Serializable;
@@ -22,14 +21,12 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      *
      */
     private static final long serialVersionUID = 3496403499343293597L;
-
-    private Boolean m_IsTranslated = null;
-
     /**
      * Cache of POInfo
      */
     private static CCache<Integer, POInfo> s_cache =
             new CCache<Integer, POInfo>(I_AD_Table.Table_Name, "POInfo", 200);
+    private Boolean m_IsTranslated = null;
 
     /**
      * ************************************************************************ Create Persistent Info

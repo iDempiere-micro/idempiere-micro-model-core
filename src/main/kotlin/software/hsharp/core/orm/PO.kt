@@ -86,7 +86,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     protected fun initPO(ctx: Properties): org.idempiere.orm.POInfo {
         return getPOInfo(ctx, this.tableId)
     }
-	
+
     /** Accounting Columns  */
     protected var s_acctColumns: List<String> = listOf()
 

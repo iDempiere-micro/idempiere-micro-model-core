@@ -8,7 +8,6 @@ import org.idempiere.common.util.Env;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 /**
  * Generated Model for AD_Role
@@ -464,13 +463,13 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
     public int getTableId() {
         return Table_ID;
     }
-    
+
     protected Properties getMyContext() {
-    	return super.getCtx();
+        return super.getCtx();
     }
-    
+
     protected CLogger getMyLog() {
-    	return super.log;
+        return super.log;
     }
-    
+
 }

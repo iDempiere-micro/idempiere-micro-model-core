@@ -155,7 +155,7 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
                 )
             )
             // globalqss : modified to compare ignoring case [ 1619179 ]
-            return columns[i].AD_Column_ID
+                return columns[i].AD_Column_ID
         }
         return -1
     }

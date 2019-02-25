@@ -5,7 +5,6 @@ import org.compiere.model.HasName;
 import org.compiere.model.I_AD_Element;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.Env;
 
 import java.sql.ResultSet;
 import java.util.Properties;

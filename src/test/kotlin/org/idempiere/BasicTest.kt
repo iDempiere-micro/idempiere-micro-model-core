@@ -12,20 +12,20 @@ import org.junit.Test
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.HikariCPI
 import java.sql.Timestamp
+import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import java.util.Random
 
 /**
  * Generate a random string (small letters)
  */
 fun randomString(length: Int): String {
     fun ClosedRange<Char>.randomString(length: Int) =
-            (1..length)
-                    .map { (Random().nextInt(endInclusive.toInt() - start.toInt()) + start.toInt()).toChar() }
-                    .joinToString("")
+        (1..length)
+            .map { (Random().nextInt(endInclusive.toInt() - start.toInt()) + start.toInt()).toChar() }
+            .joinToString("")
     return ('a'..'z').randomString(length)
 }
 

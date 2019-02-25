@@ -795,6 +795,15 @@ public abstract class PO extends software.hsharp.core.orm.PO
     } //	getOrgId
 
     /**
+     * Set AD_Org
+     *
+     * @param AD_Org_ID org
+     */
+    public void setOrgId(int AD_Org_ID) {
+        set_ValueNoCheck("AD_Org_ID", AD_Org_ID);
+    } //	setOrgId
+
+    /**
      * Is Active
      *
      * @return is active
@@ -1296,13 +1305,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         return false;
     }
 
-    /**
-     * @return uuid column name
-     */
-    public String getUUIDColumnName() {
-        return PO.getUUIDColumnName(getTableName());
-    }
-
   /*
   @Override
   protected Object clone() throws CloneNotSupportedException {
@@ -1333,6 +1335,13 @@ public abstract class PO extends software.hsharp.core.orm.PO
     clone.m_isReplication = false;
     return clone;
   }*/
+
+    /**
+     * @return uuid column name
+     */
+    public String getUUIDColumnName() {
+        return PO.getUUIDColumnName(getTableName());
+    }
 
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
         // default deserialization
@@ -1526,15 +1535,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     public final void setIsActive(boolean active) {
         set_Value("IsActive", active);
     } //	setActive
-
-    /**
-     * Set AD_Org
-     *
-     * @param AD_Org_ID org
-     */
-    public void setOrgId(int AD_Org_ID) {
-        set_ValueNoCheck("AD_Org_ID", AD_Org_ID);
-    } //	setOrgId
 
     /**
      * Set Value w/o check (update, r/o, ..). Used when Column is R/O Required for key and parent

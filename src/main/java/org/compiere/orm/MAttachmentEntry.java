@@ -4,12 +4,6 @@ import org.compiere.model.I_AD_AttachmentEntry;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.MimeType;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Random;
-import java.util.logging.Level;
-
 /**
  * Individual Attachment Entry of MAttachment
  *

@@ -227,6 +227,11 @@ public class Language implements Serializable {
         return s_baseLanguage;
     } //  getBase
 
+    public static void setBaseLanguage(String baselang) {
+        Language lang = getLanguage(baselang);
+        s_baseLanguage = lang;
+    }
+
     /**
      * Get Base Language code. (e.g. en-US)
      *
@@ -294,11 +299,6 @@ public class Language implements Serializable {
         }
         return m_decimalPoint.booleanValue();
     } //  isDecimalPoint
-
-    public static void setBaseLanguage(String baselang) {
-        Language lang = getLanguage(baselang);
-        s_baseLanguage = lang;
-    }
 
     /**
      * Get (Short) Date Format. The date format must parseable by org.idempiere.grid.ed.MDocDate i.e.

@@ -109,7 +109,7 @@ public class Evaluator {
             String defaultValue = "";
             int idx = first.indexOf(":"); // 	or clause
             if (idx >= 0) {
-                defaultValue = first.substring(idx + 1, first.length());
+                defaultValue = first.substring(idx + 1);
                 first = first.substring(0, idx);
             }
             firstEval = source.get_ValueAsString(first); // 	replace with it's value

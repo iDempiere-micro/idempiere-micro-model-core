@@ -22,7 +22,7 @@ internal val tableCache = CCache<Int, MTable>(I_AD_Table.Table_Name, 20)
 fun get(ctx: Properties, tableName: String?): MTable? {
     if (tableName == null) return null
     for (retValue in tableCache.values) {
-        if (tableName.equals(retValue.getDbTableName(), ignoreCase = true) && retValue.ctx === ctx) {
+        if (tableName.equals(retValue.dbTableName, ignoreCase = true) && retValue.ctx === ctx) {
             return retValue
         }
     }

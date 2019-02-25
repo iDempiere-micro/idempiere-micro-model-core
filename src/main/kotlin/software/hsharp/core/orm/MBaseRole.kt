@@ -25,8 +25,8 @@ open class MBaseRole : X_AD_Role {
     constructor(ctx: Properties, Id: Int) : super(ctx, Id)
     constructor(ctx: Properties, rs: ResultSet) : super(ctx, rs)
     constructor(ctx: Properties, row: Row) : super(ctx, row)
-	
-	protected val localContext: Properties get() = super.getMyContext()
+
+    protected val localContext: Properties get() = super.getMyContext()
     protected val localLog: CLogger get() = super.getMyLog()
 
     /** Org Access Summary  */
