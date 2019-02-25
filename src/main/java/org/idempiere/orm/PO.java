@@ -65,7 +65,7 @@ import static software.hsharp.core.util.DBKt.*;
  * @version $Id: PO.java,v 1.12 2006/08/09 16:38:47 jjanke Exp $
  */
 public abstract class PO extends software.hsharp.core.orm.PO
-        implements Serializable, Comparator<Object>, Evaluatee, Cloneable, IPO, I_Persistent {
+        implements Serializable, Comparator<Object>, Evaluatee, Cloneable, IPO {
     /**
      * User Maintained Entity Type
      */

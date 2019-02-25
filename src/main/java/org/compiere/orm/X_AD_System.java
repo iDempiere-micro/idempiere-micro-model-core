@@ -2,7 +2,6 @@ package org.compiere.orm;
 
 import org.compiere.model.I_AD_System;
 import org.idempiere.common.util.Env;
-import org.idempiere.orm.I_Persistent;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -14,7 +13,7 @@ import java.util.Properties;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_System extends BasePOName implements I_AD_System, I_Persistent {
+public class X_AD_System extends BasePOName implements I_AD_System {
 
     /**
      *

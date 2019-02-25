@@ -3,6 +3,7 @@ package software.hsharp.core.orm
 import kotliquery.Row
 import kotliquery.queryOf
 import org.compiere.model.I_AD_Table
+import org.compiere.util.DisplayType
 import org.idempiere.common.exceptions.AdempiereException
 import org.idempiere.common.util.Env
 import org.idempiere.orm.POInfoColumn
@@ -34,6 +35,7 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
     val accessLevel = detail.first.accessLevel
     val isChangeLog = detail.first.isChangeLog
     protected val columns: Array<POInfoColumn> = detail.second
+    val columnCount = columns.size
 
     protected fun loadInfo(baseLanguage: Boolean): Pair<POInfoDetail, Array<POInfoColumn>> {
         val columnNameMap: MutableMap<String, Int> = mutableMapOf()
@@ -129,4 +131,96 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
             ), result.map { it.second }.toTypedArray()
         )
     }
+
+    /**
+     * Get Column Name
+     *
+     * @param index index
+     * @return ColumnName column name
+     */
+    fun getColumnName(index: Int): String? {
+        return if (index < 0 || index >= columns.size) null else columns[index].ColumnName
+    } //  getColumnName
+
+    /**
+     * @param columnName
+     * @return AD_Column_ID if found, -1 if not found
+     */
+    fun getAD_Column_ID(columnName: String?): Int {
+        if (columnName == null) return -1
+
+        for (i in 0 until columns.size) {
+            if (columnName.equals(
+                    columns[i].ColumnName, ignoreCase = true
+                )
+            )
+            // globalqss : modified to compare ignoring case [ 1619179 ]
+            return columns[i].AD_Column_ID
+        }
+        return -1
+    }
+
+    /**
+     * Is Column (data) Encrypted
+     *
+     * @param index index
+     * @return true if column is encrypted
+     */
+    fun isEncrypted(index: Int): Boolean {
+        return if (index < 0 || index >= columns.size) false else columns[index].IsEncrypted
+    } //  isEncrypted
+
+    /**
+     * Get Column SQL or Column Name
+     *
+     * @param index index
+     * @return ColumnSQL column sql or name
+     */
+    fun getColumnSQL(index: Int): String? {
+        if (index < 0 || index >= columns.size) return null
+        return if (columns[index].ColumnSQL != null && columns[index].ColumnSQL.length > 0) columns[index].ColumnSQL + " AS " + columns[index].ColumnName else columns[index].ColumnName
+    } //  getColumnSQL
+
+    /**
+     * Get Column Class
+     *
+     * @param index index
+     * @return Class
+     */
+    fun getColumnClass(index: Int): Class<*>? {
+        return if (index < 0 || index >= columns.size) null else columns[index].ColumnClass
+    } //  getColumnClass
+
+    /**
+     * Get Column Display Type
+     *
+     * @param index index
+     * @return DisplayType
+     */
+    fun getColumnDisplayType(index: Int): Int {
+        return if (index < 0 || index >= columns.size) DisplayType.String else columns[index].DisplayType
+    } //  getColumnDisplayType
+
+    /**
+     * Is Column Key
+     *
+     * @param index index
+     * @return true if column is the key
+     */
+    fun isKey(index: Int): Boolean {
+        val columns = columns
+        return if (index < 0 || index >= columns.size) false else columns[index].IsKey
+    } //  isKey
+
+    /**
+     * Is Column Parent
+     *
+     * @param index index
+     * @return true if column is a Parent
+     */
+    fun isColumnParent(index: Int): Boolean {
+        return if (index < 0 || index >= columns.size) false else columns[index].IsParent
+    } //  isColumnParent
+
+
 }

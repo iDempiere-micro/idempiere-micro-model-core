@@ -7,11 +7,10 @@ import org.compiere.model.I_AD_Column
 import org.compiere.model.I_AD_Element
 import org.compiere.model.I_AD_Field
 import org.compiere.orm.MColumn
-import org.compiere.orm.PO
 import org.compiere.util.DisplayType
 import org.idempiere.common.util.SecureEngine
 import org.idempiere.icommon.model.IPO
-import org.idempiere.orm.POInfo
+import org.idempiere.orm.POInfo.getPOInfo
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.TO_DATE
@@ -82,12 +81,12 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     /** Record_IDs  */
     protected var ids: Array<Any?> = arrayOf(I_ZERO)
 
-    val p_info: POInfo = initPO(ctx)
+    val p_info: org.idempiere.orm.POInfo = initPO(ctx)
 
-    protected fun initPO(ctx: Properties): POInfo {
-        return POInfo.getPOInfo(ctx, this.tableId)
+    protected fun initPO(ctx: Properties): org.idempiere.orm.POInfo {
+        return getPOInfo(ctx, this.tableId)
     }
-
+	
     /** Accounting Columns  */
     protected var s_acctColumns: List<String> = listOf()
 
@@ -302,7 +301,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         // 	Search for Parents
         val columnNames = ArrayList<String>()
         for (i in 0 until p_info.columnCount) {
-            if (p_info.isColumnParent(i)) columnNames.add(p_info.getColumnName(i))
+            if (p_info.isColumnParent(i)) columnNames.add(p_info.getColumnName(i) ?: "")
         }
         // 	Set FKs
         val size = columnNames.size

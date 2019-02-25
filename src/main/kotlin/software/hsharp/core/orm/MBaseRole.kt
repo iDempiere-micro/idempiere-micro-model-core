@@ -3,6 +3,7 @@ package software.hsharp.core.orm
 import kotliquery.Row
 import org.compiere.orm.*
 import org.compiere.util.Msg
+import org.idempiere.common.util.CLogger
 import org.idempiere.common.util.Env
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.queryOf
@@ -24,6 +25,9 @@ open class MBaseRole : X_AD_Role {
     constructor(ctx: Properties, Id: Int) : super(ctx, Id)
     constructor(ctx: Properties, rs: ResultSet) : super(ctx, rs)
     constructor(ctx: Properties, row: Row) : super(ctx, row)
+	
+	protected val localContext: Properties get() = super.getMyContext()
+    protected val localLog: CLogger get() = super.getMyLog()
 
     /** Org Access Summary  */
     protected inner class OrgAccess
@@ -78,15 +82,15 @@ open class MBaseRole : X_AD_Role {
          */
         override fun toString(): String {
             var clientName = "System"
-            if (clientId != 0) clientName = MClient.get(ctx, clientId).name
+            if (clientId != 0) clientName = MClient.get(localContext, clientId).name
             var orgName = "*"
-            if (orgId != 0) orgName = MOrg.get(ctx, orgId).name
+            if (orgId != 0) orgName = MOrg.get(localContext, orgId).name
             val sb = StringBuilder()
-            sb.append(Msg.translate(ctx, "AD_Client_ID"))
+            sb.append(Msg.translate(localContext, "AD_Client_ID"))
                 .append("=")
                 .append(clientName)
                 .append(" - ")
-                .append(Msg.translate(ctx, "AD_Org_ID"))
+                .append(Msg.translate(localContext, "AD_Org_ID"))
                 .append("=")
                 .append(orgName)
             if (readOnly) sb.append(" r/o")
@@ -106,10 +110,10 @@ open class MBaseRole : X_AD_Role {
         list.add(oa)
         // 	Do we look for trees?
         if (treeOrgId == 0) return
-        val org = MOrg.get(ctx, oa.orgId)
+        val org = MOrg.get(localContext, oa.orgId)
         if (!org.isSummary) return
         // 	Summary Org - Get Dependents
-        val tree = MTree_Base.get(ctx, treeOrgId)
+        val tree = MTree_Base.get(localContext, treeOrgId)
         val sql = ("SELECT AD_Client_ID, orgId FROM AD_Org " +
                 "WHERE IsActive='Y' AND orgId IN (SELECT Node_ID FROM " +
                 tree.nodeTableName +
@@ -130,7 +134,7 @@ open class MBaseRole : X_AD_Role {
      */
     protected fun loadOrgAccessRole(list: ArrayList<OrgAccess>) {
         fun load(row: Row): Boolean {
-            val oa = MRoleOrgAccess(ctx, row)
+            val oa = MRoleOrgAccess(localContext, row)
             loadOrgAccessAdd(list, OrgAccess(oa.clientId, oa.orgId, oa.isReadOnly))
             return true
         }
@@ -148,12 +152,12 @@ open class MBaseRole : X_AD_Role {
     protected fun loadTableAccess(reload: Boolean): Array<MTableAccess> {
         if (m_tableAccess.isNotEmpty() && !reload) return m_tableAccess.toTypedArray()
         val sql = "SELECT * FROM AD_Table_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
-        val loadQuery = queryOf(sql, listOf(roleId)).map { MTableAccess(ctx, it) }.asList
+        val loadQuery = queryOf(sql, listOf(roleId)).map { MTableAccess(localContext, it) }.asList
         val result = DB.current.run(loadQuery)
         m_tableAccess.clear()
         m_tableAccess.addAll(result)
 
-        if (log.isLoggable(Level.FINE)) log.fine("#" + m_tableAccess.size)
+        if (localLog.isLoggable(Level.FINE)) localLog.fine("#" + m_tableAccess.size)
         return result.toTypedArray()
     } // 	loadTableAccess
 
@@ -205,7 +209,7 @@ open class MBaseRole : X_AD_Role {
         val loadQuery = queryOf(sql, listOf()).map { load(it) }.asList
         DB.current.run(loadQuery)
 
-        if (log.isLoggable(Level.FINE)) log.fine("#" + m_tableAccessLevel.size)
+        if (localLog.isLoggable(Level.FINE)) localLog.fine("#" + m_tableAccessLevel.size)
     } // 	loadTableAccessLevel
 
     /** List of Column Access  MColumnAccess[] m_columnAccess */
@@ -224,11 +228,11 @@ open class MBaseRole : X_AD_Role {
     protected fun loadColumnAccess(reload: Boolean): Array<MColumnAccess> {
         if (m_columnAccess.isNotEmpty() && !reload) return m_columnAccess.toTypedArray()
         val sql = "SELECT * FROM AD_Column_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
-        val loadQuery = queryOf(sql, listOf(roleId)).map { MColumnAccess(ctx, it) }.asList
+        val loadQuery = queryOf(sql, listOf(roleId)).map { MColumnAccess(localContext, it) }.asList
         val result = DB.current.run(loadQuery)
         m_columnAccess.clear()
         m_columnAccess.addAll(result)
-        if (log.isLoggable(Level.FINE)) log.fine("#" + m_columnAccess.size)
+        if (localLog.isLoggable(Level.FINE)) localLog.fine("#" + m_columnAccess.size)
         return result.toTypedArray()
     } // 	loadColumnAccess
 }

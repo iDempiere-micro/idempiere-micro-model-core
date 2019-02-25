@@ -235,7 +235,6 @@ internal fun getSQLException(e: Exception): Exception? {
 
 internal fun getNextID(name: String): Int {
     return getSQLValueEx("SELECT nextval('" + name.toLowerCase() + "')")
-        ?: throw Exception("Sequence $name not found")
 }
 
 /**
@@ -245,7 +244,7 @@ internal fun getNextID(name: String): Int {
  * @param timeout
  * @return true if lock is granted
  */
-fun forUpdate(po: IPO, timeout: Int): Boolean {
+fun forUpdate(po: IPO): Boolean {
     val keyColumns = po.keyColumns
     val sqlBuffer = StringBuilder(" SELECT ")
     sqlBuffer.append(keyColumns[0]).append(" FROM ").append(po.tableName).append(" WHERE ")

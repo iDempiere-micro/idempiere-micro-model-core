@@ -1,7 +1,6 @@
 package org.compiere.orm;
 
 import org.compiere.model.I_AD_User_Roles;
-import org.idempiere.orm.I_Persistent;
 
 import java.sql.ResultSet;
 import java.util.Properties;
@@ -12,7 +11,7 @@ import java.util.Properties;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_User_Roles extends PO implements I_AD_User_Roles, I_Persistent {
+public class X_AD_User_Roles extends PO implements I_AD_User_Roles {
 
     /**
      *

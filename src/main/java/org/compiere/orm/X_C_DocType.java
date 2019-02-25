@@ -2,7 +2,6 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 import org.compiere.model.I_C_DocType;
-import org.idempiere.orm.I_Persistent;
 
 import java.sql.ResultSet;
 import java.util.Properties;
@@ -13,7 +12,7 @@ import java.util.Properties;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_C_DocType extends BasePOName implements I_C_DocType, I_Persistent {
+public class X_C_DocType extends BasePOName implements I_C_DocType {
 
     /**
      * DocBaseType AD_Reference_ID=183

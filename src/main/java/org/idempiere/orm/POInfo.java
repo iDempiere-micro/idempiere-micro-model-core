@@ -23,14 +23,13 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      */
     private static final long serialVersionUID = 3496403499343293597L;
 
-    /** Used by Remote FinReport */
+    private Boolean m_IsTranslated = null;
+
     /**
      * Cache of POInfo
      */
     private static CCache<Integer, POInfo> s_cache =
             new CCache<Integer, POInfo>(I_AD_Table.Table_Name, "POInfo", 200);
-
-    private Boolean m_IsTranslated = null;
 
     /**
      * ************************************************************************ Create Persistent Info
@@ -96,15 +95,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     } //  getColumnTableId
 
     /**
-     * ************************************************************************ Get ColumnCount
-     *
-     * @return column count
-     */
-    public int getColumnCount() {
-        return getColumns().length;
-    } //  getColumnCount
-
-    /**
      * Get Column Index
      *
      * @param ColumnName column name
@@ -131,19 +121,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     } //  getColumnIndex
 
     /**
-     * @param columnName
-     * @return AD_Column_ID if found, -1 if not found
-     */
-    public int getAD_Column_ID(String columnName) {
-        for (int i = 0; i < getColumns().length; i++) {
-            if (columnName.equalsIgnoreCase(
-                    getColumns()[i].ColumnName)) // globalqss : modified to compare ignoring case [ 1619179 ]
-                return getColumns()[i].AD_Column_ID;
-        }
-        return -1;
-    }
-
-    /**
      * Get Column
      *
      * @param index index
@@ -153,31 +130,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
         if (index < 0 || index >= getColumns().length) return null;
         return getColumns()[index];
     } //  getColumn
-
-    /**
-     * Get Column Name
-     *
-     * @param index index
-     * @return ColumnName column name
-     */
-    public String getColumnName(int index) {
-        if (index < 0 || index >= getColumns().length) return null;
-        return getColumns()[index].ColumnName;
-    } //  getColumnName
-
-    /**
-     * Get Column SQL or Column Name
-     *
-     * @param index index
-     * @return ColumnSQL column sql or name
-     */
-    public String getColumnSQL(int index) {
-        POInfoColumn[] columns = getColumns();
-        if (index < 0 || index >= columns.length) return null;
-        if (columns[index].ColumnSQL != null && columns[index].ColumnSQL.length() > 0)
-            return columns[index].ColumnSQL + " AS " + columns[index].ColumnName;
-        return columns[index].ColumnName;
-    } //  getColumnSQL
 
     /**
      * Is Column Virtual?
@@ -190,30 +142,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
         if (index < 0 || index >= columns.length) return true;
         return columns[index].ColumnSQL != null && columns[index].ColumnSQL.length() > 0;
     } //  isVirtualColumn
-
-    /**
-     * Get Column Class
-     *
-     * @param index index
-     * @return Class
-     */
-    public Class<?> getColumnClass(int index) {
-        POInfoColumn[] columns = getColumns();
-        if (index < 0 || index >= columns.length) return null;
-        return columns[index].ColumnClass;
-    } //  getColumnClass
-
-    /**
-     * Get Column Display Type
-     *
-     * @param index index
-     * @return DisplayType
-     */
-    public int getColumnDisplayType(int index) {
-        POInfoColumn[] columns = getColumns();
-        if (index < 0 || index >= columns.length) return DisplayType.String;
-        return columns[index].DisplayType;
-    } //  getColumnDisplayType
 
     /**
      * Is Column Mandatory
@@ -250,30 +178,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
     } //	setUpdateable
 
     /**
-     * Is Column Key
-     *
-     * @param index index
-     * @return true if column is the key
-     */
-    public boolean isKey(int index) {
-        POInfoColumn[] columns = getColumns();
-        if (index < 0 || index >= columns.length) return false;
-        return columns[index].IsKey;
-    } //  isKey
-
-    /**
-     * Is Column Parent
-     *
-     * @param index index
-     * @return true if column is a Parent
-     */
-    public boolean isColumnParent(int index) {
-        POInfoColumn[] columns = getColumns();
-        if (index < 0 || index >= columns.length) return false;
-        return columns[index].IsParent;
-    } //  isColumnParent
-
-    /**
      * Is Column Translated
      *
      * @param index index
@@ -284,18 +188,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
         if (index < 0 || index >= columns.length) return false;
         return columns[index].IsTranslated;
     } //  isColumnTranslated
-
-    /**
-     * Is Column (data) Encrypted
-     *
-     * @param index index
-     * @return true if column is encrypted
-     */
-    public boolean isEncrypted(int index) {
-        POInfoColumn[] columns = getColumns();
-        if (index < 0 || index >= columns.length) return false;
-        return columns[index].IsEncrypted;
-    } //  isEncrypted
 
     /**
      * Get Column FieldLength

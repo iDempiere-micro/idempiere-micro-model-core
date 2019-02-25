@@ -48,7 +48,7 @@ private data class MBaseTableDetail(
     val m_columnIdMap: MutableMap<Int, Int>
 )
 
-open class MBaseTable : X_AD_Table {
+abstract class MBaseTable : X_AD_Table {
     constructor(ctx: Properties, AD_Table_ID: Int) : super(ctx, AD_Table_ID)
     constructor(ctx: Properties, rs: ResultSet?) : super(ctx, rs)
     constructor(ctx: Properties, row: Row?) : super(ctx, row)

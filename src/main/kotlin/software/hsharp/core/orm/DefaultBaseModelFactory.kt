@@ -198,6 +198,7 @@ abstract class DefaultBaseModelFactory : IModelFactory {
             Properties::class.java, Row::class.java
         )
         try {
+            @Suppress("UNCHECKED_CAST")
             return constructor.newInstance(Env.getCtx(), row) as T
         } catch (e: Exception) {
             throw AdempiereSystemError("Unable to load PO $clazz from $tableName", e)

@@ -5,7 +5,6 @@ import org.compiere.model.HasName;
 import org.compiere.model.I_AD_Column;
 import org.compiere.model.I_AD_Reference;
 import org.compiere.model.I_AD_Table;
-import org.idempiere.orm.I_Persistent;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -17,7 +16,7 @@ import java.util.Properties;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Column extends PO implements I_AD_Column, I_Persistent {
+public class X_AD_Column extends PO implements I_AD_Column {
 
     /**
      * Window = N

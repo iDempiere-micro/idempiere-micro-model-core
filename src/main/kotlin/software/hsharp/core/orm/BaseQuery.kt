@@ -89,7 +89,10 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
         val sql = buildSQL(null, true)
         val params = getQueryParameters()
         val sqlQuery =
-            (if (params == null) queryOf(sql) else queryOf(sql, *params)).map { row -> table.getPO(row) as T }.asList
+            (if (params == null) queryOf(sql) else queryOf(sql, *params)).map { row ->
+                @Suppress("UNCHECKED_CAST")
+                table.getPO(row) as T
+            }.asList
         val result = DB.current.run(sqlQuery)
         return result
     }

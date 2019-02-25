@@ -154,7 +154,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
     return doc.toString()
 }
 
-open class MBaseSequence : X_AD_Sequence {
+abstract class MBaseSequence : X_AD_Sequence {
     constructor(ctx: Properties, Id: Int) : super(ctx, Id)
     constructor(ctx: Properties, rs: ResultSet) : super(ctx, rs)
     constructor(ctx: Properties, row: Row) : super(ctx, row)
