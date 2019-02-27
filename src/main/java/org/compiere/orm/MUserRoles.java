@@ -87,7 +87,7 @@ public class MUserRoles extends X_AD_User_Roles {
      * @param AD_User_ID user
      */
     public void setUserId(int AD_User_ID) {
-        set_ValueNoCheck("AD_User_ID", new Integer(AD_User_ID));
+        setValueNoCheck("AD_User_ID", new Integer(AD_User_ID));
     } //	setUserId
 
     /**
@@ -96,7 +96,7 @@ public class MUserRoles extends X_AD_User_Roles {
      * @param AD_Role_ID role
      */
     public void setRoleId(int AD_Role_ID) {
-        set_ValueNoCheck("AD_Role_ID", new Integer(AD_Role_ID));
+        setValueNoCheck("AD_Role_ID", new Integer(AD_Role_ID));
     } //	setRoleId
 
     @Override

@@ -78,7 +78,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access {
      * @param IsDependentEntities Also check access in dependent entities
      */
     public void setIsDependentEntities(boolean IsDependentEntities) {
-        set_Value(COLUMNNAME_IsDependentEntities, Boolean.valueOf(IsDependentEntities));
+        setValue(COLUMNNAME_IsDependentEntities, Boolean.valueOf(IsDependentEntities));
     }
 
     /**
@@ -101,7 +101,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access {
      * @param IsExclude Exclude access to the data - if not selected Include access to the data
      */
     public void setIsExclude(boolean IsExclude) {
-        set_Value(COLUMNNAME_IsExclude, Boolean.valueOf(IsExclude));
+        setValue(COLUMNNAME_IsExclude, Boolean.valueOf(IsExclude));
     }
 
     /**
@@ -124,7 +124,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access {
      * @param IsReadOnly Field is read only
      */
     public void setIsReadOnly(boolean IsReadOnly) {
-        set_Value(COLUMNNAME_IsReadOnly, Boolean.valueOf(IsReadOnly));
+        setValue(COLUMNNAME_IsReadOnly, Boolean.valueOf(IsReadOnly));
     }
 
     /**

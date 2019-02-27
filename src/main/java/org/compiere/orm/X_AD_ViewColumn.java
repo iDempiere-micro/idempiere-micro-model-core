@@ -57,8 +57,8 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn {
      * @param AD_ViewComponent_ID Database View Component
      */
     public void setViewComponentId(int AD_ViewComponent_ID) {
-        if (AD_ViewComponent_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, Integer.valueOf(AD_ViewComponent_ID));
+        if (AD_ViewComponent_ID < 1) setValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_ViewComponent_ID, Integer.valueOf(AD_ViewComponent_ID));
     }
 
     /**
@@ -77,7 +77,7 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn {
      */
     public void setEntityType(String EntityType) {
 
-        set_Value(COLUMNNAME_EntityType, EntityType);
+        setValue(COLUMNNAME_EntityType, EntityType);
     }
 
     @Override

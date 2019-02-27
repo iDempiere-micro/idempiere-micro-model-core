@@ -104,7 +104,7 @@ public class X_AD_Table_Access extends PO implements I_AD_Table_Access {
      * @param IsExclude Exclude access to the data - if not selected Include access to the data
      */
     public void setIsExclude(boolean IsExclude) {
-        set_Value(COLUMNNAME_IsExclude, Boolean.valueOf(IsExclude));
+        setValue(COLUMNNAME_IsExclude, Boolean.valueOf(IsExclude));
     }
 
     /**

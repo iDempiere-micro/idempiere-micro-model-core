@@ -75,7 +75,7 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex {
      */
     public void setEntityType(String EntityType) {
 
-        set_Value(COLUMNNAME_EntityType, EntityType);
+        setValue(COLUMNNAME_EntityType, EntityType);
     }
 
     /**
@@ -84,7 +84,7 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex {
      * @param IsCreateConstraint Create Constraint
      */
     public void setIsCreateConstraint(boolean IsCreateConstraint) {
-        set_Value(COLUMNNAME_IsCreateConstraint, Boolean.valueOf(IsCreateConstraint));
+        setValue(COLUMNNAME_IsCreateConstraint, Boolean.valueOf(IsCreateConstraint));
     }
 
     /**
@@ -121,7 +121,7 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex {
      * @param IsUnique Unique
      */
     public void setIsUnique(boolean IsUnique) {
-        set_Value(COLUMNNAME_IsUnique, Boolean.valueOf(IsUnique));
+        setValue(COLUMNNAME_IsUnique, Boolean.valueOf(IsUnique));
     }
 
     /**

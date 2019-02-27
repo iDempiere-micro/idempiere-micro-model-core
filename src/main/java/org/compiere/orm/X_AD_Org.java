@@ -56,7 +56,7 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org {
      * @param Description Optional short description of the record
      */
     public void setDescription(String Description) {
-        set_Value(COLUMNNAME_Description, Description);
+        setValue(COLUMNNAME_Description, Description);
     }
 
     /**
@@ -65,7 +65,7 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org {
      * @param IsSummary This is a summary entity
      */
     public void setIsSummary(boolean IsSummary) {
-        set_Value(COLUMNNAME_IsSummary, IsSummary);
+        setValue(COLUMNNAME_IsSummary, IsSummary);
     }
 
     /**

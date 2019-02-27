@@ -233,7 +233,7 @@ public class SetGetUtil {
             }
 
             Object value = from.getValue(idx_from);
-            to.set_Value(idx_to, value);
+            to.setValue(idx_to, value);
 
             if (!trackOnlyChanges || from.is_ValueChanged(idx_from)) {
                 copiedFields++;
@@ -333,7 +333,7 @@ public class SetGetUtil {
             final PO po = (PO) o;
             return new SetGetModel() {
                 public boolean setAttrValue(String name, Object value) {
-                    return po.set_Value(name, value);
+                    return po.setValue(name, value);
                 }
 
                 public boolean isAttrValueChanged(String ColumnName) {

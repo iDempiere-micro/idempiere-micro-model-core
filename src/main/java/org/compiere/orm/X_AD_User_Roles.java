@@ -64,8 +64,8 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles {
      * @param AD_Role_ID Responsibility Role
      */
     public void setRoleId(int AD_Role_ID) {
-        if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
+        if (AD_Role_ID < 0) setValueNoCheck(COLUMNNAME_AD_Role_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
     }
 
     /**
@@ -85,8 +85,8 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles {
      * @param AD_User_ID User within the system - Internal or Business Partner Contact
      */
     public void setUserId(int AD_User_ID) {
-        if (AD_User_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_User_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
+        if (AD_User_ID < 1) setValueNoCheck(COLUMNNAME_AD_User_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
     }
 
     @Override

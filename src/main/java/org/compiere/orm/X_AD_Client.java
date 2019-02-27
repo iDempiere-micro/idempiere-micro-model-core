@@ -74,7 +74,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client {
      */
     public void setADLanguage(String AD_Language) {
 
-        set_Value(COLUMNNAME_AD_Language, AD_Language);
+        setValue(COLUMNNAME_AD_Language, AD_Language);
     }
 
     /**
@@ -84,7 +84,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client {
      */
     public void setAutoArchive(String AutoArchive) {
 
-        set_Value(COLUMNNAME_AutoArchive, AutoArchive);
+        setValue(COLUMNNAME_AutoArchive, AutoArchive);
     }
 
     /**
@@ -93,7 +93,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client {
      * @param IsMultiLingualDocument Documents are Multi Lingual
      */
     public void setIsMultiLingualDocument(boolean IsMultiLingualDocument) {
-        set_Value(COLUMNNAME_IsMultiLingualDocument, IsMultiLingualDocument);
+        setValue(COLUMNNAME_IsMultiLingualDocument, IsMultiLingualDocument);
     }
 
     /**
@@ -116,7 +116,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client {
      * @param IsPostImmediate Post the accounting immediately for testing (Deprecated)
      */
     public void setIsPostImmediate(boolean IsPostImmediate) {
-        set_Value(COLUMNNAME_IsPostImmediate, IsPostImmediate);
+        setValue(COLUMNNAME_IsPostImmediate, IsPostImmediate);
     }
 
     /**
@@ -139,7 +139,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client {
      * @param IsServerEMail Send EMail from Server
      */
     public void setIsServerEMail(boolean IsServerEMail) {
-        set_Value(COLUMNNAME_IsServerEMail, IsServerEMail);
+        setValue(COLUMNNAME_IsServerEMail, IsServerEMail);
     }
 
     /**
@@ -148,7 +148,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client {
      * @param IsSmtpAuthorization Your mail server requires Authentication
      */
     public void setIsSmtpAuthorization(boolean IsSmtpAuthorization) {
-        set_Value(COLUMNNAME_IsSmtpAuthorization, IsSmtpAuthorization);
+        setValue(COLUMNNAME_IsSmtpAuthorization, IsSmtpAuthorization);
     }
 
     /**
@@ -185,7 +185,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client {
      * @param IsUseBetaFunctions Enable the use of Beta Functionality
      */
     public void setIsUseBetaFunctions(boolean IsUseBetaFunctions) {
-        set_Value(COLUMNNAME_IsUseBetaFunctions, IsUseBetaFunctions);
+        setValue(COLUMNNAME_IsUseBetaFunctions, IsUseBetaFunctions);
     }
 
     /**
@@ -218,7 +218,7 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client {
      */
     public void setMMPolicy(String MMPolicy) {
 
-        set_Value(COLUMNNAME_MMPolicy, MMPolicy);
+        setValue(COLUMNNAME_MMPolicy, MMPolicy);
     }
 
     /**

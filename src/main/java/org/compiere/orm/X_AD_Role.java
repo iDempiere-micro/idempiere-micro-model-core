@@ -165,7 +165,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      *                            (If not defined 500)
      */
     public void setConfirmQueryRecords(int ConfirmQueryRecords) {
-        set_Value(COLUMNNAME_ConfirmQueryRecords, Integer.valueOf(ConfirmQueryRecords));
+        setValue(COLUMNNAME_ConfirmQueryRecords, Integer.valueOf(ConfirmQueryRecords));
     }
 
     /**
@@ -186,7 +186,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsAccessAdvanced Access Advanced
      */
     public void setIsAccessAdvanced(boolean IsAccessAdvanced) {
-        set_Value(COLUMNNAME_IsAccessAdvanced, Boolean.valueOf(IsAccessAdvanced));
+        setValue(COLUMNNAME_IsAccessAdvanced, Boolean.valueOf(IsAccessAdvanced));
     }
 
     /**
@@ -209,7 +209,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsAccessAllOrgs Access all Organizations (no org access control) of the client
      */
     public void setIsAccessAllOrgs(boolean IsAccessAllOrgs) {
-        set_Value(COLUMNNAME_IsAccessAllOrgs, Boolean.valueOf(IsAccessAllOrgs));
+        setValue(COLUMNNAME_IsAccessAllOrgs, Boolean.valueOf(IsAccessAllOrgs));
     }
 
     /**
@@ -246,7 +246,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsCanExport Users with this role can export data
      */
     public void setIsCanExport(boolean IsCanExport) {
-        set_Value(COLUMNNAME_IsCanExport, Boolean.valueOf(IsCanExport));
+        setValue(COLUMNNAME_IsCanExport, Boolean.valueOf(IsCanExport));
     }
 
     /**
@@ -255,7 +255,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsCanReport Users with this role can create reports
      */
     public void setIsCanReport(boolean IsCanReport) {
-        set_Value(COLUMNNAME_IsCanReport, Boolean.valueOf(IsCanReport));
+        setValue(COLUMNNAME_IsCanReport, Boolean.valueOf(IsCanReport));
     }
 
     /**
@@ -278,7 +278,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsChangeLog Maintain a log of changes
      */
     public void setIsChangeLog(boolean IsChangeLog) {
-        set_Value(COLUMNNAME_IsChangeLog, Boolean.valueOf(IsChangeLog));
+        setValue(COLUMNNAME_IsChangeLog, Boolean.valueOf(IsChangeLog));
     }
 
     /**
@@ -287,7 +287,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsManual This is a manual process
      */
     public void setIsManual(boolean IsManual) {
-        set_Value(COLUMNNAME_IsManual, Boolean.valueOf(IsManual));
+        setValue(COLUMNNAME_IsManual, Boolean.valueOf(IsManual));
     }
 
     /**
@@ -339,7 +339,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsPersonalAccess Allow access to all personal records
      */
     public void setIsPersonalAccess(boolean IsPersonalAccess) {
-        set_Value(COLUMNNAME_IsPersonalAccess, Boolean.valueOf(IsPersonalAccess));
+        setValue(COLUMNNAME_IsPersonalAccess, Boolean.valueOf(IsPersonalAccess));
     }
 
     /**
@@ -362,7 +362,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsPersonalLock Allow users with role to lock access to personal records
      */
     public void setIsPersonalLock(boolean IsPersonalLock) {
-        set_Value(COLUMNNAME_IsPersonalLock, Boolean.valueOf(IsPersonalLock));
+        setValue(COLUMNNAME_IsPersonalLock, Boolean.valueOf(IsPersonalLock));
     }
 
     /**
@@ -371,7 +371,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsShowAcct Users with this role can see accounting information
      */
     public void setIsShowAcct(boolean IsShowAcct) {
-        set_Value(COLUMNNAME_IsShowAcct, Boolean.valueOf(IsShowAcct));
+        setValue(COLUMNNAME_IsShowAcct, Boolean.valueOf(IsShowAcct));
     }
 
     /**
@@ -380,7 +380,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsUseUserOrgAccess Use Org Access defined by user instead of Role Org Access
      */
     public void setIsUseUserOrgAccess(boolean IsUseUserOrgAccess) {
-        set_Value(COLUMNNAME_IsUseUserOrgAccess, Boolean.valueOf(IsUseUserOrgAccess));
+        setValue(COLUMNNAME_IsUseUserOrgAccess, Boolean.valueOf(IsUseUserOrgAccess));
     }
 
     /**
@@ -404,7 +404,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      *                        criteria needs to be changed to query less records
      */
     public void setMaxQueryRecords(int MaxQueryRecords) {
-        set_Value(COLUMNNAME_MaxQueryRecords, Integer.valueOf(MaxQueryRecords));
+        setValue(COLUMNNAME_MaxQueryRecords, Integer.valueOf(MaxQueryRecords));
     }
 
     /**
@@ -427,7 +427,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param OverwritePriceLimit Overwrite Price Limit if the Price List enforces the Price Limit
      */
     public void setOverwritePriceLimit(boolean OverwritePriceLimit) {
-        set_Value(COLUMNNAME_OverwritePriceLimit, OverwritePriceLimit);
+        setValue(COLUMNNAME_OverwritePriceLimit, OverwritePriceLimit);
     }
 
     /**
@@ -437,7 +437,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      */
     public void setPreferenceType(String PreferenceType) {
 
-        set_Value(COLUMNNAME_PreferenceType, PreferenceType);
+        setValue(COLUMNNAME_PreferenceType, PreferenceType);
     }
 
     /**
@@ -456,7 +456,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      */
     public void setUserLevel(String UserLevel) {
 
-        set_Value(COLUMNNAME_UserLevel, UserLevel);
+        setValue(COLUMNNAME_UserLevel, UserLevel);
     }
 
     @Override

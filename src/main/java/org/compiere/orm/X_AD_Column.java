@@ -98,8 +98,8 @@ public class X_AD_Column extends PO implements I_AD_Column {
      *                      help.
      */
     public void setElementId(int AD_Element_ID) {
-        if (AD_Element_ID < 1) set_Value(COLUMNNAME_AD_Element_ID, null);
-        else set_Value(COLUMNNAME_AD_Element_ID, Integer.valueOf(AD_Element_ID));
+        if (AD_Element_ID < 1) setValue(COLUMNNAME_AD_Element_ID, null);
+        else setValue(COLUMNNAME_AD_Element_ID, Integer.valueOf(AD_Element_ID));
     }
 
     /**
@@ -135,8 +135,8 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param AD_Reference_ID System Reference and Validation
      */
     public void setReferenceId(int AD_Reference_ID) {
-        if (AD_Reference_ID < 1) set_Value(COLUMNNAME_AD_Reference_ID, null);
-        else set_Value(COLUMNNAME_AD_Reference_ID, AD_Reference_ID);
+        if (AD_Reference_ID < 1) setValue(COLUMNNAME_AD_Reference_ID, null);
+        else setValue(COLUMNNAME_AD_Reference_ID, AD_Reference_ID);
     }
 
     /**
@@ -171,8 +171,8 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param AD_Table_ID Database Table information
      */
     public void setColumnTableId(int AD_Table_ID) {
-        if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, AD_Table_ID);
+        if (AD_Table_ID < 1) setValueNoCheck(COLUMNNAME_AD_Table_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Table_ID, AD_Table_ID);
     }
 
     /**
@@ -190,7 +190,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param ColumnName Name of the column in the database
      */
     public void setColumnName(String ColumnName) {
-        set_Value(COLUMNNAME_ColumnName, ColumnName);
+        setValue(COLUMNNAME_ColumnName, ColumnName);
     }
 
     /**
@@ -217,7 +217,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param Description Optional short description of the record
      */
     public void setDescription(String Description) {
-        set_Value(COLUMNNAME_Description, Description);
+        setValue(COLUMNNAME_Description, Description);
     }
 
     /**
@@ -227,7 +227,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      */
     public void setEntityType(String EntityType) {
 
-        set_Value(COLUMNNAME_EntityType, EntityType);
+        setValue(COLUMNNAME_EntityType, EntityType);
     }
 
     /**
@@ -247,7 +247,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param FieldLength Length of the column in the database
      */
     public void setFieldLength(int FieldLength) {
-        set_Value(COLUMNNAME_FieldLength, Integer.valueOf(FieldLength));
+        setValue(COLUMNNAME_FieldLength, Integer.valueOf(FieldLength));
     }
 
     /**
@@ -265,7 +265,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param FormatPattern The pattern used to format a number or date.
      */
     public void setFormatPattern(String FormatPattern) {
-        set_Value(COLUMNNAME_FormatPattern, FormatPattern);
+        setValue(COLUMNNAME_FormatPattern, FormatPattern);
     }
 
     /**
@@ -274,7 +274,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param Help Comment or Hint
      */
     public void setHelp(String Help) {
-        set_Value(COLUMNNAME_Help, Help);
+        setValue(COLUMNNAME_Help, Help);
     }
 
     /**
@@ -283,7 +283,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsAllowCopy Determine if a column must be copied when pushing the button to copy record
      */
     public void setIsAllowCopy(boolean IsAllowCopy) {
-        set_Value(COLUMNNAME_IsAllowCopy, Boolean.valueOf(IsAllowCopy));
+        setValue(COLUMNNAME_IsAllowCopy, Boolean.valueOf(IsAllowCopy));
     }
 
     /**
@@ -307,7 +307,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      *                           processed
      */
     public void setIsAlwaysUpdateable(boolean IsAlwaysUpdateable) {
-        set_Value(COLUMNNAME_IsAlwaysUpdateable, Boolean.valueOf(IsAlwaysUpdateable));
+        setValue(COLUMNNAME_IsAlwaysUpdateable, Boolean.valueOf(IsAlwaysUpdateable));
     }
 
     /**
@@ -340,7 +340,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      */
     public void setIsEncrypted(String IsEncrypted) {
 
-        set_Value(COLUMNNAME_IsEncrypted, IsEncrypted);
+        setValue(COLUMNNAME_IsEncrypted, IsEncrypted);
     }
 
     /**
@@ -349,7 +349,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsIdentifier This column is part of the record identifier
      */
     public void setIsIdentifier(boolean IsIdentifier) {
-        set_Value(COLUMNNAME_IsIdentifier, Boolean.valueOf(IsIdentifier));
+        setValue(COLUMNNAME_IsIdentifier, Boolean.valueOf(IsIdentifier));
     }
 
     /**
@@ -372,7 +372,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsKey This column is the key in this table
      */
     public void setIsKey(boolean IsKey) {
-        set_Value(COLUMNNAME_IsKey, Boolean.valueOf(IsKey));
+        setValue(COLUMNNAME_IsKey, Boolean.valueOf(IsKey));
     }
 
     /**
@@ -395,7 +395,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsMandatory Data entry is required in this column
      */
     public void setIsMandatory(boolean IsMandatory) {
-        set_Value(COLUMNNAME_IsMandatory, Boolean.valueOf(IsMandatory));
+        setValue(COLUMNNAME_IsMandatory, Boolean.valueOf(IsMandatory));
     }
 
     /**
@@ -419,7 +419,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      *                 Association key columns
      */
     public void setIsParent(boolean IsParent) {
-        set_Value(COLUMNNAME_IsParent, Boolean.valueOf(IsParent));
+        setValue(COLUMNNAME_IsParent, Boolean.valueOf(IsParent));
     }
 
     /**
@@ -457,7 +457,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsSelectionColumn Is this column used for finding rows in windows
      */
     public void setIsSelectionColumn(boolean IsSelectionColumn) {
-        set_Value(COLUMNNAME_IsSelectionColumn, Boolean.valueOf(IsSelectionColumn));
+        setValue(COLUMNNAME_IsSelectionColumn, Boolean.valueOf(IsSelectionColumn));
     }
 
     /**
@@ -476,7 +476,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      */
     public void setIsToolbarButton(String IsToolbarButton) {
 
-        set_Value(COLUMNNAME_IsToolbarButton, IsToolbarButton);
+        setValue(COLUMNNAME_IsToolbarButton, IsToolbarButton);
     }
 
     /**
@@ -485,7 +485,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsTranslated This column is translated
      */
     public void setIsTranslated(boolean IsTranslated) {
-        set_Value(COLUMNNAME_IsTranslated, Boolean.valueOf(IsTranslated));
+        setValue(COLUMNNAME_IsTranslated, Boolean.valueOf(IsTranslated));
     }
 
     /**
@@ -508,7 +508,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsUpdateable Determines, if the field can be updated
      */
     public void setIsUpdateable(boolean IsUpdateable) {
-        set_Value(COLUMNNAME_IsUpdateable, Boolean.valueOf(IsUpdateable));
+        setValue(COLUMNNAME_IsUpdateable, Boolean.valueOf(IsUpdateable));
     }
 
     /**
@@ -540,7 +540,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param Name Alphanumeric identifier of the entity
      */
     public void setName(String Name) {
-        set_Value(HasName.Companion.getCOLUMNNAME_Name(), Name);
+        setValue(HasName.Companion.getCOLUMNNAME_Name(), Name);
     }
 
     /**
@@ -578,7 +578,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param Version Version of the table definition
      */
     public void setVersion(BigDecimal Version) {
-        set_Value(COLUMNNAME_Version, Version);
+        setValue(COLUMNNAME_Version, Version);
     }
 
     @Override

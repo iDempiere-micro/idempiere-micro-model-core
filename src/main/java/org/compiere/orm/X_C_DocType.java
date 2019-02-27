@@ -250,8 +250,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param C_DocTypeInvoice_ID Document type used for invoices generated from this sales document
      */
     public void setDocTypeInvoiceId(int C_DocTypeInvoice_ID) {
-        if (C_DocTypeInvoice_ID < 1) set_Value(COLUMNNAME_C_DocTypeInvoice_ID, null);
-        else set_Value(COLUMNNAME_C_DocTypeInvoice_ID, Integer.valueOf(C_DocTypeInvoice_ID));
+        if (C_DocTypeInvoice_ID < 1) setValue(COLUMNNAME_C_DocTypeInvoice_ID, null);
+        else setValue(COLUMNNAME_C_DocTypeInvoice_ID, Integer.valueOf(C_DocTypeInvoice_ID));
     }
 
     /**
@@ -271,8 +271,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param C_DocTypeShipment_ID Document type used for shipments generated from this sales document
      */
     public void setDocTypeShipmentId(int C_DocTypeShipment_ID) {
-        if (C_DocTypeShipment_ID < 1) set_Value(COLUMNNAME_C_DocTypeShipment_ID, null);
-        else set_Value(COLUMNNAME_C_DocTypeShipment_ID, Integer.valueOf(C_DocTypeShipment_ID));
+        if (C_DocTypeShipment_ID < 1) setValue(COLUMNNAME_C_DocTypeShipment_ID, null);
+        else setValue(COLUMNNAME_C_DocTypeShipment_ID, Integer.valueOf(C_DocTypeShipment_ID));
     }
 
     /**
@@ -302,7 +302,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      */
     public void setDocBaseType(String DocBaseType) {
 
-        set_Value(COLUMNNAME_DocBaseType, DocBaseType);
+        setValue(COLUMNNAME_DocBaseType, DocBaseType);
     }
 
     /**
@@ -322,8 +322,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param DocNoSequence_ID Document sequence determines the numbering of documents
      */
     public void setDocNoSequenceId(int DocNoSequence_ID) {
-        if (DocNoSequence_ID < 1) set_Value(COLUMNNAME_DocNoSequence_ID, null);
-        else set_Value(COLUMNNAME_DocNoSequence_ID, Integer.valueOf(DocNoSequence_ID));
+        if (DocNoSequence_ID < 1) setValue(COLUMNNAME_DocNoSequence_ID, null);
+        else setValue(COLUMNNAME_DocNoSequence_ID, Integer.valueOf(DocNoSequence_ID));
     }
 
     /**
@@ -342,7 +342,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      */
     public void setDocSubTypeInv(String DocSubTypeInv) {
 
-        set_Value(COLUMNNAME_DocSubTypeInv, DocSubTypeInv);
+        setValue(COLUMNNAME_DocSubTypeInv, DocSubTypeInv);
     }
 
     /**
@@ -361,7 +361,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      */
     public void setDocSubTypeSO(String DocSubTypeSO) {
 
-        set_Value(COLUMNNAME_DocSubTypeSO, DocSubTypeSO);
+        setValue(COLUMNNAME_DocSubTypeSO, DocSubTypeSO);
     }
 
     /**
@@ -370,7 +370,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param DocumentCopies Number of copies to be printed
      */
     public void setDocumentCopies(int DocumentCopies) {
-        set_Value(COLUMNNAME_DocumentCopies, Integer.valueOf(DocumentCopies));
+        setValue(COLUMNNAME_DocumentCopies, Integer.valueOf(DocumentCopies));
     }
 
     /**
@@ -390,8 +390,8 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param GL_Category_ID General Ledger Category
      */
     public void setGLCategoryId(int GL_Category_ID) {
-        if (GL_Category_ID < 1) set_Value(COLUMNNAME_GL_Category_ID, null);
-        else set_Value(COLUMNNAME_GL_Category_ID, Integer.valueOf(GL_Category_ID));
+        if (GL_Category_ID < 1) setValue(COLUMNNAME_GL_Category_ID, null);
+        else setValue(COLUMNNAME_GL_Category_ID, Integer.valueOf(GL_Category_ID));
     }
 
     /**
@@ -400,7 +400,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param HasCharges Charges can be added to the document
      */
     public void setHasCharges(boolean HasCharges) {
-        set_Value(COLUMNNAME_HasCharges, Boolean.valueOf(HasCharges));
+        setValue(COLUMNNAME_HasCharges, Boolean.valueOf(HasCharges));
     }
 
     /**
@@ -423,7 +423,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsCreateCounter Create Counter Document
      */
     public void setIsCreateCounter(boolean IsCreateCounter) {
-        set_Value(COLUMNNAME_IsCreateCounter, Boolean.valueOf(IsCreateCounter));
+        setValue(COLUMNNAME_IsCreateCounter, Boolean.valueOf(IsCreateCounter));
     }
 
     /**
@@ -446,7 +446,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsDefault Default value
      */
     public void setIsDefault(boolean IsDefault) {
-        set_Value(COLUMNNAME_IsDefault, Boolean.valueOf(IsDefault));
+        setValue(COLUMNNAME_IsDefault, Boolean.valueOf(IsDefault));
     }
 
     /**
@@ -469,7 +469,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsDefaultCounterDoc The document type is the default counter document type
      */
     public void setIsDefaultCounterDoc(boolean IsDefaultCounterDoc) {
-        set_Value(COLUMNNAME_IsDefaultCounterDoc, Boolean.valueOf(IsDefaultCounterDoc));
+        setValue(COLUMNNAME_IsDefaultCounterDoc, Boolean.valueOf(IsDefaultCounterDoc));
     }
 
     /**
@@ -492,7 +492,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsDocNoControlled The document has a document sequence
      */
     public void setIsDocNoControlled(boolean IsDocNoControlled) {
-        set_Value(COLUMNNAME_IsDocNoControlled, Boolean.valueOf(IsDocNoControlled));
+        setValue(COLUMNNAME_IsDocNoControlled, Boolean.valueOf(IsDocNoControlled));
     }
 
     /**
@@ -515,7 +515,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsIndexed Index the document for the internal search engine
      */
     public void setIsIndexed(boolean IsIndexed) {
-        set_Value(COLUMNNAME_IsIndexed, Boolean.valueOf(IsIndexed));
+        setValue(COLUMNNAME_IsIndexed, Boolean.valueOf(IsIndexed));
     }
 
     /**
@@ -566,7 +566,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsPickQAConfirm Require Pick or QA Confirmation before processing
      */
     public void setIsPickQAConfirm(boolean IsPickQAConfirm) {
-        set_Value(COLUMNNAME_IsPickQAConfirm, Boolean.valueOf(IsPickQAConfirm));
+        setValue(COLUMNNAME_IsPickQAConfirm, Boolean.valueOf(IsPickQAConfirm));
     }
 
     /**
@@ -603,7 +603,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsShipConfirm Require Ship or Receipt Confirmation before processing
      */
     public void setIsShipConfirm(boolean IsShipConfirm) {
-        set_Value(COLUMNNAME_IsShipConfirm, Boolean.valueOf(IsShipConfirm));
+        setValue(COLUMNNAME_IsShipConfirm, Boolean.valueOf(IsShipConfirm));
     }
 
     /**
@@ -626,7 +626,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsSOTrx This is a Sales Transaction
      */
     public void setIsSOTrx(boolean IsSOTrx) {
-        set_Value(COLUMNNAME_IsSOTrx, Boolean.valueOf(IsSOTrx));
+        setValue(COLUMNNAME_IsSOTrx, Boolean.valueOf(IsSOTrx));
     }
 
     /**
@@ -649,7 +649,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsSplitWhenDifference Split document when there is a difference
      */
     public void setIsSplitWhenDifference(boolean IsSplitWhenDifference) {
-        set_Value(COLUMNNAME_IsSplitWhenDifference, Boolean.valueOf(IsSplitWhenDifference));
+        setValue(COLUMNNAME_IsSplitWhenDifference, Boolean.valueOf(IsSplitWhenDifference));
     }
 
     /**
@@ -681,7 +681,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param PrintName The label text to be printed on a document or correspondence.
      */
     public void setPrintName(String PrintName) {
-        set_Value(COLUMNNAME_PrintName, PrintName);
+        setValue(COLUMNNAME_PrintName, PrintName);
     }
 
     @Override

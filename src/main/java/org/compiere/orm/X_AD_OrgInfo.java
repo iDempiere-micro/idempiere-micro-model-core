@@ -60,8 +60,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
      * @param AD_OrgType_ID Organization Type
      */
     public void setOrgTypeId(int AD_OrgType_ID) {
-        if (AD_OrgType_ID < 1) set_Value(COLUMNNAME_AD_OrgType_ID, null);
-        else set_Value(COLUMNNAME_AD_OrgType_ID, Integer.valueOf(AD_OrgType_ID));
+        if (AD_OrgType_ID < 1) setValue(COLUMNNAME_AD_OrgType_ID, null);
+        else setValue(COLUMNNAME_AD_OrgType_ID, Integer.valueOf(AD_OrgType_ID));
     }
 
     /**
@@ -92,8 +92,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
      * @param C_Location_ID Location or Address
      */
     public void setLocationId(int C_Location_ID) {
-        if (C_Location_ID < 1) set_Value(COLUMNNAME_C_Location_ID, null);
-        else set_Value(COLUMNNAME_C_Location_ID, Integer.valueOf(C_Location_ID));
+        if (C_Location_ID < 1) setValue(COLUMNNAME_C_Location_ID, null);
+        else setValue(COLUMNNAME_C_Location_ID, Integer.valueOf(C_Location_ID));
     }
 
     /**
@@ -113,7 +113,7 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
      * @param DUNS Dun & Bradstreet Number
      */
     public void setDUNS(String DUNS) {
-        set_Value(COLUMNNAME_DUNS, DUNS);
+        setValue(COLUMNNAME_DUNS, DUNS);
     }
 
     /**
@@ -122,7 +122,7 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
      * @param EMail Electronic Mail Address
      */
     public void setEMail(String EMail) {
-        set_Value(COLUMNNAME_EMail, EMail);
+        setValue(COLUMNNAME_EMail, EMail);
     }
 
     /**
@@ -131,7 +131,7 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
      * @param Fax Facsimile number
      */
     public void setFax(String Fax) {
-        set_Value(COLUMNNAME_Fax, Fax);
+        setValue(COLUMNNAME_Fax, Fax);
     }
 
     /**
@@ -151,8 +151,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
      * @param M_Warehouse_ID Storage Warehouse and Service Point
      */
     public void setWarehouseId(int M_Warehouse_ID) {
-        if (M_Warehouse_ID < 1) set_Value(COLUMNNAME_M_Warehouse_ID, null);
-        else set_Value(COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
+        if (M_Warehouse_ID < 1) setValue(COLUMNNAME_M_Warehouse_ID, null);
+        else setValue(COLUMNNAME_M_Warehouse_ID, Integer.valueOf(M_Warehouse_ID));
     }
 
     /**
@@ -172,7 +172,7 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
      * @param Phone Identifies a telephone number
      */
     public void setPhone(String Phone) {
-        set_Value(COLUMNNAME_Phone, Phone);
+        setValue(COLUMNNAME_Phone, Phone);
     }
 
     /**
@@ -181,7 +181,7 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
      * @param Phone2 Identifies an alternate telephone number.
      */
     public void setPhone2(String Phone2) {
-        set_Value(COLUMNNAME_Phone2, Phone2);
+        setValue(COLUMNNAME_Phone2, Phone2);
     }
 
     /**
@@ -201,7 +201,7 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
      * @param TaxID Tax Identification
      */
     public void setTaxID(String TaxID) {
-        set_Value(COLUMNNAME_TaxID, TaxID);
+        setValue(COLUMNNAME_TaxID, TaxID);
     }
 
     @Override

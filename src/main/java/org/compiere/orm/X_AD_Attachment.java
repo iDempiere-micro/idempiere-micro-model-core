@@ -67,8 +67,8 @@ public class X_AD_Attachment extends PO {
      * @param AD_Table_ID Database Table information
      */
     public void setAD_Table_ID(int AD_Table_ID) {
-        if (AD_Table_ID < 1) set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, null);
-        else set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
+        if (AD_Table_ID < 1) setValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, null);
+        else setValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
     }
 
     /**
@@ -77,8 +77,8 @@ public class X_AD_Attachment extends PO {
      * @param Record_ID Direct internal record ID
      */
     public void setRecord_ID(int Record_ID) {
-        if (Record_ID < 0) set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, null);
-        else set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
+        if (Record_ID < 0) setValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, null);
+        else setValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
     }
 
     /**
@@ -87,7 +87,7 @@ public class X_AD_Attachment extends PO {
      * @param TextMsg Text Message
      */
     public void setTextMsg(String TextMsg) {
-        set_Value(I_AD_Attachment.COLUMNNAME_TextMsg, TextMsg);
+        setValue(I_AD_Attachment.COLUMNNAME_TextMsg, TextMsg);
     }
 
     /**
@@ -105,7 +105,7 @@ public class X_AD_Attachment extends PO {
      * @param Title Name this entity is referred to as
      */
     public void setTitle(String Title) {
-        set_Value(I_AD_Attachment.COLUMNNAME_Title, Title);
+        setValue(I_AD_Attachment.COLUMNNAME_Title, Title);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class X_AD_Attachment extends PO {
      * @param BinaryData Binary Data
      */
     public void setBinaryData(byte[] BinaryData) {
-        set_ValueNoCheck(I_AD_Attachment.COLUMNNAME_BinaryData, BinaryData);
+        setValueNoCheck(I_AD_Attachment.COLUMNNAME_BinaryData, BinaryData);
     }
 
 

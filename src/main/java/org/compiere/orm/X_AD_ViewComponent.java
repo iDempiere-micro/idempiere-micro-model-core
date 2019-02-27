@@ -58,8 +58,8 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent {
      * @param AD_Table_ID Database Table information
      */
     public void setViewTableId(int AD_Table_ID) {
-        if (AD_Table_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
+        if (AD_Table_ID < 1) setValueNoCheck(COLUMNNAME_AD_Table_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
     }
 
     /**
@@ -89,7 +89,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent {
      */
     public void setEntityType(String EntityType) {
 
-        set_Value(COLUMNNAME_EntityType, EntityType);
+        setValue(COLUMNNAME_EntityType, EntityType);
     }
 
     /**

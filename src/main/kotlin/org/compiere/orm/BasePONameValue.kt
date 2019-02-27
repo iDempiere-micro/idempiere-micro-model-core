@@ -16,7 +16,7 @@ abstract class BasePONameValue : BasePOName {
      * Search key for the record in the format required - must be unique
      */
     open fun setSearchKey(Value: String) {
-        set_Value(COLUMNNAME_Value, Value)
+        setValue(COLUMNNAME_Value, Value)
     }
 
     /** Get Search Key.

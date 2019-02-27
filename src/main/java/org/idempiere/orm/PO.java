@@ -44,7 +44,7 @@ import static software.hsharp.core.util.DBKt.*;
  * <li>FR [ 1675490 ] ModelValidator on modelChange after events
  * <li>BF [ 1704828 ] PO.is_Changed() and PO.is_ValueChanged are not consistent
  * <li>FR [ 1720995 ] Add PO.saveEx() and PO.deleteEx() methods
- * <li>BF [ 1990856 ] PO.set_Value* : truncate string more than needed
+ * <li>BF [ 1990856 ] PO.setValue* : truncate string more than needed
  * <li>FR [ 2042844 ] PO.get_Translation improvements
  * <li>FR [ 2818369 ] Implement PO.get_ValueAs*(columnName)
  * https://sourceforge.net/tracker/?func=detail&aid=2818369&group_id=176962&atid=879335
@@ -800,7 +800,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param AD_Org_ID org
      */
     public void setOrgId(int AD_Org_ID) {
-        set_ValueNoCheck("AD_Org_ID", AD_Org_ID);
+        setValueNoCheck("AD_Org_ID", AD_Org_ID);
     } //	setOrgId
 
     /**
@@ -1362,7 +1362,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param checkWritable
      * @return true if value set
      */
-    protected boolean set_Value(int index, Object value, boolean checkWritable) {
+    protected boolean setValue(int index, Object value, boolean checkWritable) {
         if (index < 0 || index >= get_ColumnCount()) {
             log.log(Level.WARNING, "Index invalid - " + index);
             return false;
@@ -1491,7 +1491,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param checkWritable
      * @return true if value set
      */
-    protected final boolean set_Value(String ColumnName, Object value, boolean checkWritable) {
+    protected final boolean setValue(String ColumnName, Object value, boolean checkWritable) {
         if (value instanceof String
                 && ColumnName.equals("WhereClause")
                 && value.toString().toUpperCase().contains("=NULL"))
@@ -1513,7 +1513,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             }
         }
 
-        return set_Value(index, value, checkWritable);
+        return setValue(index, value, checkWritable);
     } //  setValue
 
     /**
@@ -1523,8 +1523,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param value      value
      * @return true if value set
      */
-    protected boolean set_Value(String ColumnName, Object value) {
-        return set_Value(ColumnName, value, true);
+    protected boolean setValue(String ColumnName, Object value) {
+        return setValue(ColumnName, value, true);
     }
 
     /**
@@ -1533,7 +1533,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param active active
      */
     public final void setIsActive(boolean active) {
-        set_Value("IsActive", active);
+        setValue("IsActive", active);
     } //	setActive
 
     /**
@@ -1544,9 +1544,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param value      value
      * @return true if value set
      */
-    public final boolean set_ValueNoCheck(String ColumnName, Object value) {
-        return set_Value(ColumnName, value, false);
-    } //  set_ValueNoCheck
+    public final boolean setValueNoCheck(String ColumnName, Object value) {
+        return setValue(ColumnName, value, false);
+    } //  setValueNoCheck
 
     /*
      * Classes which override save() method:
@@ -1647,7 +1647,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 return saveFinish(true, false);
             }
             getIds()[0] = no;
-            set_ValueNoCheck(getM_keyColumns()[0], getIds()[0]);
+            setValueNoCheck(getM_keyColumns()[0], getIds()[0]);
         }
         // uuid secondary key
         int uuidIndex = p_info.getColumnIndex(getUUIDColumnName());
@@ -1655,7 +1655,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             String value = (String) getValue(uuidIndex);
             if (p_info.getColumn(uuidIndex).FieldLength == 36 && (value == null || value.length() == 0)) {
                 UUID uuid = UUID.randomUUID();
-                set_ValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
+                setValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
             }
         }
         if (log.isLoggable(Level.FINE))
@@ -1762,7 +1762,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 //	If no changes set UpdatedBy explicitly to ensure commit of lob
                 if (!changes && !updatedBy) {
                     int AD_User_ID = Env.getContextAsInt(getCtx(), "#AD_User_ID");
-                    set_ValueNoCheck("UpdatedBy", AD_User_ID);
+                    setValueNoCheck("UpdatedBy", AD_User_ID);
                     sql.append("UpdatedBy=").append(AD_User_ID);
                     changes = true;
                     updatedBy = true;
@@ -1863,7 +1863,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             if (!updated) //	Updated not explicitly set
             {
                 Timestamp now = new Timestamp(System.currentTimeMillis());
-                set_ValueNoCheck("Updated", now);
+                setValueNoCheck("Updated", now);
                 if (withValues) {
                     sql.append(",Updated=").append(TO_DATE(now, false));
                 } else {
@@ -1874,7 +1874,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             if (!updatedBy) //	UpdatedBy not explicitly set
             {
                 int AD_User_ID = Env.getContextAsInt(getCtx(), "#AD_User_ID");
-                set_ValueNoCheck("UpdatedBy", AD_User_ID);
+                setValueNoCheck("UpdatedBy", AD_User_ID);
                 if (withValues) {
                     sql.append(",UpdatedBy=").append(AD_User_ID);
                 } else {

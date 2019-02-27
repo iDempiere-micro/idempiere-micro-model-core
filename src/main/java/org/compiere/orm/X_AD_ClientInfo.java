@@ -72,8 +72,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
      * @param AD_Tree_Activity_ID Trees are used for (financial) reporting
      */
     public void setTreeActivityId(int AD_Tree_Activity_ID) {
-        if (AD_Tree_Activity_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, Integer.valueOf(AD_Tree_Activity_ID));
+        if (AD_Tree_Activity_ID < 1) setValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Tree_Activity_ID, Integer.valueOf(AD_Tree_Activity_ID));
     }
 
     /**
@@ -82,8 +82,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
      * @param AD_Tree_BPartner_ID Trees are used for (financial) reporting
      */
     public void setTreeBPartnerId(int AD_Tree_BPartner_ID) {
-        if (AD_Tree_BPartner_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, Integer.valueOf(AD_Tree_BPartner_ID));
+        if (AD_Tree_BPartner_ID < 1) setValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Tree_BPartner_ID, Integer.valueOf(AD_Tree_BPartner_ID));
     }
 
     /**
@@ -92,8 +92,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
      * @param AD_Tree_Campaign_ID Trees are used for (financial) reporting
      */
     public void setTreeCampaignId(int AD_Tree_Campaign_ID) {
-        if (AD_Tree_Campaign_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, Integer.valueOf(AD_Tree_Campaign_ID));
+        if (AD_Tree_Campaign_ID < 1) setValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Tree_Campaign_ID, Integer.valueOf(AD_Tree_Campaign_ID));
     }
 
     /**
@@ -102,8 +102,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
      * @param AD_Tree_Menu_ID Tree of the menu
      */
     public void setTreeMenuId(int AD_Tree_Menu_ID) {
-        if (AD_Tree_Menu_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, Integer.valueOf(AD_Tree_Menu_ID));
+        if (AD_Tree_Menu_ID < 1) setValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Tree_Menu_ID, Integer.valueOf(AD_Tree_Menu_ID));
     }
 
     /**
@@ -123,8 +123,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
      * @param AD_Tree_Org_ID Trees are used for (financial) reporting and security access (via role)
      */
     public void setTreeOrgId(int AD_Tree_Org_ID) {
-        if (AD_Tree_Org_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, Integer.valueOf(AD_Tree_Org_ID));
+        if (AD_Tree_Org_ID < 1) setValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Tree_Org_ID, Integer.valueOf(AD_Tree_Org_ID));
     }
 
     /**
@@ -133,8 +133,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
      * @param AD_Tree_Product_ID Trees are used for (financial) reporting
      */
     public void setTreeProductId(int AD_Tree_Product_ID) {
-        if (AD_Tree_Product_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, Integer.valueOf(AD_Tree_Product_ID));
+        if (AD_Tree_Product_ID < 1) setValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Tree_Product_ID, Integer.valueOf(AD_Tree_Product_ID));
     }
 
     /**
@@ -143,8 +143,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
      * @param AD_Tree_Project_ID Trees are used for (financial) reporting
      */
     public void setTreeProjectId(int AD_Tree_Project_ID) {
-        if (AD_Tree_Project_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, Integer.valueOf(AD_Tree_Project_ID));
+        if (AD_Tree_Project_ID < 1) setValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Tree_Project_ID, Integer.valueOf(AD_Tree_Project_ID));
     }
 
     /**
@@ -153,9 +153,9 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
      * @param AD_Tree_SalesRegion_ID Trees are used for (financial) reporting
      */
     public void setTreeSalesRegionId(int AD_Tree_SalesRegion_ID) {
-        if (AD_Tree_SalesRegion_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Tree_SalesRegion_ID, null);
+        if (AD_Tree_SalesRegion_ID < 1) setValueNoCheck(COLUMNNAME_AD_Tree_SalesRegion_ID, null);
         else
-            set_ValueNoCheck(COLUMNNAME_AD_Tree_SalesRegion_ID, Integer.valueOf(AD_Tree_SalesRegion_ID));
+            setValueNoCheck(COLUMNNAME_AD_Tree_SalesRegion_ID, Integer.valueOf(AD_Tree_SalesRegion_ID));
     }
 
     /**
@@ -230,7 +230,7 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
      * @param IsDiscountLineAmt Payment Discount calculation does not include Taxes and Charges
      */
     public void setIsDiscountLineAmt(boolean IsDiscountLineAmt) {
-        set_Value(COLUMNNAME_IsDiscountLineAmt, Boolean.valueOf(IsDiscountLineAmt));
+        setValue(COLUMNNAME_IsDiscountLineAmt, Boolean.valueOf(IsDiscountLineAmt));
     }
 
     /**

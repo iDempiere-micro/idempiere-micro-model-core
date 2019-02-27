@@ -15,7 +15,7 @@ abstract class BasePOName : PO {
     open var name: String
         get() = getValue(HasName.COLUMNNAME_Name) as String
         set(Name) {
-            set_Value(HasName.COLUMNNAME_Name, Name)
+            setValue(HasName.COLUMNNAME_Name, Name)
         }
 
     /** Get Record ID/ColumnName

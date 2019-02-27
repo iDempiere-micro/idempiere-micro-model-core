@@ -105,7 +105,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param AD_Client_ID client
      */
     public void setADClientID(int AD_Client_ID) {
-        set_ValueNoCheck("AD_Client_ID", new Integer(AD_Client_ID));
+        setValueNoCheck("AD_Client_ID", new Integer(AD_Client_ID));
     } //	setADClientID
 
     /**
@@ -155,7 +155,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                 return saveFinish(true, false);
             }
             getIds()[0] = new Integer(no);
-            set_ValueNoCheck(getM_keyColumns()[0], getIds()[0]);
+            setValueNoCheck(getM_keyColumns()[0], getIds()[0]);
         }
         // uuid secondary key
         int uuidIndex = p_info.getColumnIndex(getUUIDColumnName());
@@ -163,7 +163,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             String value = (String) getValue(uuidIndex);
             if (p_info.getColumn(uuidIndex).FieldLength == 36 && (value == null || value.length() == 0)) {
                 UUID uuid = UUID.randomUUID();
-                set_ValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
+                setValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
             }
         }
         if (log.isLoggable(Level.FINE))
@@ -182,7 +182,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                     value = MSequence.getDocumentNo(get_ValueAsInt(dt), null, false, this);
                 if (value == null) // 	not overwritten by DocType and not manually entered
                     value = MSequence.getDocumentNo(getClientId(), p_info.getTableName(), null, this);
-                set_ValueNoCheck(columnName, value);
+                setValueNoCheck(columnName, value);
             }
         }
 
@@ -509,7 +509,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param AD_User_ID user
      */
     protected void setUpdatedBy(int AD_User_ID) {
-        set_ValueNoCheck("UpdatedBy", new Integer(AD_User_ID));
+        setValueNoCheck("UpdatedBy", new Integer(AD_User_ID));
     } //	setUserId
 
     /**
@@ -548,8 +548,8 @@ public abstract class PO extends org.idempiere.orm.PO {
         int index = p_info.getColumnIndex(AD_Column_ID);
         if (index < 0) throw new AdempiereUserError("Not found - AD_Column_ID=" + AD_Column_ID);
         String ColumnName = p_info.getColumnName(index);
-        if (ColumnName.equals("IsApproved")) return set_ValueNoCheck(ColumnName, value);
-        else return set_Value(index, value);
+        if (ColumnName.equals("IsApproved")) return setValueNoCheck(ColumnName, value);
+        else return setValue(index, value);
     } //  setValueOfColumn
 
     /**
@@ -559,13 +559,13 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param value value
      * @return true if value set
      */
-    protected boolean set_Value(int index, Object value) {
-        return set_Value(index, value, true);
+    protected boolean setValue(int index, Object value) {
+        return setValue(index, value, true);
     }
 
     @Override
-    public boolean set_Value(String ColumnName, Object value) {
-        return super.set_Value(ColumnName, value);
+    public boolean setValue(String ColumnName, Object value) {
+        return super.setValue(ColumnName, value);
     }
 
     /**

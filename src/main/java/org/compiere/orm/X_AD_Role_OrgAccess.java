@@ -69,8 +69,8 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess {
      * @param AD_Role_ID Responsibility Role
      */
     public void setRoleId(int AD_Role_ID) {
-        if (AD_Role_ID < 0) set_ValueNoCheck(COLUMNNAME_AD_Role_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
+        if (AD_Role_ID < 0) setValueNoCheck(COLUMNNAME_AD_Role_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Role_ID, Integer.valueOf(AD_Role_ID));
     }
 
     /**
@@ -79,7 +79,7 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess {
      * @param IsReadOnly Field is read only
      */
     public void setIsReadOnly(boolean IsReadOnly) {
-        set_Value(COLUMNNAME_IsReadOnly, Boolean.valueOf(IsReadOnly));
+        setValue(COLUMNNAME_IsReadOnly, Boolean.valueOf(IsReadOnly));
     }
 
     /**

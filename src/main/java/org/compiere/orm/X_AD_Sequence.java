@@ -79,7 +79,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param CurrentNext The next number to be used
      */
     public void setCurrentNext(int CurrentNext) {
-        set_Value(COLUMNNAME_CurrentNext, Integer.valueOf(CurrentNext));
+        setValue(COLUMNNAME_CurrentNext, Integer.valueOf(CurrentNext));
     }
 
     /**
@@ -99,7 +99,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param CurrentNextSys Next sequence for system use
      */
     public void setCurrentNextSys(int CurrentNextSys) {
-        set_Value(COLUMNNAME_CurrentNextSys, Integer.valueOf(CurrentNextSys));
+        setValue(COLUMNNAME_CurrentNextSys, Integer.valueOf(CurrentNextSys));
     }
 
     /**
@@ -126,7 +126,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param Description Optional short description of the record
      */
     public void setDescription(String Description) {
-        set_Value(COLUMNNAME_Description, Description);
+        setValue(COLUMNNAME_Description, Description);
     }
 
     /**
@@ -146,7 +146,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param IncrementNo The number to increment the last document number by
      */
     public void setIncrementNo(int IncrementNo) {
-        set_Value(COLUMNNAME_IncrementNo, Integer.valueOf(IncrementNo));
+        setValue(COLUMNNAME_IncrementNo, Integer.valueOf(IncrementNo));
     }
 
     /**
@@ -155,7 +155,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param IsAudited Activate Audit Trail of what numbers are generated
      */
     public void setIsAudited(boolean IsAudited) {
-        set_Value(COLUMNNAME_IsAudited, Boolean.valueOf(IsAudited));
+        setValue(COLUMNNAME_IsAudited, Boolean.valueOf(IsAudited));
     }
 
     /**
@@ -164,7 +164,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param IsAutoSequence Automatically assign the next number
      */
     public void setIsAutoSequence(boolean IsAutoSequence) {
-        set_Value(COLUMNNAME_IsAutoSequence, Boolean.valueOf(IsAutoSequence));
+        setValue(COLUMNNAME_IsAutoSequence, Boolean.valueOf(IsAutoSequence));
     }
 
     /**
@@ -187,7 +187,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param IsTableID The document number will be used as the record key
      */
     public void setIsTableID(boolean IsTableID) {
-        set_Value(COLUMNNAME_IsTableID, Boolean.valueOf(IsTableID));
+        setValue(COLUMNNAME_IsTableID, Boolean.valueOf(IsTableID));
     }
 
     /**
@@ -242,7 +242,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param StartNewMonth Restart sequence every month
      */
     public void setStartNewMonth(boolean StartNewMonth) {
-        set_Value(COLUMNNAME_StartNewMonth, Boolean.valueOf(StartNewMonth));
+        setValue(COLUMNNAME_StartNewMonth, Boolean.valueOf(StartNewMonth));
     }
 
     /**
@@ -265,7 +265,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param StartNewYear Restart the sequence with Start on every 1/1
      */
     public void setStartNewYear(boolean StartNewYear) {
-        set_Value(COLUMNNAME_StartNewYear, Boolean.valueOf(StartNewYear));
+        setValue(COLUMNNAME_StartNewYear, Boolean.valueOf(StartNewYear));
     }
 
     /**
@@ -285,7 +285,7 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      * @param StartNo Starting number/position
      */
     public void setStartNo(int StartNo) {
-        set_Value(COLUMNNAME_StartNo, Integer.valueOf(StartNo));
+        setValue(COLUMNNAME_StartNo, Integer.valueOf(StartNo));
     }
 
     /**

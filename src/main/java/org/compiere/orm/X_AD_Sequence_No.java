@@ -56,8 +56,8 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No {
      * @param AD_Sequence_ID Document Sequence
      */
     public void setSequenceId(int AD_Sequence_ID) {
-        if (AD_Sequence_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
+        if (AD_Sequence_ID < 1) setValueNoCheck(COLUMNNAME_AD_Sequence_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Sequence_ID, Integer.valueOf(AD_Sequence_ID));
     }
 
     /**
@@ -66,7 +66,7 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No {
      * @param CalendarYearMonth YYYYMM
      */
     public void setCalendarYearMonth(String CalendarYearMonth) {
-        set_ValueNoCheck(COLUMNNAME_CalendarYearMonth, CalendarYearMonth);
+        setValueNoCheck(COLUMNNAME_CalendarYearMonth, CalendarYearMonth);
     }
 
     /**
@@ -75,7 +75,7 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No {
      * @param CurrentNext The next number to be used
      */
     public void setCurrentNext(int CurrentNext) {
-        set_Value(COLUMNNAME_CurrentNext, Integer.valueOf(CurrentNext));
+        setValue(COLUMNNAME_CurrentNext, Integer.valueOf(CurrentNext));
     }
 
     @Override

@@ -189,7 +189,7 @@ public class MRole extends MBaseRole {
             defaultRole = get(ctx, AD_Role_ID, AD_User_ID, reload);
             setDefaultRole(defaultRole);
         } else if (defaultRole.getRoleId() != AD_Role_ID
-                || defaultRole.getAD_User_ID() != AD_User_ID) {
+                || defaultRole.getUserId() != AD_User_ID) {
             defaultRole = get(ctx, AD_Role_ID, AD_User_ID, reload);
             setDefaultRole(defaultRole);
         }
@@ -227,7 +227,7 @@ public class MRole extends MBaseRole {
                 String trxName = null;
                 role.load(); // 	special Handling
             }
-            role.setAD_User_ID(AD_User_ID);
+            role.setUserId(AD_User_ID);
             role.loadAccess(reload);
             if (s_log.isLoggable(Level.INFO)) s_log.info(role.toString());
         }
@@ -245,7 +245,7 @@ public class MRole extends MBaseRole {
         return get(
                 ctx,
                 AD_Role_ID,
-                Env.getAD_User_ID(ctx),
+                Env.getUserId(ctx),
                 false); // metas-2009_0021_AP1_G94 - we need to use this method because we need to
         // load/reload all accesses
     /* metas-2009_0021_AP1_G94
@@ -705,7 +705,7 @@ public class MRole extends MBaseRole {
      *
      * @return AD_User_ID user requesting info
      */
-    public int getAD_User_ID() {
+    public int getUserId() {
         return m_AD_User_ID;
     } //	getUserId
 
@@ -714,7 +714,7 @@ public class MRole extends MBaseRole {
      *
      * @param AD_User_ID user requesting info
      */
-    public void setAD_User_ID(int AD_User_ID) {
+    public void setUserId(int AD_User_ID) {
         m_AD_User_ID = AD_User_ID;
     } //	setUserId
 
@@ -769,7 +769,7 @@ public class MRole extends MBaseRole {
         String sql = "SELECT * FROM AD_User_OrgAccess " + "WHERE AD_User_ID=? AND IsActive='Y'";
         try {
             pstmt = prepareStatement(sql);
-            pstmt.setInt(1, getAD_User_ID());
+            pstmt.setInt(1, getUserId());
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 MUserOrgAccess oa = new MUserOrgAccess(getCtx(), rs);
@@ -1844,7 +1844,7 @@ public class MRole extends MBaseRole {
      */
     private void loadChildRoles(boolean reload) {
         m_includedRoles = null; // reset included roles
-        final int AD_User_ID = getAD_User_ID();
+        final int AD_User_ID = getUserId();
         if (AD_User_ID < 0) {
             // throw new IllegalStateException("AD_User_ID is not set");
             return;
@@ -1878,7 +1878,7 @@ public class MRole extends MBaseRole {
             return;
         }
         //
-        final int AD_User_ID = getAD_User_ID();
+        final int AD_User_ID = getUserId();
         if (AD_User_ID < 0) {
             // throw new IllegalStateException("AD_User_ID is not set");
             return;
@@ -1911,7 +1911,7 @@ public class MRole extends MBaseRole {
      * @see metas-2009_0021_AP1_G94
      */
     private void setParentRole(MRole parent) {
-        this.setAD_User_ID(parent.getAD_User_ID());
+        this.setUserId(parent.getUserId());
         this.m_parent = parent;
     }
 

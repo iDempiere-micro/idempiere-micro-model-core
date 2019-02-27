@@ -67,8 +67,8 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn {
      * @param AD_Column_ID Column in the table
      */
     public void setColumnId(int AD_Column_ID) {
-        if (AD_Column_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_Column_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_Column_ID, Integer.valueOf(AD_Column_ID));
+        if (AD_Column_ID < 1) setValueNoCheck(COLUMNNAME_AD_Column_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_Column_ID, Integer.valueOf(AD_Column_ID));
     }
 
     /**
@@ -77,8 +77,8 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn {
      * @param AD_TableIndex_ID Table Index
      */
     public void setTableIndexId(int AD_TableIndex_ID) {
-        if (AD_TableIndex_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_TableIndex_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_TableIndex_ID, Integer.valueOf(AD_TableIndex_ID));
+        if (AD_TableIndex_ID < 1) setValueNoCheck(COLUMNNAME_AD_TableIndex_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_TableIndex_ID, Integer.valueOf(AD_TableIndex_ID));
     }
 
     /**
@@ -96,7 +96,7 @@ public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn {
      * @param SeqNo Method of ordering records; lowest number comes first
      */
     public void setSeqNo(int SeqNo) {
-        set_Value(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
+        setValue(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
     }
 
     @Override

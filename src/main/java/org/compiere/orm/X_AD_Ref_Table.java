@@ -75,7 +75,7 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table {
      */
     public void setEntityType(String EntityType) {
 
-        set_Value(COLUMNNAME_EntityType, EntityType);
+        setValue(COLUMNNAME_EntityType, EntityType);
     }
 
     /**
@@ -84,7 +84,7 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table {
      * @param IsValueDisplayed Displays Value column with the Display column
      */
     public void setIsValueDisplayed(boolean IsValueDisplayed) {
-        set_Value(COLUMNNAME_IsValueDisplayed, Boolean.valueOf(IsValueDisplayed));
+        setValue(COLUMNNAME_IsValueDisplayed, Boolean.valueOf(IsValueDisplayed));
     }
 
     @Override

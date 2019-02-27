@@ -92,7 +92,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      */
     public void setTableAccessLevel(String AccessLevel) {
 
-        set_Value(COLUMNNAME_AccessLevel, AccessLevel);
+        setValue(COLUMNNAME_AccessLevel, AccessLevel);
     }
 
     /**
@@ -148,7 +148,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      */
     public void setEntityType(String EntityType) {
 
-        set_Value(COLUMNNAME_EntityType, EntityType);
+        setValue(COLUMNNAME_EntityType, EntityType);
     }
 
     /**
@@ -166,7 +166,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      * @param IsChangeLog Maintain a log of changes
      */
     public void setIsChangeLog(boolean IsChangeLog) {
-        set_Value(COLUMNNAME_IsChangeLog, Boolean.valueOf(IsChangeLog));
+        setValue(COLUMNNAME_IsChangeLog, Boolean.valueOf(IsChangeLog));
     }
 
     /**
@@ -175,7 +175,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      * @param IsDeleteable Indicates if records can be deleted from the database
      */
     public void setIsDeleteable(boolean IsDeleteable) {
-        set_Value(COLUMNNAME_IsDeleteable, Boolean.valueOf(IsDeleteable));
+        setValue(COLUMNNAME_IsDeleteable, Boolean.valueOf(IsDeleteable));
     }
 
     /**
@@ -198,7 +198,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      * @param IsHighVolume Use Search instead of Pick list
      */
     public void setIsHighVolume(boolean IsHighVolume) {
-        set_Value(COLUMNNAME_IsHighVolume, Boolean.valueOf(IsHighVolume));
+        setValue(COLUMNNAME_IsHighVolume, Boolean.valueOf(IsHighVolume));
     }
 
     /**
@@ -208,7 +208,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      *                          Roles
      */
     public void setIsSecurityEnabled(boolean IsSecurityEnabled) {
-        set_Value(COLUMNNAME_IsSecurityEnabled, Boolean.valueOf(IsSecurityEnabled));
+        setValue(COLUMNNAME_IsSecurityEnabled, Boolean.valueOf(IsSecurityEnabled));
     }
 
     /**
@@ -217,7 +217,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      * @param IsView This is a view
      */
     public void setIsView(boolean IsView) {
-        set_Value(COLUMNNAME_IsView, Boolean.valueOf(IsView));
+        setValue(COLUMNNAME_IsView, Boolean.valueOf(IsView));
     }
 
     /**
@@ -250,7 +250,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      */
     public void setReplicationType(String ReplicationType) {
 
-        set_Value(COLUMNNAME_ReplicationType, ReplicationType);
+        setValue(COLUMNNAME_ReplicationType, ReplicationType);
     }
 
     /**

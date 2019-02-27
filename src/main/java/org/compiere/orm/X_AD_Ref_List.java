@@ -53,7 +53,7 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List {
      */
     public void setEntityType(String EntityType) {
 
-        set_Value(COLUMNNAME_EntityType, EntityType);
+        setValue(COLUMNNAME_EntityType, EntityType);
     }
 
     @Override

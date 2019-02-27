@@ -329,7 +329,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         }
     } // 	setKeyInfo
 
-    protected fun loadSpecial(rs: Row, index: Int): Any? {
+    open fun loadSpecial(rs: Row, index: Int): Any? {
         log.trace { "(NOP) - " + p_info.getColumnName(index)!! }
         return null
     } //  loadSpecial

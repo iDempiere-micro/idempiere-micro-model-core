@@ -64,8 +64,8 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess {
      * @param AD_User_ID User within the system - Internal or Business Partner Contact
      */
     public void setUserId(int AD_User_ID) {
-        if (AD_User_ID < 1) set_ValueNoCheck(COLUMNNAME_AD_User_ID, null);
-        else set_ValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
+        if (AD_User_ID < 1) setValueNoCheck(COLUMNNAME_AD_User_ID, null);
+        else setValueNoCheck(COLUMNNAME_AD_User_ID, Integer.valueOf(AD_User_ID));
     }
 
     /**
@@ -74,7 +74,7 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess {
      * @param IsReadOnly Field is read only
      */
     public void setIsReadOnly(boolean IsReadOnly) {
-        set_Value(COLUMNNAME_IsReadOnly, Boolean.valueOf(IsReadOnly));
+        setValue(COLUMNNAME_IsReadOnly, Boolean.valueOf(IsReadOnly));
     }
 
     /**

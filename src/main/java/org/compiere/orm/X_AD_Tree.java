@@ -168,7 +168,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree {
      * @param IsAllNodes All Nodes are included (Complete Tree)
      */
     public void setIsAllNodes(boolean IsAllNodes) {
-        set_Value(COLUMNNAME_IsAllNodes, Boolean.valueOf(IsAllNodes));
+        setValue(COLUMNNAME_IsAllNodes, Boolean.valueOf(IsAllNodes));
     }
 
     /**
@@ -191,7 +191,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree {
      * @param IsDefault Default value
      */
     public void setIsDefault(boolean IsDefault) {
-        set_Value(COLUMNNAME_IsDefault, Boolean.valueOf(IsDefault));
+        setValue(COLUMNNAME_IsDefault, Boolean.valueOf(IsDefault));
     }
 
     /**
@@ -200,7 +200,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree {
      * @param IsTreeDrivenByValue Driven by Search Key
      */
     public void setIsTreeDrivenByValue(boolean IsTreeDrivenByValue) {
-        set_Value(COLUMNNAME_IsTreeDrivenByValue, Boolean.valueOf(IsTreeDrivenByValue));
+        setValue(COLUMNNAME_IsTreeDrivenByValue, Boolean.valueOf(IsTreeDrivenByValue));
     }
 
     /**
@@ -233,7 +233,7 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree {
      */
     public void setTreeType(String TreeType) {
 
-        set_ValueNoCheck(COLUMNNAME_TreeType, TreeType);
+        setValueNoCheck(COLUMNNAME_TreeType, TreeType);
     }
 
     @Override

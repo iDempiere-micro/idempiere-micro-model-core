@@ -79,7 +79,7 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig {
      */
     public void setConfigurationLevel(String ConfigurationLevel) {
 
-        set_Value(COLUMNNAME_ConfigurationLevel, ConfigurationLevel);
+        setValue(COLUMNNAME_ConfigurationLevel, ConfigurationLevel);
     }
 
     /**

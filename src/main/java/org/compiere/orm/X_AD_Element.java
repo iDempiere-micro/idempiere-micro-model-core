@@ -77,7 +77,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element {
      * @param ColumnName Name of the column in the database
      */
     public void setColumnName(String ColumnName) {
-        set_Value(COLUMNNAME_ColumnName, ColumnName);
+        setValue(COLUMNNAME_ColumnName, ColumnName);
     }
 
     /**
@@ -95,7 +95,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element {
      * @param Description Optional short description of the record
      */
     public void setDescription(String Description) {
-        set_Value(COLUMNNAME_Description, Description);
+        setValue(COLUMNNAME_Description, Description);
     }
 
     /**
@@ -105,7 +105,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element {
      */
     public void setEntityType(String EntityType) {
 
-        set_Value(COLUMNNAME_EntityType, EntityType);
+        setValue(COLUMNNAME_EntityType, EntityType);
     }
 
     /**
@@ -123,7 +123,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element {
      * @param Help Comment or Hint
      */
     public void setHelp(String Help) {
-        set_Value(COLUMNNAME_Help, Help);
+        setValue(COLUMNNAME_Help, Help);
     }
 
     /**
@@ -141,7 +141,7 @@ public class X_AD_Element extends BasePOName implements I_AD_Element {
      * @param PrintName The label text to be printed on a document or correspondence.
      */
     public void setPrintName(String PrintName) {
-        set_Value(COLUMNNAME_PrintName, PrintName);
+        setValue(COLUMNNAME_PrintName, PrintName);
     }
 
     @Override
