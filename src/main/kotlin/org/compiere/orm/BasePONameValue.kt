@@ -11,18 +11,10 @@ abstract class BasePONameValue : BasePOName {
     constructor (ctx: Properties, rs: ResultSet, a: String?) : super(ctx, rs, a)
     constructor(ctx: Properties, r: Row) : super(ctx, r)
 
-    /** Set Search Key.
-     * @param Value
-     * Search key for the record in the format required - must be unique
-     */
-    open fun setSearchKey(Value: String) {
-        setValue(COLUMNNAME_Value, Value)
-    }
+    open protected fun doGetSearchKey() = getValue(COLUMNNAME_Value) as String
+    open protected fun doSetSearchKey(Value: String) { setValue(COLUMNNAME_Value, Value) }
 
-    /** Get Search Key.
-     * @return Search key for the record in the format required - must be unique
-     */
-    open fun getSearchKey(): String {
-        return getValue(COLUMNNAME_Value) as String
-    }
+    open var searchKey: String
+        get() = doGetSearchKey()
+        set(Value) = doSetSearchKey(Value)
 }
