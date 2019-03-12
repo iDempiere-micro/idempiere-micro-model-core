@@ -2,7 +2,11 @@ package org.idempiere.common.util;
 
 import java.beans.VetoableChangeSupport;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Cache for table.

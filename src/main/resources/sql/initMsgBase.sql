@@ -1,1 +1,2 @@
-SELECT Value, MsgText, MsgTip FROM AD_Message
+SELECT Value, MsgText, MsgTip
+FROM AD_Message

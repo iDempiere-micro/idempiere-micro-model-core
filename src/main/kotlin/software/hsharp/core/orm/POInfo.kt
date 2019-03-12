@@ -8,7 +8,7 @@ import org.idempiere.common.exceptions.AdempiereException
 import org.idempiere.common.util.Env
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
-import java.util.*
+import java.util.Properties
 
 data class POInfoDetail(
     val tableName: String,
@@ -221,6 +221,4 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
     fun isColumnParent(index: Int): Boolean {
         return if (index < 0 || index >= columns.size) false else columns[index].IsParent
     } //  isColumnParent
-
-
 }

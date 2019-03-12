@@ -4,7 +4,7 @@ import kotliquery.Row
 import org.compiere.model.HasName
 import org.idempiere.common.util.KeyNamePair
 import java.sql.ResultSet
-import java.util.*
+import java.util.Properties
 
 abstract class BasePOName : PO {
     constructor(ctx: Properties, ID: Int) : super(ctx, ID)

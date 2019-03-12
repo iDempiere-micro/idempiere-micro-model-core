@@ -9,7 +9,7 @@ import software.hsharp.core.util.DB
 import software.hsharp.core.util.queryOf
 import java.io.Serializable
 import java.sql.ResultSet
-import java.util.*
+import java.util.Properties
 import java.util.logging.Level
 
 fun getOfClient(ctx: Properties): kotlin.Array<MRole> {

@@ -8,7 +8,7 @@ import org.idempiere.common.util.CCache
 import org.idempiere.common.util.Env
 import org.idempiere.common.util.Util
 import org.idempiere.icommon.model.IPO
-import java.util.*
+import java.util.Properties
 import kotlin.collections.set
 
 private val log = KotlinLogging.logger {}
@@ -85,11 +85,11 @@ abstract class DefaultBaseModelFactory : IModelFactory {
                 log.trace("Use: $className")
                 return clazz
             } else {
-                //log.trace("Not found IPO-assignable: $className")
+                // log.trace("Not found IPO-assignable: $className")
                 return null
             }
         } catch (e: Exception) {
-            //log.trace("Not found: $className with $e")
+            // log.trace("Not found: $className with $e")
         }
 
         return null

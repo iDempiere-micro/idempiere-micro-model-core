@@ -3,7 +3,7 @@ package org.compiere.orm
 import kotliquery.Row
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.queryOf
-import java.util.*
+import java.util.Properties
 
 fun checkClientSequences(ctx: Properties, clientId: Int): Boolean {
     val sql = """

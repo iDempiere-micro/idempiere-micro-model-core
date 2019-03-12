@@ -13,7 +13,8 @@ import software.hsharp.core.util.queryOf
 import java.sql.ResultSet
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Properties
 
 fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
     return "/sql/checkClientSequences.sql".asResource { sql ->

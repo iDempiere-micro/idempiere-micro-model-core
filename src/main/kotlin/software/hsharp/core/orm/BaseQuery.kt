@@ -9,7 +9,7 @@ import org.idempiere.common.util.Env
 import org.idempiere.icommon.model.IPO
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.convert
-import java.util.*
+import java.util.Properties
 
 abstract class BaseQuery(val ctx: Properties, val table: MTable) {
     protected abstract fun buildSQL(selectClause: StringBuilder?, useOrderByClause: Boolean): String

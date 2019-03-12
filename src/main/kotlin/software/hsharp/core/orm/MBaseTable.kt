@@ -7,7 +7,7 @@ import org.compiere.orm.*
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
 import java.sql.ResultSet
-import java.util.*
+import java.util.Properties
 import kotlin.collections.set
 
 internal val tableCache = CCache<Int, MTable>(I_AD_Table.Table_Name, 20)

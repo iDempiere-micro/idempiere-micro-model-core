@@ -7,7 +7,7 @@ import org.compiere.orm.X_AD_SysConfig
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
 import java.sql.ResultSet
-import java.util.*
+import java.util.Properties
 
 /** Cache  */
 internal val sysConfigCache = CCache<String, String>(I_AD_SysConfig.Table_Name, 40, 0, true)

@@ -8,8 +8,17 @@ import org.compiere.util.DisplayType;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.*;
+import org.idempiere.common.util.CCache;
+import org.idempiere.common.util.CLogMgt;
+import org.idempiere.common.util.CLogger;
+import org.idempiere.common.util.CacheMgt;
+import org.idempiere.common.util.Env;
+import org.idempiere.common.util.Evaluatee;
+import org.idempiere.common.util.SecureEngine;
+import org.idempiere.common.util.Trace;
+import org.idempiere.common.util.ValueNamePair;
 import org.idempiere.icommon.model.IPO;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import software.hsharp.core.util.DB;
@@ -29,12 +38,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import static kotliquery.PackageKt.queryOf;
 import static software.hsharp.core.orm.POKt.I_ZERO;
-import static software.hsharp.core.util.DBKt.*;
+import static software.hsharp.core.util.DBKt.TO_DATE;
+import static software.hsharp.core.util.DBKt.TO_STRING;
+import static software.hsharp.core.util.DBKt.executeUpdate;
+import static software.hsharp.core.util.DBKt.executeUpdateEx;
+import static software.hsharp.core.util.DBKt.getSQLValueEx;
+import static software.hsharp.core.util.DBKt.getSQLValueString;
+import static software.hsharp.core.util.DBKt.isQueryTimeoutSupported;
 
 /**
  * Persistent Object. Superclass for actual implementations
@@ -389,7 +410,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param columnName column name
      * @return value or null
      */
-    public final Object getValue(String columnName) {
+    public final Object getValue(@NotNull String columnName) {
         int index = getColumnIndex(columnName);
         if (index < 0) {
             log.log(Level.WARNING, "Column not found - " + columnName);
