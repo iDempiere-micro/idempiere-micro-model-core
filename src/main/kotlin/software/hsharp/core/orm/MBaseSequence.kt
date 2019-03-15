@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Properties
 
-fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
+internal fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
     return "/sql/checkClientSequences.sql".asResource { sql ->
         val loadQuery =
             queryOf(sql, listOf(clientId))
@@ -35,7 +35,7 @@ private data class GetNextIDImplResult(
     )
 }
 
-fun doGetNextIDImpl(tableName: String): Int {
+internal fun doGetNextIDImpl(tableName: String): Int {
     if (tableName.isEmpty())
         throw IllegalArgumentException("TableName missing")
 
@@ -168,7 +168,7 @@ const val PREFIX_DOCSEQ = "DocumentNo_"
  * @param tableID
  * @return Sequence
  */
-fun get(ctx: Properties, tableName: String, tableID: Boolean): MSequence? {
+internal fun get(ctx: Properties, tableName: String, tableID: Boolean): MSequence? {
     val realTableName =
         if (!tableID) {
             PREFIX_DOCSEQ + tableName

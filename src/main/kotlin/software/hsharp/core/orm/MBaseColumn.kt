@@ -4,7 +4,7 @@ import kotliquery.queryOf
 import org.compiere.orm.MTable
 import software.hsharp.core.util.DB
 
-fun getColumnId(tableName: String, columnName: String): Int {
+internal fun getColumnId(tableName: String, columnName: String): Int {
     val tableId = MTable.getTable_ID(tableName)
     if (tableId == 0) return 0
 

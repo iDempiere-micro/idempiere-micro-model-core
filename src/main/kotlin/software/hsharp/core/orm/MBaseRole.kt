@@ -11,7 +11,7 @@ import java.io.Serializable
 import java.util.Properties
 import java.util.logging.Level
 
-fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
+internal fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
     val sql = "SELECT * FROM AD_Role WHERE AD_Client_ID=?"
     val loadQuery = queryOf(sql, listOf(Env.getClientId(ctx))).map { MRole(ctx, it) }.asList
     return DB.current.run(loadQuery).toTypedArray()
@@ -24,7 +24,7 @@ fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
  * @param whereClause where clause
  * @return roles of client
  */
-fun getOf(ctx: Properties, whereClause: String?): List<MRole> {
+internal fun getOf(ctx: Properties, whereClause: String?): List<MRole> {
     var sql = "SELECT * FROM AD_Role"
     if (whereClause != null && whereClause.length > 0) sql += " WHERE $whereClause"
 

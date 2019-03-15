@@ -25,7 +25,7 @@ internal val tableCache = CCache<Int, MTable>(I_AD_Table.Table_Name, 20)
  * @param tableName case insensitive table name
  * @return Table
  */
-fun get(ctx: Properties, tableName: String?): MTable? {
+internal fun get(ctx: Properties, tableName: String?): MTable? {
     if (tableName == null) return null
     for (retValue in tableCache.values) {
         if (tableName.equals(retValue.dbTableName, ignoreCase = true) && retValue.ctx === ctx) {
@@ -44,7 +44,7 @@ fun get(ctx: Properties, tableName: String?): MTable? {
     return retValue
 } // 	get
 
-fun getFactoryList(): Array<IModelFactory>? {
+internal fun getFactoryList(): Array<IModelFactory>? {
     return arrayOf(DefaultModelFactory())
 }
 
