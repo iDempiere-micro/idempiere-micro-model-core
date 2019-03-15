@@ -6,7 +6,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.idempiere.orm.POInfo;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -31,7 +30,7 @@ public class GenericPO extends PO {
      * @param ID
      */
     public GenericPO(String tableName, Properties ctx, int ID) {
-        super(new PropertiesWrapper(ctx, tableName), ID, null);
+        super(new PropertiesWrapper(ctx, tableName), ID);
     }
 
     /**
@@ -39,10 +38,6 @@ public class GenericPO extends PO {
      * @param ctx
      * @param rs
      */
-    public GenericPO(String tableName, Properties ctx, ResultSet rs) {
-        super(new PropertiesWrapper(ctx, tableName), 0, rs);
-    }
-
     public GenericPO(String tableName, Properties ctx, Row row) {
         super(new PropertiesWrapper(ctx, tableName), row);
     }

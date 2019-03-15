@@ -1,6 +1,7 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
+import kotliquery.Row;
+
 import java.util.Properties;
 
 public class MIndexColumn extends X_AD_IndexColumn {
@@ -28,8 +29,8 @@ public class MIndexColumn extends X_AD_IndexColumn {
      * @param rs      result set
      * @param trxName trx name
      */
-    public MIndexColumn(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MIndexColumn(Properties ctx, Row row) {
+        super(ctx, row);
     }
 
     /**

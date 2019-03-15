@@ -12,7 +12,6 @@ import org.idempiere.common.util.Util;
 import org.idempiere.orm.PO;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -75,10 +74,6 @@ public class MColumn extends X_AD_Column {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MColumn(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MColumn
-
     public MColumn(Properties ctx, Row row) {
         super(ctx, row);
     }

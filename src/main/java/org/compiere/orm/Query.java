@@ -13,12 +13,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import static software.hsharp.core.util.DBKt.*;
+import static software.hsharp.core.util.DBKt.addPagingSQL;
+import static software.hsharp.core.util.DBKt.isPagingSupported;
+import static software.hsharp.core.util.DBKt.isPostgreSQL;
+import static software.hsharp.core.util.DBKt.prepareStatement;
+import static software.hsharp.core.util.DBKt.setParameter;
 
 /**
  * @author Low Heng Sin
@@ -308,80 +311,6 @@ public class Query extends BaseQuery {
         } finally {
         }
         return false;
-    }
-
-    /**
-     * Return an Iterator implementation to fetch one PO at a time. The implementation first retrieve
-     * all IDS that match the query criteria and issue sql query to fetch the PO when caller want to
-     * fetch the next PO. This minimize memory usage but it is slower than the list method.
-     *
-     * @return Iterator
-     * @throws DBException
-     */
-    public <T extends PO> Iterator<T> iterate() throws DBException {
-        MTable table = super.getTable();
-        String[] keys = table.getTableKeyColumns();
-        StringBuilder sqlBuffer = new StringBuilder(" SELECT ");
-        for (int i = 0; i < keys.length; i++) {
-            if (i > 0) sqlBuffer.append(", ");
-            if (!joinClauseList.isEmpty()) sqlBuffer.append(table.getDbTableName()).append(".");
-            sqlBuffer.append(keys[i]);
-        }
-        sqlBuffer.append(" FROM ").append(table.getDbTableName());
-        String sql = buildSQL(sqlBuffer, true);
-
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        List<Object[]> idList = new ArrayList<Object[]>();
-        try {
-            pstmt = prepareStatement(sql);
-            rs = createResultSet(pstmt);
-            while (rs.next()) {
-                Object[] ids = new Object[keys.length];
-                for (int i = 0; i < ids.length; i++) {
-                    ids[i] = rs.getObject(i + 1);
-                }
-                idList.add(ids);
-            }
-        } catch (SQLException e) {
-            log.log(Level.SEVERE, sql, e);
-            throw new DBException(e, sql);
-        } finally {
-            rs = null;
-            pstmt = null;
-        }
-        return new POIterator<T>(table, idList);
-    }
-
-    /**
-     * Return a simple wrapper over a jdbc resultset. It is the caller responsibility to call the
-     * close method to release the underlying database resources.
-     *
-     * @return POResultSet
-     * @throws DBException
-     */
-    public <T extends PO> POResultSet<T> scroll() throws DBException {
-        MTable table = super.getTable();
-        String sql = buildSQL(null, true);
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        POResultSet<T> rsPO = null;
-        try {
-            pstmt = prepareStatement(sql);
-            rs = createResultSet(pstmt);
-            rsPO = new POResultSet<T>(table, pstmt, rs);
-            rsPO.setCloseOnError(true);
-            return rsPO;
-        } catch (SQLException e) {
-            log.log(Level.SEVERE, sql, e);
-            throw new DBException(e, sql);
-        } finally {
-            // If there was an error, then close the statement and resultset
-            if (rsPO == null) {
-                rs = null;
-                pstmt = null;
-            }
-        }
     }
 
     /**

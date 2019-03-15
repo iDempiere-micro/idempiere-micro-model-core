@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Role_OrgAccess;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -30,10 +29,6 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess {
     /**
      * Load Constructor
      */
-    public X_AD_Role_OrgAccess(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
-
     public X_AD_Role_OrgAccess(Properties ctx, Row row) {
         super(ctx, row);
     } //	MRoleOrgAccess

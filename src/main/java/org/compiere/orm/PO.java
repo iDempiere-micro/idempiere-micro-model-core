@@ -5,19 +5,26 @@ import org.compiere.model.I_C_ElementValue;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
-import org.idempiere.common.util.*;
+import org.idempiere.common.util.AdempiereUserError;
+import org.idempiere.common.util.CLogger;
+import org.idempiere.common.util.CacheMgt;
+import org.idempiere.common.util.Env;
+import org.idempiere.common.util.ValueNamePair;
 import org.idempiere.icommon.model.IPO;
 import org.idempiere.orm.Null;
 import org.idempiere.orm.POInfo;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 
 import static software.hsharp.core.orm.POKt.I_ZERO;
-import static software.hsharp.core.util.DBKt.*;
+import static software.hsharp.core.util.DBKt.executeUpdate;
+import static software.hsharp.core.util.DBKt.executeUpdateEx;
+import static software.hsharp.core.util.DBKt.getSQLValue;
+import static software.hsharp.core.util.DBKt.getSQLValueEx;
+import static software.hsharp.core.util.DBKt.isGenerateUUIDSupported;
 
 public abstract class PO extends org.idempiere.orm.PO {
     /**
@@ -25,24 +32,12 @@ public abstract class PO extends org.idempiere.orm.PO {
      */
     protected MAttachment m_attachment = null;
 
-    public PO(Properties ctx) {
-        super(ctx);
-    }
-
     public PO(Properties ctx, int ID) {
         super(ctx, ID);
     }
 
-    public PO(Properties ctx, ResultSet rs) {
-        super(ctx, rs, null);
-    }
-
-    public PO(Properties ctx, ResultSet rs, String columnNamePrefix) {
-        super(ctx, rs, columnNamePrefix);
-    }
-
-    public PO(Properties ctx, int ID, ResultSet rs) {
-        super(ctx, ID, rs, null);
+    public PO(Properties ctx, String columnNamePrefix) {
+        super(ctx, columnNamePrefix);
     }
 
     public PO(Properties ctx, Row row) {

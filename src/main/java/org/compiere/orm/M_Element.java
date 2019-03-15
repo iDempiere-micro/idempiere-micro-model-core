@@ -6,11 +6,12 @@ import org.compiere.model.I_AD_Element;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.DBException;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import static software.hsharp.core.util.DBKt.*;
+import static software.hsharp.core.util.DBKt.TO_STRING;
+import static software.hsharp.core.util.DBKt.executeUpdate;
+import static software.hsharp.core.util.DBKt.getSQLValue;
 
 /**
  * System Element Model
@@ -43,9 +44,6 @@ public class M_Element extends X_AD_Element {
         }
     } //	M_Element
 
-    public M_Element(Properties ctx, Row row) {
-        super(ctx, row);
-    }
 
     /**
      * Load Constructor
@@ -54,9 +52,9 @@ public class M_Element extends X_AD_Element {
      * @param rs      result set
      * @param trxName transaction
      */
-    public M_Element(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	M_Element
+    public M_Element(Properties ctx, Row row) {
+        super(ctx, row);
+    }
 
     /**
      * Minimum Constructor

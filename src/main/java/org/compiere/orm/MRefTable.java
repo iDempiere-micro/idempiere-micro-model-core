@@ -1,9 +1,9 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.I_AD_Table;
 import org.idempiere.orm.PO;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 public class MRefTable extends X_AD_Ref_Table {
@@ -38,8 +38,8 @@ public class MRefTable extends X_AD_Ref_Table {
      * @param rs      result set
      * @param trxName trx
      */
-    public MRefTable(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MRefTable(Properties ctx, Row row) {
+        super(ctx, row);
     } //	MRefTable
 
     @Override

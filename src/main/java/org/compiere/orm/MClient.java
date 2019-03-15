@@ -7,7 +7,6 @@ import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Language;
 
 import java.io.File;
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -81,10 +80,6 @@ public class MClient extends X_AD_Client {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MClient(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MClient
-
     public MClient(Properties ctx, Row row) {
         super(ctx, row);
     } //	MClient

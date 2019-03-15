@@ -2,7 +2,6 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.orm.POInfo;
 import software.hsharp.core.orm.MBaseTable;
 import software.hsharp.core.orm.MBaseTableKt;
 
@@ -55,7 +54,6 @@ public class MTable extends MBaseTable {
      *
      * @param ctx         context
      * @param AD_Table_ID id
-     * @param trxName     transaction
      */
     public MTable(Properties ctx, int AD_Table_ID) {
         super(ctx, AD_Table_ID);
@@ -76,14 +74,9 @@ public class MTable extends MBaseTable {
     /**
      * Load Constructor
      *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
+     * @param ctx context
+     * @param rs  result set
      */
-    public MTable(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MTable
-
     public MTable(Properties ctx, Row row) {
         super(ctx, row);
     }
@@ -93,7 +86,6 @@ public class MTable extends MBaseTable {
      *
      * @param ctx         context
      * @param AD_Table_ID id
-     * @param trxName     transaction
      * @return MTable
      */
     public static MTable get(Properties ctx, int AD_Table_ID) {
@@ -201,9 +193,9 @@ public class MTable extends MBaseTable {
      * @return index of column with ColumnName or -1 if not found
      */
     public synchronized int getDbColumnIndex(String ColumnName) {
-        MColumn[] m_columns = super.getM_columns();
+        MColumn[] m_columns = super.getColumns();
         if (m_columns == null) getColumns(false);
-        Integer i = getM_columnNameMap().get(ColumnName.toUpperCase());
+        Integer i = getColumnNameMap().get(ColumnName.toUpperCase());
         if (i != null) return i.intValue();
 
         return -1;
@@ -242,7 +234,6 @@ public class MTable extends MBaseTable {
      * ************************************************************************ Get PO Class Instance
      *
      * @param Record_ID record
-     * @param trxName
      * @return PO for Record or null
      */
     public org.idempiere.orm.PO getPO(int Record_ID) {
@@ -275,73 +266,6 @@ public class MTable extends MBaseTable {
 
         return po;
     } //	getPO
-
-    /**
-     * Get PO Class Instance
-     *
-     * @param rs      result set
-     * @param trxName transaction
-     * @return PO for Record or null
-     */
-    public org.idempiere.orm.PO getPO(ResultSet rs) {
-        String tableName = getDbTableName();
-
-        org.idempiere.orm.PO po = null;
-        IModelFactory[] factoryList = getFactoryList();
-        if (factoryList != null) {
-            for (IModelFactory factory : factoryList) {
-                po = factory.getPO(tableName, rs);
-                if (po != null) break;
-            }
-        }
-
-        if (po == null) {
-            po = new GenericPO(tableName, getCtx(), rs);
-        }
-
-        return po;
-    } //	getPO
-
-    /**
-     * Get PO class instance
-     *
-     * @param whereClause
-     * @param params
-     * @param trxName
-     * @return
-     */
-    public org.idempiere.orm.PO getPO(String whereClause, Object[] params) {
-        if (whereClause == null || whereClause.length() == 0) return null;
-        //
-        org.idempiere.orm.PO po = null;
-        POInfo info = POInfo.getPOInfo(getCtx(), getTableTableId());
-        if (info == null) return null;
-        StringBuilder sqlBuffer = info.buildSelect();
-        sqlBuffer.append(" WHERE ").append(whereClause);
-        String sql = sqlBuffer.toString();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            pstmt = prepareStatement(sql);
-            if (params != null && params.length > 0) {
-                for (int i = 0; i < params.length; i++) {
-                    pstmt.setObject(i + 1, params[i]);
-                }
-            }
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                po = getPO(rs);
-            }
-        } catch (Exception e) {
-            log.log(Level.SEVERE, sql, e);
-            log.saveError("Error", e);
-        } finally {
-            rs = null;
-            pstmt = null;
-        }
-
-        return po;
-    }
 
     /**
      * Before Save

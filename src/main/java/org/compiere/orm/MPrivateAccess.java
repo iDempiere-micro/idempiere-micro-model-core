@@ -1,6 +1,7 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
+import kotliquery.Row;
+
 import java.util.Properties;
 
 /**
@@ -34,8 +35,8 @@ public class MPrivateAccess extends X_AD_Private_Access {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MPrivateAccess(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MPrivateAccess(Properties ctx, Row row) {
+        super(ctx, row);
     } //	MPrivateAccess
 
     /**

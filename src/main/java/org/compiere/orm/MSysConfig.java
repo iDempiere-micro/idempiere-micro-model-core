@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.util.DisplayType;
 import org.idempiere.common.util.CLogger;
 import software.hsharp.core.orm.MBaseSysConfig;
@@ -100,8 +101,8 @@ public class MSysConfig extends MBaseSysConfig {
      * @param ctx context
      * @param rs  result set
      */
-    public MSysConfig(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MSysConfig(Properties ctx, Row row) {
+        super(ctx, row);
     } //	MSysConfig
 
     /**

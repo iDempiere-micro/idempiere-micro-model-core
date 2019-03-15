@@ -43,10 +43,6 @@ public class MTableAccess extends X_AD_Table_Access {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MTableAccess(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MTableAccess
-
     public MTableAccess(Properties ctx, Row row) {
         super(ctx, row);
     } //	MTableAccess

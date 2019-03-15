@@ -1,8 +1,8 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.I_AD_TreeNodePR;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -29,8 +29,8 @@ public class X_AD_TreeNodePR extends PO implements I_AD_TreeNodePR {
     /**
      * Load Constructor
      */
-    public X_AD_TreeNodePR(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public X_AD_TreeNodePR(Properties ctx, Row row) {
+        super(ctx, row);
     }
 
     /**

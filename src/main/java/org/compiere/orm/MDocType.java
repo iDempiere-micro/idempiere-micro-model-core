@@ -6,7 +6,6 @@ import org.compiere.model.I_C_DocType;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.Env;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -72,10 +71,6 @@ public class MDocType extends X_C_DocType {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MDocType(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MDocType
-
     public MDocType(Properties ctx, Row row) {
         super(ctx, row);
     } //	MDocType

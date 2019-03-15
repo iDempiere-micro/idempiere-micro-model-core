@@ -4,7 +4,6 @@ import kotliquery.Row;
 import org.compiere.model.I_AD_Tree;
 import org.idempiere.common.util.CCache;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -49,10 +48,6 @@ public class MTree_Base extends X_AD_Tree {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MTree_Base(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MTree_Base
-
     public MTree_Base(Properties ctx, Row row) {
         super(ctx, row);
     } //	MTree_Base

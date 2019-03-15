@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Tree;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -109,10 +108,6 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree {
     /**
      * Load Constructor
      */
-    public X_AD_Tree(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
-
     public X_AD_Tree(Properties ctx, Row row) {
         super(ctx, row);
     }

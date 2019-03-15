@@ -1,10 +1,10 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.I_AD_User_Roles;
 import org.compiere.util.Msg;
 import org.idempiere.common.util.CLogger;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -45,8 +45,8 @@ public class MUserRoles extends X_AD_User_Roles {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MUserRoles(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MUserRoles(Properties ctx, Row row) {
+        super(ctx, row);
     } //	MUserRoles
 
     /**

@@ -1,6 +1,7 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
+import kotliquery.Row;
+
 import java.util.Properties;
 
 public class MViewColumn extends X_AD_ViewColumn {
@@ -28,8 +29,8 @@ public class MViewColumn extends X_AD_ViewColumn {
      * @param rs      result set
      * @param trxName trx name
      */
-    public MViewColumn(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MViewColumn(Properties ctx, Row row) {
+        super(ctx, row);
     }
 
     /**

@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Sequence;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -24,13 +23,6 @@ public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
      */
     public X_AD_Sequence(Properties ctx, int AD_Sequence_ID) {
         super(ctx, AD_Sequence_ID);
-    }
-
-    /**
-     * Load Constructor
-     */
-    public X_AD_Sequence(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
     }
 
     public X_AD_Sequence(Properties ctx, Row row) {

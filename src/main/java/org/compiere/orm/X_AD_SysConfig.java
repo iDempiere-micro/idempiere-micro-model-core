@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_SysConfig;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -41,10 +40,6 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig {
     /**
      * Load Constructor
      */
-    public X_AD_SysConfig(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
-
     public X_AD_SysConfig(Properties ctx, Row r) {
         super(ctx, r);
     }

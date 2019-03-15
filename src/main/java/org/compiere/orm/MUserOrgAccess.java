@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.idempiere.common.util.CLogger;
 
 import java.sql.PreparedStatement;
@@ -35,8 +36,8 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MUserOrgAccess(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MUserOrgAccess(Properties ctx, Row row) {
+        super(ctx, row);
     } //	MUserOrgAccess
 
     /**

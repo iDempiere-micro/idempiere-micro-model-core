@@ -8,7 +8,6 @@ import org.idempiere.common.util.Env
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.queryOf
 import java.io.Serializable
-import java.sql.ResultSet
 import java.util.Properties
 import java.util.logging.Level
 
@@ -18,16 +17,35 @@ fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
     return DB.current.run(loadQuery).toTypedArray()
 } // 	getOfClient
 
+/**
+ * Get Roles With where clause
+ *
+ * @param ctx         context
+ * @param whereClause where clause
+ * @return roles of client
+ */
+fun getOf(ctx: Properties, whereClause: String?): List<MRole> {
+    var sql = "SELECT * FROM AD_Role"
+    if (whereClause != null && whereClause.length > 0) sql += " WHERE $whereClause"
+
+    val query = queryOf(sql, listOf()).map { row -> MRole(ctx, row) }.asList
+    return DB.current.run(query)
+} //	getOf
+
 open class MBaseRole : X_AD_Role {
     /** List of Table Access  */
-    protected val m_tableAccess: MutableList<MTableAccess> = mutableListOf()
+    private val tableAccesses: MutableList<MTableAccess> = mutableListOf()
 
     constructor(ctx: Properties, Id: Int) : super(ctx, Id)
-    constructor(ctx: Properties, rs: ResultSet) : super(ctx, rs)
     constructor(ctx: Properties, row: Row) : super(ctx, row)
 
     protected val localContext: Properties get() = super.getMyContext()
     protected val localLog: CLogger get() = super.getMyLog()
+
+    /**
+     * User
+     */
+    var userId : Int = -1
 
     /** Org Access Summary  */
     protected inner class OrgAccess
@@ -103,7 +121,6 @@ open class MBaseRole : X_AD_Role {
      *
      * @param list list
      * @param oa org access
-     * @see Login
      */
     protected fun loadOrgAccessAdd(list: ArrayList<MBaseRole.OrgAccess>, oa: MBaseRole.OrgAccess) {
         if (list.contains(oa)) return
@@ -150,20 +167,20 @@ open class MBaseRole : X_AD_Role {
      * @param reload reload
      */
     protected fun loadTableAccess(reload: Boolean): Array<MTableAccess> {
-        if (m_tableAccess.isNotEmpty() && !reload) return m_tableAccess.toTypedArray()
+        if (tableAccesses.isNotEmpty() && !reload) return tableAccesses.toTypedArray()
         val sql = "SELECT * FROM AD_Table_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
         val loadQuery = queryOf(sql, listOf(roleId)).map { MTableAccess(localContext, it) }.asList
         val result = DB.current.run(loadQuery)
-        m_tableAccess.clear()
-        m_tableAccess.addAll(result)
+        tableAccesses.clear()
+        tableAccesses.addAll(result)
 
-        if (localLog.isLoggable(Level.FINE)) localLog.fine("#" + m_tableAccess.size)
+        if (localLog.isLoggable(Level.FINE)) localLog.fine("#" + tableAccesses.size)
         return result.toTypedArray()
     } // 	loadTableAccess
 
     protected fun setTableAccess(tableAccesses: Array<MTableAccess>) {
-        m_tableAccess.clear()
-        m_tableAccess.addAll(tableAccesses)
+        this.tableAccesses.clear()
+        this.tableAccesses.addAll(tableAccesses)
     }
 
     /** Table Data Access Level  */
@@ -235,4 +252,66 @@ open class MBaseRole : X_AD_Role {
         if (localLog.isLoggable(Level.FINE)) localLog.fine("#" + m_columnAccess.size)
         return result.toTypedArray()
     } // 	loadColumnAccess
+
+    /**
+     * Load Org Access User
+     *
+     * @param list list
+     */
+    protected fun loadOrgAccessUser(list: java.util.ArrayList<OrgAccess>) {
+        val sql = "SELECT * FROM AD_User_OrgAccess " + "WHERE AD_User_ID=? AND IsActive='Y'"
+
+        fun load(row: Row) : Int {
+            val oa = MUserOrgAccess(ctx, row)
+            loadOrgAccessAdd(list, OrgAccess(oa.clientId, oa.orgId, oa.isReadOnly()))
+            return 0
+        }
+
+        val query = queryOf(sql, listOf(userId)).map { row -> load(row) }.asList
+
+        DB.current.run(query).min()
+    } //	loadOrgAccessRole
+
+    /**
+     * List of Record Access
+     */
+    protected var recordAccess =  mutableListOf<MRecordAccess>()
+
+    protected fun getRecordAccessArray() : Array<MRecordAccess> = recordAccess.toTypedArray()
+    protected fun setRecordAccessArray(value: Array<MRecordAccess>) {
+        recordAccess.clear()
+        recordAccess.addAll(value)
+    }
+
+    /**
+     * List of Dependent Record Access
+     */
+    protected var recordDependentAccess = mutableListOf<MRecordAccess>()
+
+    protected fun getRecordDependentAccessArray() : Array<MRecordAccess> = recordDependentAccess.toTypedArray()
+    protected fun setRecordDependentAccessArray(value: Array<MRecordAccess>) {
+        recordDependentAccess.clear()
+        recordDependentAccess.addAll(value)
+    }
+
+    /**
+     * Load Record Access
+     *
+     * @param reload reload
+     */
+    protected fun loadRecordAccess(reload: Boolean) {
+        if (!(reload || recordAccess.isEmpty() || recordDependentAccess.isEmpty())) return
+
+        fun load(row: Row): Int {
+            val ra = MRecordAccess(ctx, row)
+            recordAccess.add(ra)
+            if (ra.isDependentEntities) recordDependentAccess.add(ra)
+            return 0
+        }
+
+        val sql = "SELECT * FROM AD_Record_Access " + "WHERE AD_Role_ID=? AND IsActive='Y' ORDER BY AD_Table_ID"
+        val query = queryOf(sql, listOf(roleId)).map { row -> load(row) }.asList
+
+        DB.current.run(query).max()
+    } //	loadRecordAccess
 }

@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_ClientInfo;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -33,10 +32,6 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
     /**
      * Load Constructor
      */
-    public X_AD_ClientInfo(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
-
     public X_AD_ClientInfo(Properties ctx, Row row) {
         super(ctx, row);
     } //	MClientInfo

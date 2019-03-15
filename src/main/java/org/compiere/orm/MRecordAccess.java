@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.util.Msg;
 
 import java.sql.PreparedStatement;
@@ -34,8 +35,8 @@ public class MRecordAccess extends X_AD_Record_Access {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MRecordAccess(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MRecordAccess(Properties ctx, Row row) {
+        super(ctx, row);
     } //	MRecordAccess
 
     /**

@@ -12,7 +12,7 @@ import org.junit.Test
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.HikariCPI
 import java.sql.Timestamp
-import java.util.*
+import java.util.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -34,7 +34,7 @@ internal val sessionUrl = System.getenv("SESSION_URL") ?: "jdbc:postgresql://loc
 
 class BasicTest {
 
-    val ctx = Env.getCtx()
+    private val ctx = Env.getCtx()
 
     @Before
     fun `login client 0`() {

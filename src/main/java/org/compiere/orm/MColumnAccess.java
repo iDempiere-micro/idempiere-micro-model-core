@@ -49,10 +49,6 @@ public class MColumnAccess extends X_AD_Column_Access {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MColumnAccess(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MColumnAccess
-
     public MColumnAccess(Properties ctx, Row row) {
         super(ctx, row);
     } //	MColumnAccess

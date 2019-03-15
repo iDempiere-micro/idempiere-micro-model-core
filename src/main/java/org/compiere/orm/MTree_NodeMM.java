@@ -1,6 +1,7 @@
 package org.compiere.orm;
 
-import java.sql.ResultSet;
+import kotliquery.Row;
+
 import java.util.Properties;
 
 /**
@@ -22,8 +23,8 @@ public class MTree_NodeMM extends X_AD_TreeNodeMM {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MTree_NodeMM(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MTree_NodeMM(Properties ctx, Row row) {
+        super(ctx, row);
     } //	MTree_NodeMM
 
     /**

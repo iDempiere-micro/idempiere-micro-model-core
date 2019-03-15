@@ -1,8 +1,8 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.I_AD_Record_Access;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -32,8 +32,8 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access {
     /**
      * Load Constructor
      */
-    public X_AD_Record_Access(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public X_AD_Record_Access(Properties ctx, Row row) {
+        super(ctx, row);
     }
 
     /**

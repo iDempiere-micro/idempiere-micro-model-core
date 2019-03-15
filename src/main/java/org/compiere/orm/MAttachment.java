@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.IAttachmentStore;
 import org.compiere.model.I_AD_Attachment;
 import org.compiere.model.I_AD_AttachmentEntry;
@@ -10,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -86,8 +86,8 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MAttachment(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MAttachment(Properties ctx, Row row) {
+        super(ctx, row);
         initAttachmentStoreDetails(ctx);
     } //	MAttachment
 

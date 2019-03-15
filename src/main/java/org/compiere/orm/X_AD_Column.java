@@ -7,7 +7,6 @@ import org.compiere.model.I_AD_Reference;
 import org.compiere.model.I_AD_Table;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -27,6 +26,9 @@ public class X_AD_Column extends PO implements I_AD_Column {
      */
     private static final long serialVersionUID = 20171031L;
 
+    /**
+     * Load Constructor
+     */
     public X_AD_Column(Properties ctx, Row row) {
         super(ctx, row);
     }
@@ -48,12 +50,6 @@ public class X_AD_Column extends PO implements I_AD_Column {
          */
     }
 
-    /**
-     * Load Constructor
-     */
-    public X_AD_Column(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
 
     /**
      * AccessLevel

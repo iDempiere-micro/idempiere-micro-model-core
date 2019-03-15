@@ -4,7 +4,6 @@ import kotliquery.Row;
 import org.compiere.model.I_AD_Org;
 import org.idempiere.common.util.CCache;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -53,10 +52,6 @@ public class MOrg extends X_AD_Org {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MOrg(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MOrg
-
     public MOrg(Properties ctx, Row row) {
         super(ctx, row);
     } //	MOrg

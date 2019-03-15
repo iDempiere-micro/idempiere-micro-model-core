@@ -10,7 +10,6 @@ import org.idempiere.common.util.Util
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.asResource
 import software.hsharp.core.util.queryOf
-import java.sql.ResultSet
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -155,8 +154,39 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
     return doc.toString()
 }
 
+/**
+ * Sequence for Table Document No's
+ */
+const val PREFIX_DOCSEQ = "DocumentNo_"
+
+/**
+ * Get Sequence
+ *
+ * @param ctx       context
+ * @param tableName table name
+ * @param trxName   optional transaction name
+ * @param tableID
+ * @return Sequence
+ */
+fun get(ctx: Properties, tableName: String, tableID: Boolean): MSequence? {
+    val realTableName =
+        if (!tableID) {
+            PREFIX_DOCSEQ + tableName
+        } else tableName
+
+    var sql = "SELECT * FROM AD_Sequence WHERE UPPER(Name)=? AND IsTableID=?"
+    if (!tableID) sql = "$sql AND AD_Client_ID=?"
+
+    val parameters =
+        listOf(realTableName.toUpperCase(), if (tableID) "Y" else "N")+
+        (if (!tableID) listOf(Env.getClientId(ctx)) else emptyList())
+
+    val query = queryOf(sql, parameters).map { row -> MSequence(ctx, row) }.asSingle
+
+    return DB.current.run(query)
+} //	get
+
 abstract class MBaseSequence : X_AD_Sequence {
     constructor(ctx: Properties, Id: Int) : super(ctx, Id)
-    constructor(ctx: Properties, rs: ResultSet) : super(ctx, rs)
     constructor(ctx: Properties, row: Row) : super(ctx, row)
 }

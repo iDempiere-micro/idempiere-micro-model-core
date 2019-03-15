@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Element;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -29,10 +28,6 @@ public class X_AD_Element extends BasePOName implements I_AD_Element {
     /**
      * Load Constructor
      */
-    public X_AD_Element(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
-
     public X_AD_Element(Properties ctx, Row row) {
         super(ctx, row);
     }

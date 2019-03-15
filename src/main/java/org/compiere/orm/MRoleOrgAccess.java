@@ -5,7 +5,6 @@ import org.idempiere.common.util.CLogger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -33,14 +32,8 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     /**
      * ************************************************************************ Load Constructor
      *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
+     * @param ctx context
      */
-    public MRoleOrgAccess(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MRoleOrgAccess
-
     public MRoleOrgAccess(Properties ctx, Row row) {
         super(ctx, row);
     } //	MRoleOrgAccess
@@ -50,7 +43,6 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
      *
      * @param ctx     context
      * @param ignored ignored
-     * @param trxName transaction
      */
     public MRoleOrgAccess(Properties ctx, int ignored) {
         super(ctx, 0);
@@ -102,23 +94,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
      * @return array of Role Org Access
      */
     private static MRoleOrgAccess[] get(Properties ctx, String sql, int id) {
-        ArrayList<MRoleOrgAccess> list = new ArrayList<MRoleOrgAccess>();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            pstmt = prepareStatement(sql);
-            pstmt.setInt(1, id);
-            rs = pstmt.executeQuery();
-            while (rs.next()) list.add(new MRoleOrgAccess(ctx, rs));
-        } catch (Exception e) {
-            s_log.log(Level.SEVERE, "get", e);
-        } finally {
-            rs = null;
-            pstmt = null;
-        }
-        MRoleOrgAccess[] retValue = new MRoleOrgAccess[list.size()];
-        list.toArray(retValue);
-        return retValue;
+        return MBaseRoleOrgAccessKt.get(ctx, sql, id);
     } //	get
 
     /**

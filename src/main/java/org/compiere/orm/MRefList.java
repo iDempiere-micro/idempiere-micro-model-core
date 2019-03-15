@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.compiere.model.I_AD_Ref_List;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.CLogger;
@@ -64,8 +65,8 @@ public class MRefList extends X_AD_Ref_List {
      * @param rs      result
      * @param trxName transaction
      */
-    public MRefList(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
+    public MRefList(Properties ctx, Row row) {
+        super(ctx, row);
     } //	MRef_List
 
     /**

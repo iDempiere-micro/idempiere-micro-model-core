@@ -5,7 +5,6 @@ import org.compiere.model.I_AD_EntityType;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.CLogger;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 import static org.compiere.util.SystemIDs.ENTITYTYPE_ADEMPIERE;
@@ -62,10 +61,6 @@ public class MEntityType extends X_AD_EntityType {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MEntityType(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MEntityType
-
     public MEntityType(Properties ctx, Row row) {
         super(ctx, row);
     } //	MEntityType

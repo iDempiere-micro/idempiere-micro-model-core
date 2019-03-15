@@ -177,34 +177,22 @@ public abstract class PO extends software.hsharp.core.orm.PO
     }
 
     /**
-     * ************************************************************************ Create New Persistent
-     * Object
-     *
-     * @param ctx context
-     */
-    public PO(Properties ctx) {
-        this(ctx, 0, null, null);
-    } //  PO
-
-    /**
      * Create & Load existing Persistent Object
      *
      * @param ctx context
      * @param ID  The unique ID of the object
      */
     public PO(Properties ctx, int ID) {
-        this(ctx, ID, null, null);
+        this(ctx, ID, null);
     } //  PO
 
     /**
      * Create & Load existing Persistent Object.
      *
      * @param ctx context
-     * @param rs  optional - load from current result set position (no navigation, not closed) if null,
-     *            a new record is created.
      */
-    public PO(Properties ctx, ResultSet rs, String columnNamePrefix) {
-        this(ctx, 0, rs, columnNamePrefix);
+    public PO(Properties ctx, String columnNamePrefix) {
+        this(ctx, 0, columnNamePrefix);
     } //	PO
 
     /**
@@ -224,9 +212,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @param ctx context
      * @param ID  the ID if 0, the record defaults are applied - ignored if re exists
-     * @param rs  optional - load from current result set position (no navigation, not closed)
      */
-    public PO(Properties _ctx, int ID, ResultSet rs, String _columnNamePrefix) {
+    public PO(Properties _ctx, int ID, String _columnNamePrefix) {
         super(_ctx, null, _columnNamePrefix);
 
         POInfo p_info = super.getP_info();
@@ -237,8 +224,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         clearNewValues();
         m_setErrors = new ValueNamePair[size];
 
-        if (rs != null) load(rs); // 	will not have virtual columns
-        else load(ID);
+        load(ID);
     } //  PO
 
     /**

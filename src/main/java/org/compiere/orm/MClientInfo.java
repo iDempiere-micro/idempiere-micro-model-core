@@ -2,7 +2,6 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 public class MClientInfo extends X_AD_ClientInfo {
@@ -25,10 +24,6 @@ public class MClientInfo extends X_AD_ClientInfo {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MClientInfo(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    } //	MClientInfo
-
     public MClientInfo(Properties ctx, Row row) {
         super(ctx, row);
     } //	MClientInfo

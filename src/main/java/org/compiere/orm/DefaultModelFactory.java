@@ -6,7 +6,6 @@ import org.idempiere.orm.PO;
 import software.hsharp.core.orm.DefaultBaseModelFactory;
 
 import java.lang.reflect.Constructor;
-import java.sql.ResultSet;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -80,47 +79,6 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
         }
         if (!errorLogged)
             s_log.log(Level.SEVERE, "(id) - Not found - Table=" + tableName + ", Record_ID=" + Record_ID);
-        return null;
-    }
-
-    @Override
-    public PO getPO(String tableName, ResultSet rs) {
-        return getPO(tableName, rs, null);
-    }
-
-    @Override
-    public PO getPO(String tableName, ResultSet rs, String columnNamePrefix) {
-        Class<?> clazz = getClass(tableName);
-        if (clazz == null) {
-            s_log.warning("PO NO CLAZZ FOR TABLE '" + tableName + "' with ResultSet");
-            getClass(tableName, false);
-            return null;
-        }
-
-        boolean errorLogged = false;
-        try {
-            if (columnNamePrefix == null) {
-                Constructor<?> constructor =
-                        clazz.getDeclaredConstructor(Properties.class, ResultSet.class);
-                PO po = (PO) constructor.newInstance(new Object[]{Env.getCtx(), rs});
-                return po;
-            } else {
-                Constructor<?> constructor =
-                        clazz.getDeclaredConstructor(
-                                Properties.class, ResultSet.class, String.class);
-                PO po =
-                        (PO)
-                                constructor.newInstance(new Object[]{Env.getCtx(), rs, columnNamePrefix});
-                return po;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            s_log.log(Level.SEVERE, "(rs) - Table=" + tableName + ",Class=" + clazz, e);
-            errorLogged = true;
-            s_log.saveError("Error", "Table=" + tableName + ",Class=" + clazz);
-        }
-        if (!errorLogged) s_log.log(Level.SEVERE, "(rs) - Not found - Table=" + tableName);
         return null;
     }
 }

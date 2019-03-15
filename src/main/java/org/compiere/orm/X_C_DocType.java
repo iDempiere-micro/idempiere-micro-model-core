@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_C_DocType;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -189,10 +188,6 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     /**
      * Load Constructor
      */
-    public X_C_DocType(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
-
     public X_C_DocType(Properties ctx, Row row) {
         super(ctx, row);
     } //	MDocType

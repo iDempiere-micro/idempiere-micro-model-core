@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_EntityType;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -29,10 +28,6 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType {
     /**
      * Load Constructor
      */
-    public X_AD_EntityType(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
-
     public X_AD_EntityType(Properties ctx, Row row) {
         super(ctx, row);
     }

@@ -2,7 +2,11 @@ package software.hsharp.core.orm
 
 import kotliquery.Row
 import mu.KotlinLogging
-import org.compiere.orm.*
+import org.compiere.orm.IModelFactory
+import org.compiere.orm.MTable
+import org.compiere.orm.MTree_Base
+import org.compiere.orm.M_Element
+import org.compiere.orm.MEntityType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.CCache
 import org.idempiere.common.util.Env
@@ -81,15 +85,17 @@ abstract class DefaultBaseModelFactory : IModelFactory {
                 }
             }
             // 	Make sure that it is a PO class
-            if (IPO::class.java.isAssignableFrom(clazz)) {
+            return if (IPO::class.java.isAssignableFrom(clazz)) {
                 log.trace("Use: $className")
-                return clazz
+                clazz
             } else {
-                // log.trace("Not found IPO-assignable: $className")
-                return null
+                log.trace("Not found IPO-assignable: $className")
+                null
             }
+        } catch (e1: ClassNotFoundException) {
+            // this is standard when trying to find classes
         } catch (e: Exception) {
-            // log.trace("Not found: $className with $e")
+            log.trace("Not found: $className with $e")
         }
 
         return null
@@ -101,7 +107,7 @@ abstract class DefaultBaseModelFactory : IModelFactory {
 
         // check cache
         if (useCache!!) {
-            val cache = s_classCache.get(tableName)
+            val cache = s_classCache[tableName]
             if (cache != null) {
                 // Object.class indicate no generated PO class for tableName
                 return if (cache == Any::class.java)
@@ -146,12 +152,12 @@ abstract class DefaultBaseModelFactory : IModelFactory {
             if (etmodelpackage != null) {
                 var clazz: Class<*>? = getPOclass(etmodelpackage + ".M" + Util.replace(tableName, "_", ""), tableName)
                 if (clazz != null) {
-                    s_classCache.put(tableName, clazz)
+                    s_classCache[tableName] = clazz
                     return clazz
                 }
                 clazz = getPOclass("$etmodelpackage.X_$tableName", tableName)
                 if (clazz != null) {
-                    s_classCache.put(tableName, clazz)
+                    s_classCache[tableName] = clazz
                     return clazz
                 }
                 log.warn("No class for table with it entity: $tableName")
@@ -175,29 +181,28 @@ abstract class DefaultBaseModelFactory : IModelFactory {
             var name = StringBuffer(s_packages[i]).append(".M").append(classNameWOU)
             var clazz = getPOclass(name.toString(), tableName)
             if (clazz != null) {
-                s_classCache.put(tableName, clazz)
+                s_classCache[tableName] = clazz
                 return clazz
             }
             name = StringBuffer(s_packages[i]).append(".X_").append(tableName) // X_C_ContactActivity
             clazz = getPOclass(name.toString(), tableName)
             if (clazz != null) {
-                s_classCache.put(tableName, clazz)
+                s_classCache[tableName] = clazz
                 return clazz
             }
         }
 
         // Object.class to indicate no PO class for tableName
-        s_classCache.put(tableName, Any::class.java)
+        s_classCache[tableName] = Any::class.java
         return null
     }
 
     override fun <T> getPO(tableName: String, row: Row): T {
         val clazz = getClass(tableName)
-
-        val constructor = clazz.getDeclaredConstructor(
-            Properties::class.java, Row::class.java
-        )
         try {
+            val constructor = clazz.getDeclaredConstructor(
+                Properties::class.java, Row::class.java
+            )
             @Suppress("UNCHECKED_CAST")
             return constructor.newInstance(Env.getCtx(), row) as T
         } catch (e: Exception) {

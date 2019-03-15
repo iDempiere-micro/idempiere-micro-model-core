@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Column_Access;
 
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -33,10 +32,6 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
     /**
      * Load Constructor
      */
-    public X_AD_Column_Access(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
-
     public X_AD_Column_Access(Properties ctx, Row row) {
         super(ctx, row);
     } //	MColumnAccess

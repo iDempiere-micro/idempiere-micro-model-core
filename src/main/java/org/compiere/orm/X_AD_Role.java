@@ -6,7 +6,6 @@ import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
@@ -70,10 +69,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
     /**
      * Load Constructor
      */
-    public X_AD_Role(Properties ctx, ResultSet rs) {
-        super(ctx, rs);
-    }
-
     public X_AD_Role(Properties ctx, Row row) {
         super(ctx, row);
     } //	MRole
