@@ -162,7 +162,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             }
         }
         if (log.isLoggable(Level.FINE))
-            log.fine(p_info.getTableName() + " - " + get_WhereClause(true));
+            log.fine(p_info.getTableName() + " - " + getWhereClause(true));
 
         //	Set new DocumentNo
         String columnName = "DocumentNo";
@@ -174,7 +174,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                 int dt = p_info.getColumnIndex("C_DocTypeTarget_ID");
                 if (dt == -1) dt = p_info.getColumnIndex("C_DocType_ID");
                 if (dt != -1) // 	get based on Doc Type (might return null)
-                    value = MSequence.getDocumentNo(get_ValueAsInt(dt), null, false, this);
+                    value = MSequence.getDocumentNo(getValueAsInt(dt), null, false, this);
                 if (value == null) // 	not overwritten by DocType and not manually entered
                     value = MSequence.getDocumentNo(getClientId(), p_info.getTableName(), null, this);
                 setValueNoCheck(columnName, value);
@@ -320,7 +320,7 @@ public abstract class PO extends org.idempiere.orm.PO {
 
         List<X_AD_Tree> trees =
                 new Query(getCtx(), MTree_Base.Table_Name, whereTree)
-                        .setClient_ID()
+                        .setClientId()
                         .setOnlyActiveRecords(true)
                         .setParameters(parameters)
                         .list();
@@ -422,7 +422,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         // Carlos Ruiz - globalqss - IDEMPIERE-111
         // Check if the role has access to this client
         // Don't check role System as webstore works with this role - see IDEMPIERE-401
-        if ((Env.getAD_Role_ID(getCtx()) != 0)
+        if ((Env.getRoleId(getCtx()) != 0)
                 && !MRole.getDefault().isClientAccess(getClientId(), true)) {
             log.warning("You cannot delete this record, role doesn't have access");
             log.saveError("AccessCannotDelete", "", false);
@@ -448,7 +448,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                     new StringBuilder("DELETE FROM ") // jz why no FROM??
                             .append(p_info.getTableName())
                             .append(" WHERE ")
-                            .append(get_WhereClause(true));
+                            .append(getWhereClause(true));
             int no = 0;
             if (isUseTimeoutForUpdate()) no = executeUpdateEx(sql.toString());
             else no = executeUpdate(sql.toString());
@@ -526,7 +526,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      */
     public final boolean set_ValueOfColumnReturningBoolean(String columnName, Object value) {
         POInfo p_info = super.getP_info();
-        int AD_Column_ID = p_info.getAD_Column_ID(columnName);
+        int AD_Column_ID = p_info.getColumnId(columnName);
         if (AD_Column_ID > 0) return set_ValueOfColumnReturningBoolean(AD_Column_ID, value);
         else return false;
     }

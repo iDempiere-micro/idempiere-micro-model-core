@@ -9,7 +9,7 @@ import org.idempiere.common.exceptions.DBException;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import static software.hsharp.core.util.DBKt.TO_STRING;
+import static software.hsharp.core.util.DBKt.convertString;
 import static software.hsharp.core.util.DBKt.executeUpdate;
 import static software.hsharp.core.util.DBKt.getSQLValue;
 
@@ -99,7 +99,7 @@ public class M_Element extends X_AD_Element {
     @Override
     protected boolean beforeSave(boolean newRecord) {
         // Column AD_Element.ColumnName should be unique - teo_sarca [ 1613107 ]
-        if (newRecord || is_ValueChanged(I_AD_Element.COLUMNNAME_ColumnName)) {
+        if (newRecord || isValueChanged(I_AD_Element.COLUMNNAME_ColumnName)) {
             String columnName = getColumnName().trim();
             if (getColumnName().length() != columnName.length()) setColumnName(columnName);
 
@@ -132,20 +132,20 @@ public class M_Element extends X_AD_Element {
             StringBuilder sql = new StringBuilder();
             int no = 0;
 
-            if (is_ValueChanged(HasName.Companion.getCOLUMNNAME_Name())
-                    || is_ValueChanged(M_Element.COLUMNNAME_Description)
-                    || is_ValueChanged(M_Element.COLUMNNAME_Help)
-                    || is_ValueChanged(M_Element.COLUMNNAME_ColumnName)) {
+            if (isValueChanged(HasName.Companion.getCOLUMNNAME_Name())
+                    || isValueChanged(M_Element.COLUMNNAME_Description)
+                    || isValueChanged(M_Element.COLUMNNAME_Help)
+                    || isValueChanged(M_Element.COLUMNNAME_ColumnName)) {
                 //	Column
                 sql =
                         new StringBuilder("UPDATE AD_Column SET ColumnName=")
-                                .append(TO_STRING(getColumnName()))
+                                .append(convertString(getColumnName()))
                                 .append(", Name=")
-                                .append(TO_STRING(getName()))
+                                .append(convertString(getName()))
                                 .append(", Description=")
-                                .append(TO_STRING(getDescription()))
+                                .append(convertString(getDescription()))
                                 .append(", Help=")
-                                .append(TO_STRING(getHelp()))
+                                .append(convertString(getHelp()))
                                 .append(" WHERE AD_Element_ID=")
                                 .append(getId());
                 no = executeUpdate(sql.toString());
@@ -154,29 +154,29 @@ public class M_Element extends X_AD_Element {
                 //	Parameter
                 sql =
                         new StringBuilder("UPDATE AD_Process_Para SET ColumnName=")
-                                .append(TO_STRING(getColumnName()))
+                                .append(convertString(getColumnName()))
                                 .append(", Name=")
-                                .append(TO_STRING(getName()))
+                                .append(convertString(getName()))
                                 .append(", Description=")
-                                .append(TO_STRING(getDescription()))
+                                .append(convertString(getDescription()))
                                 .append(", Help=")
-                                .append(TO_STRING(getHelp()))
+                                .append(convertString(getHelp()))
                                 .append(", AD_Element_ID=")
                                 .append(getId())
                                 .append(" WHERE UPPER(ColumnName)=")
-                                .append(TO_STRING(getColumnName().toUpperCase()))
+                                .append(convertString(getColumnName().toUpperCase()))
                                 .append(" AND IsCentrallyMaintained='Y' AND AD_Element_ID IS NULL");
                 no = executeUpdate(sql.toString());
 
                 sql =
                         new StringBuilder("UPDATE AD_Process_Para SET ColumnName=")
-                                .append(TO_STRING(getColumnName()))
+                                .append(convertString(getColumnName()))
                                 .append(", Name=")
-                                .append(TO_STRING(getName()))
+                                .append(convertString(getName()))
                                 .append(", Description=")
-                                .append(TO_STRING(getDescription()))
+                                .append(convertString(getDescription()))
                                 .append(", Help=")
-                                .append(TO_STRING(getHelp()))
+                                .append(convertString(getHelp()))
                                 .append(" WHERE AD_Element_ID=")
                                 .append(getId())
                                 .append(" AND IsCentrallyMaintained='Y'");
@@ -186,13 +186,13 @@ public class M_Element extends X_AD_Element {
                 // Info Column
                 sql =
                         new StringBuilder("UPDATE AD_InfoColumn SET ColumnName=")
-                                .append(TO_STRING(getColumnName()))
+                                .append(convertString(getColumnName()))
                                 .append(", Name=")
-                                .append(TO_STRING(getName()))
+                                .append(convertString(getName()))
                                 .append(", Description=")
-                                .append(TO_STRING(getDescription()))
+                                .append(convertString(getDescription()))
                                 .append(", Help=")
-                                .append(TO_STRING(getHelp()))
+                                .append(convertString(getHelp()))
                                 .append(" WHERE AD_Element_ID=")
                                 .append(getId())
                                 .append(" AND IsCentrallyMaintained='Y'");
@@ -200,17 +200,17 @@ public class M_Element extends X_AD_Element {
                 if (log.isLoggable(Level.FINE)) log.fine("Info Column updated #" + no);
             }
 
-            if (is_ValueChanged(HasName.Companion.getCOLUMNNAME_Name())
-                    || is_ValueChanged(M_Element.COLUMNNAME_Description)
-                    || is_ValueChanged(M_Element.COLUMNNAME_Help)) {
+            if (isValueChanged(HasName.Companion.getCOLUMNNAME_Name())
+                    || isValueChanged(M_Element.COLUMNNAME_Description)
+                    || isValueChanged(M_Element.COLUMNNAME_Help)) {
                 //	Field
                 sql =
                         new StringBuilder("UPDATE AD_Field SET Name=")
-                                .append(TO_STRING(getName()))
+                                .append(convertString(getName()))
                                 .append(", Description=")
-                                .append(TO_STRING(getDescription()))
+                                .append(convertString(getDescription()))
                                 .append(", Help=")
-                                .append(TO_STRING(getHelp()))
+                                .append(convertString(getHelp()))
                                 .append(
                                         " WHERE AD_Column_ID IN (SELECT AD_Column_ID FROM AD_Column WHERE AD_Element_ID=")
                                 .append(getId())
@@ -224,14 +224,14 @@ public class M_Element extends X_AD_Element {
                 // log.fine("InfoColumn updated #" + no);
             }
 
-            if (is_ValueChanged(M_Element.COLUMNNAME_PrintName)
-                    || is_ValueChanged(HasName.Companion.getCOLUMNNAME_Name())) {
+            if (isValueChanged(M_Element.COLUMNNAME_PrintName)
+                    || isValueChanged(HasName.Companion.getCOLUMNNAME_Name())) {
                 //	Print Info
                 sql =
                         new StringBuilder("UPDATE AD_PrintFormatItem SET PrintName=")
-                                .append(TO_STRING(getPrintName()))
+                                .append(convertString(getPrintName()))
                                 .append(", Name=")
-                                .append(TO_STRING(getName()))
+                                .append(convertString(getName()))
                                 .append(" WHERE IsCentrallyMaintained='Y'")
                                 .append(" AND EXISTS (SELECT * FROM AD_Column c ")
                                 .append("WHERE c.AD_Column_ID=AD_PrintFormatItem.AD_Column_ID AND c.AD_Element_ID=")

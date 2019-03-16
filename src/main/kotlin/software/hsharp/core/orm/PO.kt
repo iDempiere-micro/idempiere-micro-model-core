@@ -13,7 +13,7 @@ import org.idempiere.icommon.model.IPO
 import org.idempiere.orm.POInfo.getPOInfo
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
-import software.hsharp.core.util.TO_DATE
+import software.hsharp.core.util.convertDate
 import software.hsharp.core.util.executeUpdate
 import software.hsharp.core.util.getSQLValue
 import java.math.BigDecimal
@@ -37,7 +37,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             if (from.javaClass != to.javaClass) {
                 for (i1 in 0 until from.oldValues.size) {
                     val colName = from.p_info.getColumnName(i1)
-                    val column = MColumn.get(from.ctx, from.p_info.getAD_Column_ID(colName))
+                    val column = MColumn.get(from.ctx, from.p_info.getColumnId(colName))
                     if (column.isVirtualColumn ||
                         column.isKey || // 	KeyColumn
 
@@ -59,7 +59,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             {
                 for (i in 0 until from.oldValues.size) {
                     val colName = from.p_info.getColumnName(i)
-                    val column = MColumn.get(from.ctx, from.p_info.getAD_Column_ID(colName))
+                    val column = MColumn.get(from.ctx, from.p_info.getColumnId(colName))
                     if (column.isVirtualColumn ||
                         column.isKey || // 	KeyColumn
 
@@ -112,7 +112,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      * @param value LOB
      * @return object
      */
-    protected fun get_LOB(value: Any?): Any? {
+    protected fun getLOB(value: Any?): Any? {
         log.trace { "Value=" + value }
         if (value == null) return null
         //
@@ -148,7 +148,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         return retValue
     } // 	getLOB
 
-    fun get_WhereClause(withValues: Boolean): String {
+    fun getWhereClause(withValues: Boolean): String {
         val sb = StringBuilder()
         val keyColumns = m_keyColumns
         for (i in 0 until ids.size) {
@@ -158,7 +158,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
                 if (keyColumns[i]?.endsWith("_ID") == true)
                     sb.append(ids[i])
                 else if (ids[i] is Timestamp)
-                    sb.append(TO_DATE(ids[i] as Timestamp, false))
+                    sb.append(convertDate(ids[i] as Timestamp, false))
                 else {
                     sb.append("'")
                     if (ids[i] is Boolean) {
@@ -191,11 +191,11 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             if (i != 0) sql += ","
             sql += p_info.getColumnSQL(i) // 	Normal and Virtual Column
         }
-        sql += " FROM ${p_info.tableName} WHERE " + get_WhereClause(false)
+        sql += " FROM ${p_info.tableName} WHERE " + getWhereClause(false)
 
         //
         // 	int index = -1;
-        log.trace(get_WhereClause(true))
+        log.trace(getWhereClause(true))
 
         fun mapParameter(oo: Any?): Any {
             if (oo is Int)
@@ -216,7 +216,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             if (r != null) {
                 r
             } else {
-                log.error { "NO Data found for " + get_WhereClause(true) }
+                log.error { "NO Data found for " + getWhereClause(true) }
                 ids = arrayOf(I_ZERO)
                 false
             }
@@ -247,7 +247,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             else if (clazz == Timestamp::class.java)
                 oldValues[index] = decrypt(index, row.sqlTimestampOrNull(columnName))
             else if (DisplayType.isLOB(dt))
-                oldValues[index] = get_LOB(row.anyOrNull(columnName))
+                oldValues[index] = getLOB(row.anyOrNull(columnName))
             else if (clazz == String::class.java || clazz == POInfoColumn.ColumnClass_String) {
                 var value: String? = decrypt(index, row.stringOrNull(columnName)) as String?
                 if (value != null) {
@@ -436,7 +436,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      * @param index index
      * @return int value or 0
      */
-    fun get_ValueAsInt(index: Int): Int {
+    fun getValueAsInt(index: Int): Int {
         val value = getValue(index) ?: return 0
         if (value is Int) return value
         try {
@@ -453,11 +453,11 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      * @param columnName
      * @return int value
      */
-    fun get_ValueAsInt(columnName: String): Int {
+    fun getValueAsInt(columnName: String): Int {
         val idx = getColumnIndex(columnName)
         return if (idx < 0) {
             0
-        } else get_ValueAsInt(idx)
+        } else getValueAsInt(idx)
     }
 }
 

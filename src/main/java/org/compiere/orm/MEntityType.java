@@ -108,17 +108,17 @@ public class MEntityType extends X_AD_EntityType {
                 log.saveError("Error", "You cannot modify a System maintained entity");
                 return false;
             }
-            systemMaintained = is_ValueChanged("EntityType");
+            systemMaintained = isValueChanged("EntityType");
             if (systemMaintained) {
                 log.saveError("Error", "You cannot modify EntityType");
                 return false;
             }
             systemMaintained =
                     isSystemMaintained()
-                            && (is_ValueChanged("Name")
-                            || is_ValueChanged("Description")
-                            || is_ValueChanged("Help")
-                            || is_ValueChanged("IsActive"));
+                            && (isValueChanged("Name")
+                            || isValueChanged("Description")
+                            || isValueChanged("Help")
+                            || isValueChanged("IsActive"));
             if (systemMaintained) {
                 log.saveError("Error", "You cannot modify Name,Description,Help");
                 return false;

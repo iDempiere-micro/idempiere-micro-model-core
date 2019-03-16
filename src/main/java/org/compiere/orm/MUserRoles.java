@@ -108,9 +108,9 @@ public class MUserRoles extends X_AD_User_Roles {
                 log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
                 return false;
             }
-            if (!newRecord && is_ValueChanged(I_AD_User_Roles.COLUMNNAME_AD_Role_ID)) {
+            if (!newRecord && isValueChanged(I_AD_User_Roles.COLUMNNAME_AD_Role_ID)) {
                 MRole oldrole =
-                        new MRole(getCtx(), get_ValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID));
+                        new MRole(getCtx(), getValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID));
                 if (oldrole.isAccessAdvanced()) {
                     log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
                     return false;

@@ -1,7 +1,16 @@
 package software.hsharp.core.orm
 
 import kotliquery.Row
-import org.compiere.orm.*
+import org.compiere.orm.MClient
+import org.compiere.orm.MColumnAccess
+import org.compiere.orm.MRole
+import org.compiere.orm.MTableAccess
+import org.compiere.orm.X_AD_Role
+import org.compiere.orm.MOrg
+import org.compiere.orm.MRecordAccess
+import org.compiere.orm.MRoleOrgAccess
+import org.compiere.orm.MTree_Base
+import org.compiere.orm.MUserOrgAccess
 import org.compiere.util.Msg
 import org.idempiere.common.util.CLogger
 import org.idempiere.common.util.Env
@@ -20,7 +29,7 @@ internal fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
 /**
  * Get Roles With where clause
  *
- * @param ctx         context
+ * @param ctx context
  * @param whereClause where clause
  * @return roles of client
  */
@@ -30,7 +39,7 @@ internal fun getOf(ctx: Properties, whereClause: String?): List<MRole> {
 
     val query = queryOf(sql, listOf()).map { row -> MRole(ctx, row) }.asList
     return DB.current.run(query)
-} //	getOf
+} // 	getOf
 
 open class MBaseRole : X_AD_Role {
     /** List of Table Access  */
@@ -45,7 +54,7 @@ open class MBaseRole : X_AD_Role {
     /**
      * User
      */
-    var userId : Int = -1
+    var userId: Int = -1
 
     /** Org Access Summary  */
     protected inner class OrgAccess
@@ -261,7 +270,7 @@ open class MBaseRole : X_AD_Role {
     protected fun loadOrgAccessUser(list: java.util.ArrayList<OrgAccess>) {
         val sql = "SELECT * FROM AD_User_OrgAccess " + "WHERE AD_User_ID=? AND IsActive='Y'"
 
-        fun load(row: Row) : Int {
+        fun load(row: Row): Int {
             val oa = MUserOrgAccess(ctx, row)
             loadOrgAccessAdd(list, OrgAccess(oa.clientId, oa.orgId, oa.isReadOnly()))
             return 0
@@ -270,14 +279,14 @@ open class MBaseRole : X_AD_Role {
         val query = queryOf(sql, listOf(userId)).map { row -> load(row) }.asList
 
         DB.current.run(query).min()
-    } //	loadOrgAccessRole
+    } // 	loadOrgAccessRole
 
     /**
      * List of Record Access
      */
-    protected var recordAccess =  mutableListOf<MRecordAccess>()
+    protected var recordAccess = mutableListOf<MRecordAccess>()
 
-    protected fun getRecordAccessArray() : Array<MRecordAccess> = recordAccess.toTypedArray()
+    protected fun getRecordAccessArray(): Array<MRecordAccess> = recordAccess.toTypedArray()
     protected fun setRecordAccessArray(value: Array<MRecordAccess>) {
         recordAccess.clear()
         recordAccess.addAll(value)
@@ -288,7 +297,7 @@ open class MBaseRole : X_AD_Role {
      */
     protected var recordDependentAccess = mutableListOf<MRecordAccess>()
 
-    protected fun getRecordDependentAccessArray() : Array<MRecordAccess> = recordDependentAccess.toTypedArray()
+    protected fun getRecordDependentAccessArray(): Array<MRecordAccess> = recordDependentAccess.toTypedArray()
     protected fun setRecordDependentAccessArray(value: Array<MRecordAccess>) {
         recordDependentAccess.clear()
         recordDependentAccess.addAll(value)
@@ -313,5 +322,5 @@ open class MBaseRole : X_AD_Role {
         val query = queryOf(sql, listOf(roleId)).map { row -> load(row) }.asList
 
         DB.current.run(query).max()
-    } //	loadRecordAccess
+    } // 	loadRecordAccess
 }

@@ -89,7 +89,7 @@ public class MDocType extends X_C_DocType {
         setDocBaseType(DocBaseType);
         setName(Name);
         setPrintName(Name);
-        setGL_Category_ID();
+        setGLCategoryId();
     } //	MDocType
 
     /**
@@ -130,7 +130,7 @@ public class MDocType extends X_C_DocType {
     public static MDocType[] getOfClient(Properties ctx) {
         List<MDocType> list =
                 new Query(ctx, I_C_DocType.Table_Name, null)
-                        .setClient_ID()
+                        .setClientId()
                         .setOnlyActiveRecords(true)
                         .list();
         return list.toArray(new MDocType[list.size()]);
@@ -155,7 +155,7 @@ public class MDocType extends X_C_DocType {
     /**
      * Set Default GL Category
      */
-    public void setGL_Category_ID() {
+    public void setGLCategoryId() {
         final String sql =
                 "SELECT GL_Category_ID FROM GL_Category"
                         + " WHERE AD_Client_ID=?"

@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import software.hsharp.core.util.DB;
+import software.hsharp.core.util.DBKt;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,8 +50,7 @@ import java.util.logging.Level;
 
 import static kotliquery.PackageKt.queryOf;
 import static software.hsharp.core.orm.POKt.I_ZERO;
-import static software.hsharp.core.util.DBKt.TO_DATE;
-import static software.hsharp.core.util.DBKt.TO_STRING;
+import static software.hsharp.core.util.DBKt.convertString;
 import static software.hsharp.core.util.DBKt.executeUpdate;
 import static software.hsharp.core.util.DBKt.executeUpdateEx;
 import static software.hsharp.core.util.DBKt.getSQLValueEx;
@@ -63,7 +63,7 @@ import static software.hsharp.core.util.DBKt.isQueryTimeoutSupported;
  * @author Jorg Janke
  * @author Teo Sarca, SC ARHIPAC SERVICE SRL
  * <li>FR [ 1675490 ] ModelValidator on modelChange after events
- * <li>BF [ 1704828 ] PO.is_Changed() and PO.is_ValueChanged are not consistent
+ * <li>BF [ 1704828 ] PO.is_Changed() and PO.isValueChanged are not consistent
  * <li>FR [ 1720995 ] Add PO.saveEx() and PO.deleteEx() methods
  * <li>BF [ 1990856 ] PO.setValue* : truncate string more than needed
  * <li>FR [ 2042844 ] PO.get_Translation improvements
@@ -274,7 +274,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return String representation
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("PO[").append(get_WhereClause(true)).append("]");
+        StringBuilder sb = new StringBuilder("PO[").append(getWhereClause(true)).append("]");
         return sb.toString();
     } //  toString
 
@@ -440,13 +440,13 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param index index
      * @return value
      */
-    public final Object get_ValueOld(int index) {
+    public final Object getValueOld(int index) {
         if (index < 0 || index >= get_ColumnCount()) {
             log.log(Level.WARNING, "Index invalid - " + index);
             return null;
         }
         return getOldValues()[index];
-    } //  get_ValueOld
+    } //  getValueOld
 
     /**
      * Get Old Value
@@ -454,14 +454,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param columnName column name
      * @return value or null
      */
-    public final Object get_ValueOld(String columnName) {
+    public final Object getValueOld(String columnName) {
         int index = getColumnIndex(columnName);
         if (index < 0) {
             log.log(Level.WARNING, "Column not found - " + columnName);
             return null;
         }
-        return get_ValueOld(index);
-    } //  get_ValueOld
+        return getValueOld(index);
+    } //  getValueOld
 
     /**
      * Get Old Value as int
@@ -469,8 +469,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param columnName column name
      * @return int value or 0
      */
-    public int get_ValueOldAsInt(String columnName) {
-        Object value = get_ValueOld(columnName);
+    public int getValueOldAsInt(String columnName) {
+        Object value = getValueOld(columnName);
         if (value == null) return 0;
         if (value instanceof Integer) return (Integer) value;
         try {
@@ -479,7 +479,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             log.warning(columnName + " - " + ex.getMessage());
             return 0;
         }
-    } //  get_ValueOldAsInt
+    } //  getValueOldAsInt
 
     /**
      * Is Value Changed
@@ -487,7 +487,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param index index
      * @return true if changed
      */
-    public final boolean is_ValueChanged(int index) {
+    public final boolean isValueChanged(int index) {
         if (index < 0 || index >= get_ColumnCount()) {
             log.log(Level.WARNING, "Index invalid - " + index);
             return false;
@@ -496,7 +496,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         if (newValues[index] == null) return false;
         if (newValues[index] == Null.NULL && getOldValues()[index] == null) return false;
         return !newValues[index].equals(getOldValues()[index]);
-    } //  is_ValueChanged
+    } //  isValueChanged
 
     /**
      * Is Value Changed
@@ -504,14 +504,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param columnName column name
      * @return true if changed
      */
-    public final boolean is_ValueChanged(String columnName) {
+    public final boolean isValueChanged(String columnName) {
         int index = getColumnIndex(columnName);
         if (index < 0) {
             log.log(Level.WARNING, "Column not found - " + columnName);
             return false;
         }
-        return is_ValueChanged(index);
-    } //  is_ValueChanged
+        return isValueChanged(index);
+    } //  isValueChanged
 
     /**
      * Set (numeric) Key Value
@@ -619,7 +619,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                     getOldValues()[index] = "Y".equals(decrypt(index, rs.getString(columnName)));
                 else if (clazz == Timestamp.class)
                     getOldValues()[index] = decrypt(index, rs.getTimestamp(columnName));
-                else if (DisplayType.isLOB(dt)) getOldValues()[index] = get_LOB(rs.getObject(columnName));
+                else if (DisplayType.isLOB(dt)) getOldValues()[index] = getLOB(rs.getObject(columnName));
                 else if (clazz == String.class) {
                     String value = (String) decrypt(index, rs.getString(columnName));
                     if (value != null) {
@@ -958,7 +958,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         int size = get_ColumnCount();
         for (int i = 0; i < size; i++) {
             // Test if the column has changed - teo_sarca [ 1704828 ]
-            if (is_ValueChanged(i)) return true;
+            if (isValueChanged(i)) return true;
         }
         // there are custom columns modified
         return m_custom != null && m_custom.size() > 0;
@@ -1114,7 +1114,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     public void dump() {
         if (CLogMgt.isLevelFinest()) {
-            log.finer(get_WhereClause(true));
+            log.finer(getWhereClause(true));
             for (int i = 0; i < get_ColumnCount(); i++) dump(i);
         }
     } //  dump
@@ -1162,7 +1162,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 new PO_LOB(
                         p_info.getTableName(),
                         get_ColumnName(index),
-                        get_WhereClause(true),
+                        getWhereClause(true),
                         displayType,
                         value);
         if (m_lobInfo == null) m_lobInfo = new ArrayList<PO_LOB>();
@@ -1666,7 +1666,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             }
         }
         if (log.isLoggable(Level.FINE))
-            log.fine(p_info.getTableName() + " - " + get_WhereClause(true));
+            log.fine(p_info.getTableName() + " - " + getWhereClause(true));
 
         boolean ok = doInsert(isLogSQLScript());
         return saveFinish(true, ok);
@@ -1735,7 +1735,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         // params for insert statement
         List<Object> params = new ArrayList<Object>();
 
-        String where = get_WhereClause(true);
+        String where = getWhereClause(true);
         //
         boolean changes = false;
         StringBuilder sql = new StringBuilder("UPDATE ");
@@ -1803,16 +1803,16 @@ public abstract class PO extends software.hsharp.core.orm.PO
                     sql.append(encrypt(i, bValue ? "'Y'" : "'N'"));
                 } else if (value instanceof Timestamp)
                     sql.append(
-                            TO_DATE(
+                            DBKt.convertDate(
                                     (Timestamp) encrypt(i, value),
                                     p_info.getColumnDisplayType(i) == DisplayType.Date));
                 else {
                     if (value.toString().length() == 0) {
                         // [ 1722057 ] Encrypted columns throw error if saved as null
                         // don't encrypt NULL
-                        sql.append(TO_STRING(value.toString()));
+                        sql.append(convertString(value.toString()));
                     } else {
-                        sql.append(encrypt(i, TO_STRING(value.toString())));
+                        sql.append(encrypt(i, convertString(value.toString())));
                     }
                 }
             } else {
@@ -1872,7 +1872,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 Timestamp now = new Timestamp(System.currentTimeMillis());
                 setValueNoCheck("Updated", now);
                 if (withValues) {
-                    sql.append(",Updated=").append(TO_DATE(now, false));
+                    sql.append(",Updated=").append(DBKt.convertDate(now, false));
                 } else {
                     sql.append(",Updated=?");
                     params.add(now);
@@ -1970,10 +1970,10 @@ public abstract class PO extends software.hsharp.core.orm.PO
                         sqlValues.append(encrypt(i, bValue ? "'Y'" : "'N'"));
                     } else if (value instanceof Timestamp)
                         sqlValues.append(
-                                TO_DATE(
+                                DBKt.convertDate(
                                         (Timestamp) encrypt(i, value),
                                         p_info.getColumnDisplayType(i) == DisplayType.Date));
-                    else if (c == String.class) sqlValues.append(encrypt(i, TO_STRING((String) value)));
+                    else if (c == String.class) sqlValues.append(encrypt(i, convertString((String) value)));
                     else if (DisplayType.isLOB(dt)) sqlValues.append("null"); // 	no db dependent stuff here
                     else sqlValues.append(saveNewSpecial(value, i));
                 } catch (Exception e) {

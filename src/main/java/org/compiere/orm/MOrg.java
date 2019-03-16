@@ -132,7 +132,7 @@ public class MOrg extends X_AD_Org {
             //	TreeNode
             insert_Tree(MTree_Base.TREETYPE_Organization);
         }
-        if (newRecord || is_ValueChanged(I_AD_Org.COLUMNNAME_Value))
+        if (newRecord || isValueChanged(I_AD_Org.COLUMNNAME_Value))
             update_Tree(MTree_Base.TREETYPE_Organization);
 
         return true;

@@ -75,12 +75,12 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
     }
 
     /** Set Client_ID true for WhereClause routine to include clientId  */
-    fun setClient_ID(): Query {
-        return setClient_ID(true)
+    fun setClientId(): Query {
+        return setClientId(true)
     }
 
     /** Set include or not include clientId in where clause  */
-    fun setClient_ID(isIncludeClient: Boolean): Query {
+    fun setClientId(isIncludeClient: Boolean): Query {
         this.onlyClient_ID = isIncludeClient
         return this as Query
     }

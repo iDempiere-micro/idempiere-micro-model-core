@@ -4,6 +4,9 @@ import kotliquery.Row
 import org.compiere.model.I_AD_User
 import java.util.Properties
 
+/**
+ * PO with the userId
+ */
 abstract class BasePOUser : PO {
     constructor(ctx: Properties, ID: Int) : super(ctx, ID)
     constructor (ctx: Properties, a: String?) : super(ctx, a)

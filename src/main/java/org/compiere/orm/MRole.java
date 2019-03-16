@@ -398,7 +398,7 @@ public class MRole extends MBaseRole {
      * @return true if it can be saved
      */
     protected boolean beforeSave(boolean newRecord) {
-        //	if (newRecord || is_ValueChanged("UserLevel"))
+        //	if (newRecord || isValueChanged("UserLevel"))
         //	{
         if (getClientId() == 0) setUserLevel(X_AD_Role.USERLEVEL_System);
         else if (getUserLevel().equals(X_AD_Role.USERLEVEL_System)) {
@@ -430,7 +430,7 @@ public class MRole extends MBaseRole {
             updateAccessRecords();
         }
         //
-        else if (is_ValueChanged("UserLevel")) updateAccessRecords();
+        else if (isValueChanged("UserLevel")) updateAccessRecords();
 
         //	Default Role changed
         if (getDefaultRole() != null && getDefaultRole().getId() == getId()) setDefaultRole(this);
@@ -1796,7 +1796,7 @@ public class MRole extends MBaseRole {
         List<MRole> list =
                 new Query(getCtx(), I_AD_Role.Table_Name, whereClause)
                         .setParameters(AD_User_ID)
-                        .setClient_ID()
+                        .setClientId()
                         .setOrderBy(I_AD_Role.COLUMNNAME_AD_Role_ID)
                         .list();
         for (MRole role : list) {

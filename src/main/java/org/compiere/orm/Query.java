@@ -41,7 +41,7 @@ import static software.hsharp.core.util.DBKt.setParameter;
  * @author Redhuan D. Oon
  * <li>FR: [ 2214883 ] Remove SQL code and Replace for Query // introducing SQL String prompt in
  * log.info
- * <li>FR: [ 2214883 ] - to introduce .setClient_ID
+ * <li>FR: [ 2214883 ] - to introduce .setClientId
  */
 public class Query extends BaseQuery {
     public static final String AGGREGATE_COUNT = "COUNT";

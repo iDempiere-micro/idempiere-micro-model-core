@@ -146,7 +146,7 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
      * @param columnName
      * @return AD_Column_ID if found, -1 if not found
      */
-    fun getAD_Column_ID(columnName: String?): Int {
+    fun getColumnId(columnName: String?): Int {
         if (columnName == null) return -1
 
         for (i in 0 until columns.size) {

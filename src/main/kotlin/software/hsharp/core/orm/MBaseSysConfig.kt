@@ -6,7 +6,6 @@ import org.compiere.model.I_AD_SysConfig
 import org.compiere.orm.X_AD_SysConfig
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
-import java.sql.ResultSet
 import java.util.Properties
 
 /** Cache  */

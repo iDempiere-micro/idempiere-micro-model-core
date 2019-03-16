@@ -151,7 +151,7 @@ public class SetGetUtil {
      * @param from
      * @param includeFields
      * @param excludeFields
-     * @param trackOnlyChanges counts only the fields that were changed from (from.is_ValueChanged(int
+     * @param trackOnlyChanges counts only the fields that were changed from (from.isValueChanged(int
      *                         idx))
      * @return -1 the error or the number of heads that have been copied; if trackOnlyChanges = true
      * then copied and include only the columns that have changed and "from"
@@ -235,7 +235,7 @@ public class SetGetUtil {
             Object value = from.getValue(idx_from);
             to.setValue(idx_to, value);
 
-            if (!trackOnlyChanges || from.is_ValueChanged(idx_from)) {
+            if (!trackOnlyChanges || from.isValueChanged(idx_from)) {
                 copiedFields++;
             }
             if (s_log.isLoggable(Level.FINEST))
@@ -337,7 +337,7 @@ public class SetGetUtil {
                 }
 
                 public boolean isAttrValueChanged(String ColumnName) {
-                    return po.is_ValueChanged(ColumnName);
+                    return po.isValueChanged(ColumnName);
                 }
 
                 public int getTableId() {

@@ -150,14 +150,14 @@ internal fun setParameter(pstmt: PreparedStatement, index: Int, param: Any?) {
         throw DBException("Unknown parameter type $index - $param")
 }
 
-internal fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
+fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
     for (i in 0 until params.size) {
         setParameter(stmt, i + 1, params.get(i))
     }
 }
 
 // CONVERTERS
-fun TO_DATE(time: Timestamp?, dayOnly: Boolean): String {
+fun convertDate(time: Timestamp?, dayOnly: Boolean): String {
     if (time == null) {
         return if (dayOnly) "current_date()" else "current_date()"
     }
@@ -175,12 +175,12 @@ fun TO_DATE(time: Timestamp?, dayOnly: Boolean): String {
     return dateString.toString()
 }
 
-fun TO_DATE(time: Timestamp?): String = TO_DATE(time, true)
+fun convertDate(time: Timestamp?): String = convertDate(time, true)
 
 /** Quote  */
 private const val QUOTE = '\''
 
-fun TO_STRING(txt: String?, maxLength: Int): String {
+fun convertString(txt: String?, maxLength: Int): String {
     if (txt == null || txt.isEmpty()) return "NULL"
 
     //  Length
@@ -202,7 +202,7 @@ fun TO_STRING(txt: String?, maxLength: Int): String {
     return out.toString()
 }
 
-fun TO_STRING(txt: String?): String = TO_STRING(txt, 0)
+fun convertString(txt: String?): String = convertString(txt, 0)
 internal val convert: Convert = Convert_PostgreSQL()
 
 // CONNECTION

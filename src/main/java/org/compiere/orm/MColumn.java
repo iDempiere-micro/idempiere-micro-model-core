@@ -285,7 +285,7 @@ public class MColumn extends X_AD_Column {
         }
 
         //	Sync Terminology
-        if ((newRecord || is_ValueChanged("AD_Element_ID")) && getElementId() != 0) {
+        if ((newRecord || isValueChanged("AD_Element_ID")) && getElementId() != 0) {
             M_Element element = new M_Element(getCtx(), getElementId());
             setColumnName(element.getColumnName());
             setName(element.getName());
@@ -342,9 +342,9 @@ public class MColumn extends X_AD_Column {
     //	Update Fields
     if (!newRecord)
     {
-    	if (   is_ValueChanged(MColumn.HasName.Companion.getCOLUMNNAME_Name())
-    		|| is_ValueChanged(MColumn.COLUMNNAME_Description)
-    		|| is_ValueChanged(MColumn.COLUMNNAME_Help)
+    	if (   isValueChanged(MColumn.HasName.Companion.getCOLUMNNAME_Name())
+    		|| isValueChanged(MColumn.COLUMNNAME_Description)
+    		|| isValueChanged(MColumn.COLUMNNAME_Help)
     		) {
     		StringBuilder sql = new StringBuilder("UPDATE AD_Field SET Name=")
     			.append(TO_STRING(getName()))

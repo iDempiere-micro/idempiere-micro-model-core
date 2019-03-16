@@ -7,7 +7,6 @@ import org.compiere.orm.DefaultModelFactory
 import org.compiere.orm.IModelFactory
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
-import java.sql.ResultSet
 import java.util.Properties
 import kotlin.collections.set
 import org.compiere.orm.MTable
@@ -136,5 +135,4 @@ abstract class MBaseTable : X_AD_Table {
             )).map { row -> getPO(row) }.asSingle
         return DB.current.run(sqlQuery)
     }
-
 }

@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Properties
 
-internal fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
+fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
     return "/sql/checkClientSequences.sql".asResource { sql ->
         val loadQuery =
             queryOf(sql, listOf(clientId))
@@ -86,7 +86,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
         }
     val docOrg_ID =
         if (isUseOrgLevel && po != null && orgColumn != null && orgColumn.length > 0) {
-            po.get_ValueAsInt(orgColumn)
+            po.getValueAsInt(orgColumn)
         } else {
             0
         }
@@ -162,9 +162,9 @@ const val PREFIX_DOCSEQ = "DocumentNo_"
 /**
  * Get Sequence
  *
- * @param ctx       context
+ * @param ctx context
  * @param tableName table name
- * @param trxName   optional transaction name
+ * @param trxName optional transaction name
  * @param tableID
  * @return Sequence
  */
@@ -178,13 +178,13 @@ internal fun get(ctx: Properties, tableName: String, tableID: Boolean): MSequenc
     if (!tableID) sql = "$sql AND AD_Client_ID=?"
 
     val parameters =
-        listOf(realTableName.toUpperCase(), if (tableID) "Y" else "N")+
+        listOf(realTableName.toUpperCase(), if (tableID) "Y" else "N") +
         (if (!tableID) listOf(Env.getClientId(ctx)) else emptyList())
 
     val query = queryOf(sql, parameters).map { row -> MSequence(ctx, row) }.asSingle
 
     return DB.current.run(query)
-} //	get
+} // 	get
 
 abstract class MBaseSequence : X_AD_Sequence {
     constructor(ctx: Properties, Id: Int) : super(ctx, Id)
