@@ -150,6 +150,10 @@ internal fun setParameter(pstmt: PreparedStatement, index: Int, param: Any?) {
         throw DBException("Unknown parameter type $index - $param")
 }
 
+/**
+ * Backwards compatible way to set parameters to a PreparedStatement.
+ */
+@Deprecated("Use the new queryOf instead")
 fun setParameters(stmt: PreparedStatement, params: Array<Any>) {
     for (i in 0 until params.size) {
         setParameter(stmt, i + 1, params.get(i))

@@ -15,6 +15,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Properties
 
+/**
+ * Get data to Check/Initialize DocumentNo/Value Sequences for all Clients
+ */
 fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
     return "/sql/checkClientSequences.sql".asResource { sql ->
         val loadQuery =
