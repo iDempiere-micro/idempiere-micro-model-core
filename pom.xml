@@ -45,7 +45,7 @@
             </activation>
             <properties>
                 <idempiere-micro.groupId>com.github.iDempiere-micro</idempiere-micro.groupId>
-                <idempiere-micro.version>0.14.0</idempiere-micro.version>
+                <idempiere-micro.version>0.15.0</idempiere-micro.version>
             </properties>
         </profile>
     </profiles>
