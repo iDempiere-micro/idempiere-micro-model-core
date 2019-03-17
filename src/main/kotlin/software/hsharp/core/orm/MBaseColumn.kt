@@ -8,7 +8,7 @@ import software.hsharp.core.util.DB
  * Get the column Id from a [tableName] table by [columnName]
  */
 fun getColumnId(tableName: String, columnName: String): Int {
-    val tableId = MTable.getTable_ID(tableName)
+    val tableId = MTable.getTableId(tableName)
     if (tableId == 0) return 0
 
     val sql = "SELECT AD_Column_ID FROM AD_Column WHERE AD_Table_ID = ?  AND columnname = ?"

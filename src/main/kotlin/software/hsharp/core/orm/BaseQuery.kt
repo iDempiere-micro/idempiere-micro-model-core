@@ -18,7 +18,7 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
         private set
     protected var onlyActiveRecords = false
         private set
-    protected var onlyClient_ID = false
+    protected var onlyClientId = false
         private set
 
     private fun convertParameter(param: Any?): Any? {
@@ -29,7 +29,7 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
 
     private fun getQueryParameters(): Array<Any?>? {
         val activeRecordsParameter = if (onlyActiveRecords) listOf(true) else listOf()
-        val clientIdParameter = if (onlyClient_ID) listOf(Env.getClientId(ctx)) else listOf()
+        val clientIdParameter = if (onlyClientId) listOf(Env.getClientId(ctx)) else listOf()
         val params = parameters ?: arrayOf()
         val result = params
             .toList()
@@ -81,7 +81,7 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
 
     /** Set include or not include clientId in where clause  */
     fun setClientId(isIncludeClient: Boolean): Query {
-        this.onlyClient_ID = isIncludeClient
+        this.onlyClientId = isIncludeClient
         return this as Query
     }
 

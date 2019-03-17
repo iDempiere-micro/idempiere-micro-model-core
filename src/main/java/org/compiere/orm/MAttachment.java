@@ -74,8 +74,8 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
                         ? MAttachment.getID(AD_Table_ID, Record_ID)
                         : 0);
         if (getId() == 0) {
-            setAD_Table_ID(AD_Table_ID);
-            setRecord_ID(Record_ID);
+            setRowTableId(AD_Table_ID);
+            setRecordId(Record_ID);
         }
     } //	MAttachment
 
@@ -165,7 +165,7 @@ public class MAttachment extends X_AD_Attachment implements I_AD_Attachment {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder("MAttachment[");
-        sb.append(getAD_Attachment_ID())
+        sb.append(getAD_AttachmentId())
                 .append(",Title=")
                 .append(getTitle())
                 .append(",Entries=")

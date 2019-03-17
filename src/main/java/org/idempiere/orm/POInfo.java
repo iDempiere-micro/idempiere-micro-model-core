@@ -67,7 +67,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      * @return String Representation
      */
     public String toString() {
-        return "POInfo[" + getTableName() + ",AD_Table_ID=" + getAD_Table_ID() + "]";
+        return "POInfo[" + getTableName() + ",AD_Table_ID=" + getRowTableId() + "]";
     } //  toString
 
     /**
@@ -87,7 +87,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      *
      * @return AD_Table_ID
      */
-    public int getAD_Table_ID() {
+    public int getRowTableId() {
         return getTableId();
     } //  getColumnTableId
 

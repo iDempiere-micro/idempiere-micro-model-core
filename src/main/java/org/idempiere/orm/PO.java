@@ -1700,7 +1700,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 } catch (Exception e) {
                 }
             }
-            if (s_docWFMgr != null) s_docWFMgr.process(this, p_info.getAD_Table_ID());
+            if (s_docWFMgr != null) s_docWFMgr.process(this, p_info.getRowTableId());
 
             Object[] newValues = getNewValues();
             //	Copy to Old values

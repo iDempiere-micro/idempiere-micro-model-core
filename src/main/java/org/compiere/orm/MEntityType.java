@@ -146,7 +146,7 @@ public class MEntityType extends X_AD_EntityType {
       	return false;
       }
       */
-            // setAD_EntityType_ID();
+            // setAD_EntityTypeId();
         } //	new
         return true;
     } //	beforeSave

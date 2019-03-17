@@ -130,7 +130,7 @@ public class MTable extends MBaseTable {
      * @param String tableName
      * @return int retValue
      */
-    public static int getTable_ID(String tableName) {
+    public static int getTableId(String tableName) {
         int retValue = 0;
         String SQL = "SELECT AD_Table_ID FROM AD_Table WHERE tablename = ?";
         PreparedStatement pstmt = null;

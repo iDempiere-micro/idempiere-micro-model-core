@@ -149,7 +149,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                 log.severe("No NextID (" + no + ")");
                 return saveFinish(true, false);
             }
-            getIds()[0] = new Integer(no);
+            getIds()[0] = no;
             setValueNoCheck(getM_keyColumns()[0], getIds()[0]);
         }
         // uuid secondary key
@@ -404,7 +404,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         CLogger.resetLast();
         if (isNew()) return true;
         POInfo p_info = super.getP_info();
-        int AD_Table_ID = p_info.getAD_Table_ID();
+        int AD_Table_ID = p_info.getRowTableId();
         int Record_ID = getId();
 
         if (!force) {

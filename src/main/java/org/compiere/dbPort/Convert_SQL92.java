@@ -123,22 +123,22 @@ public abstract class Convert_SQL92 extends Convert {
 
         /**
          * Single column SELECT t.TableName, w.Name FROM AD_Table t, AD_Window w WHERE
-         * t.AD_Window_ID=w.AD_Window_ID(+) -- 275 rows SELECT t.TableName, w.Name FROM AD_Table t LEFT
+         * t.AD_Window_ID=w.AD_WindowId(+) -- 275 rows SELECT t.TableName, w.Name FROM AD_Table t LEFT
          * OUTER JOIN AD_Window w ON (t.AD_Window_ID=w.AD_Window_ID)
          *
          * <p>SELECT t.TableName, w.Name FROM AD_Table t, AD_Window w WHERE
-         * t.AD_Window_ID(+)=w.AD_Window_ID -- 239 rows SELECT t.TableName, w.Name FROM AD_Table t RIGHT
+         * t.AD_WindowId(+)=w.AD_Window_ID -- 239 rows SELECT t.TableName, w.Name FROM AD_Table t RIGHT
          * OUTER JOIN AD_Window w ON (t.AD_Window_ID=w.AD_Window_ID)
          *
          * <p>* Multiple columns SELECT tn.Node_ID,tn.Parent_ID,tn.SeqNo,tb.IsActive FROM AD_TreeNode
-         * tn, AD_TreeBar tb WHERE tn.AD_Tree_ID=tb.AD_Tree_ID(+) AND tn.Node_ID=tb.Node_ID(+) AND
+         * tn, AD_TreeBar tb WHERE tn.AD_Tree_ID=tb.AD_TreeId(+) AND tn.Node_ID=tb.NodeId(+) AND
          * tn.AD_Tree_ID=10 -- 235 rows SELECT tn.Node_ID,tn.Parent_ID,tn.SeqNo,tb.IsActive FROM
          * AD_TreeNode tn LEFT OUTER JOIN AD_TreeBar tb ON (tn.Node_ID=tb.Node_ID AND
          * tn.AD_Tree_ID=tb.AD_Tree_ID AND tb.AD_User_ID=0) WHERE tn.AD_Tree_ID=10
          *
          * <p>SELECT tn.Node_ID,tn.Parent_ID,tn.SeqNo,tb.IsActive FROM AD_TreeNode tn, AD_TreeBar tb
-         * WHERE tn.AD_Tree_ID=tb.AD_Tree_ID(+) AND tn.Node_ID=tb.Node_ID(+) AND tn.AD_Tree_ID=10 AND
-         * tb.AD_User_ID(+)=0 -- 214 rows SELECT tn.Node_ID,tn.Parent_ID,tn.SeqNo,tb.IsActive FROM
+         * WHERE tn.AD_Tree_ID=tb.AD_TreeId(+) AND tn.Node_ID=tb.NodeId(+) AND tn.AD_Tree_ID=10 AND
+         * tb.AD_UserId(+)=0 -- 214 rows SELECT tn.Node_ID,tn.Parent_ID,tn.SeqNo,tb.IsActive FROM
          * AD_TreeNode tn LEFT OUTER JOIN AD_TreeBar tb ON (tn.Node_ID=tb.Node_ID AND
          * tn.AD_Tree_ID=tb.AD_Tree_ID AND tb.AD_User_ID=0) WHERE tn.AD_Tree_ID=10
          */

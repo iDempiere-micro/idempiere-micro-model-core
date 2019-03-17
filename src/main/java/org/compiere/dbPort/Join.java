@@ -6,7 +6,7 @@ import org.idempiere.common.util.Util;
  * Join Clause.
  *
  * <pre>
- *  f.AD_Column_ID = c.AD_Column_ID(+)
+ *  f.AD_Column_ID = c.AD_ColumnId(+)
  *  </pre>
  *
  * @author Jorg Janke
@@ -32,7 +32,7 @@ public class Join {
     } //  Join
 
     /**
-     * Evaluate the clause. e.g. tb.AD_User_ID(+)=? f.AD_Column_ID = c.AD_Column_ID(+)
+     * Evaluate the clause. e.g. tb.AD_UserId(+)=? f.AD_Column_ID = c.AD_ColumnId(+)
      *
      * @param joinClause
      */
@@ -41,14 +41,14 @@ public class Join {
         int indexEqual = joinClause.indexOf('=');
         m_left = indexEqual < joinClause.indexOf("(+)"); //  converts to LEFT if true
         //  get table alias of it
-        if (m_left) //  f.AD_Column_ID = c.AD_Column_ID(+)  => f / c
+        if (m_left) //  f.AD_Column_ID = c.AD_ColumnId(+)  => f / c
         {
             m_mainAlias = joinClause.substring(0, Util.findIndexOf(joinClause, '.', '=')).trim(); //  f
             int end = joinClause.indexOf('.', indexEqual);
             if (end == -1) //  no alias
                 end = joinClause.indexOf('(', indexEqual);
             m_joinAlias = joinClause.substring(indexEqual + 1, end).trim(); //  c
-        } else //  f.AD_Column_ID(+) = c.AD_Column_ID  => c / f
+        } else //  f.AD_ColumnId(+) = c.AD_Column_ID  => c / f
         {
             int end = joinClause.indexOf('.', indexEqual);
             if (end == -1) //  no alias
@@ -140,7 +140,7 @@ public class Join {
     /** ********************************************************************** */
 
     /**
-     * This Join is a condition of the first Join. e.g. tb.AD_User_ID(+)=? or tb.AD_User_ID(+)='123'
+     * This Join is a condition of the first Join. e.g. tb.AD_UserId(+)=? or tb.AD_UserId(+)='123'
      *
      * @param first
      * @return true if condition

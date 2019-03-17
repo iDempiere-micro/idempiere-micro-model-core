@@ -55,7 +55,7 @@ public class X_AD_Attachment extends PO {
      *
      * @return Attachment for the document
      */
-    public int getAD_Attachment_ID() {
+    public int getAD_AttachmentId() {
         Integer ii = (Integer) getValue(I_AD_Attachment.COLUMNNAME_AD_Attachment_ID);
         if (ii == null) return 0;
         return ii;
@@ -66,7 +66,7 @@ public class X_AD_Attachment extends PO {
      *
      * @param AD_Table_ID Database Table information
      */
-    public void setAD_Table_ID(int AD_Table_ID) {
+    public void setRowTableId(int AD_Table_ID) {
         if (AD_Table_ID < 1) setValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, null);
         else setValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
     }
@@ -76,7 +76,7 @@ public class X_AD_Attachment extends PO {
      *
      * @param Record_ID Direct internal record ID
      */
-    public void setRecord_ID(int Record_ID) {
+    public void setRecordId(int Record_ID) {
         if (Record_ID < 0) setValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, null);
         else setValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
     }

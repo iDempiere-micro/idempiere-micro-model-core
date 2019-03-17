@@ -1412,7 +1412,7 @@ public class MRole extends MBaseRole {
             if (TableName.toUpperCase().endsWith("_TRL")) continue;
             if (isView(TableName)) continue;
 
-            int AD_Table_ID = getAD_Table_ID(TableName);
+            int AD_Table_ID = getRowTableId(TableName);
             //	Data Table Access
             if (AD_Table_ID != 0 && !isTableAccess(AD_Table_ID, !rw)) {
                 retSQL.append(" AND 1=3"); // 	prevent access at all
@@ -1568,7 +1568,7 @@ public class MRole extends MBaseRole {
      * @param tableName table name
      * @return AD_Table_ID or 0
      */
-    private int getAD_Table_ID(String tableName) {
+    private int getRowTableId(String tableName) {
         loadTableInfo(false);
         Integer ii = getM_tableName().get(tableName);
         if (ii != null) return ii;

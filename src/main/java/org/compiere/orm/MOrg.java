@@ -154,7 +154,7 @@ public class MOrg extends X_AD_Org {
      *
      * @return C_BPartner_ID
      */
-    public int getLinkedC_BPartner_ID(String trxName) {
+    public int getLinkedC_BPartnerId(String trxName) {
         if (m_linkedBPartner == null) {
             int C_BPartner_ID =
                     getSQLValue(

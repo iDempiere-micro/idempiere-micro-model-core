@@ -346,7 +346,7 @@ public class Query extends BaseQuery {
             if (!joinClauseList.isEmpty()) whereBuffer.append(table.getDbTableName()).append(".");
             whereBuffer.append("IsActive=?");
         }
-        boolean onlyClient_ID = super.getOnlyClient_ID();
+        boolean onlyClient_ID = super.getOnlyClientId();
         if (onlyClient_ID) // red1
         {
             if (whereBuffer.length() > 0) whereBuffer.append(" AND ");
@@ -435,7 +435,7 @@ public class Query extends BaseQuery {
             setParameter(pstmt, i++, true);
             if (log.isLoggable(Level.FINEST)) log.finest("Parameter IsActive = Y");
         }
-        boolean onlyClient_ID = super.getOnlyClient_ID();
+        boolean onlyClient_ID = super.getOnlyClientId();
         if (onlyClient_ID) {
             int AD_Client_ID = Env.getClientId(this.getCtx());
             setParameter(pstmt, i++, AD_Client_ID);
