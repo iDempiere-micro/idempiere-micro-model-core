@@ -48,7 +48,7 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
                         constructor != null
                                 ? (PO)
                                 constructor.newInstance(
-                                        new Object[]{Env.getCtx(), new Integer(Record_ID)})
+                                        new Object[]{Env.getCtx(), Record_ID})
                                 : null;
                 return po;
             } catch (Exception ex) {

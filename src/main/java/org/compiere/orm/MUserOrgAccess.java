@@ -21,13 +21,8 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
      *
      */
     private static final long serialVersionUID = 11601583764711895L;
-    /**
-     * Static Logger
-     */
-    private static CLogger s_log = CLogger.getCLogger(MUserOrgAccess.class);
 
     private String m_clientName;
-    private String m_orgName;
 
     /**
      * ************************************************************************ Load Constructor
@@ -109,7 +104,6 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
                     m_clientName = rs.getString(1);
-                    m_orgName = rs.getString(2);
                 }
             } catch (Exception e) {
                 log.log(Level.SEVERE, sql, e);

@@ -7,11 +7,6 @@ import java.util.Properties;
  */
 public class DefaultContextProvider implements ContextProvider {
 
-    /**
-     * Logging
-     */
-    private static CLogger s_log = CLogger.getCLogger(DefaultContextProvider.class);
-
     private static Properties s_ctx = new Properties();
 
     public Properties getContext() {

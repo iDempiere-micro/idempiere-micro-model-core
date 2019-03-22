@@ -60,15 +60,6 @@ public class Query extends BaseQuery {
     private List<String> joinClauseList = new ArrayList<String>();
 
     /**
-     * Limit current query rows return.
-     */
-    private int pageSize;
-    /**
-     * Number of pages will be skipped on query run.
-     */
-    private int pagesToSkip;
-
-    /**
      * @param table
      * @param whereClause
      * @deprecated Use {@link #Query(Properties, MTable, String)} instead because this method
@@ -388,10 +379,7 @@ public class Query extends BaseQuery {
             if (isPostgreSQL()) sql = sql + " OF " + table.getDbTableName();
         }
 
-        // If have pagination
-        if (pageSize > 0) {
-            sql = appendPagination(sql);
-        }
+        // TODO If have pagination
 
         if (log.isLoggable(Level.FINEST))
             log.finest(
@@ -401,28 +389,6 @@ public class Query extends BaseQuery {
                             + sql); // red1 - to assist in debugging SQL
 
         return sql;
-    }
-
-    /**
-     * If top is bigger than 0 set the pagination on query
-     *
-     * @param query    SQL String
-     * @param pageSize number
-     * @param skip     number
-     */
-    private String appendPagination(String pQuery) {
-
-        String query = pQuery;
-
-        if (pageSize > 0) {
-            if (isPagingSupported()) {
-                query = addPagingSQL(query, (pageSize * pagesToSkip) + 1, pageSize * (pagesToSkip + 1));
-            } else {
-                throw new IllegalArgumentException("Pagination not supported by database");
-            }
-        }
-
-        return query;
     }
 
     private final ResultSet createResultSet(PreparedStatement pstmt) throws SQLException {

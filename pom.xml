@@ -45,7 +45,7 @@
             </activation>
             <properties>
                 <idempiere-micro.groupId>com.github.iDempiere-micro</idempiere-micro.groupId>
-                <idempiere-micro.version>0.17.0</idempiere-micro.version>
+                <idempiere-micro.version>0.19.0</idempiere-micro.version>
             </properties>
         </profile>
     </profiles>
@@ -210,15 +210,39 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.17</version>
                 <configuration>
-                    <!-- see: https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class -->
-                    <argLine>-Xmx1024m -Xms1024m -XX:MaxPermSize=512m
-                        -Djdk.net.URLClassPath.disableClassPathURLCheck=true
-                    </argLine>
+                    <argLine>${surefireArgLine}</argLine>
                     <includes>
                         <include>**/*Test.java</include>
                         <include>**/*Test.kt</include>
                     </includes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.3</version>
+                <executions>
+                    <!-- Jacoco for Unit-Tests -->
+                    <execution>
+                        <id>jacoco-agent-ut</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <!-- Jacoco for Integration-Tests -->
+                    <execution>
+                        <id>jacoco-agent-it</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <pluginManagement>

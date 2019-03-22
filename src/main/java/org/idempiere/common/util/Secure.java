@@ -27,10 +27,6 @@ public class Secure implements SecureInterface {
      * Logger
      */
     private static CLogger log = CLogger.getCLogger(Secure.class.getName());
-    /**
-     * Message Digest
-     */
-    private MessageDigest m_md = null;
 
     private IKeyStore m_keyStore = null;
 

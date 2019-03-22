@@ -1099,17 +1099,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     }
 
     /**
-     * Get the Column Processing index
-     *
-     * @return index or -1
-     */
-    private int get_ProcessingIndex() {
-
-        POInfo p_info = super.getP_info();
-        return p_info.getColumnIndex("Processing");
-    } //	getProcessingIndex
-
-    /**
      * ****************************************************************** Dump Record
      */
     public void dump() {

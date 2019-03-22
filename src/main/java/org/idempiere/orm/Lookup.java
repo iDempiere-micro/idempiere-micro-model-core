@@ -35,11 +35,6 @@ public abstract class Lookup extends AbstractListModel<Object>
     private volatile Object m_selectedObject;
 
     /**
-     * Temporary Data
-     */
-    private Object[] m_tempData = null;
-
-    /**
      * Lookup
      *
      * @param displayType display type

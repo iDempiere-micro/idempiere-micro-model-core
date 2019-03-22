@@ -41,10 +41,6 @@ public class CLogMgt {
     private static final CLogConsole CONSOLE_HANDLER = new CLogConsole();
     private static final CLogErrorBuffer ERROR_BUFFER_HANDLER = new CLogErrorBuffer();
     private static final Map<String, Level> levelMap = new HashMap<String, Level>();
-    /**
-     * New Line
-     */
-    private static final String NL = System.getProperty("line.separator");
 
     private static CLogFile fileHandler;
     /**
@@ -319,54 +315,6 @@ public class CLogMgt {
     public static boolean isLevelInfo() {
         return Level.INFO.intValue() >= getLevelAsInt();
     } //	isLevelFine
-
-    private static String formatMemoryInfo(long amount) {
-        String unit = "";
-        long size = amount / 1024;
-        if (size > 1024) {
-            size = size / 1024;
-            unit = "M";
-        } else {
-            unit = "K";
-        }
-        return size + unit;
-    }
-
-    /**
-     * Get translated Message, if DB connection exists
-     *
-     * @param msg AD_Message
-     * @return translated msg if connected
-     */
-    private static String getMsg(String msg) {
-        return msg;
-    } //  getMsg
-
-    /**
-     * Get Database Info
-     *
-     * @return host : port : sid
-     */
-    private static String getDatabaseInfo() {
-        StringBuilder sb = new StringBuilder();
-
-        return sb.toString();
-    } //  getDatabaseInfo
-
-    /**
-     * Get Localhost
-     *
-     * @return local host
-     */
-    private static String getLocalHost() {
-        try {
-            InetAddress id = InetAddress.getLocalHost();
-            return id.toString();
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "getLocalHost", e);
-        }
-        return "-no local host info -";
-    } //  getLocalHost
 
     private static Logger getRootLogger() {
         Logger rootLogger = Logger.getLogger("");

@@ -20,7 +20,7 @@ public class MSystem extends X_AD_System {
      */
     public MSystem(Properties ctx, int ignored, String mtrxName) {
         super(ctx, 0);
-        String trxName = null;
+
         load(); // 	load ID=0
         if (s_system.get(0) == null) s_system.put(0, this);
     } //	MSystem

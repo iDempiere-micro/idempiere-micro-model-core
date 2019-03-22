@@ -215,7 +215,7 @@ public class MRole extends MBaseRole {
             role = new MRole(ctx, AD_Role_ID);
             s_roles.put(key, role);
             if (AD_Role_ID == 0) {
-                String trxName = null;
+
                 role.load(); // 	special Handling
             }
             role.setUserId(AD_User_ID);
@@ -242,7 +242,7 @@ public class MRole extends MBaseRole {
     /* metas-2009_0021_AP1_G94
     String key = String.valueOf(AD_Role_ID);
     MRole role = (MRole)s_roles.get (key);
-    String trxName = null;
+
     if (role == null)
     {
     	role = new MRole (ctx, AD_Role_ID);

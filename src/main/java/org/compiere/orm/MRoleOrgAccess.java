@@ -27,7 +27,6 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
     private static CLogger s_log = CLogger.getCLogger(MRoleOrgAccess.class);
 
     private String m_clientName;
-    private String m_orgName;
 
     /**
      * ************************************************************************ Load Constructor
@@ -154,7 +153,6 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
                     m_clientName = rs.getString(1);
-                    m_orgName = rs.getString(2);
                 }
             } catch (Exception e) {
                 log.log(Level.SEVERE, "getClientName", e);
