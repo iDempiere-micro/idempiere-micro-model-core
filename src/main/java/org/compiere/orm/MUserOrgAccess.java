@@ -1,7 +1,6 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.idempiere.common.util.CLogger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

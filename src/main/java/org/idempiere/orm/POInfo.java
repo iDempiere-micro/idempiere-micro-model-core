@@ -25,7 +25,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      * Cache of POInfo
      */
     private static CCache<Integer, POInfo> s_cache =
-            new CCache<Integer, POInfo>(I_AD_Table.Table_Name, "POInfo", 200);
+            new CCache<>(I_AD_Table.Table_Name, "POInfo", 200);
 
     /**
      * ************************************************************************ Create Persistent Info
@@ -33,7 +33,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      * @param ctx              context
      * @param AD_Table_ID      AD_ Table_ID
      * @param baseLanguageOnly get in base language
-     * @param trxName          transaction name
      */
     protected POInfo(Properties ctx, int AD_Table_ID, boolean baseLanguageOnly) {
         super(ctx, AD_Table_ID, baseLanguageOnly);
@@ -44,7 +43,6 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      *
      * @param ctx         context
      * @param AD_Table_ID AD_Table_ID
-     * @param trxName     Transaction name
      * @return POInfo
      */
     public static synchronized POInfo getPOInfo(Properties ctx, int AD_Table_ID) {
@@ -98,7 +96,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      */
     public int getColumnIndex(String ColumnName) {
         Integer i = getColumnNameMap().get(ColumnName.toUpperCase());
-        if (i != null) return i.intValue();
+        if (i != null) return i;
 
         return -1;
     } //  getColumnIndex
@@ -111,7 +109,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      */
     public int getColumnIndex(int AD_Column_ID) {
         Integer i = getColumnIdMap().get(AD_Column_ID);
-        if (i != null) return i.intValue();
+        if (i != null) return i;
 
         return -1;
     } //  getColumnIndex
@@ -170,7 +168,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      */
     public void setUpdateable(boolean updateable) {
         POInfoColumn[] columns = getColumns();
-        for (int i = 0; i < columns.length; i++) columns[i].IsUpdateable = updateable;
+        for (POInfoColumn column : columns) column.IsUpdateable = updateable;
     } //	setUpdateable
 
     /**

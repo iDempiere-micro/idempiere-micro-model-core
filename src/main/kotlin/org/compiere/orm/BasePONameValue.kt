@@ -2,7 +2,6 @@ package org.compiere.orm
 
 import kotliquery.Row
 import org.compiere.model.I_AD_Client.COLUMNNAME_Value
-import org.idempiere.common.exceptions.AdempiereException
 import java.util.Properties
 
 abstract class BasePONameValue : BasePOName {

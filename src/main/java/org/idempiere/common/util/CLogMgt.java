@@ -3,7 +3,6 @@ package org.idempiere.common.util;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;

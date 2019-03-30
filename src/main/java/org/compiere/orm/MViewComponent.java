@@ -1,5 +1,7 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
+
 import java.util.List;
 import java.util.Properties;
 
@@ -19,10 +21,13 @@ public class MViewComponent extends X_AD_ViewComponent {
      *
      * @param ctx                 context
      * @param AD_ViewComponent_ID view component
-     * @param trxName             trx name
      */
     public MViewComponent(Properties ctx, int AD_ViewComponent_ID) {
         super(ctx, AD_ViewComponent_ID);
+    }
+
+    public MViewComponent(Properties ctx, Row row) {
+        super(ctx, row);
     }
 
     /**
@@ -67,8 +72,8 @@ public class MViewComponent extends X_AD_ViewComponent {
      */
     @Override
     public String toString() {
-        StringBuffer sb =
-                new StringBuffer("MViewComponent[").append(getId()).append("-").append(getName());
+        StringBuilder sb =
+                new StringBuilder("MViewComponent[").append(getId()).append("-").append(getName());
         sb.append("]");
         return sb.toString();
     }

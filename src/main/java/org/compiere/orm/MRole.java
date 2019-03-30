@@ -1688,8 +1688,8 @@ public class MRole extends MBaseRole {
      * @see metas-2009_0021_AP1_G94
      */
     private void loadIncludedRoles(boolean reload) {
-        loadChildRoles(reload);
-        loadSubstitutedRoles(reload);
+        loadChildRoles();
+        loadSubstitutedRoles();
         //
         if (this.m_parent == null) {
             mergeAccesses(reload);
@@ -1739,10 +1739,9 @@ public class MRole extends MBaseRole {
     /**
      * Load Child Roles
      *
-     * @param reload
      * @see metas-2009_0021_AP1_G94
      */
-    private void loadChildRoles(boolean reload) {
+    private void loadChildRoles() {
         m_includedRoles = null; // reset included roles
         final int AD_User_ID = getUserId();
         if (AD_User_ID < 0) {
@@ -1769,10 +1768,9 @@ public class MRole extends MBaseRole {
     /**
      * Load substituted roles
      *
-     * @param reload
      * @see metas-2009_0021_AP1_G94
      */
-    private void loadSubstitutedRoles(boolean reload) {
+    private void loadSubstitutedRoles() {
         if (this.m_parent != null) {
             // load only if this is logged role (no parent roles)
             return;

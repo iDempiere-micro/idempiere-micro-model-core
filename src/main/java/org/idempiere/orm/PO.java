@@ -210,15 +210,12 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *  you need to set the IDs for multi-key records explicitly.
      * </pre>
      *
-     * @param ctx context
      * @param ID  the ID if 0, the record defaults are applied - ignored if re exists
      */
     public PO(Properties _ctx, int ID, String _columnNamePrefix) {
         super(_ctx, null, _columnNamePrefix);
 
         POInfo p_info = super.getP_info();
-        if (p_info == null || p_info.getTableName() == null)
-            throw new IllegalArgumentException("Invalid PO Info - " + p_info);
         //
         int size = p_info.getColumnCount();
         clearNewValues();
@@ -274,8 +271,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return String representation
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("PO[").append(getWhereClause(true)).append("]");
-        return sb.toString();
+        return "PO[" + getWhereClause(true) + "]";
     } //  toString
 
     /**
@@ -357,7 +353,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     public int getId() {
         Object oo = super.getIds()[0];
-        if (oo != null && oo instanceof Integer) return (Integer) oo;
+        if (oo instanceof Integer) return (Integer) oo;
         return 0;
     } //  getID
 
@@ -550,17 +546,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     } //  getColumnName
 
     /**
-     * Get Column DisplayType
-     *
-     * @param index index
-     * @return display type
-     */
-    protected int get_ColumnDisplayType(int index) {
-        POInfo p_info = super.getP_info();
-        return p_info.getColumnDisplayType(index);
-    } //	getColumnDisplayType
-
-    /**
      * Get Column Index
      *
      * @param columnName column name
@@ -582,7 +567,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         if (ID > 0) {
             setKeyInfo();
             setIds(new Object[]{ID});
-            // keyColumns = new String[] {p_info.getTableName() + "_ID"};
             load();
         } else //	new
         {
@@ -591,85 +575,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
             setKeyInfo(); //	sets ids
             loadComplete(true);
         }
-    } //	load
-
-    /**
-     * Load from the current position of a ResultSet
-     *
-     * @param rs result set
-     * @return true if loaded
-     */
-    protected boolean load(ResultSet rs) {
-        int size = get_ColumnCount();
-        boolean success = true;
-        int index = 0;
-        POInfo p_info = super.getP_info();
-        log.finest("(rs)");
-        //  load column values
-        for (index = 0; index < size; index++) {
-            String columnName =
-                    (m_columnNamePrefix == null ? "" : m_columnNamePrefix) + p_info.getColumnName(index);
-            Class<?> clazz = p_info.getColumnClass(index);
-            int dt = p_info.getColumnDisplayType(index);
-            try {
-                if (clazz == Integer.class) getOldValues()[index] = decrypt(index, rs.getInt(columnName));
-                else if (clazz == BigDecimal.class)
-                    getOldValues()[index] = decrypt(index, rs.getBigDecimal(columnName));
-                else if (clazz == Boolean.class)
-                    getOldValues()[index] = "Y".equals(decrypt(index, rs.getString(columnName)));
-                else if (clazz == Timestamp.class)
-                    getOldValues()[index] = decrypt(index, rs.getTimestamp(columnName));
-                else if (DisplayType.isLOB(dt)) getOldValues()[index] = getLOB(rs.getObject(columnName));
-                else if (clazz == String.class) {
-                    String value = (String) decrypt(index, rs.getString(columnName));
-                    if (value != null) {
-                        if (getTableId() == I_AD_Column.Table_ID
-                                || getTableId() == I_AD_Element.Table_ID
-                                || getTableId() == I_AD_Field.Table_ID) {
-                            if ("Description".equals(columnName) || "Help".equals(columnName)) {
-                                value = value.intern();
-                            }
-                        }
-                    }
-                    getOldValues()[index] = value;
-                } else getOldValues()[index] = loadSpecial(rs, index);
-                //	NULL
-                if (rs.wasNull() && getOldValues()[index] != null) getOldValues()[index] = null;
-                //
-                if (CLogMgt.isLevelAll())
-                    log.finest(
-                            index
-                                    + ": "
-                                    + p_info.getColumnName(index)
-                                    + "("
-                                    + p_info.getColumnClass(index)
-                                    + ") = "
-                                    + getOldValues()[index]);
-            } catch (SQLException e) {
-                if (p_info.isVirtualColumn(index)) { // 	if rs constructor used
-                    if (log.isLoggable(Level.FINER))
-                        log.log(Level.FINER, "Virtual Column not loaded: " + columnName);
-                } else {
-                    log.log(
-                            Level.SEVERE,
-                            "(rs) - "
-                                    + index
-                                    + ": "
-                                    + p_info.getTableName()
-                                    + "."
-                                    + p_info.getColumnName(index)
-                                    + " ("
-                                    + p_info.getColumnClass(index)
-                                    + ") - "
-                                    + e);
-                    success = false;
-                }
-            }
-        }
-        setCreateNew(false);
-        setKeyInfo();
-        loadComplete(success);
-        return success;
     } //	load
 
     /**
@@ -742,27 +647,10 @@ public abstract class PO extends software.hsharp.core.orm.PO
     } //	load
 
     /**
-     * Load Special data (images, ..). To be extended by sub-classes
-     *
-     * @param rs    result set
-     * @param index zero based index
-     * @return value value
-     * @throws SQLException
-     */
-    protected Object loadSpecial(ResultSet rs, int index) throws SQLException {
-        POInfo p_info = super.getP_info();
-        if (log.isLoggable(Level.FINEST)) log.finest("(NOP) - " + p_info.getColumnName(index));
-        return null;
-    } //  loadSpecial
-
-    /**
      * Load Defaults
      */
     protected void loadDefaults() {
         setStandardDefaults();
-        //
-        /** @todo defaults from Field */
-        //	MField.getDefault(p_info.getDefaultLogic(i));
     } //	loadDefaults
 
     /**
@@ -1178,43 +1066,11 @@ public abstract class PO extends software.hsharp.core.orm.PO
     } //	saveLOB
 
     /**
-     * Get Object xml representation as string
-     *
-     * @param xml optional string buffer
-     * @return updated/new string buffer header is only added once
-     */
-    public StringBuffer get_xmlString(StringBuffer xml) {
-        if (xml == null) xml = new StringBuffer();
-        else xml.append(Env.NL);
-        //
-        try {
-            StringWriter writer = new StringWriter();
-            StreamResult result = new StreamResult(writer);
-            DOMSource source = new DOMSource(get_xmlDocument(xml.length() != 0));
-            TransformerFactory tFactory = TransformerFactory.newInstance();
-            Transformer transformer = tFactory.newTransformer();
-            transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
-            transformer.transform(source, result);
-            StringBuffer newXML = writer.getBuffer();
-            //
-            if (xml.length() != 0) { // 	//	<?xml version="1.0" encoding="UTF-8"?>
-                int tagIndex = newXML.indexOf("?>");
-                if (tagIndex != -1) xml.append(newXML.substring(tagIndex + 2));
-                else xml.append(newXML);
-            } else xml.append(newXML);
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "", e);
-        }
-        return xml;
-    } //	get_xmlString
-
-    /**
      * Get XML Document representation
      *
-     * @param noComment do not add comment
      * @return XML document
      */
-    public Document get_xmlDocument(boolean noComment) {
+    public Document get_xmlDocument() {
         Document document = null;
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -1285,52 +1141,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     public void setReplication(boolean isFromReplication) {
         m_isReplication = isFromReplication;
     }
-
-    /**
-     * Get value as Boolean
-     *
-     * @param columnName
-     * @return boolean value
-     */
-    public boolean get_ValueAsBoolean(String columnName) {
-        Object oo = getValue(columnName);
-        if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
-            return "Y".equals(oo);
-        }
-        return false;
-    }
-
-  /*
-  @Override
-  protected Object clone() throws CloneNotSupportedException {
-    PO clone = (PO) super.clone();
-    clone.m_trxName = null;
-    if (m_custom != null) {
-      clone.m_custom = new HashMap<String, String>();
-      clone.m_custom.putAll(m_custom);
-    }
-    Object[] newValues = getNewValues();
-    if (newValues != null) {
-      clone.newValues = new Object[newValues.length];
-      for (int i = 0; i < newValues.length; i++) {
-        clone.newValues[i] = newValues[i];
-      }
-    }
-    if (getOldValues() != null) {
-      for (int i = 0; i < getOldValues().length; i++) {
-        clone.getOldValues()[i] = getOldValues()[i];
-      }
-    }
-    if (getIds() != null) {
-      for (int i = 0; i < getIds().length; i++) {
-        clone.getIds()[i] = getIds()[i];
-      }
-    }
-    clone.m_lobInfo = null;
-    clone.m_isReplication = false;
-    return clone;
-  }*/
 
     /**
      * @return uuid column name
@@ -1770,7 +1580,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 String strValue = (String) value;
                 if (strValue.startsWith("<") && strValue.endsWith(">")) {
                     value = null;
-                    int AD_Client_ID = getClientId();
                     int index = p_info.getColumnIndex("C_DocTypeTarget_ID");
                     if (index == -1) index = p_info.getColumnIndex("C_DocType_ID");
                 } else if (log.isLoggable(Level.INFO))

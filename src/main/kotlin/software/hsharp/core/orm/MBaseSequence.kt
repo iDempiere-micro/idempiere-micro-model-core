@@ -58,7 +58,7 @@ internal fun doGetNextIDImpl(tableName: String): Int {
 private const val NoYearNorMonth = "-"
 
 internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
-    val AD_Sequence_ID = seq.sequenceId
+    val sequenceId = seq.sequenceId
     val isStartNewYear = seq.isStartNewYear
     val isStartNewMonth = seq.isStartNewMonth
     val dateColumn = seq.dateColumn
@@ -78,7 +78,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
                 else
                     SimpleDateFormat("yyyy")
 
-            if (po != null && dateColumn != null && dateColumn.length > 0) {
+            if (po != null && dateColumn != null && dateColumn.isNotEmpty()) {
                 val docDate = po.getValue(dateColumn) as Date
                 sdf.format(docDate)
             } else {
@@ -87,8 +87,8 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
         } else {
             NoYearNorMonth
         }
-    val docOrg_ID =
-        if (isUseOrgLevel && po != null && orgColumn != null && orgColumn.length > 0) {
+    val docOrgId =
+        if (isUseOrgLevel && po != null && orgColumn != null && orgColumn.isNotEmpty()) {
             po.getValueAsInt(orgColumn)
         } else {
             0
@@ -97,11 +97,11 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
     val next1 = DB.current.run(
         if (isStartNewYear || isUseOrgLevel) {
             "/sql/getDocumentNoFromSeqNY.sql".asResource { sql ->
-                queryOf(sql, listOf(AD_Sequence_ID, calendarYearMonth, docOrg_ID)).map { it.int(1) }.asSingle
+                queryOf(sql, listOf(sequenceId, calendarYearMonth, docOrgId)).map { it.int(1) }.asSingle
             }
         } else {
             "/sql/getDocumentNoFromSeq.sql".asResource { sql ->
-                queryOf(sql, listOf(AD_Sequence_ID)).map { it.int(1) }.asSingle
+                queryOf(sql, listOf(sequenceId)).map { it.int(1) }.asSingle
             }
         }
     )
@@ -112,24 +112,24 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
                     DB.current.run(
                         queryOf(
                             sql,
-                            listOf(incrementNo, AD_Sequence_ID, calendarYearMonth, docOrg_ID)
+                            listOf(incrementNo, sequenceId, calendarYearMonth, docOrgId)
                         ).asUpdate
                     )
                 }
             } else {
                 "/sql/updateDocumentNoFromSeq.sql".asResource { sql ->
-                    DB.current.run(queryOf(sql, listOf(incrementNo, AD_Sequence_ID)).asUpdate)
+                    DB.current.run(queryOf(sql, listOf(incrementNo, sequenceId)).asUpdate)
                 }
             }
             next1
         } else {
             if (isUseOrgLevel || isStartNewYear) {
-                val seqno = X_AD_Sequence_No(Env.getCtx(), 0)
-                seqno.setSequenceId(AD_Sequence_ID)
-                seqno.setOrgId(docOrg_ID)
-                seqno.setCalendarYearMonth(calendarYearMonth)
-                seqno.setCurrentNext(startNo + incrementNo)
-                seqno.saveEx()
+                val sequenceNumber = X_AD_Sequence_No(Env.getCtx(), 0)
+                sequenceNumber.setSequenceId(sequenceId)
+                sequenceNumber.setOrgId(docOrgId)
+                sequenceNumber.setCalendarYearMonth(calendarYearMonth)
+                sequenceNumber.setCurrentNext(startNo + incrementNo)
+                sequenceNumber.saveEx()
 
                 startNo
             } else {
@@ -167,7 +167,6 @@ const val PREFIX_DOCSEQ = "DocumentNo_"
  *
  * @param ctx context
  * @param tableName table name
- * @param trxName optional transaction name
  * @param tableID
  * @return Sequence
  */

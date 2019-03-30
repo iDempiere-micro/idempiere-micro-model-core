@@ -2,7 +2,6 @@ package org.compiere.orm;
 
 import org.idempiere.orm.PO;
 
-import java.util.List;
 import java.util.Properties;
 
 public class MTableIndex extends X_AD_TableIndex {
@@ -10,10 +9,6 @@ public class MTableIndex extends X_AD_TableIndex {
      *
      */
     private static final long serialVersionUID = 5312095272014146977L;
-    /**
-     * Lines
-     */
-    private MIndexColumn[] m_columns = null;
 
     /**
      * Standard constructor
@@ -29,30 +24,6 @@ public class MTableIndex extends X_AD_TableIndex {
             setIsUnique(false);
             setIsCreateConstraint(false);
         }
-    }
-
-    /**
-     * Get index columns
-     *
-     * @param reload reload data
-     * @return array of index column
-     */
-    public MIndexColumn[] getColumns(boolean reload) {
-        if (m_columns != null && !reload) return m_columns;
-
-        Query query =
-                new Query(
-                        getCtx(),
-                        MIndexColumn.Table_Name,
-                        MIndexColumn.COLUMNNAME_AD_TableIndex_ID + "=?"
-                );
-        query.setParameters(getTableIndexId());
-        query.setOrderBy(MIndexColumn.COLUMNNAME_SeqNo);
-        List<MIndexColumn> list = query.list();
-
-        m_columns = new MIndexColumn[list.size()];
-        list.toArray(m_columns);
-        return m_columns;
     }
 
     /**

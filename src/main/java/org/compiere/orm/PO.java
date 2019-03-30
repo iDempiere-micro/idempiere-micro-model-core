@@ -15,6 +15,7 @@ import org.idempiere.orm.Null;
 import org.idempiere.orm.POInfo;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -27,10 +28,6 @@ import static software.hsharp.core.util.DBKt.getSQLValueEx;
 import static software.hsharp.core.util.DBKt.isGenerateUUIDSupported;
 
 public abstract class PO extends org.idempiere.orm.PO {
-    /**
-     * Attachment with entries
-     */
-    protected MAttachment m_attachment = null;
 
     public PO(Properties ctx, int ID) {
         super(ctx, ID);
@@ -174,9 +171,9 @@ public abstract class PO extends org.idempiere.orm.PO {
                 int dt = p_info.getColumnIndex("C_DocTypeTarget_ID");
                 if (dt == -1) dt = p_info.getColumnIndex("C_DocType_ID");
                 if (dt != -1) // 	get based on Doc Type (might return null)
-                    value = MSequence.getDocumentNo(getValueAsInt(dt), null, false, this);
+                    value = MSequence.getDocumentNo(getValueAsInt(dt), false, this);
                 if (value == null) // 	not overwritten by DocType and not manually entered
-                    value = MSequence.getDocumentNo(getClientId(), p_info.getTableName(), null, this);
+                    value = MSequence.getDocumentNo(p_info.getTableName(), this);
                 setValueNoCheck(columnName, value);
             }
         }
@@ -404,14 +401,12 @@ public abstract class PO extends org.idempiere.orm.PO {
         CLogger.resetLast();
         if (isNew()) return true;
         POInfo p_info = super.getP_info();
-        int AD_Table_ID = p_info.getRowTableId();
-        int Record_ID = getId();
 
         if (!force) {
             int iProcessed = getColumnIndex("Processed");
             if (iProcessed != -1) {
                 Boolean processed = (Boolean) getValue(iProcessed);
-                if (processed != null && processed.booleanValue()) {
+                if (processed != null && processed) {
                     log.warning("Record processed"); // 	CannotDeleteTrx
                     log.saveError("Processed", "Processed", false);
                     return false;
@@ -429,7 +424,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             return false;
         }
 
-        boolean success = false;
+        boolean success;
 
         if (!beforeDelete()) {
             log.warning("beforeDelete failed");
@@ -491,7 +486,6 @@ public abstract class PO extends org.idempiere.orm.PO {
             // osgi event handler
 
             m_idOld = 0;
-            int size = p_info.getColumnCount();
             clearNewValues();
             CacheMgt.get().reset(p_info.getTableName());
         }
@@ -504,7 +498,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param AD_User_ID user
      */
     protected void setUpdatedBy(int AD_User_ID) {
-        setValueNoCheck("UpdatedBy", new Integer(AD_User_ID));
+        setValueNoCheck("UpdatedBy", AD_User_ID);
     } //	setUserId
 
     /**
@@ -543,7 +537,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         int index = p_info.getColumnIndex(AD_Column_ID);
         if (index < 0) throw new AdempiereUserError("Not found - AD_Column_ID=" + AD_Column_ID);
         String ColumnName = p_info.getColumnName(index);
-        if (ColumnName.equals("IsApproved")) return setValueNoCheck(ColumnName, value);
+        if (Objects.equals(ColumnName, "IsApproved")) return setValueNoCheck(ColumnName, value);
         else return setValue(index, value);
     } //  setValueOfColumn
 

@@ -19,7 +19,7 @@ data class POInfoDetail(
     val columnIdMap: MutableMap<Int, Int>
 )
 
-open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: Boolean) {
+open class POInfo(val ctx: Properties, val tableId: Int, baseLanguageOnly: Boolean) {
     private val detail: Pair<POInfoDetail, Array<POInfoColumn>> = loadInfo(
         if (baseLanguageOnly) true else Env.isBaseLanguage(
             ctx,
@@ -33,7 +33,6 @@ open class POInfo(val ctx: Properties, val tableId: Int, val baseLanguageOnly: B
     val tableName: String = detail.first.tableName
     val hasKeyColumn = detail.first.hasKeyColumn
     val accessLevel = detail.first.accessLevel
-    val isChangeLog = detail.first.isChangeLog
     protected val columns: Array<POInfoColumn> = detail.second
     val columnCount = columns.size
 

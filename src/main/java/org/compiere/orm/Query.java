@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import static software.hsharp.core.util.DBKt.addPagingSQL;
-import static software.hsharp.core.util.DBKt.isPagingSupported;
 import static software.hsharp.core.util.DBKt.isPostgreSQL;
 import static software.hsharp.core.util.DBKt.prepareStatement;
 import static software.hsharp.core.util.DBKt.setParameter;

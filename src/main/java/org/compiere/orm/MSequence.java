@@ -145,7 +145,7 @@ public class MSequence extends MBaseSequence {
             int m_sequence_id = software.hsharp.core.util.DBKt.getNextID(TableName + "_SQ");
             if (m_sequence_id == -1) {
                 // try to create the sequence and try again
-                MSequence.createTableSequence(Env.getCtx(), TableName, null, true);
+                MSequence.createTableSequence(Env.getCtx(), TableName, true);
                 m_sequence_id = software.hsharp.core.util.DBKt.getNextID(TableName + "_SQ");
             }
             return m_sequence_id;
@@ -173,25 +173,23 @@ public class MSequence extends MBaseSequence {
      * ************************************************************************ Get Document No from
      * table (when the document doesn't have a c_doctype)
      *
-     * @param AD_Client_ID client
      * @param TableName    table name
-     * @param trxName      optional Transaction Name
      * @return document no or null
      */
-    public static String getDocumentNo(int AD_Client_ID, String TableName, String trxName, PO po) {
+    public static String getDocumentNo(String TableName, PO po) {
         if (TableName == null || TableName.length() == 0)
             throw new IllegalArgumentException("TableName missing");
 
         MSequence seq = get(Env.getCtx(), TableName,  /*tableID=*/ false);
         if (seq == null || seq.getId() == 0) {
-            if (!MSequence.createTableSequence(Env.getCtx(), TableName, trxName, /*tableID=*/ false))
+            if (!MSequence.createTableSequence(Env.getCtx(), TableName,  /*tableID=*/ false))
                 throw new AdempiereException("Could not create table sequence");
             seq = get(Env.getCtx(), TableName,  /*tableID=*/ false);
             if (seq == null || seq.getId() == 0)
                 throw new AdempiereException("Could not find table sequence");
         }
 
-        return getDocumentNoFromSeq(seq, trxName, po);
+        return getDocumentNoFromSeq(seq, po);
     } //	getDocumentNo
 
     /**
@@ -312,7 +310,7 @@ public class MSequence extends MBaseSequence {
         return outStr.toString();
     }
 
-    public static String getDocumentNoFromSeq(MSequence seq, String trxName, PO po) {
+    public static String getDocumentNoFromSeq(MSequence seq, PO po) {
         return doGetDocumentNoFromSeq(seq, po);
     }
 
@@ -324,31 +322,29 @@ public class MSequence extends MBaseSequence {
      * @deprecated
      */
     public static String getDocumentNo(int C_DocType_ID) {
-        return getDocumentNo(C_DocType_ID, null, false);
+        return getDocumentNo(C_DocType_ID, false);
     } //	getDocumentNo
 
     /**
      * Get Document No based on Document Type
      *
      * @param C_DocType_ID document type
-     * @param trxName      optional Transaction Name
      * @param definite     asking for a definitive or temporary sequence
      * @return document no or null
      */
-    public static String getDocumentNo(int C_DocType_ID, String trxName, boolean definite) {
-        return getDocumentNo(C_DocType_ID, trxName, definite, null);
+    public static String getDocumentNo(int C_DocType_ID, boolean definite) {
+        return getDocumentNo(C_DocType_ID, definite, null);
     }
 
     /**
      * Get Document No based on Document Type
      *
      * @param C_DocType_ID document type
-     * @param trxName      optional Transaction Name
      * @param definite     asking for a definitive or temporary sequence
      * @param po
      * @return document no or null
      */
-    public static String getDocumentNo(int C_DocType_ID, String trxName, boolean definite, PO po) {
+    public static String getDocumentNo(int C_DocType_ID, boolean definite, PO po) {
         if (C_DocType_ID == 0) {
             s_log.severe("C_DocType_ID=0");
             return null;
@@ -376,13 +372,13 @@ public class MSequence extends MBaseSequence {
         MSequence seq = new MSequence(Env.getCtx(), seqID);
 
         if (CLogMgt.isLevel(LOGLEVEL))
-            s_log.log(LOGLEVEL, "DocType_ID=" + C_DocType_ID + " [" + trxName + "]");
+            s_log.log(LOGLEVEL, "DocType_ID=" + C_DocType_ID );
 
-        return getDocumentNoFromSeq(seq, trxName, po);
+        return getDocumentNoFromSeq(seq, po);
     } //	getDocumentNo
 
     public static boolean createTableSequence(Properties ctx, String TableName) {
-        return createTableSequence(ctx, TableName, null, true);
+        return createTableSequence(ctx, TableName, true);
     }
 
     /**
@@ -390,11 +386,10 @@ public class MSequence extends MBaseSequence {
      *
      * @param ctx       context
      * @param TableName table name
-     * @param trxName   transaction
      * @return true if created
      */
     public static boolean createTableSequence(
-            Properties ctx, String TableName, String trxName, boolean tableID) {
+            Properties ctx, String TableName, boolean tableID) {
         boolean SYSTEM_NATIVE_SEQUENCE =
                 MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false);
 

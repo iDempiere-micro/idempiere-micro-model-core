@@ -7,7 +7,7 @@ import kotliquery.TransactionalSession
 import kotliquery.sessionOf
 import kotliquery.using
 import org.compiere.dbPort.Convert
-import org.compiere.dbPort.Convert_PostgreSQL
+import org.compiere.dbPort.ConvertPostgreSQL
 import org.compiere.orm.PO
 import org.idempiere.common.exceptions.AdempiereException
 import org.idempiere.common.exceptions.DBException
@@ -207,7 +207,7 @@ fun convertString(txt: String?, maxLength: Int): String {
 }
 
 fun convertString(txt: String?): String = convertString(txt, 0)
-internal val convert: Convert = Convert_PostgreSQL()
+internal val convert: Convert = ConvertPostgreSQL()
 
 // CONNECTION
 

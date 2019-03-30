@@ -103,7 +103,6 @@ public class Language implements Serializable {
         //
         m_decimalPoint = decimalPoint;
         setDateFormat(javaDatePattern);
-        setMediaSize(mediaSize);
     } //  Language
 
     /**
@@ -385,14 +384,6 @@ public class Language implements Serializable {
     public String getDBdatePattern() {
         return getDateFormat().toPattern().toUpperCase(m_locale);
     } //  getDBdatePattern
-
-    /**
-     * Set default MediaSize
-     *
-     * @param size media size
-     */
-    public void setMediaSize(MediaSize size) {
-    } //	setMediaSize
 
     /**
      * String Representation

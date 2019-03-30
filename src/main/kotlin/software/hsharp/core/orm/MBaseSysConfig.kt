@@ -6,6 +6,7 @@ import org.compiere.model.I_AD_SysConfig
 import org.compiere.orm.X_AD_SysConfig
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
+import software.hsharp.core.util.asResource
 import java.util.Properties
 
 /** Cache  */
@@ -18,15 +19,12 @@ internal fun getValue(name: String, defaultValue: String?, clientId: Int, orgId:
     if (sysConfigCache.containsKey(key))
         return defaultValue
 
-    val sql = """
-        SELECT Value FROM AD_SysConfig
-        WHERE Name=? AND AD_Client_ID IN (0, ?) AND AD_Org_ID IN (0, ?) AND IsActive='Y'
-        ORDER BY AD_Client_ID DESC, AD_Org_ID DESC
-    """.trimIndent()
-    val loadQuery = queryOf(sql, name, clientId, orgId).map { it.stringOrNull(1) }.asSingle
-    val r = DB.current.run(loadQuery)
-    sysConfigCache[name] = r
-    return r ?: defaultValue
+    return "/sql/getBaseSysConfigValue.sql".asResource { sql ->
+        val loadQuery = queryOf(sql, name, clientId, orgId).map { it.stringOrNull(1) }.asSingle
+        val r = DB.current.run(loadQuery)
+        sysConfigCache[name] = r
+        r ?: defaultValue
+    }
 }
 
 abstract class MBaseSysConfig : X_AD_SysConfig {

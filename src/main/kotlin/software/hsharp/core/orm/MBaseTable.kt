@@ -38,7 +38,7 @@ internal fun get(ctx: Properties, tableName: String?): MTable? {
 
     if (retValue != null) {
         val key = retValue.tableTableId
-        tableCache.put(key, retValue)
+        tableCache[key] = retValue
     }
     return retValue
 } // 	get
@@ -77,8 +77,6 @@ abstract class MBaseTable : X_AD_Table {
     protected val columns: Array<MColumn> = detail.m_columns
     /** column name to index map *  */
     protected val columnNameMap: MutableMap<String, Int> = detail.m_columnNameMap
-    /** ad_column_id to index map *  */
-    protected val columnIdMap: MutableMap<Int, Int> = detail.m_columnIdMap
 
     @Synchronized
     fun getColumns(requery: Boolean): Array<MColumn> {

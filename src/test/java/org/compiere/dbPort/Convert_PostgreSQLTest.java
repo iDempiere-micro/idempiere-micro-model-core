@@ -12,7 +12,7 @@ public final class Convert_PostgreSQLTest extends TestCase {
     String sql;
     String sqe;
     String[] r;
-    private Convert_PostgreSQL convert = new Convert_PostgreSQL();
+    private ConvertPostgreSQL convert = new ConvertPostgreSQL();
 
     public Convert_PostgreSQLTest() {
     }

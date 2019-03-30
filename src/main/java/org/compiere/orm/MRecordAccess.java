@@ -1,7 +1,6 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.util.Msg;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,10 +22,6 @@ public class MRecordAccess extends X_AD_Record_Access {
     private static final long serialVersionUID = -5115765616266528435L;
     //	Key Column Name			*/
     private String m_keyColumnName = null;
-    /**
-     * TableName
-     */
-    private String m_tableName;
 
     /**
      * Load Constructor
@@ -133,34 +128,4 @@ public class MRecordAccess extends X_AD_Record_Access {
         return sb.toString();
     } //	toString
 
-    /**
-     * Get Table Name
-     *
-     * @param ctx context
-     * @return table name
-     */
-    public String getTableName(Properties ctx) {
-        if (m_tableName == null) {
-            String sql = "SELECT TableName FROM AD_Table WHERE AD_Table_ID=?";
-            PreparedStatement pstmt = null;
-            ResultSet rs = null;
-            try {
-                pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getRecordTableId());
-                rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    m_tableName = rs.getString(1);
-                }
-            } catch (Exception e) {
-                log.log(Level.SEVERE, sql, e);
-            } finally {
-                rs = null;
-                pstmt = null;
-            }
-            //	Get Clear Text
-            String realName = Msg.translate(ctx, m_tableName + "_ID");
-            if (!realName.equals(m_tableName + "_ID")) m_tableName = realName;
-        }
-        return m_tableName;
-    } //	getTableName
 } //	MRecordAccess

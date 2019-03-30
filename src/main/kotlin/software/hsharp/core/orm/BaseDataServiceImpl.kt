@@ -15,11 +15,17 @@ open class BaseDataServiceImpl<T : IPO> (
     private val shared: Boolean
 ) : BaseDataService<T> {
 
+    protected open fun andWhere(): String = "1=1"
+
     /**
      * get all [T] either also with for client = 0 or only for the current clitn
      */
     override fun getAll(): List<T> {
-        return Query(environmentService.context, tableName, if (shared) "AD_Client_ID=0 OR AD_Client_ID=?" else "AD_Client_ID=?")
+        val where =
+            (if (shared)
+                "AD_Client_ID=0 OR AD_Client_ID=?"
+            else "AD_Client_ID=?") + " AND " + andWhere()
+        return Query(environmentService.context, tableName, where)
             .setParameters(environmentService.clientId)
             .list()
     }

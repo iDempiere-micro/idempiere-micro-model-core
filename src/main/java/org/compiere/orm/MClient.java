@@ -167,12 +167,4 @@ public class MClient extends X_AD_Client {
         return ca.equalsIgnoreCase(CLIENT_ACCOUNTING_IMMEDIATE);
     }
 
-    public boolean sendEMail(String to, String subject, String message, File attachment) {
-        return true;
-    }
-
-    public boolean sendEMail(
-            String to, String subject, String message, File attachment, boolean html) {
-        return true;
-    }
 }

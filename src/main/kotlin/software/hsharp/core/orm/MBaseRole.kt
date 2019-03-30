@@ -35,7 +35,7 @@ internal fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
  */
 internal fun getOf(ctx: Properties, whereClause: String?): List<MRole> {
     var sql = "SELECT * FROM AD_Role"
-    if (whereClause != null && whereClause.length > 0) sql += " WHERE $whereClause"
+    if (whereClause != null && whereClause.isNotEmpty()) sql += " WHERE $whereClause"
 
     val query = queryOf(sql, listOf()).map { row -> MRole(ctx, row) }.asList
     return DB.current.run(query)

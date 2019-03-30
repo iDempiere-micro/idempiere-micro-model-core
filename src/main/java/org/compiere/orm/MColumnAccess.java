@@ -1,14 +1,8 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.util.Msg;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Properties;
-import java.util.logging.Level;
-
-import static software.hsharp.core.util.DBKt.prepareStatement;
 
 /**
  * Column Access Model
@@ -72,58 +66,4 @@ public class MColumnAccess extends X_AD_Column_Access {
         return sb.toString();
     } //	toString
 
-    /**
-     * Get Table Name
-     *
-     * @param ctx context for translatioin
-     * @return table name
-     */
-    public String getTableName(Properties ctx) {
-        if (m_tableName == null) getColumnName(ctx);
-        return m_tableName;
-    } //	getTableName
-
-    /**
-     * Get Column Name
-     *
-     * @param ctx context for translatioin
-     * @return column name
-     */
-    public String getColumnName(Properties ctx) {
-        if (m_columnName == null) {
-            String sql =
-                    "SELECT t.TableName,c.ColumnName, t.AD_Table_ID "
-                            + "FROM AD_Table t INNER JOIN AD_Column c ON (t.AD_Table_ID=c.AD_Table_ID) "
-                            + "WHERE AD_Column_ID=?";
-            PreparedStatement pstmt = null;
-            ResultSet rs = null;
-            try {
-                pstmt = prepareStatement(sql);
-                pstmt.setInt(1, getColumnId());
-                rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    m_tableName = rs.getString(1);
-                    m_columnName = rs.getString(2);
-                    if (rs.getInt(3) != getColumnTableId())
-                        log.log(
-                                Level.SEVERE,
-                                "AD_Table_ID inconsistent - Access="
-                                        + getColumnTableId()
-                                        + " - Table="
-                                        + rs.getInt(3));
-                }
-            } catch (Exception e) {
-                log.log(Level.SEVERE, sql, e);
-            } finally {
-                rs = null;
-                pstmt = null;
-            }
-            //	Get Clear Text
-            StringBuilder msgrn = new StringBuilder(m_tableName).append("_ID");
-            String realName = Msg.translate(ctx, msgrn.toString());
-            if (!realName.equals(msgrn.toString())) m_tableName = realName;
-            m_columnName = Msg.translate(ctx, m_columnName);
-        }
-        return m_columnName;
-    } //	getColumnName
 } //	MColumnAccess

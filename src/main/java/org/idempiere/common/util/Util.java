@@ -146,27 +146,6 @@ public class Util {
         return in;
     } //	cleanAmp
 
-    /**
-     * Trim to max byte size
-     *
-     * @param str  string
-     * @param size max size in bytes
-     * @return string
-     */
-    public static String trimSize(String str, int size) {
-        if (str == null) return str;
-        if (size <= 0) throw new IllegalArgumentException("Trim size invalid: " + size);
-        //	Assume two byte code
-        int length = str.length();
-        if (length < size / 2) return str;
-        byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-        if (bytes.length <= size) return str;
-        //	create new - may cut last character in half
-        byte[] result = new byte[size];
-        System.arraycopy(bytes, 0, result, 0, size);
-        return new String(result, StandardCharsets.UTF_8);
-    } //	trimSize
-
     public static Timestamp removeTime(Timestamp ts) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(ts);

@@ -23,7 +23,7 @@ public class MOrg extends X_AD_Org {
     /**
      * Cache
      */
-    private static CCache<Integer, MOrg> s_cache = new CCache<Integer, MOrg>(I_AD_Org.Table_Name, 50);
+    private static CCache<Integer, MOrg> s_cache = new CCache<>(I_AD_Org.Table_Name, 50);
     /**
      * Linked Business Partner
      */
@@ -34,13 +34,10 @@ public class MOrg extends X_AD_Org {
      *
      * @param ctx       context
      * @param AD_Org_ID id
-     * @param trxName   transaction
      */
     public MOrg(Properties ctx, int AD_Org_ID) {
         super(ctx, AD_Org_ID);
         if (AD_Org_ID == 0) {
-            //	setValue (null);
-            //	setName (null);
             setIsSummary(false);
         }
     } //	MOrg
@@ -49,8 +46,6 @@ public class MOrg extends X_AD_Org {
      * Load Constructor
      *
      * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
      */
     public MOrg(Properties ctx, Row row) {
         super(ctx, row);
@@ -85,7 +80,7 @@ public class MOrg extends X_AD_Org {
         for (MOrg org : list) {
             s_cache.put(org.getId(), org);
         }
-        return list.toArray(new MOrg[list.size()]);
+        return list.toArray(new MOrg[0]);
     } //	getOfClient
 
     /**
@@ -154,15 +149,15 @@ public class MOrg extends X_AD_Org {
      *
      * @return C_BPartner_ID
      */
-    public int getLinkedC_BPartnerId(String trxName) {
+    public int getLinkedC_BPartnerId() {
         if (m_linkedBPartner == null) {
             int C_BPartner_ID =
                     getSQLValue(
                             "SELECT C_BPartner_ID FROM C_BPartner WHERE AD_OrgBP_ID=?", getOrgId());
             if (C_BPartner_ID < 0) // 	not found = -1
                 C_BPartner_ID = 0;
-            m_linkedBPartner = new Integer(C_BPartner_ID);
+            m_linkedBPartner = C_BPartner_ID;
         }
-        return m_linkedBPartner.intValue();
+        return m_linkedBPartner;
     } //	getLinkedC_BPartner_ID
 } //	MOrg

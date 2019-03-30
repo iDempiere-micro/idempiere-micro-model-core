@@ -189,15 +189,14 @@ public class POInfoColumn implements Serializable {
      * @return info
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("POInfo.Column[");
-        sb.append(ColumnName)
-                .append(",ID=")
-                .append(AD_Column_ID)
-                .append(",DisplayType=")
-                .append(DisplayType)
-                .append(",ColumnClass=")
-                .append(ColumnClass);
-        sb.append("]");
-        return sb.toString();
+        String sb = "POInfo.Column[" + ColumnName +
+                ",ID=" +
+                AD_Column_ID +
+                ",DisplayType=" +
+                DisplayType +
+                ",ColumnClass=" +
+                ColumnClass +
+                "]";
+        return sb;
     } //	toString
 } //	POInfoColumn

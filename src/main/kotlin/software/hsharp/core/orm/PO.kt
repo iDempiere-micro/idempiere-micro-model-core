@@ -113,7 +113,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
      * @return object
      */
     protected fun getLOB(value: Any?): Any? {
-        log.trace { "Value=" + value }
+        log.trace { "Value=$value" }
         if (value == null) return null
         //
         var retValue: Any? = null
@@ -155,22 +155,22 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             if (i != 0) sb.append(" AND ")
             sb.append(keyColumns[i]).append("=")
             if (withValues) {
-                if (keyColumns[i]?.endsWith("_ID") == true)
-                    sb.append(ids[i])
-                else if (ids[i] is Timestamp)
-                    sb.append(convertDate(ids[i] as Timestamp, false))
-                else {
-                    sb.append("'")
-                    if (ids[i] is Boolean) {
-                        if (ids[i] as Boolean) {
-                            sb.append("Y")
+                when {
+                    keyColumns[i]?.endsWith("_ID") == true -> sb.append(ids[i])
+                    ids[i] is Timestamp -> sb.append(convertDate(ids[i] as Timestamp, false))
+                    else -> {
+                        sb.append("'")
+                        if (ids[i] is Boolean) {
+                            if (ids[i] as Boolean) {
+                                sb.append("Y")
+                            } else {
+                                sb.append("N")
+                            }
                         } else {
-                            sb.append("N")
+                            sb.append(ids[i])
                         }
-                    } else {
-                        sb.append(ids[i])
+                        sb.append("'")
                     }
-                    sb.append("'")
                 }
             } else
                 sb.append("?")
@@ -181,7 +181,6 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     /**
      * (re)Load record with m_ID[*]
      *
-     * @param trxName transaction
      * @return true if loaded
      */
     fun load(): Boolean {
@@ -198,14 +197,12 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         log.trace(getWhereClause(true))
 
         fun mapParameter(oo: Any?): Any {
-            if (oo is Int)
-                return oo
-            else if (oo is Boolean)
-                return if (oo) "Y" else "N"
-            else if (oo is Timestamp)
-                return oo
-            else
-                return oo.toString()
+            return when (oo) {
+                is Int -> oo
+                is Boolean -> if (oo) "Y" else "N"
+                is Timestamp -> oo
+                else -> oo.toString()
+            }
         }
 
         val params = ids.map { mapParameter(it) }.toTypedArray()
@@ -281,17 +278,17 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
                 m_keyColumns = arrayOf(ColumnName)
                 if (p_info.getColumnName(i)!!.endsWith("_ID")) {
                     val ii = getValue(i) as Int?
-                    if (ii == null)
-                        ids = arrayOf(I_ZERO)
+                    ids = if (ii == null)
+                        arrayOf(I_ZERO)
                     else
-                        ids = arrayOf(ii)
+                        arrayOf(ii)
                     log.trace { "(PK) $ColumnName=$ii" }
                 } else {
                     val oo = getValue(i)
-                    if (oo == null)
-                        ids = arrayOf(null)
+                    ids = if (oo == null)
+                        arrayOf(null)
                     else
-                        ids = arrayOf(oo)
+                        arrayOf(oo)
                     log.trace { "(PK) $ColumnName=$oo" }
                 }
                 return
@@ -407,7 +404,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             .append(acctBaseTable)
             .append(" p WHERE p.AD_Client_ID=")
             .append(clientId)
-        if (whereClause != null && whereClause.length > 0) sb.append(" AND ").append(whereClause)
+        if (whereClause != null && whereClause.isNotEmpty()) sb.append(" AND ").append(whereClause)
         sb.append(" AND NOT EXISTS (SELECT * FROM ")
             .append(acctTable)
             .append(" e WHERE e.C_AcctSchema_ID=p.C_AcctSchema_ID AND e.")
@@ -439,11 +436,11 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     fun getValueAsInt(index: Int): Int {
         val value = getValue(index) ?: return 0
         if (value is Int) return value
-        try {
-            return Integer.parseInt(value.toString())
+        return try {
+            Integer.parseInt(value.toString())
         } catch (ex: NumberFormatException) {
             log.warn(p_info.getColumnName(index) + " - " + ex.message)
-            return 0
+            0
         }
     } //  get_ValueAsInt
 
@@ -470,6 +467,6 @@ fun getAllIDs(tableName: String, whereClause: String?): IntArray {
 }
 
 fun getIDsEx(sql: String, vararg params: Any): IntArray {
-    val loadQuery = software.hsharp.core.util.queryOf(sql.toString(), listOf(*params)).map { row -> row.int(1) }.asList
+    val loadQuery = software.hsharp.core.util.queryOf(sql, listOf(*params)).map { row -> row.int(1) }.asList
     return DB.current.run(loadQuery).toIntArray()
 }

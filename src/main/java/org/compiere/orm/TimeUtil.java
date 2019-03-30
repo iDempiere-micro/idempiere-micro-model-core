@@ -160,34 +160,6 @@ public class TimeUtil {
     } //	formatElapsed
 
     /**
-     * Is it valid today?
-     *
-     * @param validFrom valid from
-     * @param validTo   valid to
-     * @return true if walid
-     */
-    public static boolean isValid(Timestamp validFrom, Timestamp validTo) {
-        return isValid(validFrom, validTo, new Timestamp(System.currentTimeMillis()));
-    } //	isValid
-
-    /**
-     * Is it valid on test date
-     *
-     * @param validFrom valid from
-     * @param validTo   valid to
-     * @param testDate  Date
-     * @return true if walid
-     */
-    public static boolean isValid(Timestamp validFrom, Timestamp validTo, Timestamp testDate) {
-        if (testDate == null) return true;
-        if (validFrom == null && validTo == null) return true;
-        //	(validFrom)	ok
-        if (validFrom != null && validFrom.after(testDate)) return false;
-        //	ok	(validTo)
-        return validTo == null || !validTo.before(testDate);
-    } //	isValid
-
-    /**
      * Get today (truncate)
      *
      * @return day with 00:00
@@ -222,54 +194,6 @@ public class TimeUtil {
         cal.add(Calendar.DAY_OF_YEAR, -1); // 	previous
         return new Timestamp(cal.getTimeInMillis());
     } //	getNextDay
-
-    /**
-     * Calculate the number of days between start and end.
-     *
-     * @param start start date
-     * @param end   end date
-     * @return number of days (0 = same)
-     */
-    public static int getDaysBetween(Timestamp start, Timestamp end) {
-        boolean negative = false;
-        if (end.before(start)) {
-            negative = true;
-            Timestamp temp = start;
-            start = end;
-            end = temp;
-        }
-        //
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(start);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        GregorianCalendar calEnd = new GregorianCalendar();
-        calEnd.setTime(end);
-        calEnd.set(Calendar.HOUR_OF_DAY, 0);
-        calEnd.set(Calendar.MINUTE, 0);
-        calEnd.set(Calendar.SECOND, 0);
-        calEnd.set(Calendar.MILLISECOND, 0);
-
-        //	System.out.println("Start=" + start + ", End=" + end + ", dayStart=" +
-        // cal.get(Calendar.DAY_OF_YEAR) + ", dayEnd=" + calEnd.get(Calendar.DAY_OF_YEAR));
-
-        //	in same year
-        if (cal.get(Calendar.YEAR) == calEnd.get(Calendar.YEAR)) {
-            if (negative) return (calEnd.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_YEAR)) * -1;
-            return calEnd.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_YEAR);
-        }
-
-        //	not very efficient, but correct
-        int counter = 0;
-        while (calEnd.after(cal)) {
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            counter++;
-        }
-        if (negative) return counter * -1;
-        return counter;
-    } //	getDaysBetween
 
     /**
      * Get truncated day/time

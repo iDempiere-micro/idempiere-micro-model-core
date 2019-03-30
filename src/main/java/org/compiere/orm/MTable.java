@@ -89,7 +89,7 @@ public class MTable extends MBaseTable {
      * @return MTable
      */
     public static MTable get(Properties ctx, int AD_Table_ID) {
-        Integer key = Integer.valueOf(AD_Table_ID);
+        Integer key = AD_Table_ID;
         MTable retValue = getTableCache().get(key);
         if (retValue != null && retValue.getCtx() == ctx) {
             return retValue;
