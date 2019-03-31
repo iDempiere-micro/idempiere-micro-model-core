@@ -333,6 +333,10 @@ class DB {
             }
         }
 
+        /**
+         * You need to start the transaction by wrapping the code that need it into the [operation] first.
+         * Someone else whenever inside the code then can call [current] easily to call a query from [queryOf].
+         */
         fun <T> run(operation: () -> T): T {
             val session = sessionOf(ds)
             return using(session) {
@@ -343,6 +347,10 @@ class DB {
             }
         }
 
+        /**
+         * You want to use this in the code when you need to execute a query from [queryOf].
+         * Someone else on the top level e.g. when processing a GraphQL request had to start the transaction first.
+         */
         val current: TransactionalSession
             get() {
                 return context.get() ?: throw AdempiereException("Start transaction on the entry point first")
