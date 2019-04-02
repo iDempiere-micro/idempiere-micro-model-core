@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Private_Access;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Private_Access
  *
@@ -21,8 +19,8 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access {
     /**
      * Standard Constructor
      */
-    public X_AD_Private_Access(Properties ctx, int AD_Private_Access_ID) {
-        super(ctx, AD_Private_Access_ID);
+    public X_AD_Private_Access(int AD_Private_Access_ID) {
+        super(AD_Private_Access_ID);
         /**
          * if (AD_Private_Access_ID == 0) { setColumnTableId (0); setUserId (0); setRecordId (0); }
          */
@@ -31,8 +29,8 @@ public class X_AD_Private_Access extends PO implements I_AD_Private_Access {
     /**
      * Load Constructor
      */
-    public X_AD_Private_Access(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Private_Access(Row row) {
+        super(row);
     }
 
     /**

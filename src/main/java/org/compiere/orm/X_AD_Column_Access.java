@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Column_Access;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Column_Access
  *
@@ -21,8 +19,8 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
     /**
      * Standard Constructor
      */
-    public X_AD_Column_Access(Properties ctx, int AD_Column_Access_ID) {
-        super(ctx, AD_Column_Access_ID);
+    public X_AD_Column_Access(int AD_Column_Access_ID) {
+        super(AD_Column_Access_ID);
         /**
          * if (AD_Column_Access_ID == 0) { setColumnId (0); setRoleId (0); setIsExclude (true); // Y
          * setIsReadOnly (false); }
@@ -32,8 +30,8 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
     /**
      * Load Constructor
      */
-    public X_AD_Column_Access(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Column_Access(Row row) {
+        super(row);
     } //	MColumnAccess
 
     /**

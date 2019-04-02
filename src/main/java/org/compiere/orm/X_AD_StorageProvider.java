@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_StorageProvider;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_StorageProvider
  *
@@ -21,16 +19,16 @@ public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider {
     /**
      * Standard Constructor
      */
-    public X_AD_StorageProvider(Properties ctx, int AD_StorageProvider_ID) {
-        super(ctx, AD_StorageProvider_ID);
+    public X_AD_StorageProvider(int AD_StorageProvider_ID) {
+        super(AD_StorageProvider_ID);
         /** if (AD_StorageProvider_ID == 0) { setAD_StorageProvider_ID (0); setName (null); } */
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_StorageProvider(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_StorageProvider(Row row) {
+        super(row);
     }
 
     /**

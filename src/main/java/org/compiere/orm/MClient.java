@@ -5,11 +5,10 @@ import org.compiere.model.I_AD_Client;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Language;
+import software.hsharp.core.util.Environment;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 public class MClient extends X_AD_Client {
     /*
@@ -28,7 +27,7 @@ public class MClient extends X_AD_Client {
      * Cache
      */
     protected static CCache<Integer, MClient> s_cache =
-            new CCache<Integer, MClient>(Table_Name, 3, 120, true);
+            new CCache<>(Table_Name, 3, 120, true);
     /**
      * Client Info
      */
@@ -40,10 +39,9 @@ public class MClient extends X_AD_Client {
      * @param ctx          context
      * @param AD_Client_ID id
      * @param createNew    create new
-     * @param trxName      transaction
      */
-    public MClient(Properties ctx, int AD_Client_ID, boolean createNew) {
-        super(ctx, AD_Client_ID);
+    public MClient(int AD_Client_ID, boolean createNew) {
+        super(AD_Client_ID);
         createNew = createNew;
         if (AD_Client_ID == 0) {
             if (createNew) {
@@ -67,55 +65,49 @@ public class MClient extends X_AD_Client {
      *
      * @param ctx          context
      * @param AD_Client_ID id
-     * @param trxName      transaction
      */
-    public MClient(Properties ctx, int AD_Client_ID) {
-        this(ctx, AD_Client_ID, false);
+    public MClient(int AD_Client_ID) {
+        this(AD_Client_ID, false);
     } //	MClient
 
     /**
      * Load Constructor
      *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
+     * @param ctx context
      */
-    public MClient(Properties ctx, Row row) {
-        super(ctx, row);
+    public MClient(Row row) {
+        super(row);
     } //	MClient
 
     /**
      * Simplified Constructor
      *
-     * @param ctx     context
-     * @param trxName transaction
+     * @param ctx context
      */
-    public MClient(Properties ctx) {
-        this(ctx, Env.getClientId(ctx));
+    public MClient() {
+        this(Env.getClientId());
     } //	MClient
 
     /**
      * Get optionally cached client
      *
-     * @param ctx context
      * @return client
      */
-    public static MClient get(Properties ctx) {
-        return get(ctx, Env.getClientId(ctx));
+    public static MClient get() {
+        return get(Environment.Companion.getCurrent().getClientId());
     } //	get
 
     /**
      * Get client
      *
-     * @param ctx          context
      * @param AD_Client_ID id
      * @return client
      */
-    public static MClient get(Properties ctx, int AD_Client_ID) {
-        Integer key = new Integer(AD_Client_ID);
+    public static MClient get(int AD_Client_ID) {
+        Integer key = AD_Client_ID;
         MClient client = s_cache.get(key);
         if (client != null) return client;
-        client = new MClient(ctx, AD_Client_ID);
+        client = new MClient(AD_Client_ID);
         s_cache.put(key, client);
         return client;
     } //	get
@@ -123,23 +115,20 @@ public class MClient extends X_AD_Client {
     /**
      * Get all clients
      *
-     * @param ctx context
      * @return clients
      */
-    public static MClient[] getAll(Properties ctx) {
-        return getAll(ctx, "");
+    public static MClient[] getAll() {
+        return getAll("");
     } //	getAll
 
     /**
      * Get all clients
      *
-     * @param ctx   context
-     * @param order by clause
      * @return clients
      */
-    public static MClient[] getAll(Properties ctx, String orderBy) {
+    public static MClient[] getAll(String orderBy) {
         List<MClient> list =
-                new Query(ctx, I_AD_Client.Table_Name, null).setOrderBy(orderBy).list();
+                new Query(I_AD_Client.Table_Name, null).setOrderBy(orderBy).list();
         for (MClient client : list) {
             s_cache.put(client.getClientId(), client);
         }
@@ -154,7 +143,7 @@ public class MClient extends X_AD_Client {
      * @return Client Info
      */
     public MClientInfo getInfo() {
-        if (m_info == null) m_info = MClientInfo.get(getCtx(), getClientId());
+        if (m_info == null) m_info = MClientInfo.get(getClientId());
         return m_info;
     } //	getMClientInfo
 
@@ -163,7 +152,7 @@ public class MClient extends X_AD_Client {
                 MSysConfig.getConfigValue(
                         MSysConfig.CLIENT_ACCOUNTING,
                         CLIENT_ACCOUNTING_QUEUE, // default
-                        Env.getClientId(Env.getCtx()));
+                        Env.getClientId());
         return ca.equalsIgnoreCase(CLIENT_ACCOUNTING_IMMEDIATE);
     }
 

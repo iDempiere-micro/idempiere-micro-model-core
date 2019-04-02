@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_User_OrgAccess;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_User_OrgAccess
  *
@@ -21,16 +19,16 @@ public class X_AD_User_OrgAccess extends PO implements I_AD_User_OrgAccess {
     /**
      * Standard Constructor
      */
-    public X_AD_User_OrgAccess(Properties ctx, int AD_User_OrgAccess_ID) {
-        super(ctx, AD_User_OrgAccess_ID);
+    public X_AD_User_OrgAccess(int AD_User_OrgAccess_ID) {
+        super(AD_User_OrgAccess_ID);
         /** if (AD_User_OrgAccess_ID == 0) { setUserId (0); setIsReadOnly (false); // N } */
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_User_OrgAccess(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_User_OrgAccess(Row row) {
+        super(row);
     }
 
     /**

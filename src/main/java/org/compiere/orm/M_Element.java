@@ -6,7 +6,6 @@ import org.compiere.model.I_AD_Element;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.DBException;
 
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.util.DBKt.convertString;
@@ -30,42 +29,27 @@ public class M_Element extends X_AD_Element {
     /**
      * ************************************************************************ Standard Constructor
      *
-     * @param ctx           context
      * @param AD_Element_ID element
-     * @param trxName       transaction
      */
-    public M_Element(Properties ctx, int AD_Element_ID) {
-        super(ctx, AD_Element_ID);
-        if (AD_Element_ID == 0) {
-            //	setColumnName (null);
-            //	setEntityType (null);	// U
-            //	setName (null);
-            //	setPrintName (null);
-        }
+    public M_Element(int AD_Element_ID) {
+        super(AD_Element_ID);
     } //	M_Element
-
 
     /**
      * Load Constructor
-     *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
      */
-    public M_Element(Properties ctx, Row row) {
-        super(ctx, row);
+    public M_Element(Row row) {
+        super(row);
     }
 
     /**
      * Minimum Constructor
      *
-     * @param ctx        context
      * @param columnName column
      * @param EntityType entity type
-     * @param trxName    trx
      */
-    public M_Element(Properties ctx, String columnName, String EntityType) {
-        super(ctx, 0);
+    public M_Element(String columnName, String EntityType) {
+        super(0);
         setColumnName(columnName);
         setName(columnName);
         setPrintName(columnName);
@@ -76,21 +60,17 @@ public class M_Element extends X_AD_Element {
     /**
      * Get Element
      *
-     * @param ctx        context
      * @param columnName case insensitive column name
-     * @param trxName    optional transaction name
      * @return case sensitive column name
      */
-    public static M_Element get(Properties ctx, String columnName) {
+    public static M_Element get(String columnName) {
         if (columnName == null || columnName.length() == 0) return null;
         //
         // TODO: caching if trxName == null
         final String whereClause = "UPPER(ColumnName)=?";
-        M_Element retValue =
-                new Query(ctx, I_AD_Element.Table_Name, whereClause)
-                        .setParameters(columnName.toUpperCase())
-                        .firstOnly();
-        return retValue;
+        return new Query(I_AD_Element.Table_Name, whereClause)
+                .setParameters(columnName.toUpperCase())
+                .firstOnly();
     } //	get
 
     /* (non-Javadoc)
@@ -110,7 +90,7 @@ public class M_Element extends X_AD_Element {
             if (no > 0) {
                 log.saveError(
                         DBException.SAVE_ERROR_NOT_UNIQUE_MSG,
-                        Msg.getElement(getCtx(), I_AD_Element.COLUMNNAME_ColumnName));
+                        Msg.getElement(I_AD_Element.COLUMNNAME_ColumnName));
                 return false;
             }
         }
@@ -129,8 +109,8 @@ public class M_Element extends X_AD_Element {
         if (!success) return success;
         //	Update Columns, Fields, Parameters, Print Info
         if (!newRecord) {
-            StringBuilder sql = new StringBuilder();
-            int no = 0;
+            StringBuilder sql;
+            int no;
 
             if (isValueChanged(HasName.Companion.getCOLUMNNAME_Name())
                     || isValueChanged(M_Element.COLUMNNAME_Description)
@@ -250,8 +230,6 @@ public class M_Element extends X_AD_Element {
      * @return info
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("M_Element[");
-        sb.append(getId()).append("-").append(getColumnName()).append("]");
-        return sb.toString();
+        return "M_Element[" + getId() + "-" + getColumnName() + "]";
     } //	toString
 } //	M_Element

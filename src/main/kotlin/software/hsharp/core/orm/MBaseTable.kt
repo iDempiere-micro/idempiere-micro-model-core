@@ -7,7 +7,6 @@ import org.compiere.orm.DefaultModelFactory
 import org.compiere.orm.IModelFactory
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
-import java.util.Properties
 import kotlin.collections.set
 import org.compiere.orm.MTable
 import org.compiere.orm.X_AD_Table
@@ -24,16 +23,16 @@ internal val tableCache = CCache<Int, MTable>(I_AD_Table.Table_Name, 20)
  * @param tableName case insensitive table name
  * @return Table
  */
-internal fun get(ctx: Properties, tableName: String?): MTable? {
+internal fun get(tableName: String?): MTable? {
     if (tableName == null) return null
     for (retValue in tableCache.values) {
-        if (tableName.equals(retValue.dbTableName, ignoreCase = true) && retValue.ctx === ctx) {
+        if (tableName.equals(retValue.dbTableName, ignoreCase = true)) {
             return retValue
         }
     }
     //
     val sql = "SELECT * FROM AD_Table WHERE UPPER(TableName)=?"
-    val loadQuery = queryOf(sql, tableName.toUpperCase()).map { MTable(ctx, it) }.asSingle
+    val loadQuery = queryOf(sql, tableName.toUpperCase()).map { MTable(it) }.asSingle
     val retValue = DB.current.run(loadQuery)
 
     if (retValue != null) {
@@ -54,12 +53,12 @@ private data class MBaseTableDetail(
 )
 
 abstract class MBaseTable : X_AD_Table {
-    constructor(ctx: Properties, AD_Table_ID: Int) : super(ctx, AD_Table_ID)
-    constructor(ctx: Properties, row: Row?) : super(ctx, row)
+    constructor(AD_Table_ID: Int) : super(AD_Table_ID)
+    constructor(row: Row?) : super(row)
 
     private fun initDetail(): MBaseTableDetail {
         val sql = "SELECT * FROM AD_Column WHERE AD_Table_ID=? AND IsActive='Y' ORDER BY ColumnName"
-        val loadQuery = queryOf(sql, this.id).map { MColumn(ctx, it) }.asList
+        val loadQuery = queryOf(sql, this.id).map { MColumn(it) }.asList
         val r = DB.current.run(loadQuery)
         val columnNameMap: MutableMap<String, Int> = mutableMapOf()
         val columnIdMap: MutableMap<Int, Int> = mutableMapOf()
@@ -97,7 +96,7 @@ abstract class MBaseTable : X_AD_Table {
         }
 
         if (po == null) {
-            po = GenericPO(tableName, ctx, row)
+            po = GenericPO(tableName, row)
         }
 
         return po
@@ -120,7 +119,7 @@ abstract class MBaseTable : X_AD_Table {
     fun getPO(whereClause: String?, params: Array<Any?>?): org.idempiere.orm.PO? {
         if (whereClause == null || whereClause.isEmpty()) return null
 
-        val info = POInfo.getPOInfo(ctx, tableTableId) ?: return null
+        val info = POInfo.getPOInfo(tableTableId) ?: return null
         val sqlBuffer = info.buildSelect()
         sqlBuffer.append(" WHERE ").append(whereClause)
         val sql = sqlBuffer.toString()

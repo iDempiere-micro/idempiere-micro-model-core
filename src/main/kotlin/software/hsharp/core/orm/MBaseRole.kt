@@ -6,23 +6,22 @@ import org.compiere.orm.MColumnAccess
 import org.compiere.orm.MRole
 import org.compiere.orm.MTableAccess
 import org.compiere.orm.X_AD_Role
-import org.compiere.orm.MOrg
 import org.compiere.orm.MRecordAccess
 import org.compiere.orm.MRoleOrgAccess
 import org.compiere.orm.MTree_Base
 import org.compiere.orm.MUserOrgAccess
+import org.compiere.orm.getOrg
 import org.compiere.util.Msg
 import org.idempiere.common.util.CLogger
 import org.idempiere.common.util.Env
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.queryOf
 import java.io.Serializable
-import java.util.Properties
 import java.util.logging.Level
 
-internal fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
+internal fun getOfClient(): kotlin.Array<MRole> {
     val sql = "SELECT * FROM AD_Role WHERE AD_Client_ID=?"
-    val loadQuery = queryOf(sql, listOf(Env.getClientId(ctx))).map { MRole(ctx, it) }.asList
+    val loadQuery = queryOf(sql, listOf(Env.getClientId())).map { MRole(it) }.asList
     return DB.current.run(loadQuery).toTypedArray()
 } // 	getOfClient
 
@@ -33,11 +32,11 @@ internal fun getOfClient(ctx: Properties): kotlin.Array<MRole> {
  * @param whereClause where clause
  * @return roles of client
  */
-internal fun getOf(ctx: Properties, whereClause: String?): List<MRole> {
+internal fun getOf(whereClause: String?): List<MRole> {
     var sql = "SELECT * FROM AD_Role"
     if (whereClause != null && whereClause.isNotEmpty()) sql += " WHERE $whereClause"
 
-    val query = queryOf(sql, listOf()).map { row -> MRole(ctx, row) }.asList
+    val query = queryOf(sql, listOf()).map { row -> MRole(row) }.asList
     return DB.current.run(query)
 } // 	getOf
 
@@ -45,10 +44,9 @@ open class MBaseRole : X_AD_Role {
     /** List of Table Access  */
     private val tableAccesses: MutableList<MTableAccess> = mutableListOf()
 
-    constructor(ctx: Properties, Id: Int) : super(ctx, Id)
-    constructor(ctx: Properties, row: Row) : super(ctx, row)
+    constructor(Id: Int) : super(Id)
+    constructor(row: Row) : super(row)
 
-    protected val localContext: Properties get() = super.getMyContext()
     protected val localLog: CLogger get() = super.getMyLog()
 
     /**
@@ -109,15 +107,15 @@ open class MBaseRole : X_AD_Role {
          */
         override fun toString(): String {
             var clientName = "System"
-            if (clientId != 0) clientName = MClient.get(localContext, clientId).name
+            if (clientId != 0) clientName = MClient.get(clientId).name
             var orgName = "*"
-            if (orgId != 0) orgName = MOrg.get(localContext, orgId).name
+            if (orgId != 0) orgName = getOrg(orgId).name
             val sb = StringBuilder()
-            sb.append(Msg.translate(localContext, "AD_Client_ID"))
+            sb.append(Msg.translate("AD_Client_ID"))
                 .append("=")
                 .append(clientName)
                 .append(" - ")
-                .append(Msg.translate(localContext, "AD_Org_ID"))
+                .append(Msg.translate("AD_Org_ID"))
                 .append("=")
                 .append(orgName)
             if (readOnly) sb.append(" r/o")
@@ -136,10 +134,10 @@ open class MBaseRole : X_AD_Role {
         list.add(oa)
         // 	Do we look for trees?
         if (treeOrgId == 0) return
-        val org = MOrg.get(localContext, oa.orgId)
+        val org = getOrg(oa.orgId)
         if (!org.isSummary) return
         // 	Summary Org - Get Dependents
-        val tree = MTree_Base.get(localContext, treeOrgId)
+        val tree = MTree_Base.get(treeOrgId)
         val sql = ("SELECT AD_Client_ID, orgId FROM AD_Org " +
                 "WHERE IsActive='Y' AND orgId IN (SELECT Node_ID FROM " +
                 tree.nodeTableName +
@@ -160,7 +158,7 @@ open class MBaseRole : X_AD_Role {
      */
     protected fun loadOrgAccessRole(list: ArrayList<OrgAccess>) {
         fun load(row: Row): Boolean {
-            val oa = MRoleOrgAccess(localContext, row)
+            val oa = MRoleOrgAccess(row)
             loadOrgAccessAdd(list, OrgAccess(oa.clientId, oa.orgId, oa.isReadOnly))
             return true
         }
@@ -178,7 +176,7 @@ open class MBaseRole : X_AD_Role {
     protected fun loadTableAccess(reload: Boolean): Array<MTableAccess> {
         if (tableAccesses.isNotEmpty() && !reload) return tableAccesses.toTypedArray()
         val sql = "SELECT * FROM AD_Table_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
-        val loadQuery = queryOf(sql, listOf(roleId)).map { MTableAccess(localContext, it) }.asList
+        val loadQuery = queryOf(sql, listOf(roleId)).map { MTableAccess(it) }.asList
         val result = DB.current.run(loadQuery)
         tableAccesses.clear()
         tableAccesses.addAll(result)
@@ -254,7 +252,7 @@ open class MBaseRole : X_AD_Role {
     protected fun loadColumnAccess(reload: Boolean): Array<MColumnAccess> {
         if (m_columnAccess.isNotEmpty() && !reload) return m_columnAccess.toTypedArray()
         val sql = "SELECT * FROM AD_Column_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
-        val loadQuery = queryOf(sql, listOf(roleId)).map { MColumnAccess(localContext, it) }.asList
+        val loadQuery = queryOf(sql, listOf(roleId)).map { MColumnAccess(it) }.asList
         val result = DB.current.run(loadQuery)
         m_columnAccess.clear()
         m_columnAccess.addAll(result)
@@ -271,7 +269,7 @@ open class MBaseRole : X_AD_Role {
         val sql = "SELECT * FROM AD_User_OrgAccess " + "WHERE AD_User_ID=? AND IsActive='Y'"
 
         fun load(row: Row): Int {
-            val oa = MUserOrgAccess(ctx, row)
+            val oa = MUserOrgAccess(row)
             loadOrgAccessAdd(list, OrgAccess(oa.clientId, oa.orgId, oa.isReadOnly()))
             return 0
         }
@@ -312,7 +310,7 @@ open class MBaseRole : X_AD_Role {
         if (!(reload || recordAccess.isEmpty() || recordDependentAccess.isEmpty())) return
 
         fun load(row: Row): Int {
-            val ra = MRecordAccess(ctx, row)
+            val ra = MRecordAccess(row)
             recordAccess.add(ra)
             if (ra.isDependentEntities) recordDependentAccess.add(ra)
             return 0

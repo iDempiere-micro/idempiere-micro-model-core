@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_TreeNodeMM;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_TreeNodeMM
  *
@@ -21,16 +19,16 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM {
     /**
      * Standard Constructor
      */
-    public X_AD_TreeNodeMM(Properties ctx, int AD_TreeNodeMM_ID) {
-        super(ctx, AD_TreeNodeMM_ID);
+    public X_AD_TreeNodeMM(int AD_TreeNodeMM_ID) {
+        super(AD_TreeNodeMM_ID);
         /** if (AD_TreeNodeMM_ID == 0) { setTreeId (0); setNodeId (0); } */
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_TreeNodeMM(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_TreeNodeMM(Row row) {
+        super(row);
     }
 
     /**

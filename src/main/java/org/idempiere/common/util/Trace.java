@@ -1,6 +1,5 @@
 package org.idempiere.common.util;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**

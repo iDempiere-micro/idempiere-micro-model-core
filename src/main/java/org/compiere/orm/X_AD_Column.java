@@ -7,7 +7,6 @@ import org.compiere.model.I_AD_Reference;
 import org.compiere.model.I_AD_Table;
 
 import java.math.BigDecimal;
-import java.util.Properties;
 
 /**
  * Generated Model for AD_Column
@@ -29,15 +28,15 @@ public class X_AD_Column extends PO implements I_AD_Column {
     /**
      * Load Constructor
      */
-    public X_AD_Column(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Column(Row row) {
+        super(row);
     }
 
     /**
      * Standard Constructor
      */
-    public X_AD_Column(Properties ctx, int AD_Column_ID) {
-        super(ctx, AD_Column_ID);
+    public X_AD_Column(int AD_Column_ID) {
+        super(AD_Column_ID);
         /**
          * if (AD_Column_ID == 0) { setColumnId (0); setElementId (0); setReferenceId (0);
          * setColumnTableId (0); setColumnName (null); setEntityType (null); // @SQL=select
@@ -111,7 +110,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
 
     public I_AD_Reference getReference() throws RuntimeException {
         return (I_AD_Reference)
-                MTable.get(getCtx(), I_AD_Reference.Table_Name).getPO(getReferenceId());
+                MTable.get(I_AD_Reference.Table_Name).getPO(getReferenceId());
     }
 
     /**
@@ -147,7 +146,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     }
 
     public I_AD_Table getColumnTable() throws RuntimeException {
-        return (I_AD_Table) MTable.get(getCtx(), I_AD_Table.Table_Name).getPO(getColumnTableId());
+        return (I_AD_Table) MTable.get(I_AD_Table.Table_Name).getPO(getColumnTableId());
     }
 
     /**

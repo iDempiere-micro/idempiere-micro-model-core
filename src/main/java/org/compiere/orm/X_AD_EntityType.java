@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_EntityType;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_EntityType
  *
@@ -21,15 +19,15 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType {
     /**
      * Standard Constructor
      */
-    public X_AD_EntityType(Properties ctx, int AD_EntityType_ID) {
-        super(ctx, AD_EntityType_ID);
+    public X_AD_EntityType(int AD_EntityType_ID) {
+        super(AD_EntityType_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_EntityType(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_EntityType(Row row) {
+        super(row);
     }
 
     /**

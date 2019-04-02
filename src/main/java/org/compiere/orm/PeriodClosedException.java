@@ -1,7 +1,6 @@
 package org.compiere.orm;
 
 import org.idempiere.common.exceptions.AdempiereException;
-import org.idempiere.common.util.Env;
 
 import java.sql.Timestamp;
 
@@ -28,6 +27,6 @@ public class PeriodClosedException extends AdempiereException {
                         + dateAcct
                         + ", @DocBaseType@="
                         + MRefList.getListName(
-                        Env.getCtx(), X_C_DocType.DOCBASETYPE_AD_Reference_ID, docBaseType));
+                        X_C_DocType.DOCBASETYPE_AD_Reference_ID, docBaseType));
     }
 }

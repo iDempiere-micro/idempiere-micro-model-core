@@ -2,8 +2,6 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 
-import java.util.Properties;
-
 /**
  * (Disk) Tree Node Model BPartner
  *
@@ -23,8 +21,8 @@ public class MTree_NodeBP extends X_AD_TreeNodeBP {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MTree_NodeBP(Properties ctx, Row row) {
-        super(ctx, row);
+    public MTree_NodeBP(Row row) {
+        super(row);
     } //	MTree_NodeBP
 
     /**
@@ -34,7 +32,7 @@ public class MTree_NodeBP extends X_AD_TreeNodeBP {
      * @param Node_ID node
      */
     public MTree_NodeBP(MTree_Base tree, int Node_ID) {
-        super(tree.getCtx(), 0);
+        super(0);
         setClientOrg(tree);
         setTreeId(tree.getTreeId());
         setNodeId(Node_ID);

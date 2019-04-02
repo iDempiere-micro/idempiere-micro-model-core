@@ -5,7 +5,6 @@ import org.idempiere.common.util.CCache;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Properties;
 
 /**
  * Persistent Object Info. Provides structural information
@@ -34,25 +33,25 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      * @param AD_Table_ID      AD_ Table_ID
      * @param baseLanguageOnly get in base language
      */
-    protected POInfo(Properties ctx, int AD_Table_ID, boolean baseLanguageOnly) {
-        super(ctx, AD_Table_ID, baseLanguageOnly);
+    protected POInfo(int AD_Table_ID, boolean baseLanguageOnly) {
+        super(AD_Table_ID, baseLanguageOnly);
     } //  PInfo
 
     /**
      * POInfo Factory
      *
-     * @param ctx         context
      * @param AD_Table_ID AD_Table_ID
      * @return POInfo
      */
-    public static synchronized POInfo getPOInfo(Properties ctx, int AD_Table_ID) {
+    public static synchronized POInfo getPOInfo(int AD_Table_ID) {
+
         Integer key = AD_Table_ID;
         POInfo retValue = s_cache.get(key);
         if (retValue == null) {
-            retValue = new POInfo(ctx, AD_Table_ID, false);
+            retValue = new POInfo(AD_Table_ID, false);
             if (retValue.getColumnCount() == 0)
                 //	May be run before Language verification
-                retValue = new POInfo(ctx, AD_Table_ID, true);
+                retValue = new POInfo(AD_Table_ID, true);
             else s_cache.put(key, retValue);
         }
         return retValue;

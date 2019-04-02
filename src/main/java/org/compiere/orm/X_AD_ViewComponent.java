@@ -4,8 +4,6 @@ import kotliquery.Row;
 import org.compiere.model.HasName;
 import org.compiere.model.I_AD_ViewComponent;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_ViewComponent
  *
@@ -22,8 +20,8 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent {
     /**
      * Standard Constructor
      */
-    public X_AD_ViewComponent(Properties ctx, int AD_ViewComponent_ID) {
-        super(ctx, AD_ViewComponent_ID);
+    public X_AD_ViewComponent(int AD_ViewComponent_ID) {
+        super(AD_ViewComponent_ID);
         /**
          * if (AD_ViewComponent_ID == 0) { setColumnTableId (0); setViewComponentId (0); setEntityType
          * (null); // @SQL=select get_sysconfig('DEFAULT_ENTITYTYPE','U',0,0) from dual setFromClause
@@ -34,8 +32,8 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent {
     /**
      * Load Constructor
      */
-    public X_AD_ViewComponent(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_ViewComponent(Row row) {
+        super(row);
     }
 
     /**

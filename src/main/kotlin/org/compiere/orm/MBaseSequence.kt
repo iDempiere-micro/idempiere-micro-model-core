@@ -3,9 +3,8 @@ package org.compiere.orm
 import kotliquery.Row
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.queryOf
-import java.util.Properties
 
-fun checkClientSequences(ctx: Properties, clientId: Int): Boolean {
+fun checkClientSequences(clientId: Int): Boolean {
     val sql = """
         SELECT TableName
         FROM AD_Table t
@@ -19,7 +18,7 @@ fun checkClientSequences(ctx: Properties, clientId: Int): Boolean {
     """.trimIndent()
     val processTable: (row: Row) -> Boolean = {
         val tableName = it.string(1)
-        val seq = MSequence(ctx, clientId, tableName)
+        val seq = MSequence(clientId, tableName)
         seq.save()
     }
     val loadQuery = queryOf(sql, listOf(clientId)).map(processTable).asList

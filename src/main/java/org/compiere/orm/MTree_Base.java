@@ -4,8 +4,6 @@ import kotliquery.Row;
 import org.compiere.model.I_AD_Tree;
 import org.idempiere.common.util.CCache;
 
-import java.util.Properties;
-
 /**
  * Base Tree Model. (see also MTree in project base)
  *
@@ -22,20 +20,16 @@ public class MTree_Base extends X_AD_Tree {
      * Cache
      */
     private static CCache<Integer, MTree_Base> s_cache =
-            new CCache<Integer, MTree_Base>(I_AD_Tree.Table_Name, 10);
+            new CCache<>(I_AD_Tree.Table_Name, 10);
 
     /**
      * ************************************************************************ Standard Constructor
      *
-     * @param ctx        context
      * @param AD_Tree_ID id
-     * @param trxName    transaction
      */
-    public MTree_Base(Properties ctx, int AD_Tree_ID) {
-        super(ctx, AD_Tree_ID);
+    public MTree_Base(int AD_Tree_ID) {
+        super(AD_Tree_ID);
         if (AD_Tree_ID == 0) {
-            //	setName (null);
-            //	setTreeType (null);
             setIsAllNodes(true); // 	complete tree
             setIsDefault(false);
         }
@@ -43,13 +37,9 @@ public class MTree_Base extends X_AD_Tree {
 
     /**
      * Load Constructor
-     *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
      */
-    public MTree_Base(Properties ctx, Row row) {
-        super(ctx, row);
+    public MTree_Base(Row row) {
+        super(row);
     } //	MTree_Base
 
     /**
@@ -60,7 +50,7 @@ public class MTree_Base extends X_AD_Tree {
      * @param treeType
      */
     public MTree_Base(MClient client, String name, String treeType) {
-        this(client.getCtx(), 0);
+        this(0);
         setClientOrg(client);
         setName(name);
         setTreeType(treeType);
@@ -72,10 +62,9 @@ public class MTree_Base extends X_AD_Tree {
      * @param ctx      context
      * @param Name     name
      * @param TreeType tree type
-     * @param trxName  transaction
      */
-    public MTree_Base(Properties ctx, String Name, String TreeType) {
-        super(ctx, 0);
+    public MTree_Base(String Name, String TreeType) {
+        super(0);
         setName(Name);
         setTreeType(TreeType);
         setIsAllNodes(true); // 	complete tree
@@ -145,16 +134,14 @@ public class MTree_Base extends X_AD_Tree {
     /**
      * Get MTree_Base from Cache
      *
-     * @param ctx        context
      * @param AD_Tree_ID id
-     * @param trxName    transaction
      * @return MTree_Base
      */
-    public static MTree_Base get(Properties ctx, int AD_Tree_ID) {
-        Integer key = new Integer(AD_Tree_ID);
+    public static MTree_Base get(int AD_Tree_ID) {
+        Integer key = AD_Tree_ID;
         MTree_Base retValue = s_cache.get(key);
         if (retValue != null) return retValue;
-        retValue = new MTree_Base(ctx, AD_Tree_ID);
+        retValue = new MTree_Base(AD_Tree_ID);
         if (retValue.getId() != 0) s_cache.put(key, retValue);
         return retValue;
     } //	get
@@ -177,7 +164,7 @@ public class MTree_Base extends X_AD_Tree {
     public String getSourceTableName(boolean tableNameOnly) {
         String tableName = getSourceTableName(getTreeType());
         if (tableName == null) {
-            if (getTreeTableId() > 0) tableName = MTable.getDbTableName(getCtx(), getTreeTableId());
+            if (getTreeTableId() > 0) tableName = MTable.getDbTableName(getTreeTableId());
         }
         if (tableNameOnly) return tableName;
         if ("M_Product".equals(tableName))
@@ -218,7 +205,7 @@ public class MTree_Base extends X_AD_Tree {
         if (!isActive() || !isAllNodes()) setIsDefault(false);
 
         String tableName = getSourceTableName(true);
-        MTable table = MTable.get(getCtx(), tableName);
+        MTable table = MTable.get(tableName);
         if (table.getDbColumnIndex("IsSummary") < 0) {
             // IsSummary is mandatory column to have a tree
             log.saveError("Error", "IsSummary column required for tree tables");

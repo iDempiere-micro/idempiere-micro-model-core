@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_OrgInfo;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_OrgInfo
  *
@@ -21,8 +19,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
     /**
      * Standard Constructor
      */
-    public X_AD_OrgInfo(Properties ctx, int AD_OrgInfo_ID) {
-        super(ctx, AD_OrgInfo_ID);
+    public X_AD_OrgInfo(int AD_OrgInfo_ID) {
+        super(AD_OrgInfo_ID);
         /**
          * if (AD_OrgInfo_ID == 0) { setDUNS (null); setReceiptFooterMsg (null); // 1 setTaxID (null); }
          */
@@ -31,8 +29,8 @@ public class X_AD_OrgInfo extends PO implements I_AD_OrgInfo {
     /**
      * Load Constructor
      */
-    public X_AD_OrgInfo(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_OrgInfo(Row row) {
+        super(row);
     } //	MOrgInfo
 
     /**

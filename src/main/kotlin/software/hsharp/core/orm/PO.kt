@@ -8,6 +8,7 @@ import org.compiere.model.I_AD_Element
 import org.compiere.model.I_AD_Field
 import org.compiere.orm.MColumn
 import org.compiere.util.DisplayType
+import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.SecureEngine
 import org.idempiere.icommon.model.IPO
 import org.idempiere.orm.POInfo.getPOInfo
@@ -20,7 +21,6 @@ import java.math.BigDecimal
 import java.sql.Blob
 import java.sql.Clob
 import java.sql.Timestamp
-import java.util.Properties
 import kotlin.collections.ArrayList
 
 private val log = KotlinLogging.logger {}
@@ -28,7 +28,7 @@ private val log = KotlinLogging.logger {}
 /** Zero Integer  */
 const val I_ZERO = 0
 
-internal abstract class PO(final override val ctx: Properties, row: Row?, val columnNamePrefix: String?) : IPO {
+internal abstract class PO(row: Row?) : IPO {
 
     companion object {
         fun copyValues(from: PO, to: PO) {
@@ -37,7 +37,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             if (from.javaClass != to.javaClass) {
                 for (i1 in 0 until from.oldValues.size) {
                     val colName = from.p_info.getColumnName(i1)
-                    val column = MColumn.get(from.ctx, from.p_info.getColumnId(colName))
+                    val column = MColumn.get(from.p_info.getColumnId(colName))
                     if (column.isVirtualColumn ||
                         column.isKey || // 	KeyColumn
 
@@ -59,7 +59,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
             {
                 for (i in 0 until from.oldValues.size) {
                     val colName = from.p_info.getColumnName(i)
-                    val column = MColumn.get(from.ctx, from.p_info.getColumnId(colName))
+                    val column = MColumn.get(from.p_info.getColumnId(colName))
                     if (column.isVirtualColumn ||
                         column.isKey || // 	KeyColumn
 
@@ -74,6 +74,25 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
         } // 	copy
     }
 
+    /**
+     * Equals based on ID
+     *
+     * @param other comparator
+     * @return true if ID the same
+     */
+    override fun equals(other: Any?): Boolean {
+        if (other == null) return false
+        if (other !is PO) return false
+        return if (other.javaClass == this.javaClass) if (other.id == 0 && id == 0)
+            super.equals(other)
+        else
+            other.id == id else super.equals(other)
+    } // 	equals
+
+    override fun hashCode(): Int {
+        return if (id == 0) (Int.MIN_VALUE..0).random() else id
+    }
+
     /** Create New for Multi Key  */
     protected var createNew = false
     /** Key Columns  */
@@ -81,10 +100,10 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
     /** Record_IDs  */
     protected var ids: Array<Any?> = arrayOf(I_ZERO)
 
-    val p_info: org.idempiere.orm.POInfo = initPO(ctx)
+    val p_info: org.idempiere.orm.POInfo = initPO()
 
-    protected fun initPO(ctx: Properties): org.idempiere.orm.POInfo {
-        return getPOInfo(ctx, this.tableId)
+    protected fun initPO(): org.idempiere.orm.POInfo {
+        return getPOInfo(this.tableId)
     }
 
     /** Accounting Columns  */
@@ -231,7 +250,7 @@ internal abstract class PO(final override val ctx: Properties, row: Row?, val co
 
     protected fun load(row: Row): Boolean {
         for (index in 0 until p_info.columnCount) {
-            val columnName = columnNamePrefix ?: "" + p_info.getColumnName(index)
+            val columnName = p_info.getColumnName(index) ?: throw AdempiereSystemError("Column at index $index not found")
             val clazz = p_info.getColumnClass(index)
             val dt = p_info.getColumnDisplayType(index)
 

@@ -1,5 +1,7 @@
 package org.idempiere.common.util;
 
+import software.hsharp.core.util.Environment;
+
 import java.util.Properties;
 
 /**
@@ -8,7 +10,6 @@ import java.util.Properties;
 public class ServerContextProvider implements ContextProvider {
 
     public static final ServerContextProvider INSTANCE = new ServerContextProvider();
-    private static final Properties context = new ServerContextPropertiesWrapper();
 
     private ServerContextProvider() {
     }
@@ -17,7 +18,7 @@ public class ServerContextProvider implements ContextProvider {
      * Get server context proxy
      */
     public Properties getContext() {
-        return context;
+        return Environment.Companion.getCurrent().getContext();
     }
 
 }

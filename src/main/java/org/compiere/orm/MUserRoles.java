@@ -6,7 +6,6 @@ import org.compiere.util.Msg;
 import org.idempiere.common.util.CLogger;
 
 import java.util.List;
-import java.util.Properties;
 
 /**
  * User Roles Model
@@ -31,22 +30,19 @@ public class MUserRoles extends X_AD_User_Roles {
      *
      * @param ctx     context
      * @param ignored invalid
-     * @param trxName transaction
      */
-    public MUserRoles(Properties ctx, int ignored) {
-        super(ctx, ignored);
+    public MUserRoles(int ignored) {
+        super(ignored);
         if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
     } //	MUserRoles
 
     /**
      * Load constructor
      *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
+     * @param ctx context
      */
-    public MUserRoles(Properties ctx, Row row) {
-        super(ctx, row);
+    public MUserRoles(Row row) {
+        super(row);
     } //	MUserRoles
 
     /**
@@ -55,10 +51,9 @@ public class MUserRoles extends X_AD_User_Roles {
      * @param ctx        context
      * @param AD_User_ID user
      * @param AD_Role_ID role
-     * @param trxName    transaction
      */
-    public MUserRoles(Properties ctx, int AD_User_ID, int AD_Role_ID) {
-        this(ctx, 0);
+    public MUserRoles(int AD_User_ID, int AD_Role_ID) {
+        this(0);
         setUserId(AD_User_ID);
         setRoleId(AD_Role_ID);
     } //	MUserRoles
@@ -70,10 +65,10 @@ public class MUserRoles extends X_AD_User_Roles {
      * @param AD_Role_ID role
      * @return array of user roles
      */
-    public static MUserRoles[] getOfRole(Properties ctx, int AD_Role_ID) {
+    public static MUserRoles[] getOfRole(int AD_Role_ID) {
         final String whereClause = I_AD_User_Roles.COLUMNNAME_AD_Role_ID + "=?";
         List<MUserRoles> list =
-                new Query(ctx, I_AD_User_Roles.Table_Name, whereClause)
+                new Query(I_AD_User_Roles.Table_Name, whereClause)
                         .setParameters(AD_Role_ID)
                         .list();
         MUserRoles[] retValue = new MUserRoles[list.size()];
@@ -103,16 +98,16 @@ public class MUserRoles extends X_AD_User_Roles {
     protected boolean beforeSave(boolean newRecord) {
         // IDEMPIERE-1410
         if (!MRole.getDefault().isAccessAdvanced()) {
-            MRole role = new MRole(getCtx(), getRoleId());
+            MRole role = new MRole(getRoleId());
             if (role.isAccessAdvanced()) {
-                log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
+                log.saveError("Error", Msg.getMsg("ActionNotAllowedHere"));
                 return false;
             }
             if (!newRecord && isValueChanged(I_AD_User_Roles.COLUMNNAME_AD_Role_ID)) {
                 MRole oldrole =
-                        new MRole(getCtx(), getValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID));
+                        new MRole(getValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID));
                 if (oldrole.isAccessAdvanced()) {
-                    log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
+                    log.saveError("Error", Msg.getMsg("ActionNotAllowedHere"));
                     return false;
                 }
             }
@@ -125,9 +120,9 @@ public class MUserRoles extends X_AD_User_Roles {
     protected boolean beforeDelete() {
         // IDEMPIERE-1410
         if (!MRole.getDefault().isAccessAdvanced()) {
-            MRole role = new MRole(getCtx(), getRoleId());
+            MRole role = new MRole(getRoleId());
             if (role.isAccessAdvanced()) {
-                log.saveError("Error", Msg.getMsg(getCtx(), "ActionNotAllowedHere"));
+                log.saveError("Error", Msg.getMsg("ActionNotAllowedHere"));
                 return false;
             }
         }

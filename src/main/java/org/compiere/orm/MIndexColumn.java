@@ -2,8 +2,6 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 
-import java.util.Properties;
-
 public class MIndexColumn extends X_AD_IndexColumn {
 
     /**
@@ -16,21 +14,18 @@ public class MIndexColumn extends X_AD_IndexColumn {
      *
      * @param ctx               context
      * @param AD_IndexColumn_ID index column
-     * @param trxName           trx name
      */
-    public MIndexColumn(Properties ctx, int AD_IndexColumn_ID) {
-        super(ctx, AD_IndexColumn_ID);
+    public MIndexColumn(int AD_IndexColumn_ID) {
+        super(AD_IndexColumn_ID);
     }
 
     /**
      * Load constructor
      *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName trx name
+     * @param ctx context
      */
-    public MIndexColumn(Properties ctx, Row row) {
-        super(ctx, row);
+    public MIndexColumn(Row row) {
+        super(row);
     }
 
     /**
@@ -41,7 +36,7 @@ public class MIndexColumn extends X_AD_IndexColumn {
      * @param seqNo  sequence no
      */
     public MIndexColumn(MTableIndex parent, MColumn column, int seqNo) {
-        this(parent.getCtx(), 0);
+        this(0);
         setClientOrg(parent);
         setTableIndexId(parent.getTableIndexId());
         setColumnId(column.getColumnId());
@@ -57,7 +52,7 @@ public class MIndexColumn extends X_AD_IndexColumn {
         String sql = getColumnSQL(); // Function Index
         if (sql != null && sql.length() > 0) return sql;
         int AD_Column_ID = getColumnId();
-        return MColumn.getColumnName(getCtx(), AD_Column_ID);
+        return MColumn.getColumnName(AD_Column_ID);
     }
 
     /**

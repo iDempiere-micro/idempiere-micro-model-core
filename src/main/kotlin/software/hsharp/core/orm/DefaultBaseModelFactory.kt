@@ -9,9 +9,9 @@ import org.compiere.orm.M_Element
 import org.compiere.orm.MEntityType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.CCache
-import org.idempiere.common.util.Env
 import org.idempiere.common.util.Util
 import org.idempiere.icommon.model.IPO
+import java.lang.reflect.Modifier
 import java.util.Properties
 import kotlin.collections.set
 
@@ -117,13 +117,13 @@ abstract class DefaultBaseModelFactory : IModelFactory {
             }
         }
 
-        val table = MTable.get(Env.getCtx(), tableName)
+        val table = MTable.get(tableName)
         val entityType = table.entityType
 
         // 	Import Tables (Name conflict)
         //  Import Tables doesn't manage model M classes, just X_
         if (tableName.startsWith("I_")) {
-            val et = MEntityType.get(Env.getCtx(), entityType)
+            val et = MEntityType.get(entityType)
             var etmodelpackage: String? = et!!.modelPackage
             if (etmodelpackage == null || MEntityType.ENTITYTYPE_Dictionary == entityType)
                 etmodelpackage = "org.compiere.impl" // fallback for dictionary or empty model package on entity type
@@ -147,7 +147,7 @@ abstract class DefaultBaseModelFactory : IModelFactory {
 
         // begin [ 1784588 ] Use ModelPackage of EntityType to Find Model Class - vpj-cd
         if (MEntityType.ENTITYTYPE_Dictionary != entityType) {
-            val et = MEntityType.get(Env.getCtx(), entityType)
+            val et = MEntityType.get(entityType)
             val etmodelpackage = et!!.modelPackage
             if (etmodelpackage != null) {
                 var clazz: Class<*>? = getPOclass(etmodelpackage + ".M" + Util.replace(tableName, "_", ""), tableName)
@@ -200,11 +200,26 @@ abstract class DefaultBaseModelFactory : IModelFactory {
     override fun <T> getPO(tableName: String, row: Row): T {
         val clazz = getClass(tableName)
         try {
+            try {
+                val constructor = clazz.getDeclaredConstructor(
+                    Row::class.java
+                )
+                if (Modifier.isPrivate(constructor.modifiers)) {
+                    constructor.isAccessible = true
+                }
+                @Suppress("UNCHECKED_CAST")
+                return constructor.newInstance(row) as T
+            } catch (e: Exception) {
+                // still may use the old constructor
+            }
             val constructor = clazz.getDeclaredConstructor(
                 Properties::class.java, Row::class.java
             )
+            if (Modifier.isPrivate(constructor.modifiers)) {
+                constructor.isAccessible = true
+            }
             @Suppress("UNCHECKED_CAST")
-            return constructor.newInstance(Env.getCtx(), row) as T
+            return constructor.newInstance(row) as T
         } catch (e: Exception) {
             throw AdempiereSystemError("Unable to load PO $clazz from $tableName", e)
         }

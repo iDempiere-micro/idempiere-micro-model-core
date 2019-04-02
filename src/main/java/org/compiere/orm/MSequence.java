@@ -14,7 +14,6 @@ import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 
@@ -67,8 +66,8 @@ public class MSequence extends MBaseSequence {
      * @param ctx            context
      * @param AD_Sequence_ID id
      */
-    public MSequence(Properties ctx, int AD_Sequence_ID) {
-        super(ctx, AD_Sequence_ID);
+    public MSequence(int AD_Sequence_ID) {
+        super(AD_Sequence_ID);
         if (AD_Sequence_ID == 0) {
             //	setName (null);
             //
@@ -85,11 +84,9 @@ public class MSequence extends MBaseSequence {
 
     /**
      * Load Constructor
-     *
-     * @param ctx context
      */
-    public MSequence(Properties ctx, Row row) {
-        super(ctx, row);
+    public MSequence(Row row) {
+        super(row);
     }
 
     /**
@@ -99,8 +96,8 @@ public class MSequence extends MBaseSequence {
      * @param AD_Client_ID owner
      * @param tableName    name
      */
-    public MSequence(Properties ctx, int AD_Client_ID, String tableName) {
-        this(ctx, 0);
+    public MSequence(int AD_Client_ID, String tableName) {
+        this(0);
         setClientOrg(AD_Client_ID, 0); // 	Client Ownership
         setName(PREFIX_DOCSEQ + tableName);
         setDescription("DocumentNo/Value for Table " + tableName);
@@ -115,8 +112,8 @@ public class MSequence extends MBaseSequence {
      * @param StartNo      start
      */
     public MSequence(
-            Properties ctx, int AD_Client_ID, String sequenceName, int StartNo) {
-        this(ctx, 0);
+            int AD_Client_ID, String sequenceName, int StartNo) {
+        this(0);
         setClientOrg(AD_Client_ID, 0); // 	Client Ownership
         setName(sequenceName);
         setDescription(sequenceName);
@@ -145,7 +142,7 @@ public class MSequence extends MBaseSequence {
             int m_sequence_id = software.hsharp.core.util.DBKt.getNextID(TableName + "_SQ");
             if (m_sequence_id == -1) {
                 // try to create the sequence and try again
-                MSequence.createTableSequence(Env.getCtx(), TableName, true);
+                MSequence.createTableSequence(TableName, true);
                 m_sequence_id = software.hsharp.core.util.DBKt.getNextID(TableName + "_SQ");
             }
             return m_sequence_id;
@@ -173,18 +170,18 @@ public class MSequence extends MBaseSequence {
      * ************************************************************************ Get Document No from
      * table (when the document doesn't have a c_doctype)
      *
-     * @param TableName    table name
+     * @param TableName table name
      * @return document no or null
      */
     public static String getDocumentNo(String TableName, PO po) {
         if (TableName == null || TableName.length() == 0)
             throw new IllegalArgumentException("TableName missing");
 
-        MSequence seq = get(Env.getCtx(), TableName,  /*tableID=*/ false);
+        MSequence seq = get(TableName,  /*tableID=*/ false);
         if (seq == null || seq.getId() == 0) {
-            if (!MSequence.createTableSequence(Env.getCtx(), TableName,  /*tableID=*/ false))
+            if (!MSequence.createTableSequence(TableName,  /*tableID=*/ false))
                 throw new AdempiereException("Could not create table sequence");
-            seq = get(Env.getCtx(), TableName,  /*tableID=*/ false);
+            seq = get(TableName,  /*tableID=*/ false);
             if (seq == null || seq.getId() == 0)
                 throw new AdempiereException("Could not find table sequence");
         }
@@ -229,10 +226,10 @@ public class MSequence extends MBaseSequence {
                 token = token.substring(0, f);
             }
 
-            Properties ctx = po != null ? po.getCtx() : Env.getCtx();
+
             if (token.startsWith("#") || token.startsWith("$")) {
                 // take from context
-                String v = Env.getContext(ctx, token);
+                String v = Env.getContext(token);
                 if (v != null && v.length() > 0) outStr.append(v);
                 else if (keepUnparseable) {
                     outStr.append("@").append(token);
@@ -243,7 +240,7 @@ public class MSequence extends MBaseSequence {
                 // take from po
                 if (po.getColumnIndex(token) >= 0) {
                     Object v = po.getValue(token);
-                    MColumn colToken = MColumn.get(ctx, po.getTableName(), token);
+                    MColumn colToken = MColumn.get(po.getTableName(), token);
                     String foreignTable = colToken.getReferenceTableName();
                     if (v != null) {
                         if (format != null && format.length() > 0) {
@@ -252,7 +249,7 @@ public class MSequence extends MBaseSequence {
                                 String tableName = null;
                                 if (tblIndex > 0) tableName = format.substring(0, tblIndex);
                                 else tableName = foreignTable;
-                                MTable table = MTable.get(ctx, tableName);
+                                MTable table = MTable.get(tableName);
                                 if (table != null && tableName.equalsIgnoreCase(foreignTable)) {
                                     String columnName = tblIndex > 0 ? format.substring(tblIndex + 1) : format;
                                     MColumn column = table.getColumn(columnName);
@@ -350,7 +347,7 @@ public class MSequence extends MBaseSequence {
             return null;
         }
 
-        MDocType dt = MDocType.get(Env.getCtx(), C_DocType_ID); // 	wrong for SERVER, but r/o
+        MDocType dt = MDocType.get(C_DocType_ID); // 	wrong for SERVER, but r/o
         if (dt != null && !dt.isDocNoControlled()) {
             if (s_log.isLoggable(Level.FINER))
                 s_log.finer("DocType_ID=" + C_DocType_ID + " Not DocNo controlled");
@@ -369,27 +366,26 @@ public class MSequence extends MBaseSequence {
             return null;
         }
         int seqID = (definite ? dt.getDefiniteSequenceId() : dt.getDocNoSequenceId());
-        MSequence seq = new MSequence(Env.getCtx(), seqID);
+        MSequence seq = new MSequence(seqID);
 
         if (CLogMgt.isLevel(LOGLEVEL))
-            s_log.log(LOGLEVEL, "DocType_ID=" + C_DocType_ID );
+            s_log.log(LOGLEVEL, "DocType_ID=" + C_DocType_ID);
 
         return getDocumentNoFromSeq(seq, po);
     } //	getDocumentNo
 
-    public static boolean createTableSequence(Properties ctx, String TableName) {
-        return createTableSequence(ctx, TableName, true);
+    public static boolean createTableSequence(String TableName) {
+        return createTableSequence(TableName, true);
     }
 
     /**
      * Create Table ID Sequence
      *
-     * @param ctx       context
      * @param TableName table name
      * @return true if created
      */
     public static boolean createTableSequence(
-            Properties ctx, String TableName, boolean tableID) {
+            String TableName, boolean tableID) {
         boolean SYSTEM_NATIVE_SEQUENCE =
                 MSysConfig.getBooleanValue(MSysConfig.SYSTEM_NATIVE_SEQUENCE, false);
 
@@ -397,9 +393,9 @@ public class MSequence extends MBaseSequence {
             throw new IllegalArgumentException(NYI);
         }
 
-        MSequence seq = new MSequence(ctx, 0);
+        MSequence seq = new MSequence(0);
         if (tableID) seq.setClientOrg(0, 0);
-        else seq.setClientOrg(Env.getClientId(Env.getCtx()), 0);
+        else seq.setClientOrg(Env.getClientId(), 0);
 
         if (tableID) {
             seq.setName(TableName);
@@ -415,20 +411,19 @@ public class MSequence extends MBaseSequence {
     } //	createTableSequence
 
     /* Get the tableID sequence based on the TableName */
-    public static MSequence get(Properties ctx, String tableName) {
-        return get(ctx, tableName, true);
+    public static MSequence get(String tableName) {
+        return get(tableName, true);
     }
 
     /**
      * Get Sequence
      *
-     * @param ctx       context
      * @param tableName table name
      * @param tableID
      * @return Sequence
      */
-    public static MSequence get(Properties ctx, String tableName, boolean tableID) {
-        return software.hsharp.core.orm.MBaseSequenceKt.get(ctx, tableName, tableID);
+    public static MSequence get(String tableName, boolean tableID) {
+        return software.hsharp.core.orm.MBaseSequenceKt.get(tableName, tableID);
     } //	get
 
     /**
@@ -453,7 +448,7 @@ public class MSequence extends MBaseSequence {
                                 + "_ID'");
         if (AD_Column_ID <= 0) return null;
         //
-        MSystem system = MSystem.get(getCtx());
+        MSystem system = MSystem.get();
         int IDRangeEnd = 0;
         if (system.getIDRangeEnd() != null) IDRangeEnd = system.getIDRangeEnd().intValue();
 

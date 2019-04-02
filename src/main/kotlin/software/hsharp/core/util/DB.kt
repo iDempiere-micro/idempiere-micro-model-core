@@ -284,7 +284,7 @@ fun forUpdate(po: IPO): Boolean {
  * @param local local RowSet (own connection)
  * @return row set or null
  */
-fun getRowSet(sql: String): RowSet = throw IllegalArgumentException(NYI)
+fun getRowSet(): RowSet = throw IllegalArgumentException(NYI)
 
 object HikariCPI {
 

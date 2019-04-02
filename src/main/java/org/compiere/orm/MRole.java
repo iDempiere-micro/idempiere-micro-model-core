@@ -11,6 +11,7 @@ import org.idempiere.common.util.Trace;
 import org.idempiere.icommon.model.IPO;
 import software.hsharp.core.orm.MBaseRole;
 import software.hsharp.core.orm.MBaseRoleKt;
+import software.hsharp.core.util.Environment;
 
 import java.lang.reflect.Array;
 import java.sql.PreparedStatement;
@@ -22,7 +23,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -114,14 +114,12 @@ public class MRole extends MBaseRole {
     /**
      * ************************************************************************ Standard Constructor
      *
-     * @param ctx        context
      * @param AD_Role_ID id
      */
-    public MRole(Properties ctx, int AD_Role_ID) {
-        super(ctx, AD_Role_ID);
+    public MRole(int AD_Role_ID) {
+        super(AD_Role_ID);
         //	ID=0 == System Administrator
         if (AD_Role_ID == 0) {
-            //	setName (null);
             setIsCanExport(true);
             setIsCanReport(true);
             setIsManual(false);
@@ -140,17 +138,10 @@ public class MRole extends MBaseRole {
     } //	MRole
 
     /**
-     * *********************************************************************** Access Management
-     * **********************************************************************
-     */
-
-    /**
      * Load Constructor
-     *
-     * @param ctx context
      */
-    public MRole(Properties ctx, Row row) {
-        super(ctx, row);
+    public MRole(Row row) {
+        super(row);
     } //	MRole
 
     /**
@@ -159,29 +150,26 @@ public class MRole extends MBaseRole {
      * @return role
      */
     public static MRole getDefault() {
-        return getDefault(Env.getCtx(), false);
+        return getDefault(false);
     } //	getDefault
 
     /**
      * Get/Set Default Role.
      *
-     * @param ctx    context
      * @param reload if true forces load
      * @return role
      * @see Login#loadPreferences(KeyNamePair, KeyNamePair, java.sql.Timestamp, String)
      */
-    public static MRole getDefault(Properties ctx, boolean reload) {
-        int AD_Role_ID = Env.getContextAsInt(ctx, "#AD_Role_ID");
-        int AD_User_ID = Env.getContextAsInt(ctx, "#AD_User_ID");
-        //		if (!Ini.isClient())	//	none for Server
-        //			AD_User_ID = 0;
+    public static MRole getDefault(boolean reload) {
+        int AD_Role_ID = Env.getContextAsInt("#AD_Role_ID");
+        int AD_User_ID = Environment.Companion.getCurrent().getUserId();
         MRole defaultRole = getDefaultRole();
         if (reload || defaultRole == null) {
-            defaultRole = get(ctx, AD_Role_ID, AD_User_ID, reload);
+            defaultRole = get(AD_Role_ID, AD_User_ID, reload);
             setDefaultRole(defaultRole);
         } else if (defaultRole.getRoleId() != AD_Role_ID
                 || defaultRole.getUserId() != AD_User_ID) {
-            defaultRole = get(ctx, AD_Role_ID, AD_User_ID, reload);
+            defaultRole = get(AD_Role_ID, AD_User_ID, reload);
             setDefaultRole(defaultRole);
         }
         return defaultRole;
@@ -199,20 +187,19 @@ public class MRole extends MBaseRole {
     /**
      * Get Role for User
      *
-     * @param ctx        context
      * @param AD_Role_ID role
      * @param AD_User_ID user
      * @param reload     if true forces load
      * @return role
      */
     public static synchronized MRole get(
-            Properties ctx, int AD_Role_ID, int AD_User_ID, boolean reload) {
+            int AD_Role_ID, int AD_User_ID, boolean reload) {
         if (s_log.isLoggable(Level.INFO))
             s_log.info("AD_Role_ID=" + AD_Role_ID + ", AD_User_ID=" + AD_User_ID + ", reload=" + reload);
         String key = AD_Role_ID + "_" + AD_User_ID;
         MRole role = s_roles.get(key);
         if (role == null || reload) {
-            role = new MRole(ctx, AD_Role_ID);
+            role = new MRole(AD_Role_ID);
             s_roles.put(key, role);
             if (AD_Role_ID == 0) {
 
@@ -232,11 +219,10 @@ public class MRole extends MBaseRole {
      * @param AD_Role_ID role
      * @return role
      */
-    public static MRole get(Properties ctx, int AD_Role_ID) {
+    public static MRole get(int AD_Role_ID) {
         return get(
-                ctx,
                 AD_Role_ID,
-                Env.getUserId(ctx),
+                Env.getUserId(),
                 false); // metas-2009_0021_AP1_G94 - we need to use this method because we need to
         // load/reload all accesses
     /* metas-2009_0021_AP1_G94
@@ -245,7 +231,7 @@ public class MRole extends MBaseRole {
 
     if (role == null)
     {
-    	role = new MRole (ctx, AD_Role_ID);
+    	role = new MRole (AD_Role_ID);
     	s_roles.put (key, role);
     	if (AD_Role_ID == 0)	//	System Role
     	{
@@ -263,19 +249,18 @@ public class MRole extends MBaseRole {
      * @param ctx context
      * @return roles of client
      */
-    public static MRole[] getOfClient(Properties ctx) {
-        return MBaseRoleKt.getOfClient(ctx);
+    public static MRole[] getOfClient() {
+        return MBaseRoleKt.getOfClient();
     } //	getOfClient
 
     /**
      * Get Roles With where clause
      *
-     * @param ctx         context
      * @param whereClause where clause
      * @return roles of client
      */
-    public static List<MRole> getOf(Properties ctx, String whereClause) {
-        return MBaseRoleKt.getOf(ctx, whereClause);
+    public static List<MRole> getOf(String whereClause) {
+        return MBaseRoleKt.getOf(whereClause);
     } //	getOf
 
     /**
@@ -402,7 +387,7 @@ public class MRole extends MBaseRole {
         //	{
         if (getClientId() == 0) setUserLevel(X_AD_Role.USERLEVEL_System);
         else if (getUserLevel().equals(X_AD_Role.USERLEVEL_System)) {
-            log.saveError("AccessTableNoUpdate", Msg.getElement(getCtx(), "UserLevel"));
+            log.saveError("AccessTableNoUpdate", Msg.getElement("UserLevel"));
             return false;
         }
         //	}
@@ -420,11 +405,11 @@ public class MRole extends MBaseRole {
         if (!success) return success;
         if (newRecord && success) {
             //	Add Role to SuperUser
-            MUserRoles su = new MUserRoles(getCtx(), SUPERUSER_USER_ID, getRoleId());
+            MUserRoles su = new MUserRoles(SUPERUSER_USER_ID, getRoleId());
             su.saveEx();
             //	Add Role to User
             if (getCreatedBy() != SUPERUSER_USER_ID) {
-                MUserRoles ur = new MUserRoles(getCtx(), getCreatedBy(), getRoleId());
+                MUserRoles ur = new MUserRoles(getCreatedBy(), getRoleId());
                 ur.saveEx();
             }
             updateAccessRecords();
@@ -964,7 +949,7 @@ public class MRole extends MBaseRole {
             // first get the window access from the included and substitute roles
             mergeIncludedAccess("m_windowAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the window access directly from this role
-            MClient client = MClient.get(Env.getCtx());
+            MClient client = MClient.get();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1049,7 +1034,7 @@ public class MRole extends MBaseRole {
             // first get the process access from the included and substitute roles
             mergeIncludedAccess("m_processAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the process access directly from this role
-            MClient client = MClient.get(Env.getCtx());
+            MClient client = MClient.get();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1128,7 +1113,7 @@ public class MRole extends MBaseRole {
             // first get the task access from the included and substitute roles
             mergeIncludedAccess("m_taskAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the task access directly from this role
-            MClient client = MClient.get(Env.getCtx());
+            MClient client = MClient.get();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1204,7 +1189,7 @@ public class MRole extends MBaseRole {
             // first get the form access from the included and substitute roles
             mergeIncludedAccess("m_formAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the form access directly from this role
-            MClient client = MClient.get(Env.getCtx());
+            MClient client = MClient.get();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1280,7 +1265,7 @@ public class MRole extends MBaseRole {
             // first get the workflow access from the included and substitute roles
             mergeIncludedAccess("m_workflowAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the workflow access directly from this role
-            MClient client = MClient.get(Env.getCtx());
+            MClient client = MClient.get();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1458,7 +1443,7 @@ public class MRole extends MBaseRole {
             if (mainSql.toUpperCase().startsWith("SELECT COUNT(*) FROM ")) {
                 // globalqss - Carlos Ruiz - [ 1965744 ] Dependent entities access problem
                 // this is the count select, it doesn't have the column but needs to be filtered
-                MTable table = MTable.get(getCtx(), tableName);
+                MTable table = MTable.get(tableName);
                 if (table == null) continue;
                 MColumn column = table.getColumn(columnName);
                 if (column == null || column.isVirtualColumn() || !column.isActive()) continue;
@@ -1751,7 +1736,7 @@ public class MRole extends MBaseRole {
         //
         final String whereClause = X_AD_Role_Included.COLUMNNAME_AD_Role_ID + "=?";
         List<X_AD_Role_Included> list =
-                new Query(getCtx(), X_AD_Role_Included.Table_Name, whereClause)
+                new Query(X_AD_Role_Included.Table_Name, whereClause)
                         .setParameters(getRoleId())
                         .setOnlyActiveRecords(true)
                         .setOrderBy(
@@ -1760,7 +1745,7 @@ public class MRole extends MBaseRole {
                                         + X_AD_Role_Included.COLUMNNAME_Included_Role_ID)
                         .list();
         for (X_AD_Role_Included includedRole : list) {
-            MRole role = MRole.get(getCtx(), includedRole.getIncludedRoleId());
+            MRole role = MRole.get(includedRole.getIncludedRoleId());
             includeRole(role, includedRole.getSeqNo());
         }
     }
@@ -1792,7 +1777,7 @@ public class MRole extends MBaseRole {
                         + " AND us.Substitute_ID=?)";
 
         List<MRole> list =
-                new Query(getCtx(), I_AD_Role.Table_Name, whereClause)
+                new Query(I_AD_Role.Table_Name, whereClause)
                         .setParameters(AD_User_ID)
                         .setClientId()
                         .setOrderBy(I_AD_Role.COLUMNNAME_AD_Role_ID)
@@ -1882,7 +1867,7 @@ public class MRole extends MBaseRole {
             // and now get the info access directly from this role
             String ASPFilter = "";
       /*
-      MClient client = MClient.get(getCtx(), getClientId());
+      MClient client = MClient.get(getClientId());
       if (client.isUseASP())
       	ASPFilter =
       		  "   AND (   AD_InfoWindow_ID IN ( "

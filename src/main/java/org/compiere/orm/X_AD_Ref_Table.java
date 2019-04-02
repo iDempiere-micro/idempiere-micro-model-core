@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Ref_Table;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Ref_Table
  *
@@ -21,8 +19,8 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table {
     /**
      * Standard Constructor
      */
-    public X_AD_Ref_Table(Properties ctx, int AD_Ref_Table_ID) {
-        super(ctx, AD_Ref_Table_ID);
+    public X_AD_Ref_Table(int AD_Ref_Table_ID) {
+        super(AD_Ref_Table_ID);
         /**
          * if (AD_Ref_Table_ID == 0) { setAD_Display (0); setAD_Key (0); setReferenceId (0);
          * setColumnTableId (0); setEntityType (null); // @SQL=select
@@ -33,8 +31,8 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table {
     /**
      * Load Constructor
      */
-    public X_AD_Ref_Table(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Ref_Table(Row row) {
+        super(row);
     }
 
     /**
@@ -53,7 +51,7 @@ public class X_AD_Ref_Table extends PO implements I_AD_Ref_Table {
 
     public org.compiere.model.I_AD_Table getTable() throws RuntimeException {
         return (org.compiere.model.I_AD_Table)
-                MTable.get(getCtx(), org.compiere.model.I_AD_Table.Table_Name)
+                MTable.get(org.compiere.model.I_AD_Table.Table_Name)
                         .getPO(getRefTableId());
     }
 

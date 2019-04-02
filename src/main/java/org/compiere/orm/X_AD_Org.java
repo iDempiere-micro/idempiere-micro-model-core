@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Org;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Org
  *
@@ -21,15 +19,15 @@ public class X_AD_Org extends BasePONameValue implements I_AD_Org {
     /**
      * Standard Constructor
      */
-    public X_AD_Org(Properties ctx, int AD_Org_ID) {
-        super(ctx, AD_Org_ID);
+    public X_AD_Org(int AD_Org_ID) {
+        super(AD_Org_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Org(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Org(Row row) {
+        super(row);
     } //	MOrg
 
     /**

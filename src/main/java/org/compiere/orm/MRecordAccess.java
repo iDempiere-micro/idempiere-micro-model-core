@@ -4,7 +4,6 @@ import kotliquery.Row;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.util.DBKt.prepareStatement;
@@ -30,8 +29,8 @@ public class MRecordAccess extends X_AD_Record_Access {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MRecordAccess(Properties ctx, Row row) {
-        super(ctx, row);
+    public MRecordAccess(Row row) {
+        super(row);
     } //	MRecordAccess
 
     /**

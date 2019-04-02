@@ -5,24 +5,23 @@ import org.compiere.orm.MSequence
 import org.compiere.orm.MSequence.parseVariable
 import org.compiere.orm.X_AD_Sequence
 import org.compiere.orm.X_AD_Sequence_No
-import org.idempiere.common.util.Env
 import org.idempiere.common.util.Util
 import software.hsharp.core.util.DB
+import software.hsharp.core.util.Environment
 import software.hsharp.core.util.asResource
 import software.hsharp.core.util.queryOf
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Properties
 
 /**
  * Get data to Check/Initialize DocumentNo/Value Sequences for all Clients
  */
-fun doCheckClientSequences(ctx: Properties, clientId: Int): Boolean {
+fun doCheckClientSequences(clientId: Int): Boolean {
     return "/sql/checkClientSequences.sql".asResource { sql ->
         val loadQuery =
             queryOf(sql, listOf(clientId))
-                .map { row -> MSequence(ctx, clientId, row.string(1)).save() }
+                .map { row -> MSequence(clientId, row.string(1)).save() }
                 .asList
         DB.current.run(loadQuery).min() ?: false
     }
@@ -124,7 +123,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
             next1
         } else {
             if (isUseOrgLevel || isStartNewYear) {
-                val sequenceNumber = X_AD_Sequence_No(Env.getCtx(), 0)
+                val sequenceNumber = X_AD_Sequence_No(0)
                 sequenceNumber.setSequenceId(sequenceId)
                 sequenceNumber.setOrgId(docOrgId)
                 sequenceNumber.setCalendarYearMonth(calendarYearMonth)
@@ -170,7 +169,7 @@ const val PREFIX_DOCSEQ = "DocumentNo_"
  * @param tableID
  * @return Sequence
  */
-internal fun get(ctx: Properties, tableName: String, tableID: Boolean): MSequence? {
+internal fun get(tableName: String, tableID: Boolean): MSequence? {
     val realTableName =
         if (!tableID) {
             PREFIX_DOCSEQ + tableName
@@ -181,14 +180,14 @@ internal fun get(ctx: Properties, tableName: String, tableID: Boolean): MSequenc
 
     val parameters =
         listOf(realTableName.toUpperCase(), if (tableID) "Y" else "N") +
-        (if (!tableID) listOf(Env.getClientId(ctx)) else emptyList())
+        (if (!tableID) listOf(Environment.current.clientId) else emptyList())
 
-    val query = queryOf(sql, parameters).map { row -> MSequence(ctx, row) }.asSingle
+    val query = queryOf(sql, parameters).map { row -> MSequence(row) }.asSingle
 
     return DB.current.run(query)
 } // 	get
 
 abstract class MBaseSequence : X_AD_Sequence {
-    constructor(ctx: Properties, Id: Int) : super(ctx, Id)
-    constructor(ctx: Properties, row: Row) : super(ctx, row)
+    constructor(Id: Int) : super(Id)
+    constructor(row: Row) : super(row)
 }

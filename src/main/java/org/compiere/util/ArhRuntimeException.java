@@ -3,13 +3,10 @@
  */
 package org.compiere.util;
 
-import org.idempiere.common.util.Env;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Properties;
 
 /**
  * Arhipac Runtime exception
@@ -36,16 +33,6 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
         super(message);
     }
 
-    /**
-     * Constructor
-     *
-     * @param ctx
-     * @param message
-     */
-    public ArhRuntimeException(Properties ctx, String message) {
-        this(message);
-    }
-
     /** @param cause */
     public ArhRuntimeException(Throwable cause) {
         super(cause);
@@ -65,11 +52,11 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
 
     public String getLocalizedMessage() {
         StringBuilder sb = new StringBuilder();
-        Properties ctx = Env.getCtx();
+
         // Message
         String msg = getMessage();
         if (msg != null && msg.length() > 0) {
-            sb.append(Msg.parseTranslation(ctx, msg));
+            sb.append(Msg.parseTranslation(msg));
         } else {
             msg = null;
         }
@@ -85,7 +72,7 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
                 } else {
                     sb.append(", ");
                 }
-                sb.append(Msg.parseTranslation(ctx, name));
+                sb.append(Msg.parseTranslation(name));
                 String svalue = getStringValue(value);
                 if (value != null && svalue.length() > 0) sb.append(" ").append(svalue);
                 cnt++;
@@ -109,7 +96,7 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
         if (value == null) {
             svalue = "-";
         } else if (value instanceof Boolean) {
-            svalue = Msg.getMsg(Env.getCtx(), ((Boolean) value).booleanValue() ? "Yes" : "No");
+            svalue = Msg.getMsg(((Boolean) value).booleanValue() ? "Yes" : "No");
         } else if (value instanceof Timestamp) {
             SimpleDateFormat df = DisplayType.getDateFormat();
             svalue = df.format((Timestamp) value);

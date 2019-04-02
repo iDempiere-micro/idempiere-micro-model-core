@@ -2,15 +2,13 @@ package org.compiere.orm
 
 import kotliquery.Row
 import org.compiere.model.I_AD_User
-import java.util.Properties
 
 /**
  * PO with the userId
  */
 abstract class BasePOUser : PO {
-    constructor(ctx: Properties, ID: Int) : super(ctx, ID)
-    constructor (ctx: Properties, a: String?) : super(ctx, a)
-    constructor (ctx: Properties, row: Row) : super(ctx, row)
+    constructor(ID: Int) : super(ID)
+    constructor (row: Row) : super(row)
 
     /** Set User/Contact.
      * @param AD_User_ID

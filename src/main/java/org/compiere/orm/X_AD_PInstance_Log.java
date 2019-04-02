@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_PInstance_Log;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_PInstance_Log
  *
@@ -21,16 +19,16 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log {
     /**
      * Standard Constructor
      */
-    public X_AD_PInstance_Log(Properties ctx, int AD_PInstance_Log_ID) {
-        super(ctx, AD_PInstance_Log_ID);
+    public X_AD_PInstance_Log(int AD_PInstance_Log_ID) {
+        super(AD_PInstance_Log_ID);
         /** if (AD_PInstance_Log_ID == 0) { setAD_PInstance_ID (0); setLog_ID (0); } */
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_PInstance_Log(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_PInstance_Log(Row row) {
+        super(row);
     }
 
     /**

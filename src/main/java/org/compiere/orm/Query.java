@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.util.DBKt.isPostgreSQL;
@@ -60,31 +59,18 @@ public class Query extends BaseQuery {
     /**
      * @param table
      * @param whereClause
-     * @deprecated Use {@link #Query(Properties, MTable, String)} instead because this method
-     * is security error prone
      */
     public Query(MTable table, String whereClause) {
-        super(table.getCtx(), table);
+        super(table);
         this.whereClause = whereClause;
     }
 
     /**
-     * @param ctx         context
-     * @param table
-     * @param whereClause
-     */
-    public Query(Properties ctx, MTable table, String whereClause) {
-        super(ctx, table);
-        this.whereClause = whereClause;
-    }
-
-    /**
-     * @param ctx
      * @param tableName
      * @param whereClause
      */
-    public Query(Properties ctx, String tableName, String whereClause) {
-        this(ctx, MTable.get(ctx, tableName), whereClause);
+    public Query(String tableName, String whereClause) {
+        this(MTable.get(tableName), whereClause);
         MTable table = super.getTable();
         if (table == null) throw new IllegalArgumentException("Table Name Not Found - " + tableName);
     }
@@ -105,8 +91,6 @@ public class Query extends BaseQuery {
 
     /**
      * Turn on data access filter with controls
-     *
-     * @param flag
      */
     public Query setApplyAccessFilter(boolean fullyQualified, boolean RW) {
         this.applyAccessFilter = true;
@@ -311,7 +295,7 @@ public class Query extends BaseQuery {
     protected final String buildSQL(StringBuilder selectClause, boolean useOrderByClause) {
         MTable table = super.getTable();
         if (selectClause == null) {
-            POInfo info = POInfo.getPOInfo(this.getCtx(), table.getTableTableId());
+            POInfo info = POInfo.getPOInfo(table.getTableTableId());
             if (info == null) {
                 throw new IllegalStateException(
                         "No POInfo found for AD_Table_ID=" + table.getTableTableId());
@@ -367,7 +351,7 @@ public class Query extends BaseQuery {
         }
         String sql = sqlBuffer.toString();
         if (applyAccessFilter) {
-            MRole role = MRole.getDefault(this.getCtx(), false);
+            MRole role = MRole.getDefault(false);
             sql =
                     role.addAccessSQL(
                             sql, table.getDbTableName(), applyAccessFilterFullyQualified, applyAccessFilterRW);
@@ -401,7 +385,7 @@ public class Query extends BaseQuery {
         }
         boolean onlyClient_ID = super.getOnlyClientId();
         if (onlyClient_ID) {
-            int AD_Client_ID = Env.getClientId(this.getCtx());
+            int AD_Client_ID = Env.getClientId();
             setParameter(pstmt, i++, AD_Client_ID);
             if (log.isLoggable(Level.FINEST)) log.finest("Parameter AD_Client_ID = " + AD_Client_ID);
         }

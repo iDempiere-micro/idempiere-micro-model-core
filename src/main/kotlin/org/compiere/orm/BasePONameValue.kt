@@ -2,12 +2,10 @@ package org.compiere.orm
 
 import kotliquery.Row
 import org.compiere.model.I_AD_Client.COLUMNNAME_Value
-import java.util.Properties
 
 abstract class BasePONameValue : BasePOName {
-    constructor(ctx: Properties, ID: Int) : super(ctx, ID)
-    constructor (ctx: Properties, a: String?) : super(ctx, a)
-    constructor(ctx: Properties, r: Row) : super(ctx, r)
+    constructor(ID: Int) : super(ID)
+    constructor(r: Row) : super(r)
 
     protected open fun doGetSearchKey() = getValue(COLUMNNAME_Value) as String
     protected open fun doSetSearchKey(Value: String) {

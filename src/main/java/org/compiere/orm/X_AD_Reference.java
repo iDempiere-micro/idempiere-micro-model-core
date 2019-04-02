@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Reference;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Reference
  *
@@ -25,15 +23,15 @@ public class X_AD_Reference extends BasePOName implements I_AD_Reference {
     /**
      * Standard Constructor
      */
-    public X_AD_Reference(Properties ctx, int AD_Reference_ID) {
-        super(ctx, AD_Reference_ID);
+    public X_AD_Reference(int AD_Reference_ID) {
+        super(AD_Reference_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Reference(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Reference(Row row) {
+        super(row);
     }
 
     /**

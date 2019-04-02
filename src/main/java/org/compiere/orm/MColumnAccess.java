@@ -2,8 +2,6 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 
-import java.util.Properties;
-
 /**
  * Column Access Model
  *
@@ -31,8 +29,8 @@ public class MColumnAccess extends X_AD_Column_Access {
      * @param ignored ignored
      * @param trxName transaction
      */
-    public MColumnAccess(Properties ctx, int ignored) {
-        super(ctx, 0);
+    public MColumnAccess(int ignored) {
+        super(0);
         if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
     } //	MColumnAccess
 
@@ -43,8 +41,8 @@ public class MColumnAccess extends X_AD_Column_Access {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MColumnAccess(Properties ctx, Row row) {
-        super(ctx, row);
+    public MColumnAccess(Row row) {
+        super(row);
     } //	MColumnAccess
 
     /**

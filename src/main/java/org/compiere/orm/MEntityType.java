@@ -5,8 +5,6 @@ import org.compiere.model.I_AD_EntityType;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.CLogger;
 
-import java.util.Properties;
-
 import static org.compiere.util.SystemIDs.ENTITYTYPE_ADEMPIERE;
 import static org.compiere.util.SystemIDs.ENTITYTYPE_DICTIONARY;
 
@@ -17,7 +15,7 @@ import static org.compiere.util.SystemIDs.ENTITYTYPE_DICTIONARY;
  * @author Teo Sarca
  * <li>BF [ 2827777 ] MEntityType.isSystemMaintained not working well
  * https://sourceforge.net/tracker/?func=detail&aid=2827777&group_id=176962&atid=879332
- * <li>FR [ 2827786 ] Introduce MEntityType.get(Properties ctx, String entityType)
+ * <li>FR [ 2827786 ] Introduce MEntityType.get(String entityType)
  * https://sourceforge.net/tracker/?func=detail&aid=2827786&group_id=176962&atid=879335
  * <li>BF [ 2861194 ] EntityType is not using normal PO framework for getting IDs
  * https://sourceforge.net/tracker/?func=detail&aid=2861194&group_id=176962&atid=879332
@@ -50,8 +48,8 @@ public class MEntityType extends X_AD_EntityType {
      * @param AD_EntityType_ID id
      * @param trxName          transaction
      */
-    public MEntityType(Properties ctx, int AD_EntityType_ID) {
-        super(ctx, AD_EntityType_ID);
+    public MEntityType(int AD_EntityType_ID) {
+        super(AD_EntityType_ID);
     } //	MEntityType
 
     /**
@@ -61,22 +59,21 @@ public class MEntityType extends X_AD_EntityType {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MEntityType(Properties ctx, Row row) {
-        super(ctx, row);
+    public MEntityType(Row row) {
+        super(row);
     } //	MEntityType
 
     /**
      * Get EntityType object by name
      *
-     * @param ctx
      * @param entityType
      * @return
      */
-    public static MEntityType get(Properties ctx, String entityType) {
+    public static MEntityType get(String entityType) {
         MEntityType retValue = s_cache.get(entityType);
         if (retValue != null) return retValue;
         retValue =
-                new Query(ctx, I_AD_EntityType.Table_Name, "EntityType=?")
+                new Query(I_AD_EntityType.Table_Name, "EntityType=?")
                         .setParameters(entityType)
                         .firstOnly();
         if (retValue != null) s_cache.put(entityType, retValue);
@@ -129,7 +126,7 @@ public class MEntityType extends X_AD_EntityType {
       setEntityType(getEntityType().toUpperCase());	//	upper case
       if (getEntityType().trim().length() < 4)
       {
-      	log.saveError("FillMandatory", Msg.getElement(getCtx(), "EntityType")
+      	log.saveError("FillMandatory", Msg.getElement("EntityType")
       		+ " - 4 Characters");
       	return false;
       }
@@ -141,7 +138,7 @@ public class MEntityType extends X_AD_EntityType {
       	if (Character.isDigit(c) || (c >= 'A' && c <= 'Z'))
       		continue;
       	//
-      	log.saveError("FillMandatory", Msg.getElement(getCtx(), "EntityType")
+      	log.saveError("FillMandatory", Msg.getElement("EntityType")
       		+ " - Must be ASCII Letter or Digit");
       	return false;
       }

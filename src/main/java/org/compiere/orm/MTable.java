@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.orm.MBaseTableKt.getFactoryList;
@@ -52,14 +51,11 @@ public class MTable extends MBaseTable {
     /**
      * ************************************************************************ Standard Constructor
      *
-     * @param ctx         context
      * @param AD_Table_ID id
      */
-    public MTable(Properties ctx, int AD_Table_ID) {
-        super(ctx, AD_Table_ID);
+    public MTable(int AD_Table_ID) {
+        super(AD_Table_ID);
         if (AD_Table_ID == 0) {
-            //	setName (null);
-            //	setTableName (null);
             setTableAccessLevel(X_AD_Table.ACCESSLEVEL_SystemOnly); // 4
             setEntityType(org.idempiere.orm.PO.ENTITYTYPE_UserMaintained); // U
             setIsChangeLog(false);
@@ -73,28 +69,24 @@ public class MTable extends MBaseTable {
 
     /**
      * Load Constructor
-     *
-     * @param ctx context
-     * @param rs  result set
      */
-    public MTable(Properties ctx, Row row) {
-        super(ctx, row);
+    public MTable(Row row) {
+        super(row);
     }
 
     /**
      * Get Table from Cache
      *
-     * @param ctx         context
      * @param AD_Table_ID id
      * @return MTable
      */
-    public static MTable get(Properties ctx, int AD_Table_ID) {
+    public static MTable get(int AD_Table_ID) {
         Integer key = AD_Table_ID;
         MTable retValue = getTableCache().get(key);
-        if (retValue != null && retValue.getCtx() == ctx) {
+        if (retValue != null) {
             return retValue;
         }
-        retValue = new MTable(ctx, AD_Table_ID);
+        retValue = new MTable(AD_Table_ID);
         if (retValue.getId() != 0) {
             getTableCache().put(key, retValue);
         }
@@ -104,30 +96,27 @@ public class MTable extends MBaseTable {
     /**
      * Get Table from Cache
      *
-     * @param ctx       context
      * @param tableName case insensitive table name
      * @return Table
      */
-    public static MTable get(Properties ctx, String tableName) {
+    public static MTable get(String tableName) {
         if (tableName == null) return null;
-        return MBaseTableKt.get(ctx, tableName);
+        return MBaseTableKt.get(tableName);
     } //	get
 
     /**
      * Get Table Name
      *
-     * @param ctx         context
      * @param AD_Table_ID table
      * @return tavle name
      */
-    public static String getDbTableName(Properties ctx, int AD_Table_ID) {
-        return MTable.get(ctx, AD_Table_ID).getDbTableName();
+    public static String getDbTableName(int AD_Table_ID) {
+        return MTable.get(AD_Table_ID).getDbTableName();
     } //	getTableName
 
     /**
      * Grant independence to GenerateModel from AD_Table_ID
      *
-     * @param String tableName
      * @return int retValue
      */
     public static int getTableId(String tableName) {
@@ -260,7 +249,7 @@ public class MTable extends MBaseTable {
         }
 
         if (po == null) {
-            po = new GenericPO(tableName, getCtx(), Record_ID);
+            po = new GenericPO(tableName, Record_ID);
             if (po.getId() != Record_ID && Record_ID > 0) po = null;
         }
 
@@ -291,9 +280,9 @@ public class MTable extends MBaseTable {
     protected boolean afterSave(boolean newRecord, boolean success) {
         if (!success) return success;
         //	Sync Table ID
-        MSequence seq = MSequence.get(getCtx(), getDbTableName());
+        MSequence seq = MSequence.get(getDbTableName());
         if (seq == null || seq.getId() == 0)
-            MSequence.createTableSequence(getCtx(), getDbTableName());
+            MSequence.createTableSequence(getDbTableName());
         else if (!seq.getName().equals(getDbTableName())) {
             seq.setName(getDbTableName());
             seq.saveEx();
@@ -306,11 +295,10 @@ public class MTable extends MBaseTable {
      * Create query to retrieve one or more PO.
      *
      * @param whereClause
-     * @param trxName
      * @return Query
      */
     public Query createQuery(String whereClause) {
-        return new Query(this.getCtx(), this, whereClause);
+        return new Query(this, whereClause);
     }
 
     /**
@@ -326,7 +314,6 @@ public class MTable extends MBaseTable {
 
         Query query =
                 new Query(
-                        getCtx(),
                         MViewComponent.Table_Name,
                         MViewComponent.COLUMNNAME_AD_Table_ID + "=?"
                 );

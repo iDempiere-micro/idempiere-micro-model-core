@@ -13,7 +13,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.util.DBKt.prepareStatement;
@@ -84,25 +83,17 @@ public class MSysConfig extends MBaseSysConfig {
     /**
      * Standard Constructor
      *
-     * @param ctx             context
      * @param AD_SysConfig_ID id
      */
-    public MSysConfig(Properties ctx, int AD_SysConfig_ID) {
-        super(ctx, AD_SysConfig_ID);
-        if (AD_SysConfig_ID == 0) {
-            //	setName (null);
-            //  setValue (null);
-        }
+    public MSysConfig(int AD_SysConfig_ID) {
+        super(AD_SysConfig_ID);
     } //	MSysConfig
 
     /**
      * Load Constructor
-     *
-     * @param ctx context
-     * @param rs  result set
      */
-    public MSysConfig(Properties ctx, Row row) {
-        super(ctx, row);
+    public MSysConfig(Row row) {
+        super(row);
     } //	MSysConfig
 
     /**

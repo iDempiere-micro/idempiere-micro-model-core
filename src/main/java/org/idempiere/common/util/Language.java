@@ -157,7 +157,7 @@ public class Language implements Serializable {
       	if (!isBaseLanguageSet) {
       		setBaseLanguage();
       	}
-      	MLanguage dblang = MLanguage.get(Env.getCtx(), langInfo);
+      	MLanguage dblang = MLanguage.get(langInfo);
       	if (dblang != null) {
       		if (!(   language.equals(dblang.getLanguageISO())
       			  && country.equals(dblang.getCountryCode())
@@ -247,7 +247,7 @@ public class Language implements Serializable {
      * @return login language
      */
     public static Language getLoginLanguage() {
-        return Env.getLanguage(Env.getCtx());
+        return Env.getLanguage();
     } //  getLanguage
 
     /**

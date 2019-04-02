@@ -4,8 +4,6 @@ import kotliquery.Row;
 import org.compiere.model.I_AD_OrgInfo;
 import org.idempiere.common.util.CCache;
 
-import java.util.Properties;
-
 /**
  * Organization Info Model
  *
@@ -23,7 +21,7 @@ public class MOrgInfo extends X_AD_OrgInfo {
      * Cache
      */
     private static CCache<Integer, MOrgInfo> s_cache =
-            new CCache<Integer, MOrgInfo>(I_AD_OrgInfo.Table_Name, 50);
+            new CCache<>(I_AD_OrgInfo.Table_Name, 50);
 
     /**
      * Organization constructor
@@ -31,31 +29,29 @@ public class MOrgInfo extends X_AD_OrgInfo {
      * @param org org
      */
     public MOrgInfo(MOrg org) {
-        super(org.getCtx(), 0);
+        super(0);
         setClientOrg(org);
         setDUNS("?");
         setTaxID("?");
     } //	MOrgInfo
 
-    public MOrgInfo(Properties ctx, Row row) {
-        super(ctx, row);
+    public MOrgInfo(Row row) {
+        super(row);
     } //	MOrgInfo
 
     /**
      * Load Constructor
      *
-     * @param ctx       context
      * @param AD_Org_ID id
-     * @param trxName
      * @return Org Info
      */
-    public static MOrgInfo get(Properties ctx, int AD_Org_ID) {
+    public static MOrgInfo get(int AD_Org_ID) {
         MOrgInfo retValue = s_cache.get(AD_Org_ID);
         if (retValue != null) {
             return retValue;
         }
         retValue =
-                new Query(ctx, I_AD_OrgInfo.Table_Name, "AD_Org_ID=?")
+                new Query(I_AD_OrgInfo.Table_Name, "AD_Org_ID=?")
                         .setParameters(AD_Org_ID)
                         .firstOnly();
         if (retValue != null) {

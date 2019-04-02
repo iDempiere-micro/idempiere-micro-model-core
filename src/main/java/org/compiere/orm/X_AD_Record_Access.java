@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Record_Access;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Record_Access
  *
@@ -21,19 +19,15 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access {
     /**
      * Standard Constructor
      */
-    public X_AD_Record_Access(Properties ctx, int AD_Record_Access_ID) {
-        super(ctx, AD_Record_Access_ID);
-        /**
-         * if (AD_Record_Access_ID == 0) { setRoleId (0); setColumnTableId (0); setIsDependentEntities
-         * (false); // N setIsExclude (true); // Y setIsReadOnly (false); setRecordId (0); }
-         */
+    public X_AD_Record_Access(int AD_Record_Access_ID) {
+        super(AD_Record_Access_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Record_Access(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Record_Access(Row row) {
+        super(row);
     }
 
     /**

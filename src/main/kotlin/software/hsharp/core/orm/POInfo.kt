@@ -8,7 +8,6 @@ import org.idempiere.common.exceptions.AdempiereException
 import org.idempiere.common.util.Env
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
-import java.util.Properties
 
 data class POInfoDetail(
     val tableName: String,
@@ -19,10 +18,9 @@ data class POInfoDetail(
     val columnIdMap: MutableMap<Int, Int>
 )
 
-open class POInfo(val ctx: Properties, val tableId: Int, baseLanguageOnly: Boolean) {
+open class POInfo(val tableId: Int, baseLanguageOnly: Boolean) {
     private val detail: Pair<POInfoDetail, Array<POInfoColumn>> = loadInfo(
         if (baseLanguageOnly) true else Env.isBaseLanguage(
-            ctx,
             "AD_Table"
         )
     )
@@ -62,7 +60,7 @@ open class POInfo(val ctx: Properties, val tableId: Int, baseLanguageOnly: Boole
             val accessLevel = row.stringOrNull(18)
             var ColumnSQL: String? = row.stringOrNull(19)
             if (ColumnSQL != null && ColumnSQL.contains("@"))
-                ColumnSQL = Env.parseContext(Env.getCtx(), -1, ColumnSQL, false, true)
+                ColumnSQL = Env.parseContext(-1, ColumnSQL, false, true)
             val IsEncrypted = "Y" == row.stringOrNull(20)
             val IsAllowLogging = "Y" == row.stringOrNull(21)
             val IsAllowCopy = "Y" == row.stringOrNull(22)

@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Client;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Client
  *
@@ -29,15 +27,15 @@ public class X_AD_Client extends BasePONameValue implements I_AD_Client {
     /**
      * Standard Constructor
      */
-    public X_AD_Client(Properties ctx, int AD_Client_ID) {
-        super(ctx, AD_Client_ID);
+    public X_AD_Client(int AD_Client_ID) {
+        super(AD_Client_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Client(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Client(Row row) {
+        super(row);
     } //	MClient
 
     /**

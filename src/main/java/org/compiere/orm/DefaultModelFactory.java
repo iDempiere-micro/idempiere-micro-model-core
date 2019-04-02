@@ -1,11 +1,11 @@
 package org.compiere.orm;
 
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.Env;
 import org.idempiere.orm.PO;
 import software.hsharp.core.orm.DefaultBaseModelFactory;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -36,7 +36,37 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
         try {
             Constructor<?> constructor = null;
             try {
+                try {
+                    constructor = clazz.getDeclaredConstructor(int.class);
+                    if (constructor != null && Modifier.isPrivate(constructor.getModifiers())) {
+                        constructor.setAccessible(true);
+                    }
+                    try {
+                        return constructor != null
+                                ? (PO)
+                                constructor.newInstance(
+                                        new Object[]{Record_ID})
+                                : null;
+                    } catch (Exception ex) {
+                        s_log.warning(
+                                "PO FAILED for table '"
+                                        + tableName
+                                        + "', Record_ID:"
+                                        + Record_ID
+                                        + " and clazz '"
+                                        + clazz.getCanonicalName()
+                                        + "'");
+                        throw ex;
+                    }
+                } catch (Exception e) {
+                    // still can have the second constructor
+                }
+
+
                 constructor = clazz.getDeclaredConstructor(Properties.class, int.class);
+                if (constructor != null && Modifier.isPrivate(constructor.getModifiers())) {
+                    constructor.setAccessible(true);
+                }
             } catch (Exception e) {
                 String msg = e.getMessage();
                 if (msg == null) msg = e.toString();
@@ -44,13 +74,11 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
             }
 
             try {
-                PO po =
-                        constructor != null
-                                ? (PO)
-                                constructor.newInstance(
-                                        new Object[]{Env.getCtx(), Record_ID})
-                                : null;
-                return po;
+                return constructor != null
+                        ? (PO)
+                        constructor.newInstance(
+                                new Object[]{Record_ID})
+                        : null;
             } catch (Exception ex) {
                 s_log.warning(
                         "PO FAILED for table '"

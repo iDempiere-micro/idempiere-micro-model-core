@@ -1,9 +1,6 @@
 package org.idempiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Column;
-import org.compiere.model.I_AD_Element;
-import org.compiere.model.I_AD_Field;
 import org.compiere.util.DisplayType;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
@@ -23,20 +20,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import software.hsharp.core.util.DB;
 import software.hsharp.core.util.DBKt;
+import software.hsharp.core.util.Environment;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -44,7 +35,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -169,51 +159,32 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     private ArrayList<PO_LOB> m_lobInfo = null;
 
-    public PO(Properties ctx, Row row) {
-        super(ctx, row, null);
+    public PO(Row row) {
+        super(row);
         int size = getP_info().getColumnCount();
         clearNewValues();
         m_setErrors = new ValueNamePair[size];
     }
 
     /**
-     * Create & Load existing Persistent Object
-     *
-     * @param ctx context
-     * @param ID  The unique ID of the object
-     */
-    public PO(Properties ctx, int ID) {
-        this(ctx, ID, null);
-    } //  PO
-
-    /**
-     * Create & Load existing Persistent Object.
-     *
-     * @param ctx context
-     */
-    public PO(Properties ctx, String columnNamePrefix) {
-        this(ctx, 0, columnNamePrefix);
-    } //	PO
-
-    /**
      * Create & Load existing Persistent Object.
      *
      * <pre>
      *  You load
-     * 		- an existing single key record with 	new PO (ctx, Record_ID)
-     * 			or									new PO (ctx, Record_ID)
-     * 			or									new PO (ctx, rs, null)
-     * 		- a new single key record with			new PO (ctx, 0)
-     * 		- an existing multi key record with		new PO (ctx, rs, null)
-     * 		- a new multi key record with			new PO (ctx, null)
+     * 		- an existing single key record with 	new PO (Record_ID)
+     * 			or									new PO (Record_ID)
+     * 			or									new PO (rs, null)
+     * 		- a new single key record with			new PO (0)
+     * 		- an existing multi key record with		new PO (rs, null)
+     * 		- a new multi key record with			new PO (null)
      *  The ID for new single key records is created automatically,
      *  you need to set the IDs for multi-key records explicitly.
      * </pre>
      *
-     * @param ID  the ID if 0, the record defaults are applied - ignored if re exists
+     * @param ID the ID if 0, the record defaults are applied - ignored if re exists
      */
-    public PO(Properties _ctx, int ID, String _columnNamePrefix) {
-        super(_ctx, null, _columnNamePrefix);
+    public PO(int ID) {
+        super(null);
 
         POInfo p_info = super.getP_info();
         //
@@ -273,27 +244,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     public String toString() {
         return "PO[" + getWhereClause(true) + "]";
     } //  toString
-
-    /**
-     * Equals based on ID
-     *
-     * @param cmp comparator
-     * @return true if ID the same
-     */
-    public boolean equals(Object cmp) {
-        if (cmp == null) return false;
-        if (!(cmp instanceof PO)) return false;
-        if (cmp.getClass().equals(this.getClass()))
-            // if both ID's are zero they can't be compared by ID
-            if (((PO) cmp).getId() == 0 && getId() == 0) return super.equals(cmp);
-            else return ((PO) cmp).getId() == getId();
-        return super.equals(cmp);
-    } //	equals
-
-    public int hashCode() {
-        assert false : "hashCode not designed";
-        return 42; // any arbitrary constant will do
-    }
 
     /**
      * Compare based on DocumentNo, Value, Name, Description
@@ -664,14 +614,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
             if (p_info.isVirtualColumn(i)) continue;
             String colName = p_info.getColumnName(i);
             //  Set Standard Values
-            if (colName.endsWith("tedBy")) newValues[i] = Env.getContextAsInt(getCtx(), "#AD_User_ID");
+            if (colName.endsWith("tedBy")) newValues[i] = Environment.Companion.getCurrent().getUserId();
             else if (colName.equals("Created") || colName.equals("Updated"))
                 newValues[i] = new Timestamp(System.currentTimeMillis());
             else if (colName.equals(p_info.getTableName() + "_ID")) //  KeyColumn
                 newValues[i] = I_ZERO;
             else if (colName.equals("IsActive")) newValues[i] = Boolean.TRUE;
-            else if (colName.equals("AD_Client_ID")) newValues[i] = Env.getClientId(getCtx());
-            else if (colName.equals("AD_Org_ID")) newValues[i] = Env.getOrgId(getCtx());
+            else if (colName.equals("AD_Client_ID")) newValues[i] = Environment.Companion.getCurrent().getClientId();
+            else if (colName.equals("AD_Org_ID")) newValues[i] = Environment.Companion.getCurrent().getOrgId();
             else if (colName.equals("Processed")) newValues[i] = Boolean.FALSE;
             else if (colName.equals("Processing")) newValues[i] = Boolean.FALSE;
             else if (colName.equals("Posted")) newValues[i] = Boolean.FALSE;
@@ -834,7 +784,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return translation
      */
     public String get_Translation(String columnName, boolean fallback) {
-        return get_Translation(columnName, Env.getADLanguage(getCtx()), false, fallback);
+        return get_Translation(columnName, Env.getADLanguage(), false, fallback);
     }
 
     /**
@@ -860,8 +810,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     protected boolean beforeSave(boolean newRecord) {
         /**
-         * Prevents saving log.saveError("Error", Msg.parseTranslation(getCtx(), "@C_Currency_ID@
-         * = @C_Currency_ID@")); log.saveError("FillMandatory", Msg.getElement(getCtx(),
+         * Prevents saving log.saveError("Error", Msg.parseTranslation("@C_Currency_ID@
+         * = @C_Currency_ID@")); log.saveError("FillMandatory", Msg.getElement(
          * "PriceEntered")); /** Issues message log.saveWarning(AD_Message, message); log.saveInfo
          * (AD_Message, message);
          */
@@ -944,7 +894,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return true if record can be deleted
      */
     protected boolean beforeDelete() {
-        //	log.saveError("Error", Msg.getMsg(getCtx(), "CannotDelete"));
+        //	log.saveError("Error", Msg.getMsg( "CannotDelete"));
         return true;
     } //	beforeDelete
 
@@ -1156,8 +1106,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     }
 
     protected void checkValidContext() {
-        if (getCtx().isEmpty() && getCtx().getProperty("#AD_Client_ID") == null)
-            throw new AdempiereException("Context lost");
     }
 
     /**
@@ -1383,14 +1331,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
             if (setError != null) {
                 log.saveError(
                         setError.getValue(),
-                        Msg.getElement(getCtx(), p_info.getColumnName(i)) + " - " + setError.getName());
+                        Msg.getElement(p_info.getColumnName(i)) + " - " + setError.getName());
                 return false;
             }
         }
 
         //	Organization Check
         if (getOrgId() == 0 && (getAccessLevel() == ACCESSLEVEL_ORG)) {
-            log.saveError("FillMandatory", Msg.getElement(getCtx(), "AD_Org_ID"));
+            log.saveError("FillMandatory", Msg.getElement("AD_Org_ID"));
             return false;
         }
         //	Should be Org 0
@@ -1567,7 +1515,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 lobAdd(value, i, dt);
                 //	If no changes set UpdatedBy explicitly to ensure commit of lob
                 if (!changes && !updatedBy) {
-                    int AD_User_ID = Env.getContextAsInt(getCtx(), "#AD_User_ID");
+                    int AD_User_ID = Environment.Companion.getCurrent().getUserId();
                     setValueNoCheck("UpdatedBy", AD_User_ID);
                     sql.append("UpdatedBy=").append(AD_User_ID);
                     changes = true;
@@ -1678,7 +1626,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             }
             if (!updatedBy) //	UpdatedBy not explicitly set
             {
-                int AD_User_ID = Env.getContextAsInt(getCtx(), "#AD_User_ID");
+                int AD_User_ID = Environment.Companion.getCurrent().getUserId();
                 setValueNoCheck("UpdatedBy", AD_User_ID);
                 if (withValues) {
                     sql.append(",UpdatedBy=").append(AD_User_ID);
@@ -1688,9 +1636,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 }
             }
             sql.append(" WHERE ").append(where);
-            /** @todo status locking goes here */
+            /* @todo status locking goes here */
             if (log.isLoggable(Level.FINEST)) log.finest(sql.toString());
-            int no = 0;
+            int no;
             if (isUseTimeoutForUpdate())
                 no =
                         withValues
@@ -1726,7 +1674,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         lobReset();
 
         // params for insert statement
-        List<Object> params = new ArrayList<Object>();
+        List<Object> params = new ArrayList<>();
         POInfo p_info = super.getP_info();
         //	SQL
         StringBuilder sqlInsert = new StringBuilder("INSERT INTO ");

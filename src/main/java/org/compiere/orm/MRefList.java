@@ -10,7 +10,6 @@ import org.idempiere.orm.PO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.util.DBKt.prepareStatement;
@@ -47,8 +46,8 @@ public class MRefList extends X_AD_Ref_List {
      * @param AD_Ref_List_ID id
      * @param trxName        transaction
      */
-    public MRefList(Properties ctx, int AD_Ref_List_ID) {
-        super(ctx, AD_Ref_List_ID);
+    public MRefList(int AD_Ref_List_ID) {
+        super(AD_Ref_List_ID);
         if (AD_Ref_List_ID == 0) {
             //	setReferenceId (0);
             //	setAD_Ref_List_ID (0);
@@ -65,8 +64,8 @@ public class MRefList extends X_AD_Ref_List {
      * @param rs      result
      * @param trxName transaction
      */
-    public MRefList(Properties ctx, Row row) {
-        super(ctx, row);
+    public MRefList(Row row) {
+        super(row);
     } //	MRef_List
 
     /**
@@ -77,8 +76,8 @@ public class MRefList extends X_AD_Ref_List {
      * @param Value           value
      * @return List or ""
      */
-    public static String getListName(Properties ctx, int AD_Reference_ID, String Value) {
-        String AD_Language = Env.getADLanguage(ctx);
+    public static String getListName(int AD_Reference_ID, String Value) {
+        String AD_Language = Env.getADLanguage();
         return getListName(AD_Language, AD_Reference_ID, Value);
     }
 

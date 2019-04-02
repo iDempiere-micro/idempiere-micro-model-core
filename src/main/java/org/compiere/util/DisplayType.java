@@ -401,7 +401,7 @@ public final class DisplayType {
      */
     public static SimpleDateFormat getDateFormat(int displayType, Language language, String pattern) {
         Language myLanguage = language;
-        if (myLanguage == null) myLanguage = Env.getLanguage(Env.getCtx());
+        if (myLanguage == null) myLanguage = Env.getLanguage();
         //
         if (pattern != null && pattern.length() > 0) {
             SimpleDateFormat format =

@@ -26,29 +26,24 @@ public class GenericPO extends PO {
 
     /**
      * @param tableName
-     * @param ctx
      * @param ID
      */
-    public GenericPO(String tableName, Properties ctx, int ID) {
-        super(new PropertiesWrapper(ctx, tableName), ID);
+    public GenericPO(String tableName, int ID) {
+        super(ID);
     }
 
     /**
      * @param tableName
-     * @param ctx
-     * @param rs
      */
-    public GenericPO(String tableName, Properties ctx, Row row) {
-        super(new PropertiesWrapper(ctx, tableName), row);
+    public GenericPO(String tableName, Row row) {
+        super(row);
     }
 
     public String toString() {
-        StringBuffer sb =
-                new StringBuffer("GenericPO[Table=")
-                        .append("" + getTableId() + ",ID=")
-                        .append(getId())
-                        .append("]");
-        return sb.toString();
+        return "GenericPO[Table=" +
+                "" + getTableId() + ",ID=" +
+                getId() +
+                "]";
     }
 
     @Override
@@ -76,6 +71,6 @@ class PropertiesWrapper extends Properties {
      */
     private static final long serialVersionUID = 8887531951501323594L;
 
-    PropertiesWrapper(Properties source, String tableName) {
+    PropertiesWrapper(String tableName) {
     }
 }

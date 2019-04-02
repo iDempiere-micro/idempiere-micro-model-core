@@ -2,8 +2,6 @@ package org.compiere.orm;
 
 import org.idempiere.orm.PO;
 
-import java.util.Properties;
-
 public class MTableIndex extends X_AD_TableIndex {
     /**
      *
@@ -17,8 +15,8 @@ public class MTableIndex extends X_AD_TableIndex {
      * @param AD_TableIndex_ID table index
      * @param trxName          trx name
      */
-    public MTableIndex(Properties ctx, int AD_TableIndex_ID) {
-        super(ctx, AD_TableIndex_ID);
+    public MTableIndex(int AD_TableIndex_ID) {
+        super(AD_TableIndex_ID);
         if (AD_TableIndex_ID == 0) {
             setEntityType(PO.ENTITYTYPE_UserMaintained);
             setIsUnique(false);
@@ -33,7 +31,7 @@ public class MTableIndex extends X_AD_TableIndex {
      */
     public String getDbTableName() {
         int AD_Table_ID = getIndexTableId();
-        return MTable.getDbTableName(getCtx(), AD_Table_ID);
+        return MTable.getDbTableName(AD_Table_ID);
     }
 
     /**

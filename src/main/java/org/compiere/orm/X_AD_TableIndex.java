@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_TableIndex;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_TableIndex
  *
@@ -21,15 +19,15 @@ public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex {
     /**
      * Standard Constructor
      */
-    public X_AD_TableIndex(Properties ctx, int AD_TableIndex_ID) {
-        super(ctx, AD_TableIndex_ID);
+    public X_AD_TableIndex(int AD_TableIndex_ID) {
+        super(AD_TableIndex_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_TableIndex(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_TableIndex(Row row) {
+        super(row);
     }
 
     /**

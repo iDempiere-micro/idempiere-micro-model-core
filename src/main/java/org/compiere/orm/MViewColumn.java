@@ -2,8 +2,6 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 
-import java.util.Properties;
-
 public class MViewColumn extends X_AD_ViewColumn {
 
     /**
@@ -16,21 +14,18 @@ public class MViewColumn extends X_AD_ViewColumn {
      *
      * @param ctx              context
      * @param AD_ViewColumn_ID view column
-     * @param trxName          trx name
      */
-    public MViewColumn(Properties ctx, int AD_ViewColumn_ID) {
-        super(ctx, AD_ViewColumn_ID);
+    public MViewColumn(int AD_ViewColumn_ID) {
+        super(AD_ViewColumn_ID);
     }
 
     /**
      * Load constructor
      *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName trx name
+     * @param ctx context
      */
-    public MViewColumn(Properties ctx, Row row) {
-        super(ctx, row);
+    public MViewColumn(Row row) {
+        super(row);
     }
 
     /**
@@ -39,7 +34,7 @@ public class MViewColumn extends X_AD_ViewColumn {
      * @param parent parent
      */
     public MViewColumn(MViewComponent parent) {
-        this(parent.getCtx(), 0);
+        this(0);
         setClientOrg(parent);
         setViewComponentId(parent.getViewComponentId());
     }
@@ -51,8 +46,6 @@ public class MViewColumn extends X_AD_ViewColumn {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("MViewColumn[");
-        sb.append(getId()).append("-").append(getColumnName()).append("]");
-        return sb.toString();
+        return "MViewColumn[" + getId() + "-" + getColumnName() + "]";
     }
 }

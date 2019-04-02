@@ -2,7 +2,6 @@ package org.idempiere.common.util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Properties;
 import java.util.logging.Level;
 
 /**
@@ -65,12 +64,10 @@ public class SecureEngine {
 
     /**
      * Initialize Security
-     *
-     * @param ctx context with ADEMPIERE_SECURE class name
      */
-    public static void init(Properties ctx) {
+    public static void init() {
         if (s_engine == null) {
-            String className = ctx.getProperty(SecureInterface.ADEMPIERE_SECURE);
+            String className = SecureInterface.ADEMPIERE_SECURE_DEFAULT;
             s_engine = new SecureEngine(className);
         }
     } //	init
@@ -86,7 +83,7 @@ public class SecureEngine {
      */
     public static String getSHA512Hash(int iterations, String value, byte[] salt)
             throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        if (s_engine == null) init(System.getProperties());
+        if (s_engine == null) init();
         return s_engine.implementation.getSHA512Hash(iterations, value, salt);
     } //	getDigest
 
@@ -99,7 +96,7 @@ public class SecureEngine {
      */
     public static String encrypt(String value, int AD_Client_ID) {
         if (value == null || value.length() == 0) return value;
-        if (s_engine == null) init(System.getProperties());
+        if (s_engine == null) init();
         //
         boolean inQuotes = value.startsWith("'") && value.endsWith("'");
         if (inQuotes) value = value.substring(1, value.length() - 1);
@@ -118,7 +115,7 @@ public class SecureEngine {
      */
     public static String decrypt(String value, int AD_Client_ID) {
         if (value == null) return null;
-        if (s_engine == null) init(System.getProperties());
+        if (s_engine == null) init();
         boolean inQuotes = value.startsWith("'") && value.endsWith("'");
         if (inQuotes) value = value.substring(1, value.length() - 1);
         String retValue = null;
@@ -163,7 +160,6 @@ public class SecureEngine {
      * @param hashedText
      * @param hexSalt
      * @param planText
-     * @param log
      * @return
      */
     public static boolean isMatchHash(String hashedText, String hexSalt, String planText) {

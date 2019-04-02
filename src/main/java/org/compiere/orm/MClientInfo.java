@@ -2,30 +2,23 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 
-import java.util.Properties;
-
 public class MClientInfo extends X_AD_ClientInfo {
     /**
      * ************************************************************************ Standard Constructor
      *
      * @param ctx     context
      * @param ignored ignored
-     * @param trxName transaction
      */
-    public MClientInfo(Properties ctx, int ignored) {
-        super(ctx, ignored);
+    public MClientInfo(int ignored) {
+        super(ignored);
         if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
     } //	MClientInfo
 
     /**
      * Load Constructor
-     *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
      */
-    public MClientInfo(Properties ctx, Row row) {
-        super(ctx, row);
+    public MClientInfo(Row row) {
+        super(row);
     } //	MClientInfo
 
     /**
@@ -39,7 +32,6 @@ public class MClientInfo extends X_AD_ClientInfo {
      * @param AD_Tree_Product_ID     product tree
      * @param AD_Tree_Campaign_ID    campaign tree
      * @param AD_Tree_Activity_ID    activity tree
-     * @param trxName                transaction
      */
     public MClientInfo(
             MClient client,
@@ -49,9 +41,8 @@ public class MClientInfo extends X_AD_ClientInfo {
             int AD_Tree_SalesRegion_ID,
             int AD_Tree_Product_ID,
             int AD_Tree_Campaign_ID,
-            int AD_Tree_Activity_ID,
-            String trxName) {
-        super(client.getCtx(), 0);
+            int AD_Tree_Activity_ID) {
+        super(0);
         setADClientID(client.getClientId()); // 	to make sure
         setOrgId(0);
         setIsDiscountLineAmt(false);
@@ -73,12 +64,10 @@ public class MClientInfo extends X_AD_ClientInfo {
     /**
      * Get Client Info
      *
-     * @param ctx          context
      * @param AD_Client_ID id
-     * @param trxName      optional trx
      * @return Client Info
      */
-    public static MClientInfo get(Properties ctx, int AD_Client_ID) {
-        return MBaseClientInfoKt.get(ctx, AD_Client_ID);
+    public static MClientInfo get(int AD_Client_ID) {
+        return MBaseClientInfoKt.get(AD_Client_ID);
     } //	get
 }

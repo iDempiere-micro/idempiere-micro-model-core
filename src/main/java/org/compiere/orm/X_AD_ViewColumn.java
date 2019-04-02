@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_ViewColumn;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_ViewColumn
  *
@@ -21,8 +19,8 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn {
     /**
      * Standard Constructor
      */
-    public X_AD_ViewColumn(Properties ctx, int AD_ViewColumn_ID) {
-        super(ctx, AD_ViewColumn_ID);
+    public X_AD_ViewColumn(int AD_ViewColumn_ID) {
+        super(AD_ViewColumn_ID);
         /**
          * if (AD_ViewColumn_ID == 0) { setAD_ViewColumn_ID (0); setViewComponentId (0);
          * setColumnName (null); setEntityType (null); // @SQL=select
@@ -33,8 +31,8 @@ public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn {
     /**
      * Load Constructor
      */
-    public X_AD_ViewColumn(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_ViewColumn(Row row) {
+        super(row);
     }
 
     /**

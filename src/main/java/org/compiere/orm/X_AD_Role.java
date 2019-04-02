@@ -6,7 +6,6 @@ import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 
 import java.math.BigDecimal;
-import java.util.Properties;
 
 /**
  * Generated Model for AD_Role
@@ -48,8 +47,8 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
     /**
      * Standard Constructor
      */
-    public X_AD_Role(Properties ctx, int AD_Role_ID) {
-        super(ctx, AD_Role_ID);
+    public X_AD_Role(int AD_Role_ID) {
+        super(AD_Role_ID);
         /**
          * if (AD_Role_ID == 0) { setRoleId (0); setAllow_Info_Account (true); // Y
          * setAllow_Info_Asset (true); // Y setAllow_Info_BPartner (true); // Y setAllow_Info_InOut
@@ -69,8 +68,8 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
     /**
      * Load Constructor
      */
-    public X_AD_Role(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Role(Row row) {
+        super(row);
     } //	MRole
 
     /**
@@ -457,10 +456,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
     @Override
     public int getTableId() {
         return Table_ID;
-    }
-
-    protected Properties getMyContext() {
-        return super.getCtx();
     }
 
     protected CLogger getMyLog() {

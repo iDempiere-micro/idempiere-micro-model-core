@@ -7,7 +7,6 @@ import org.idempiere.common.util.Language;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.Properties;
 import java.util.logging.Level;
 
 /**
@@ -33,10 +32,10 @@ public final class Msg extends BaseMsg {
      * The Map
      */
     private CCache<String, CCache<String, String>> m_languages =
-            new CCache<String, CCache<String, String>>(null, "msg_lang", 2, 0, false);
+            new CCache<>(null, "msg_lang", 2, 0, false);
 
     private CCache<String, CCache<String, String>> m_elementCache =
-            new CCache<String, CCache<String, String>>(null, "msg_element", 2, 0, false);
+            new CCache<>(null, "msg_element", 2, 0, false);
 
     /**
      * ****************************************************************** Constructor
@@ -82,12 +81,11 @@ public final class Msg extends BaseMsg {
     /**
      * Get translated text message for AD_Message
      *
-     * @param ctx        Context to retrieve language
      * @param AD_Message - Message Key
      * @return translated text
      */
-    public static String getMsg(Properties ctx, String AD_Message) {
-        return getMsg(Env.getADLanguage(ctx), AD_Message);
+    public static String getMsg(String AD_Message) {
+        return getMsg(Env.getADLanguage(), AD_Message);
     } //  getMeg
 
     /**
@@ -120,26 +118,24 @@ public final class Msg extends BaseMsg {
     /**
      * Get translated text message for AD_Message
      *
-     * @param ctx        Context to retrieve language
      * @param AD_Message Message Key
      * @param getText    if true only return Text, if false only return Tip
      * @return translated text
      */
-    public static String getMsg(Properties ctx, String AD_Message, boolean getText) {
-        return getMsg(Env.getADLanguage(ctx), AD_Message, getText);
+    public static String getMsg(String AD_Message, boolean getText) {
+        return getMsg(Env.getADLanguage(), AD_Message, getText);
     } //  getMsg
 
     /**
      * Get clear text for AD_Message with parameters
      *
-     * @param ctx        Context to retrieve language
      * @param AD_Message Message key
      * @param args       MessageFormat arguments
      * @return translated text
      * @see java.text.MessageFormat for formatting options
      */
-    public static String getMsg(Properties ctx, String AD_Message, Object[] args) {
-        return getMsg(Env.getADLanguage(ctx), AD_Message, args);
+    public static String getMsg(String AD_Message, Object[] args) {
+        return getMsg(Env.getADLanguage(), AD_Message, args);
     } //	getMsg
 
     /**
@@ -192,24 +188,22 @@ public final class Msg extends BaseMsg {
     /**
      * Get Translation for Element using Sales terminology
      *
-     * @param ctx        context
      * @param ColumnName column name
      * @return Name of the Column or "" if not found
      */
-    public static String getElement(Properties ctx, String ColumnName) {
-        return getElement(Env.getADLanguage(ctx), ColumnName, true);
+    public static String getElement(String ColumnName) {
+        return getElement(Env.getADLanguage(), ColumnName, true);
     } //  getElement
 
     /**
      * Get Translation for Element
      *
-     * @param ctx        context
      * @param ColumnName column name
      * @param isSOTrx    sales transaction
      * @return Name of the Column or "" if not found
      */
-    public static String getElement(Properties ctx, String ColumnName, boolean isSOTrx) {
-        return getElement(Env.getADLanguage(ctx), ColumnName, isSOTrx);
+    public static String getElement(String ColumnName, boolean isSOTrx) {
+        return getElement(Env.getADLanguage(), ColumnName, isSOTrx);
     } //  getElement
 
     /**
@@ -272,25 +266,21 @@ public final class Msg extends BaseMsg {
      * 	- Check AD_Element.ColumnName	->	Name
      *  </pre>
      *
-     * @param ctx  Context
      * @param text Text - MsgText or Element Name
      * @return translated text or original text if not found
      */
-    public static String translate(Properties ctx, String text) {
+    public static String translate(String text) {
         if (text == null || text.length() == 0) return text;
-        String s = ctx.getProperty(text);
-        if (s != null && s.length() > 0) return s;
-        return translate(Env.getADLanguage(ctx), Env.isSOTrx(ctx), text);
+        return translate(Env.getADLanguage(), Env.isSOTrx(), text);
     } //  translate
 
     /**
      * Translate elements enclosed in "@" (at sign)
      *
-     * @param ctx  Context
      * @param text Text
      * @return translated text or original text if not found
      */
-    public static String parseTranslation(Properties ctx, String text) {
+    public static String parseTranslation(String text) {
         if (text == null || text.length() == 0) return text;
 
         String inStr = text;
@@ -310,7 +300,7 @@ public final class Msg extends BaseMsg {
             }
 
             token = inStr.substring(0, j);
-            outStr.append(translate(ctx, token)); // replace context
+            outStr.append(translate(token)); // replace context
 
             inStr = inStr.substring(j + 1); // from second @
             i = inStr.indexOf('@');
@@ -351,7 +341,7 @@ public final class Msg extends BaseMsg {
         CCache<String, String> retValue = m_elementCache.get(AD_Language);
         if (retValue != null && retValue.size() > 0) return retValue;
 
-        retValue = new CCache<String, String>("element", 100, 0, false, 0);
+        retValue = new CCache<>("element", 100, 0, false, 0);
         m_elementCache.put(AD_Language, retValue);
         return retValue;
     }

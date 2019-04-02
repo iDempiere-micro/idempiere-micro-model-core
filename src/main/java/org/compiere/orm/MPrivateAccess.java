@@ -2,8 +2,6 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 
-import java.util.Properties;
-
 /**
  * Private Access
  *
@@ -23,8 +21,8 @@ public class MPrivateAccess extends X_AD_Private_Access {
      * @param ignored ignored
      * @param trxName transaction
      */
-    public MPrivateAccess(Properties ctx, int ignored) {
-        super(ctx, 0);
+    public MPrivateAccess(int ignored) {
+        super(0);
         if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
     } //	MPrivateAccess
 
@@ -35,8 +33,8 @@ public class MPrivateAccess extends X_AD_Private_Access {
      * @param rs      result set
      * @param trxName transaction
      */
-    public MPrivateAccess(Properties ctx, Row row) {
-        super(ctx, row);
+    public MPrivateAccess(Row row) {
+        super(row);
     } //	MPrivateAccess
 
     /**
@@ -47,8 +45,8 @@ public class MPrivateAccess extends X_AD_Private_Access {
      * @param AD_Table_ID table
      * @param Record_ID   record
      */
-    public MPrivateAccess(Properties ctx, int AD_User_ID, int AD_Table_ID, int Record_ID) {
-        super(ctx, 0);
+    public MPrivateAccess(int AD_User_ID, int AD_Table_ID, int Record_ID) {
+        super(0);
         setUserId(AD_User_ID);
         setTableId(AD_Table_ID);
         setRecordId(Record_ID);

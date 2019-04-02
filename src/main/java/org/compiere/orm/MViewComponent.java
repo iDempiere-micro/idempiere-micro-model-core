@@ -3,7 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 
 import java.util.List;
-import java.util.Properties;
 
 public class MViewComponent extends X_AD_ViewComponent {
 
@@ -22,12 +21,12 @@ public class MViewComponent extends X_AD_ViewComponent {
      * @param ctx                 context
      * @param AD_ViewComponent_ID view component
      */
-    public MViewComponent(Properties ctx, int AD_ViewComponent_ID) {
-        super(ctx, AD_ViewComponent_ID);
+    public MViewComponent(int AD_ViewComponent_ID) {
+        super(AD_ViewComponent_ID);
     }
 
-    public MViewComponent(Properties ctx, Row row) {
-        super(ctx, row);
+    public MViewComponent(Row row) {
+        super(row);
     }
 
     /**
@@ -36,7 +35,7 @@ public class MViewComponent extends X_AD_ViewComponent {
      * @param parent parent
      */
     public MViewComponent(MTable parent) {
-        this(parent.getCtx(), 0);
+        this(0);
         setClientOrg(parent);
         setViewTableId(parent.getTableTableId());
     }
@@ -52,7 +51,6 @@ public class MViewComponent extends X_AD_ViewComponent {
 
         Query query =
                 new Query(
-                        getCtx(),
                         MViewColumn.Table_Name,
                         MViewColumn.COLUMNNAME_AD_ViewComponent_ID + "=?"
                 );

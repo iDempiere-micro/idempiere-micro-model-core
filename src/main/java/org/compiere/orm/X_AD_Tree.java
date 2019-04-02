@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Tree;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Tree
  *
@@ -101,15 +99,15 @@ public class X_AD_Tree extends BasePOName implements I_AD_Tree {
     /**
      * Standard Constructor
      */
-    public X_AD_Tree(Properties ctx, int AD_Tree_ID) {
-        super(ctx, AD_Tree_ID);
+    public X_AD_Tree(int AD_Tree_ID) {
+        super(AD_Tree_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Tree(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Tree(Row row) {
+        super(row);
     }
 
     /**

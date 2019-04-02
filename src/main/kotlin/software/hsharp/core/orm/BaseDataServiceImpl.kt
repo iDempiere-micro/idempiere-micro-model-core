@@ -2,8 +2,8 @@ package software.hsharp.core.orm
 
 import org.compiere.orm.Query
 import org.idempiere.icommon.model.IPO
-import software.hsharp.core.models.BaseDataService
-import software.hsharp.core.models.EnvironmentService
+import software.hsharp.core.services.BaseDataService
+import software.hsharp.core.services.EnvironmentService
 
 /**
  * Implementation of the [BaseDataService] to serve [T].
@@ -25,7 +25,7 @@ open class BaseDataServiceImpl<T : IPO> (
             (if (shared)
                 "AD_Client_ID=0 OR AD_Client_ID=?"
             else "AD_Client_ID=?") + " AND " + andWhere()
-        return Query(environmentService.context, tableName, where)
+        return Query(tableName, where)
             .setParameters(environmentService.clientId)
             .list()
     }

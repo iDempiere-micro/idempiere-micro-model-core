@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_User_Roles;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_User_Roles
  *
@@ -21,16 +19,16 @@ public class X_AD_User_Roles extends PO implements I_AD_User_Roles {
     /**
      * Standard Constructor
      */
-    public X_AD_User_Roles(Properties ctx, int AD_User_Roles_ID) {
-        super(ctx, AD_User_Roles_ID);
+    public X_AD_User_Roles(int AD_User_Roles_ID) {
+        super(AD_User_Roles_ID);
         /** if (AD_User_Roles_ID == 0) { setRoleId (0); setUserId (0); } */
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_User_Roles(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_User_Roles(Row row) {
+        super(row);
     }
 
     /**

@@ -7,7 +7,6 @@ import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.Env;
 
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.util.DBKt.executeUpdate;
@@ -38,17 +37,11 @@ public class MDocType extends X_C_DocType {
     /**
      * ************************************************************************ Standard Constructor
      *
-     * @param ctx          context
      * @param C_DocType_ID id
-     * @param trxName      transaction
      */
-    public MDocType(Properties ctx, int C_DocType_ID) {
-        super(ctx, C_DocType_ID);
+    public MDocType(int C_DocType_ID) {
+        super(C_DocType_ID);
         if (C_DocType_ID == 0) {
-            //	setName (null);
-            //	setPrintName (null);
-            //	setDocBaseType (null);
-            //	setGLCategoryId (0);
             setDocumentCopies(0);
             setHasCharges(false);
             setIsDefault(false);
@@ -66,13 +59,9 @@ public class MDocType extends X_C_DocType {
 
     /**
      * Load Constructor
-     *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
      */
-    public MDocType(Properties ctx, Row row) {
-        super(ctx, row);
+    public MDocType(Row row) {
+        super(row);
     } //	MDocType
 
     /**
@@ -81,10 +70,9 @@ public class MDocType extends X_C_DocType {
      * @param ctx         context
      * @param DocBaseType document base type
      * @param Name        name
-     * @param trxName     transaction
      */
-    public MDocType(Properties ctx, String DocBaseType, String Name) {
-        this(ctx, 0);
+    public MDocType(String DocBaseType, String Name) {
+        this(0);
         setOrgId(0);
         setDocBaseType(DocBaseType);
         setName(Name);
@@ -99,22 +87,21 @@ public class MDocType extends X_C_DocType {
      * @return
      */
     public static int getDocType(String DocBaseType) {
-        MDocType[] doc = MDocType.getOfDocBaseType(Env.getCtx(), DocBaseType);
+        MDocType[] doc = MDocType.getOfDocBaseType(DocBaseType);
         return doc.length > 0 ? doc[0].getId() : 0;
     }
 
     /**
      * Get Client Document Type with DocBaseType
      *
-     * @param ctx         context
      * @param DocBaseType base document type
      * @return array of doc types
      */
-    public static MDocType[] getOfDocBaseType(Properties ctx, String DocBaseType) {
+    public static MDocType[] getOfDocBaseType(String DocBaseType) {
         final String whereClause = "AD_Client_ID=? AND DocBaseType=?";
         List<MDocType> list =
-                new Query(ctx, I_C_DocType.Table_Name, whereClause)
-                        .setParameters(Env.getClientId(ctx), DocBaseType)
+                new Query(I_C_DocType.Table_Name, whereClause)
+                        .setParameters(Env.getClientId(), DocBaseType)
                         .setOnlyActiveRecords(true)
                         .setOrderBy("IsDefault DESC, C_DocType_ID")
                         .list();
@@ -124,12 +111,11 @@ public class MDocType extends X_C_DocType {
     /**
      * Get Client Document Types
      *
-     * @param ctx context
      * @return array of doc types
      */
-    public static MDocType[] getOfClient(Properties ctx) {
+    public static MDocType[] getOfClient() {
         List<MDocType> list =
-                new Query(ctx, I_C_DocType.Table_Name, null)
+                new Query(I_C_DocType.Table_Name, null)
                         .setClientId()
                         .setOnlyActiveRecords(true)
                         .list();
@@ -143,10 +129,10 @@ public class MDocType extends X_C_DocType {
      * @param C_DocType_ID id
      * @return document type
      */
-    public static MDocType get(Properties ctx, int C_DocType_ID) {
+    public static MDocType get(int C_DocType_ID) {
         MDocType retValue = s_cache.get(C_DocType_ID);
         if (retValue == null) {
-            retValue = new MDocType(ctx, C_DocType_ID);
+            retValue = new MDocType(C_DocType_ID);
             s_cache.put(C_DocType_ID, retValue);
         }
         return retValue;
@@ -297,6 +283,6 @@ public class MDocType extends X_C_DocType {
     public String getNameTrl() {
         // warning: to cache this translation you need to change the cache to include language (see i.e.
         // MWFNode)
-        return get_Translation(HasName.Companion.getCOLUMNNAME_Name(), Env.getADLanguage(getCtx()));
+        return get_Translation(HasName.Companion.getCOLUMNNAME_Name(), Env.getADLanguage());
     } //	getNameTrl
 } //	MDocType

@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_SysConfig;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_SysConfig
  *
@@ -33,15 +31,15 @@ public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig {
     /**
      * Standard Constructor
      */
-    public X_AD_SysConfig(Properties ctx, int AD_SysConfig_ID) {
-        super(ctx, AD_SysConfig_ID);
+    public X_AD_SysConfig(int AD_SysConfig_ID) {
+        super(AD_SysConfig_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_SysConfig(Properties ctx, Row r) {
-        super(ctx, r);
+    public X_AD_SysConfig(Row r) {
+        super(r);
     }
 
     /**

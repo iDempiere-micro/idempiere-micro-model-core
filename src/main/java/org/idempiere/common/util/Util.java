@@ -1,6 +1,5 @@
 package org.idempiere.common.util;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.Calendar;
 

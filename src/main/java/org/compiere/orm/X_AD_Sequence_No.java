@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Sequence_No;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Sequence_No
  *
@@ -21,8 +19,8 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No {
     /**
      * Standard Constructor
      */
-    public X_AD_Sequence_No(Properties ctx, int AD_Sequence_No_ID) {
-        super(ctx, AD_Sequence_No_ID);
+    public X_AD_Sequence_No(int AD_Sequence_No_ID) {
+        super(AD_Sequence_No_ID);
         /**
          * if (AD_Sequence_No_ID == 0) { setSequenceId (0); setCalendarYearMonth (null);
          * setCurrentNext (0); }
@@ -32,8 +30,8 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No {
     /**
      * Load Constructor
      */
-    public X_AD_Sequence_No(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Sequence_No(Row row) {
+        super(row);
     }
 
     /**

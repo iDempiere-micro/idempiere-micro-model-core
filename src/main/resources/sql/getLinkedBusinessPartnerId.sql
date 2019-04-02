@@ -1,0 +1,1 @@
+SELECT C_BPartner_ID FROM C_BPartner WHERE AD_OrgBP_ID=?

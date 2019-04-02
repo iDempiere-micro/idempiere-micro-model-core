@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_C_DocType;
 
-import java.util.Properties;
-
 /**
  * Generated Model for C_DocType
  *
@@ -181,15 +179,15 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     /**
      * Standard Constructor
      */
-    public X_C_DocType(Properties ctx, int C_DocType_ID) {
-        super(ctx, C_DocType_ID);
+    public X_C_DocType(int C_DocType_ID) {
+        super(C_DocType_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_C_DocType(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_C_DocType(Row row) {
+        super(row);
     } //	MDocType
 
     /**
@@ -202,8 +200,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_C_DocType[").append(getId()).append("]");
-        return sb.toString();
+        return "X_C_DocType[" + getId() + "]";
     }
 
     /**
@@ -246,7 +243,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      */
     public void setDocTypeInvoiceId(int C_DocTypeInvoice_ID) {
         if (C_DocTypeInvoice_ID < 1) setValue(COLUMNNAME_C_DocTypeInvoice_ID, null);
-        else setValue(COLUMNNAME_C_DocTypeInvoice_ID, Integer.valueOf(C_DocTypeInvoice_ID));
+        else setValue(COLUMNNAME_C_DocTypeInvoice_ID, C_DocTypeInvoice_ID);
     }
 
     /**
@@ -267,7 +264,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      */
     public void setDocTypeShipmentId(int C_DocTypeShipment_ID) {
         if (C_DocTypeShipment_ID < 1) setValue(COLUMNNAME_C_DocTypeShipment_ID, null);
-        else setValue(COLUMNNAME_C_DocTypeShipment_ID, Integer.valueOf(C_DocTypeShipment_ID));
+        else setValue(COLUMNNAME_C_DocTypeShipment_ID, C_DocTypeShipment_ID);
     }
 
     /**
@@ -318,7 +315,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      */
     public void setDocNoSequenceId(int DocNoSequence_ID) {
         if (DocNoSequence_ID < 1) setValue(COLUMNNAME_DocNoSequence_ID, null);
-        else setValue(COLUMNNAME_DocNoSequence_ID, Integer.valueOf(DocNoSequence_ID));
+        else setValue(COLUMNNAME_DocNoSequence_ID, DocNoSequence_ID);
     }
 
     /**
@@ -365,7 +362,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param DocumentCopies Number of copies to be printed
      */
     public void setDocumentCopies(int DocumentCopies) {
-        setValue(COLUMNNAME_DocumentCopies, Integer.valueOf(DocumentCopies));
+        setValue(COLUMNNAME_DocumentCopies, DocumentCopies);
     }
 
     /**
@@ -386,7 +383,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      */
     public void setGLCategoryId(int GL_Category_ID) {
         if (GL_Category_ID < 1) setValue(COLUMNNAME_GL_Category_ID, null);
-        else setValue(COLUMNNAME_GL_Category_ID, Integer.valueOf(GL_Category_ID));
+        else setValue(COLUMNNAME_GL_Category_ID, GL_Category_ID);
     }
 
     /**
@@ -395,7 +392,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param HasCharges Charges can be added to the document
      */
     public void setHasCharges(boolean HasCharges) {
-        setValue(COLUMNNAME_HasCharges, Boolean.valueOf(HasCharges));
+        setValue(COLUMNNAME_HasCharges, HasCharges);
     }
 
     /**
@@ -406,7 +403,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isChargeOrProductMandatory() {
         Object oo = getValue(COLUMNNAME_IsChargeOrProductMandatory);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -418,7 +415,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsCreateCounter Create Counter Document
      */
     public void setIsCreateCounter(boolean IsCreateCounter) {
-        setValue(COLUMNNAME_IsCreateCounter, Boolean.valueOf(IsCreateCounter));
+        setValue(COLUMNNAME_IsCreateCounter, IsCreateCounter);
     }
 
     /**
@@ -429,7 +426,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isCreateCounter() {
         Object oo = getValue(COLUMNNAME_IsCreateCounter);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -441,7 +438,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsDefault Default value
      */
     public void setIsDefault(boolean IsDefault) {
-        setValue(COLUMNNAME_IsDefault, Boolean.valueOf(IsDefault));
+        setValue(COLUMNNAME_IsDefault, IsDefault);
     }
 
     /**
@@ -452,7 +449,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isDefault() {
         Object oo = getValue(COLUMNNAME_IsDefault);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -464,7 +461,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsDefaultCounterDoc The document type is the default counter document type
      */
     public void setIsDefaultCounterDoc(boolean IsDefaultCounterDoc) {
-        setValue(COLUMNNAME_IsDefaultCounterDoc, Boolean.valueOf(IsDefaultCounterDoc));
+        setValue(COLUMNNAME_IsDefaultCounterDoc, IsDefaultCounterDoc);
     }
 
     /**
@@ -475,7 +472,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isDefaultCounterDoc() {
         Object oo = getValue(COLUMNNAME_IsDefaultCounterDoc);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -487,7 +484,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsDocNoControlled The document has a document sequence
      */
     public void setIsDocNoControlled(boolean IsDocNoControlled) {
-        setValue(COLUMNNAME_IsDocNoControlled, Boolean.valueOf(IsDocNoControlled));
+        setValue(COLUMNNAME_IsDocNoControlled, IsDocNoControlled);
     }
 
     /**
@@ -498,7 +495,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isDocNoControlled() {
         Object oo = getValue(COLUMNNAME_IsDocNoControlled);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -510,7 +507,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsIndexed Index the document for the internal search engine
      */
     public void setIsIndexed(boolean IsIndexed) {
-        setValue(COLUMNNAME_IsIndexed, Boolean.valueOf(IsIndexed));
+        setValue(COLUMNNAME_IsIndexed, IsIndexed);
     }
 
     /**
@@ -521,7 +518,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isInTransit() {
         Object oo = getValue(COLUMNNAME_IsInTransit);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -535,7 +532,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isOverwriteDateOnComplete() {
         Object oo = getValue(COLUMNNAME_IsOverwriteDateOnComplete);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -549,7 +546,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isOverwriteSeqOnComplete() {
         Object oo = getValue(COLUMNNAME_IsOverwriteSeqOnComplete);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -561,7 +558,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsPickQAConfirm Require Pick or QA Confirmation before processing
      */
     public void setIsPickQAConfirm(boolean IsPickQAConfirm) {
-        setValue(COLUMNNAME_IsPickQAConfirm, Boolean.valueOf(IsPickQAConfirm));
+        setValue(COLUMNNAME_IsPickQAConfirm, IsPickQAConfirm);
     }
 
     /**
@@ -572,7 +569,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isPickQAConfirm() {
         Object oo = getValue(COLUMNNAME_IsPickQAConfirm);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -586,7 +583,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isPrepareSplitDocument() {
         Object oo = getValue(COLUMNNAME_IsPrepareSplitDocument);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -598,7 +595,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsShipConfirm Require Ship or Receipt Confirmation before processing
      */
     public void setIsShipConfirm(boolean IsShipConfirm) {
-        setValue(COLUMNNAME_IsShipConfirm, Boolean.valueOf(IsShipConfirm));
+        setValue(COLUMNNAME_IsShipConfirm, IsShipConfirm);
     }
 
     /**
@@ -609,7 +606,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isShipConfirm() {
         Object oo = getValue(COLUMNNAME_IsShipConfirm);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -621,7 +618,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsSOTrx This is a Sales Transaction
      */
     public void setIsSOTrx(boolean IsSOTrx) {
-        setValue(COLUMNNAME_IsSOTrx, Boolean.valueOf(IsSOTrx));
+        setValue(COLUMNNAME_IsSOTrx, IsSOTrx);
     }
 
     /**
@@ -632,7 +629,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isSOTrx() {
         Object oo = getValue(COLUMNNAME_IsSOTrx);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -644,7 +641,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
      * @param IsSplitWhenDifference Split document when there is a difference
      */
     public void setIsSplitWhenDifference(boolean IsSplitWhenDifference) {
-        setValue(COLUMNNAME_IsSplitWhenDifference, Boolean.valueOf(IsSplitWhenDifference));
+        setValue(COLUMNNAME_IsSplitWhenDifference, IsSplitWhenDifference);
     }
 
     /**
@@ -655,7 +652,7 @@ public class X_C_DocType extends BasePOName implements I_C_DocType {
     public boolean isSplitWhenDifference() {
         Object oo = getValue(COLUMNNAME_IsSplitWhenDifference);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;

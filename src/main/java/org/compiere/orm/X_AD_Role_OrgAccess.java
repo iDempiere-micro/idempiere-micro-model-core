@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Role_OrgAccess;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Role_OrgAccess
  *
@@ -21,16 +19,16 @@ public class X_AD_Role_OrgAccess extends PO implements I_AD_Role_OrgAccess {
     /**
      * Standard Constructor
      */
-    public X_AD_Role_OrgAccess(Properties ctx, int AD_Role_OrgAccess_ID) {
-        super(ctx, AD_Role_OrgAccess_ID);
+    public X_AD_Role_OrgAccess(int AD_Role_OrgAccess_ID) {
+        super(AD_Role_OrgAccess_ID);
         /** if (AD_Role_OrgAccess_ID == 0) { setRoleId (0); setIsReadOnly (false); } */
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Role_OrgAccess(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Role_OrgAccess(Row row) {
+        super(row);
     } //	MRoleOrgAccess
 
     /**

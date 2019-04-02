@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_ClientInfo;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_ClientInfo
  *
@@ -21,8 +19,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
     /**
      * Standard Constructor
      */
-    public X_AD_ClientInfo(Properties ctx, int AD_ClientInfo_ID) {
-        super(ctx, AD_ClientInfo_ID);
+    public X_AD_ClientInfo(int AD_ClientInfo_ID) {
+        super(AD_ClientInfo_ID);
         /**
          * if (AD_ClientInfo_ID == 0) { setIsConfirmOnDocClose (false); // N setIsConfirmOnDocVoid
          * (false); // N setIsDiscountLineAmt (false); }
@@ -32,8 +30,8 @@ public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
     /**
      * Load Constructor
      */
-    public X_AD_ClientInfo(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_ClientInfo(Row row) {
+        super(row);
     } //	MClientInfo
 
     /**

@@ -4,7 +4,6 @@ import kotliquery.Row;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.util.DBKt.prepareStatement;
@@ -26,12 +25,10 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
     /**
      * ************************************************************************ Load Constructor
      *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
+     * @param ctx context
      */
-    public MUserOrgAccess(Properties ctx, Row row) {
-        super(ctx, row);
+    public MUserOrgAccess(Row row) {
+        super(row);
     } //	MUserOrgAccess
 
     /**
@@ -39,10 +36,9 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
      *
      * @param ctx     context
      * @param ignored ignored
-     * @param trxName transaction
      */
-    public MUserOrgAccess(Properties ctx, int ignored) {
-        super(ctx, 0);
+    public MUserOrgAccess(int ignored) {
+        super(0);
         if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
         setIsReadOnly(false);
     } //	MUserOrgAccess
@@ -54,7 +50,7 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
      * @param AD_User_ID role
      */
     public MUserOrgAccess(MOrg org, int AD_User_ID) {
-        this(org.getCtx(), 0);
+        this(0);
         setClientOrg(org);
         setUserId(AD_User_ID);
     } //	MUserOrgAccess
@@ -71,17 +67,15 @@ public class MUserOrgAccess extends X_AD_User_OrgAccess {
      * @return info
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("MUserOrgAccess[");
-        sb.append("AD_User_ID=")
-                .append(getUserId())
-                .append(",AD_Client_ID=")
-                .append(getClientId())
-                .append(",AD_Org_ID=")
-                .append(getOrgId())
-                .append(",RO=")
-                .append(isReadOnly());
-        sb.append("]");
-        return sb.toString();
+        return "MUserOrgAccess[" + "AD_User_ID=" +
+                getUserId() +
+                ",AD_Client_ID=" +
+                getClientId() +
+                ",AD_Org_ID=" +
+                getOrgId() +
+                ",RO=" +
+                isReadOnly() +
+                "]";
     } //	toString
 
     /**

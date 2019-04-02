@@ -4,8 +4,6 @@ import kotliquery.Row;
 import org.compiere.model.HasName;
 import org.compiere.model.I_AD_Table;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Table
  *
@@ -46,15 +44,15 @@ public class X_AD_Table extends PO implements I_AD_Table {
     /**
      * Standard Constructor
      */
-    public X_AD_Table(Properties ctx, int AD_Table_ID) {
-        super(ctx, AD_Table_ID);
+    public X_AD_Table(int AD_Table_ID) {
+        super(AD_Table_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Table(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Table(Row row) {
+        super(row);
     }
 
     /**
@@ -103,7 +101,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
 
     public org.compiere.model.I_AD_Val_Rule getValRule() throws RuntimeException {
         return (org.compiere.model.I_AD_Val_Rule)
-                MTable.get(getCtx(), org.compiere.model.I_AD_Val_Rule.Table_Name)
+                MTable.get(org.compiere.model.I_AD_Val_Rule.Table_Name)
                         .getPO(getValRuleId());
     }
 

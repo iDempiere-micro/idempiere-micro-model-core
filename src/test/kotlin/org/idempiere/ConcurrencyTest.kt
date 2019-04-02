@@ -5,7 +5,6 @@ import kotliquery.Row
 import kotliquery.queryOf
 import mu.KotlinLogging
 import org.compiere.orm.MTable
-import org.idempiere.common.util.Env
 import org.junit.Test
 import org.junit.runner.RunWith
 import software.hsharp.core.util.DB
@@ -27,7 +26,7 @@ class ConcurrencyTest {
     fun runTest() {
         DB.run {
             val toTable: (Row) -> MTable = { row ->
-                MTable(Env.getCtx(), row)
+                MTable(row)
             }
             val tableQuery =
                 queryOf("select * from adempiere.ad_table where ad_table_id = ?", 100).map(toTable).asSingle

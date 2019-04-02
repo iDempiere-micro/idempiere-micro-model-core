@@ -8,7 +8,6 @@ import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.AdempiereUserError;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.CacheMgt;
-import org.idempiere.common.util.Env;
 import org.idempiere.common.util.ValueNamePair;
 import org.idempiere.icommon.model.IPO;
 import org.idempiere.orm.Null;
@@ -16,7 +15,6 @@ import org.idempiere.orm.POInfo;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -29,16 +27,12 @@ import static software.hsharp.core.util.DBKt.isGenerateUUIDSupported;
 
 public abstract class PO extends org.idempiere.orm.PO {
 
-    public PO(Properties ctx, int ID) {
-        super(ctx, ID);
+    public PO(int ID) {
+        super(ID);
     }
 
-    public PO(Properties ctx, String columnNamePrefix) {
-        super(ctx, columnNamePrefix);
-    }
-
-    public PO(Properties ctx, Row row) {
-        super(ctx, row);
+    public PO(Row row) {
+        super(row);
     }
 
     /**
@@ -119,7 +113,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         if (!save()) {
             String msg = null;
             ValueNamePair err = CLogger.retrieveError();
-            String val = err != null ? Msg.translate(getCtx(), err.getValue()) : "";
+            String val = err != null ? Msg.translate(err.getValue()) : "";
             if (err != null) msg = (val != null ? val + ": " : "") + err.getName();
             if (msg == null || msg.length() == 0) msg = "SaveError";
             throw new AdempiereException(msg);
@@ -316,7 +310,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                         + "_ID) WHERE tn.Parent_ID=? AND tn.AD_Tree_ID=? AND n.Value<?";
 
         List<X_AD_Tree> trees =
-                new Query(getCtx(), MTree_Base.Table_Name, whereTree)
+                new Query(MTree_Base.Table_Name, whereTree)
                         .setClientId()
                         .setOnlyActiveRecords(true)
                         .setParameters(parameters)
@@ -365,7 +359,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             countSql.append(" AND t.AD_Table_ID=").append(getTableId());
         int cnt = getSQLValueEx(countSql.toString(), id, treeType);
         if (cnt > 0)
-            throw new AdempiereException(Msg.getMsg(Env.getCtx(), "NoParentDelete", new Object[]{cnt}));
+            throw new AdempiereException(Msg.getMsg("NoParentDelete", new Object[]{cnt}));
 
         StringBuilder sb =
                 new StringBuilder("DELETE FROM ")
@@ -417,8 +411,8 @@ public abstract class PO extends org.idempiere.orm.PO {
         // Carlos Ruiz - globalqss - IDEMPIERE-111
         // Check if the role has access to this client
         // Don't check role System as webstore works with this role - see IDEMPIERE-401
-        if ((Env.getRoleId(getCtx()) != 0)
-                && !MRole.getDefault().isClientAccess(getClientId(), true)) {
+        if ( /*(Env.getRoleId(Env.getCtx()) != 0) DAP
+                &&*/ 0 != 0 && !MRole.getDefault().isClientAccess(getClientId(), true)) {
             log.warning("You cannot delete this record, role doesn't have access");
             log.saveError("AccessCannotDelete", "", false);
             return false;

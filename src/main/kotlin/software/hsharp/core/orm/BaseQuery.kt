@@ -5,13 +5,12 @@ import org.compiere.orm.MTable
 import org.compiere.orm.PO
 import org.compiere.orm.Query
 import org.idempiere.common.exceptions.DBException
-import org.idempiere.common.util.Env
 import org.idempiere.icommon.model.IPO
 import software.hsharp.core.util.DB
+import software.hsharp.core.util.Environment
 import software.hsharp.core.util.convert
-import java.util.Properties
 
-abstract class BaseQuery(val ctx: Properties, val table: MTable) {
+abstract class BaseQuery(val table: MTable) {
     protected abstract fun buildSQL(selectClause: StringBuilder?, useOrderByClause: Boolean): String
 
     protected var parameters: Array<Any>? = null
@@ -29,7 +28,7 @@ abstract class BaseQuery(val ctx: Properties, val table: MTable) {
 
     private fun getQueryParameters(): Array<Any?>? {
         val activeRecordsParameter = if (onlyActiveRecords) listOf(true) else listOf()
-        val clientIdParameter = if (onlyClientId) listOf(Env.getClientId(ctx)) else listOf()
+        val clientIdParameter = if (onlyClientId) listOf(Environment.current.clientId) else listOf()
         val params = parameters ?: arrayOf()
         val result = params
             .toList()

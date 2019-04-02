@@ -1,7 +1,6 @@
 package org.compiere.dbPort
 
 import org.idempiere.common.util.AdempiereSystemError
-import org.idempiere.common.util.Env
 import org.idempiere.common.util.Util
 
 import java.math.BigDecimal
@@ -85,7 +84,7 @@ class ConvertPostgreSQL : ConvertSQL92() {
 
     private fun convertSimilarTo(statement: String): String {
         var retValue = statement
-        val useSimilarTo = "Y" == Env.getContext(Env.getCtx(), "P|IsUseSimilarTo")
+        val useSimilarTo = "Y" == "N" // Env.getContext("P|IsUseSimilarTo")
         if (useSimilarTo) {
             val regex = "\\bLIKE\\b"
             val replacement = "SIMILAR TO"

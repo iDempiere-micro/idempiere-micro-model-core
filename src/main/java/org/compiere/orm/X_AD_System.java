@@ -5,7 +5,6 @@ import org.compiere.model.I_AD_System;
 import org.idempiere.common.util.Env;
 
 import java.math.BigDecimal;
-import java.util.Properties;
 
 /**
  * Generated Model for AD_System
@@ -23,8 +22,8 @@ public class X_AD_System extends BasePOName implements I_AD_System {
     /**
      * Standard Constructor
      */
-    public X_AD_System(Properties ctx, int AD_System_ID) {
-        super(ctx, AD_System_ID);
+    public X_AD_System(int AD_System_ID) {
+        super(AD_System_ID);
         /**
          * if (AD_System_ID == 0) { setAD_System_ID (0); // 0 setInfo (null); setIsAllowStatistics
          * (false); setIsAutoErrorReport (true); // Y setIsFailOnBuildDiffer (false); // N
@@ -37,8 +36,8 @@ public class X_AD_System extends BasePOName implements I_AD_System {
     /**
      * Load Constructor
      */
-    public X_AD_System(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_System(Row row) {
+        super(row);
     }
 
     /**

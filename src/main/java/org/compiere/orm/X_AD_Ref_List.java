@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Ref_List;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Ref_List
  *
@@ -21,15 +19,15 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List {
     /**
      * Standard Constructor
      */
-    public X_AD_Ref_List(Properties ctx, int AD_Ref_List_ID) {
-        super(ctx, AD_Ref_List_ID);
+    public X_AD_Ref_List(int AD_Ref_List_ID) {
+        super(AD_Ref_List_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Ref_List(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Ref_List(Row row) {
+        super(row);
     }
 
     /**

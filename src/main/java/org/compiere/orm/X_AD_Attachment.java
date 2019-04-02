@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Attachment;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Attachment
  *
@@ -21,19 +19,15 @@ public class X_AD_Attachment extends PO {
     /**
      * Standard Constructor
      */
-    public X_AD_Attachment(Properties ctx, int AD_Attachment_ID) {
-        super(ctx, AD_Attachment_ID);
-        /**
-         * if (AD_Attachment_ID == 0) { setAD_Attachment_ID (0); setColumnTableId (0); setRecordId (0);
-         * setTitle (null); }
-         */
+    public X_AD_Attachment(int AD_Attachment_ID) {
+        super(AD_Attachment_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Attachment(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Attachment(Row row) {
+        super(row);
     }
 
     /**
@@ -46,8 +40,7 @@ public class X_AD_Attachment extends PO {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_Attachment[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_Attachment[" + getId() + "]";
     }
 
     /**
@@ -68,7 +61,7 @@ public class X_AD_Attachment extends PO {
      */
     public void setRowTableId(int AD_Table_ID) {
         if (AD_Table_ID < 1) setValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, null);
-        else setValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
+        else setValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, AD_Table_ID);
     }
 
     /**
@@ -78,7 +71,7 @@ public class X_AD_Attachment extends PO {
      */
     public void setRecordId(int Record_ID) {
         if (Record_ID < 0) setValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, null);
-        else setValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, Integer.valueOf(Record_ID));
+        else setValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, Record_ID);
     }
 
     /**

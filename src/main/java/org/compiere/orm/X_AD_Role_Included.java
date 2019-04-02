@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Role_Included;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Role_Included
  *
@@ -21,8 +19,8 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included {
     /**
      * Standard Constructor
      */
-    public X_AD_Role_Included(Properties ctx, int AD_Role_Included_ID) {
-        super(ctx, AD_Role_Included_ID);
+    public X_AD_Role_Included(int AD_Role_Included_ID) {
+        super(AD_Role_Included_ID);
         /**
          * if (AD_Role_Included_ID == 0) { setRoleId (0); setIncluded_Role_ID (0); setSeqNo (0);
          * // @SQL=SELECT NVL(MAX(SeqNo),0)+10 AS DefaultValue FROM AD_Role_Included WHERE
@@ -33,8 +31,8 @@ public class X_AD_Role_Included extends PO implements I_AD_Role_Included {
     /**
      * Load Constructor
      */
-    public X_AD_Role_Included(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Role_Included(Row row) {
+        super(row);
     }
 
     /**

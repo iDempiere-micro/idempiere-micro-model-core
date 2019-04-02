@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.util.DBKt.prepareStatement;
@@ -350,10 +349,6 @@ public class SetGetUtil {
 
                 public Object getAttrValue(String name) {
                     return po.getValue(name);
-                }
-
-                public Properties getCtx() {
-                    return po.getCtx();
                 }
             };
         } else {

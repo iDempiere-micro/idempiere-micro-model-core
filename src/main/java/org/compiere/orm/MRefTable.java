@@ -4,8 +4,6 @@ import kotliquery.Row;
 import org.compiere.model.I_AD_Table;
 import org.idempiere.orm.PO;
 
-import java.util.Properties;
-
 public class MRefTable extends X_AD_Ref_Table {
     /**
      *
@@ -20,8 +18,8 @@ public class MRefTable extends X_AD_Ref_Table {
      *                        be used AD_Reference_Value_ID
      * @param trxName         trx
      */
-    public MRefTable(Properties ctx, int AD_Reference_ID) {
-        super(ctx, AD_Reference_ID);
+    public MRefTable(int AD_Reference_ID) {
+        super(AD_Reference_ID);
         if (AD_Reference_ID == 0) {
             //	setColumnTableId (0);
             //	setAD_Display (0);
@@ -38,13 +36,13 @@ public class MRefTable extends X_AD_Ref_Table {
      * @param rs      result set
      * @param trxName trx
      */
-    public MRefTable(Properties ctx, Row row) {
-        super(ctx, row);
+    public MRefTable(Row row) {
+        super(row);
     } //	MRefTable
 
     @Override
     public I_AD_Table getTable() throws RuntimeException {
-        MTable table = MTable.get(getCtx(), getRefTableId());
+        MTable table = MTable.get(getRefTableId());
         return table;
     }
 } //	MRefTable

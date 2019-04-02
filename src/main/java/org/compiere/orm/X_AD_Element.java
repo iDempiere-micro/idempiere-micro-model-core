@@ -3,8 +3,6 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.I_AD_Element;
 
-import java.util.Properties;
-
 /**
  * Generated Model for AD_Element
  *
@@ -21,15 +19,15 @@ public class X_AD_Element extends BasePOName implements I_AD_Element {
     /**
      * Standard Constructor
      */
-    public X_AD_Element(Properties ctx, int AD_Element_ID) {
-        super(ctx, AD_Element_ID);
+    public X_AD_Element(int AD_Element_ID) {
+        super(AD_Element_ID);
     }
 
     /**
      * Load Constructor
      */
-    public X_AD_Element(Properties ctx, Row row) {
-        super(ctx, row);
+    public X_AD_Element(Row row) {
+        super(row);
     }
 
     /**

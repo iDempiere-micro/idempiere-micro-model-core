@@ -5,7 +5,6 @@ import org.idempiere.common.util.CLogger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import static software.hsharp.core.util.DBKt.prepareStatement;
@@ -30,21 +29,18 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
 
     /**
      * ************************************************************************ Load Constructor
-     *
-     * @param ctx context
      */
-    public MRoleOrgAccess(Properties ctx, Row row) {
-        super(ctx, row);
+    public MRoleOrgAccess(Row row) {
+        super(row);
     } //	MRoleOrgAccess
 
     /**
      * Persistency Constructor
      *
-     * @param ctx     context
      * @param ignored ignored
      */
-    public MRoleOrgAccess(Properties ctx, int ignored) {
-        super(ctx, 0);
+    public MRoleOrgAccess(int ignored) {
+        super(0);
         if (ignored != 0) throw new IllegalArgumentException("Multi-Key");
         setIsReadOnly(false);
     } //	MRoleOrgAccess
@@ -56,7 +52,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
      * @param AD_Role_ID role
      */
     public MRoleOrgAccess(MOrg org, int AD_Role_ID) {
-        this(org.getCtx(), 0);
+        this(0);
         setClientOrg(org);
         setRoleId(AD_Role_ID);
     } //	MRoleOrgAccess
@@ -68,7 +64,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
      * @param AD_Org_ID org
      */
     public MRoleOrgAccess(MRole role, int AD_Org_ID) {
-        this(role.getCtx(), 0);
+        this(0);
         setClientOrg(role.getClientId(), AD_Org_ID);
         setRoleId(role.getRoleId());
     } //	MRoleOrgAccess
@@ -80,20 +76,19 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
      * @param AD_Org_ID role
      * @return array of Role Org Access
      */
-    public static MRoleOrgAccess[] getOfOrg(Properties ctx, int AD_Org_ID) {
-        return get(ctx, "SELECT * FROM AD_Role_OrgAccess WHERE AD_Org_ID=?", AD_Org_ID);
+    public static MRoleOrgAccess[] getOfOrg(int AD_Org_ID) {
+        return get("SELECT * FROM AD_Role_OrgAccess WHERE AD_Org_ID=?", AD_Org_ID);
     } //	getOfOrg
 
     /**
      * Get Organizational Info
      *
-     * @param ctx context
      * @param sql sql command
      * @param id  id
      * @return array of Role Org Access
      */
-    private static MRoleOrgAccess[] get(Properties ctx, String sql, int id) {
-        return MBaseRoleOrgAccessKt.get(ctx, sql, id);
+    private static MRoleOrgAccess[] get(String sql, int id) {
+        return MBaseRoleOrgAccessKt.get(sql, id);
     } //	get
 
     /**
@@ -104,10 +99,10 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
      */
     public static boolean createForOrg(MOrg org) {
         int counter = 0;
-        MRole[] roles = MRole.getOfClient(org.getCtx());
-        for (int i = 0; i < roles.length; i++) {
-            if (!roles[i].isManual()) {
-                MRoleOrgAccess orgAccess = new MRoleOrgAccess(org, roles[i].getRoleId());
+        MRole[] roles = MRole.getOfClient();
+        for (MRole role : roles) {
+            if (!role.isManual()) {
+                MRoleOrgAccess orgAccess = new MRoleOrgAccess(org, role.getRoleId());
                 if (orgAccess.save()) counter++;
             }
         }
@@ -121,17 +116,15 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
      * @return info
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("MRoleOrgAccess[");
-        sb.append("AD_Role_ID=")
-                .append(getRoleId())
-                .append(",AD_Client_ID=")
-                .append(getClientId())
-                .append(",AD_Org_ID=")
-                .append(getOrgId())
-                .append(",RO=")
-                .append(isReadOnly());
-        sb.append("]");
-        return sb.toString();
+        return "MRoleOrgAccess[" + "AD_Role_ID=" +
+                getRoleId() +
+                ",AD_Client_ID=" +
+                getClientId() +
+                ",AD_Org_ID=" +
+                getOrgId() +
+                ",RO=" +
+                isReadOnly() +
+                "]";
     } //	toString
 
     /**
