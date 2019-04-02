@@ -7,20 +7,17 @@ public class MSystem extends X_AD_System {
      * System - cached
      */
     private static CCache<Integer, MSystem> s_system =
-            new CCache<Integer, MSystem>(Table_Name, 1, -1, true);
+            new CCache<>(Table_Name, 1, -1, true);
 
     /**
      * ************************************************************************ Default Constructor
      *
-     * @param ctx      context
-     * @param ignored  id
-     * @param mtrxName transaction
      */
-    public MSystem(int ignored, String mtrxName) {
+    public MSystem() {
         super(0);
 
         load(); // 	load ID=0
-        if (s_system.get(0) == null) s_system.put(0, this);
+        s_system.putIfAbsent(0, this);
     } //	MSystem
 
     /**

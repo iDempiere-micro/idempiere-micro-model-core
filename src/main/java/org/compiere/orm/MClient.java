@@ -36,17 +36,13 @@ public class MClient extends X_AD_Client {
     /**
      * ************************************************************************ Standard Constructor
      *
-     * @param ctx          context
      * @param AD_Client_ID id
      * @param createNew    create new
      */
     public MClient(int AD_Client_ID, boolean createNew) {
         super(AD_Client_ID);
-        createNew = createNew;
         if (AD_Client_ID == 0) {
             if (createNew) {
-                //	setValue (null);
-                //	setName (null);
                 setOrgId(0);
                 setIsMultiLingualDocument(false);
                 setIsSmtpAuthorization(false);
@@ -63,7 +59,6 @@ public class MClient extends X_AD_Client {
     /**
      * Standard Constructor
      *
-     * @param ctx          context
      * @param AD_Client_ID id
      */
     public MClient(int AD_Client_ID) {
@@ -73,7 +68,6 @@ public class MClient extends X_AD_Client {
     /**
      * Load Constructor
      *
-     * @param ctx context
      */
     public MClient(Row row) {
         super(row);
@@ -82,7 +76,6 @@ public class MClient extends X_AD_Client {
     /**
      * Simplified Constructor
      *
-     * @param ctx context
      */
     public MClient() {
         this(Env.getClientId());

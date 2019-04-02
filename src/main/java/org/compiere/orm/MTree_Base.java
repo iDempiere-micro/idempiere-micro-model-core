@@ -59,7 +59,6 @@ public class MTree_Base extends X_AD_Tree {
     /**
      * Full Constructor
      *
-     * @param ctx      context
      * @param Name     name
      * @param TreeType tree type
      */
@@ -104,29 +103,62 @@ public class MTree_Base extends X_AD_Tree {
     public static String getSourceTableName(String treeType) {
         if (treeType == null) return null;
         String sourceTable = null;
-        if (treeType.equals(X_AD_Tree.TREETYPE_Menu)) sourceTable = "AD_Menu";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_Organization)) sourceTable = "AD_Org";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_Product)) sourceTable = "M_Product";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_ProductCategory))
-            sourceTable = "M_Product_Category";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_BoM)) sourceTable = "M_BOM";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_ElementValue)) sourceTable = "C_ElementValue";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_BPartner)) sourceTable = "C_BPartner";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_Campaign)) sourceTable = "C_Campaign";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_Project)) sourceTable = "C_Project";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_Activity)) sourceTable = "C_Activity";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_SalesRegion)) sourceTable = "C_SalesRegion";
+        switch (treeType) {
+            case X_AD_Tree.TREETYPE_Menu:
+                sourceTable = "AD_Menu";
+                break;
+            case X_AD_Tree.TREETYPE_Organization:
+                sourceTable = "AD_Org";
+                break;
+            case X_AD_Tree.TREETYPE_Product:
+                sourceTable = "M_Product";
+                break;
+            case X_AD_Tree.TREETYPE_ProductCategory:
+                sourceTable = "M_Product_Category";
+                break;
+            case X_AD_Tree.TREETYPE_BoM:
+                sourceTable = "M_BOM";
+                break;
+            case X_AD_Tree.TREETYPE_ElementValue:
+                sourceTable = "C_ElementValue";
+                break;
+            case X_AD_Tree.TREETYPE_BPartner:
+                sourceTable = "C_BPartner";
+                break;
+            case X_AD_Tree.TREETYPE_Campaign:
+                sourceTable = "C_Campaign";
+                break;
+            case X_AD_Tree.TREETYPE_Project:
+                sourceTable = "C_Project";
+                break;
+            case X_AD_Tree.TREETYPE_Activity:
+                sourceTable = "C_Activity";
+                break;
+            case X_AD_Tree.TREETYPE_SalesRegion:
+                sourceTable = "C_SalesRegion";
+                break;
             //
-        else if (treeType.equals(X_AD_Tree.TREETYPE_CMContainer)) sourceTable = "CM_Container";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_CMContainerStage)) sourceTable = "CM_CStage";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_CMMedia)) sourceTable = "CM_Media";
-        else if (treeType.equals(X_AD_Tree.TREETYPE_CMTemplate)) sourceTable = "CM_Template";
+            case X_AD_Tree.TREETYPE_CMContainer:
+                sourceTable = "CM_Container";
+                break;
+            case X_AD_Tree.TREETYPE_CMContainerStage:
+                sourceTable = "CM_CStage";
+                break;
+            case X_AD_Tree.TREETYPE_CMMedia:
+                sourceTable = "CM_Media";
+                break;
+            case X_AD_Tree.TREETYPE_CMTemplate:
+                sourceTable = "CM_Template";
+                break;
             //	User Trees
             // afalcone [Bugs #1837219]
-        else if (treeType.equals(X_AD_Tree.TREETYPE_User1)
-                || treeType.equals(X_AD_Tree.TREETYPE_User2)
-                || treeType.equals(X_AD_Tree.TREETYPE_User3)
-                || treeType.equals(X_AD_Tree.TREETYPE_User4)) sourceTable = "C_ElementValue";
+            case X_AD_Tree.TREETYPE_User1:
+            case X_AD_Tree.TREETYPE_User2:
+            case X_AD_Tree.TREETYPE_User3:
+            case X_AD_Tree.TREETYPE_User4:
+                sourceTable = "C_ElementValue";
+                break;
+        }
 
         return sourceTable;
     } //	getSourceTableName

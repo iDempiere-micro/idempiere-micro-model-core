@@ -249,7 +249,7 @@ public class MTable extends MBaseTable {
         }
 
         if (po == null) {
-            po = new GenericPO(tableName, Record_ID);
+            po = new GenericPO(Record_ID);
             if (po.getId() != Record_ID && Record_ID > 0) po = null;
         }
 

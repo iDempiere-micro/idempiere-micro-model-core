@@ -35,9 +35,6 @@ fun getClientOrganizations(po: PO): Array<MOrg> {
  * @version $Id: MOrg.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
  */
 class MOrg : X_AD_Org {
-    /**
-     * Linked Business Partner
-     */
     private val doLinkedBusinessPartnerId = {
         val result = "/sql/getLinkedBusinessPartnerId.sql".asResource { sql ->
             getSQLValue(sql, orgId)

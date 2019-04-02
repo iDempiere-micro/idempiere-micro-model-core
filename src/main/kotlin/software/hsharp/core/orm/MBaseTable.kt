@@ -96,7 +96,7 @@ abstract class MBaseTable : X_AD_Table {
         }
 
         if (po == null) {
-            po = GenericPO(tableName, row)
+            po = GenericPO(row)
         }
 
         return po
