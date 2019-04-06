@@ -6,7 +6,6 @@ public class MClientInfo extends X_AD_ClientInfo {
     /**
      * ************************************************************************ Standard Constructor
      *
-     * @param ctx     context
      * @param ignored ignored
      */
     public MClientInfo(int ignored) {

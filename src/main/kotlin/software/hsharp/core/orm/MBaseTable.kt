@@ -12,6 +12,7 @@ import org.compiere.orm.MTable
 import org.compiere.orm.X_AD_Table
 import org.compiere.orm.MColumn
 import org.compiere.orm.GenericPO
+import org.idempiere.icommon.model.IPO
 import org.idempiere.orm.POInfo
 
 internal val tableCache = CCache<Int, MTable>(I_AD_Table.Table_Name, 20)
@@ -102,7 +103,7 @@ abstract class MBaseTable : X_AD_Table {
         return po
     } // 	getPO
 
-    fun <T> getPO(row: Row): T? {
+    fun <T : IPO> getPO(row: Row): T? {
         val tableName = dbTableName
 
         val factoryList = getFactoryList()

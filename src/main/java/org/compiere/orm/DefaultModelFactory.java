@@ -20,13 +20,8 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
     private static final CLogger s_log = CLogger.getCLogger(DefaultModelFactory.class);
 
     @Override
-    public Class<?> getClass(String tableName) {
-        return getClass(tableName, true);
-    }
-
-    @Override
-    public PO getPO(String tableName, int Record_ID) {
-        Class<?> clazz = getClass(tableName);
+    public PO getPO(String tableName, int recordId) {
+        Class<?> clazz = getClass(tableName, true);
         if (clazz == null) {
             s_log.warning("No class for table: " + tableName + " called with Record_ID");
             return null;
@@ -45,14 +40,14 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
                         return constructor != null
                                 ? (PO)
                                 constructor.newInstance(
-                                        new Object[]{Record_ID})
+                                        new Object[]{recordId})
                                 : null;
                     } catch (Exception ex) {
                         s_log.warning(
                                 "PO FAILED for table '"
                                         + tableName
                                         + "', Record_ID:"
-                                        + Record_ID
+                                        + recordId
                                         + " and clazz '"
                                         + clazz.getCanonicalName()
                                         + "'");
@@ -77,14 +72,14 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
                 return constructor != null
                         ? (PO)
                         constructor.newInstance(
-                                new Object[]{Record_ID})
+                                new Object[]{recordId})
                         : null;
             } catch (Exception ex) {
                 s_log.warning(
                         "PO FAILED for table '"
                                 + tableName
                                 + "', Record_ID:"
-                                + Record_ID
+                                + recordId
                                 + " and clazz '"
                                 + clazz.getCanonicalName()
                                 + "'");
@@ -106,7 +101,7 @@ public class DefaultModelFactory extends DefaultBaseModelFactory implements IMod
             }
         }
         if (!errorLogged)
-            s_log.log(Level.SEVERE, "(id) - Not found - Table=" + tableName + ", Record_ID=" + Record_ID);
+            s_log.log(Level.SEVERE, "(id) - Not found - Table=" + tableName + ", Record_ID=" + recordId);
         return null;
     }
 }

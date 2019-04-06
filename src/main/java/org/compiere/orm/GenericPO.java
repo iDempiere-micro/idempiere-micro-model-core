@@ -30,6 +30,7 @@ public class GenericPO extends PO {
     }
 
     /**
+     *
      */
     public GenericPO(Row row) {
         super(row);

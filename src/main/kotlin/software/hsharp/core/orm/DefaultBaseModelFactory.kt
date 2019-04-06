@@ -197,29 +197,29 @@ abstract class DefaultBaseModelFactory : IModelFactory {
         return null
     }
 
-    override fun <T> getPO(tableName: String, row: Row): T {
-        val clazz = getClass(tableName)
+    override fun <T : IPO> getPO(tableName: String, row: Row): T {
+        val clazz = getClass(tableName, true)
         try {
             try {
-                val constructor = clazz.getDeclaredConstructor(
+                val constructor = clazz?.getDeclaredConstructor(
                     Row::class.java
                 )
-                if (Modifier.isPrivate(constructor.modifiers)) {
+                if (constructor != null && Modifier.isPrivate(constructor.modifiers)) {
                     constructor.isAccessible = true
                 }
                 @Suppress("UNCHECKED_CAST")
-                return constructor.newInstance(row) as T
+                return constructor?.newInstance(row) as T
             } catch (e: Exception) {
                 // still may use the old constructor
             }
-            val constructor = clazz.getDeclaredConstructor(
+            val constructor = clazz?.getDeclaredConstructor(
                 Properties::class.java, Row::class.java
             )
-            if (Modifier.isPrivate(constructor.modifiers)) {
+            if (constructor != null && Modifier.isPrivate(constructor.modifiers)) {
                 constructor.isAccessible = true
             }
             @Suppress("UNCHECKED_CAST")
-            return constructor.newInstance(row) as T
+            return constructor?.newInstance(row) as T
         } catch (e: Exception) {
             throw AdempiereSystemError("Unable to load PO $clazz from $tableName", e)
         }

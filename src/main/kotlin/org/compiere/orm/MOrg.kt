@@ -3,15 +3,18 @@ package org.compiere.orm
 import arrow.syntax.function.memoize
 import kotliquery.Row
 import org.compiere.model.I_AD_Org
-import org.compiere.orm.MOrg.Companion.doGetOrg
+import org.idempiere.common.util.factory
+import org.idempiere.common.util.loadUsing
 import software.hsharp.core.util.asResource
 
 import software.hsharp.core.util.getSQLValue
 
+private val orgFactory = factory { MOrg(it) }
+
 /**
  * Get organization by Id
  */
-fun getOrg(orgId: Int) = doGetOrg(orgId)
+fun getOrg(orgId: Int) = orgId loadUsing orgFactory
 
 /**
  * Get Active Organizations Of Client
@@ -64,7 +67,7 @@ class MOrg : X_AD_Org {
      *
      * @param AD_Org_ID id
      */
-    private constructor(AD_Org_ID: Int) : super(AD_Org_ID) {
+    constructor(AD_Org_ID: Int) : super(AD_Org_ID) {
         if (AD_Org_ID == 0) {
             setIsSummary(false)
         }
@@ -73,7 +76,6 @@ class MOrg : X_AD_Org {
     /**
      * Load Constructor
      *
-     * @param ctx context
      */
     constructor(row: Row) : super(row) // 	MOrg
 
@@ -128,6 +130,5 @@ class MOrg : X_AD_Org {
 
     companion object {
         private const val serialVersionUID = -5604686137606338725L
-        internal val doGetOrg = { AD_Org_ID: Int -> MOrg(AD_Org_ID) }.memoize()
     }
 } // 	MOrg

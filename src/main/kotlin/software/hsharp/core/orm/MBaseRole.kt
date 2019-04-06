@@ -1,7 +1,6 @@
 package software.hsharp.core.orm
 
 import kotliquery.Row
-import org.compiere.orm.MClient
 import org.compiere.orm.MColumnAccess
 import org.compiere.orm.MRole
 import org.compiere.orm.MTableAccess
@@ -10,6 +9,7 @@ import org.compiere.orm.MRecordAccess
 import org.compiere.orm.MRoleOrgAccess
 import org.compiere.orm.MTree_Base
 import org.compiere.orm.MUserOrgAccess
+import org.compiere.orm.getClient
 import org.compiere.orm.getOrg
 import org.compiere.util.Msg
 import org.idempiere.common.util.CLogger
@@ -107,7 +107,7 @@ open class MBaseRole : X_AD_Role {
          */
         override fun toString(): String {
             var clientName = "System"
-            if (clientId != 0) clientName = MClient.get(clientId).name
+            if (clientId != 0) clientName = getClient(clientId).name
             var orgName = "*"
             if (orgId != 0) orgName = getOrg(orgId).name
             val sb = StringBuilder()

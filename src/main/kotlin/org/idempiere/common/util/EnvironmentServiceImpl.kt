@@ -3,7 +3,14 @@ package org.idempiere.common.util
 import software.hsharp.core.services.EnvironmentService
 import java.util.Properties
 
-class EnvironmentServiceImpl(initialClientId: Int, initialOrgId: Int, initialUserId: Int) : EnvironmentService {
+/**
+ * implementation of the [EnvironmentService].
+ */
+class EnvironmentServiceImpl(
+    initialClientId: Int,
+    initialOrgId: Int,
+    initialUserId: Int
+) : EnvironmentService {
     private var actualClientId = initialClientId
     private var actualOrgId = initialOrgId
     private var actualUserId = initialUserId

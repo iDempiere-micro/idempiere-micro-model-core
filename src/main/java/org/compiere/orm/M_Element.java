@@ -112,7 +112,7 @@ public class M_Element extends X_AD_Element {
             StringBuilder sql;
             int no;
 
-            if (isValueChanged(HasName.Companion.getCOLUMNNAME_Name())
+            if (isValueChanged(HasName.COLUMNNAME_Name)
                     || isValueChanged(M_Element.COLUMNNAME_Description)
                     || isValueChanged(M_Element.COLUMNNAME_Help)
                     || isValueChanged(M_Element.COLUMNNAME_ColumnName)) {
@@ -180,7 +180,7 @@ public class M_Element extends X_AD_Element {
                 if (log.isLoggable(Level.FINE)) log.fine("Info Column updated #" + no);
             }
 
-            if (isValueChanged(HasName.Companion.getCOLUMNNAME_Name())
+            if (isValueChanged(HasName.COLUMNNAME_Name)
                     || isValueChanged(M_Element.COLUMNNAME_Description)
                     || isValueChanged(M_Element.COLUMNNAME_Help)) {
                 //	Field
@@ -205,7 +205,7 @@ public class M_Element extends X_AD_Element {
             }
 
             if (isValueChanged(M_Element.COLUMNNAME_PrintName)
-                    || isValueChanged(HasName.Companion.getCOLUMNNAME_Name())) {
+                    || isValueChanged(HasName.COLUMNNAME_Name)) {
                 //	Print Info
                 sql =
                         new StringBuilder("UPDATE AD_PrintFormatItem SET PrintName=")

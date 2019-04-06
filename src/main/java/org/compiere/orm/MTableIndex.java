@@ -1,5 +1,6 @@
 package org.compiere.orm;
 
+import kotliquery.Row;
 import org.idempiere.orm.PO;
 
 public class MTableIndex extends X_AD_TableIndex {
@@ -11,9 +12,7 @@ public class MTableIndex extends X_AD_TableIndex {
     /**
      * Standard constructor
      *
-     * @param ctx              context
      * @param AD_TableIndex_ID table index
-     * @param trxName          trx name
      */
     public MTableIndex(int AD_TableIndex_ID) {
         super(AD_TableIndex_ID);
@@ -22,6 +21,10 @@ public class MTableIndex extends X_AD_TableIndex {
             setIsUnique(false);
             setIsCreateConstraint(false);
         }
+    }
+
+    public MTableIndex(Row row) {
+        super(row);
     }
 
     /**

@@ -82,13 +82,12 @@ public class SetGetUtil {
      * @param columnNames
      * @param sql
      * @param params
-     * @param trxName
      * @see #updateColumns(SetGetModel[], String[], ResultSet)
      */
     public static void updateColumns(
             SetGetModel[] models, String[] columnNames, String sql, Object[] params) {
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        PreparedStatement pstmt;
+        ResultSet rs;
         try {
             pstmt = prepareStatement(sql);
             setParameters(pstmt, params);
@@ -96,9 +95,6 @@ public class SetGetUtil {
             updateColumns(models, columnNames, rs);
         } catch (SQLException e) {
             throw new DBException(e, sql);
-        } finally {
-            rs = null;
-            pstmt = null;
         }
     } //	updateColumns
 
@@ -252,7 +248,6 @@ public class SetGetUtil {
      * @param from_tableName source object table
      * @param from_id        source object ID
      * @param includeFields  name fields to be excluded, null will be interpreted as String[0];
-     * @see #updateColumns(SetGetModel, String[], String, String)
      */
     public static boolean copyValues(
             SetGetModel to, String from_tableName, int from_id, String[] includeFields) {
@@ -314,7 +309,7 @@ public class SetGetUtil {
      * @return true if is persistent (i.e. instanceof PO)
      */
     public static final boolean isPersistent(Object o) {
-        return o != null && o instanceof PO;
+        return o instanceof PO;
     }
 
     /**

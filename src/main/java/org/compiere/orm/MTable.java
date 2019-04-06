@@ -2,6 +2,7 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 import org.idempiere.common.util.CLogger;
+import org.idempiere.icommon.model.IPO;
 import software.hsharp.core.orm.MBaseTable;
 import software.hsharp.core.orm.MBaseTableKt;
 
@@ -225,7 +226,7 @@ public class MTable extends MBaseTable {
      * @param Record_ID record
      * @return PO for Record or null
      */
-    public org.idempiere.orm.PO getPO(int Record_ID) {
+    public IPO getPO(int Record_ID) {
         if (Record_ID == 0) {
             return null;
         }
@@ -236,7 +237,7 @@ public class MTable extends MBaseTable {
             return null;
         }
 
-        org.idempiere.orm.PO po = null;
+        IPO po = null;
         IModelFactory[] factoryList = getFactoryList();
         if (factoryList != null) {
             for (IModelFactory factory : factoryList) {

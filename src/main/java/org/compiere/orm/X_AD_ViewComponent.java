@@ -96,7 +96,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent {
      * @return Alphanumeric identifier of the entity
      */
     public String getName() {
-        return (String) getValue(HasName.Companion.getCOLUMNNAME_Name());
+        return (String) getValue(HasName.COLUMNNAME_Name);
     }
 
     @Override

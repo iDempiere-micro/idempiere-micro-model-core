@@ -18,7 +18,7 @@ open class BaseDataServiceImpl<T : IPO> (
     protected open fun andWhere(): String = "1=1"
 
     /**
-     * get all [T] either also with for client = 0 or only for the current clitn
+     * get all [T] either also with for client = 0 or only for the current client
      */
     override fun getAll(): List<T> {
         val where =

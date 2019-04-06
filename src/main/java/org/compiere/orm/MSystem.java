@@ -11,7 +11,6 @@ public class MSystem extends X_AD_System {
 
     /**
      * ************************************************************************ Default Constructor
-     *
      */
     public MSystem() {
         super(0);

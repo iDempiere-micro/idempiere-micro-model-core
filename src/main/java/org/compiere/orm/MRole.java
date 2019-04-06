@@ -1,6 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
+import org.compiere.model.I_AD_Client;
 import org.compiere.model.I_AD_Role;
 import org.compiere.util.Msg;
 import org.idempiere.common.exceptions.AdempiereException;
@@ -215,7 +216,6 @@ public class MRole extends MBaseRole {
     /**
      * Get Role (cached). Did not set user - so no access loaded
      *
-     * @param ctx        context
      * @param AD_Role_ID role
      * @return role
      */
@@ -224,29 +224,11 @@ public class MRole extends MBaseRole {
                 AD_Role_ID,
                 Env.getUserId(),
                 false); // metas-2009_0021_AP1_G94 - we need to use this method because we need to
-        // load/reload all accesses
-    /* metas-2009_0021_AP1_G94
-    String key = String.valueOf(AD_Role_ID);
-    MRole role = (MRole)s_roles.get (key);
-
-    if (role == null)
-    {
-    	role = new MRole (AD_Role_ID);
-    	s_roles.put (key, role);
-    	if (AD_Role_ID == 0)	//	System Role
-    	{
-    		role.load(trxName);	//	special Handling
-    	}
-    }
-    return role;
-    /**/
-        // metas-2009_0021_AP1_G94
     } //	get
 
     /**
      * Get Roles Of Client
      *
-     * @param ctx context
      * @return roles of client
      */
     public static MRole[] getOfClient() {
@@ -949,7 +931,7 @@ public class MRole extends MBaseRole {
             // first get the window access from the included and substitute roles
             mergeIncludedAccess("m_windowAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the window access directly from this role
-            MClient client = MClient.get();
+            I_AD_Client client = MClientKt.getClient();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1034,7 +1016,7 @@ public class MRole extends MBaseRole {
             // first get the process access from the included and substitute roles
             mergeIncludedAccess("m_processAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the process access directly from this role
-            MClient client = MClient.get();
+            I_AD_Client client = MClientKt.getClient();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1113,7 +1095,7 @@ public class MRole extends MBaseRole {
             // first get the task access from the included and substitute roles
             mergeIncludedAccess("m_taskAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the task access directly from this role
-            MClient client = MClient.get();
+            I_AD_Client client = MClientKt.getClient();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1189,7 +1171,7 @@ public class MRole extends MBaseRole {
             // first get the form access from the included and substitute roles
             mergeIncludedAccess("m_formAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the form access directly from this role
-            MClient client = MClient.get();
+            I_AD_Client client = MClientKt.getClient();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1265,7 +1247,7 @@ public class MRole extends MBaseRole {
             // first get the workflow access from the included and substitute roles
             mergeIncludedAccess("m_workflowAccess"); // Load included accesses - metas-2009_0021_AP1_G94
             // and now get the workflow access directly from this role
-            MClient client = MClient.get();
+            I_AD_Client client = MClientKt.getClient();
             String ASPFilter = "";
             if (client.isUseASP())
                 ASPFilter =
@@ -1356,7 +1338,7 @@ public class MRole extends MBaseRole {
         AccessSqlParser.TableInfo[] ti = asp.getTableInfo(asp.getMainSqlIndex());
 
         //  Do we have to add WHERE or AND
-        if (asp.getMainSql().indexOf(" WHERE ") == -1) retSQL.append(" WHERE ");
+        if (!asp.getMainSql().contains(" WHERE ")) retSQL.append(" WHERE ");
         else retSQL.append(" AND ");
 
         //	Use First Table
@@ -1867,7 +1849,7 @@ public class MRole extends MBaseRole {
             // and now get the info access directly from this role
             String ASPFilter = "";
       /*
-      MClient client = MClient.get(getClientId());
+      MClient client = MClientKt.getClient(getClientId());
       if (client.isUseASP())
       	ASPFilter =
       		  "   AND (   AD_InfoWindow_ID IN ( "

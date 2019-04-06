@@ -10,15 +10,6 @@ import org.compiere.model.I_AD_Client;
  * @version Release 5.1 - $Id$
  */
 public class X_AD_Client extends BasePONameValue implements I_AD_Client {
-
-    /**
-     * None = N
-     */
-    public static final String AUTOARCHIVE_None = "N";
-    /**
-     * FiFo = F
-     */
-    public static final String MMPOLICY_FiFo = "F";
     /**
      *
      */

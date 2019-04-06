@@ -231,9 +231,11 @@ public class X_AD_Table extends PO implements I_AD_Table {
      * Get Name.
      *
      * @return Alphanumeric identifier of the entity
+     * <p>
+     * HasName.COLUMNNAME_Name
      */
     public String getName() {
-        return (String) getValue(HasName.Companion.getCOLUMNNAME_Name());
+        return (String) getValue(HasName.COLUMNNAME_Name);
     }
 
     /**

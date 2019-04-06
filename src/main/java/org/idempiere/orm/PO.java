@@ -533,7 +533,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param hmIn hash map
      * @return true if loaded
      */
-    protected boolean load(HashMap<String, String> hmIn) {
+    protected boolean loadFromMap(HashMap<String, String> hmIn) {
         if (hmIn == null) return load();
 
         int size = get_ColumnCount();
