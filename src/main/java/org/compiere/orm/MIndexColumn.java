@@ -52,7 +52,7 @@ public class MIndexColumn extends X_AD_IndexColumn {
         String sql = getColumnSQL(); // Function Index
         if (sql != null && sql.length() > 0) return sql;
         int AD_Column_ID = getColumnId();
-        return MColumn.getColumnName(AD_Column_ID);
+        return MColumnKt.getColumnName(AD_Column_ID);
     }
 
     /**

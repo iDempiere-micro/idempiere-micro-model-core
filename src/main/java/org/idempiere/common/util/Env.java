@@ -51,9 +51,6 @@ public final class Env {
     public static final BigDecimal ONE = BigDecimal.valueOf(1.0);
 
     /**
-     * ************************************************************************ Application Context
-     */
-    /**
      * Big Decimal 100
      */
     public static final BigDecimal ONEHUNDRED = BigDecimal.valueOf(100.0);
@@ -232,7 +229,6 @@ public final class Env {
     /**
      * Set SO Trx
      *
-     * @param ctx     context
      * @param isSOTrx SO Context
      */
     public static void setSOTrx(boolean isSOTrx) {
@@ -265,16 +261,6 @@ public final class Env {
             return new Timestamp(System.currentTimeMillis());
         }
 
-        // BUG:3075946 KTU - Fix Thai Date
-    /*
-    //  timestamp requires time
-    if (s.trim().length() == 10)
-    	s = s.trim() + " 00:00:00.0";
-    else if (s.indexOf('.') == -1)
-    	s = s.trim() + ".0";
-
-    return Timestamp.valueOf(s);*/
-
         Date date;
         try {
             date = getTimestampFormat_Default().parse(s);
@@ -283,13 +269,10 @@ public final class Env {
             return null;
         }
 
-        Timestamp timeStampDate = new Timestamp(date.getTime());
-
-        return timeStampDate;
+        return new Timestamp(date.getTime());
         // KTU
     } //	getContextAsDate
 
-    /************************************************************************** Language issues */
 
     /**
      * Get Login AD_Client_ID

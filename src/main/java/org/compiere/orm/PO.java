@@ -2,7 +2,7 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 import org.compiere.model.I_C_ElementValue;
-import org.compiere.util.Msg;
+import org.compiere.util.MsgKt;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.AdempiereUserError;
@@ -113,7 +113,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         if (!save()) {
             String msg = null;
             ValueNamePair err = CLogger.retrieveError();
-            String val = err != null ? Msg.translate(err.getValue()) : "";
+            String val = err != null ? MsgKt.translate(err.getValue()) : "";
             if (err != null) msg = (val != null ? val + ": " : "") + err.getName();
             if (msg == null || msg.length() == 0) msg = "SaveError";
             throw new AdempiereException(msg);
@@ -194,7 +194,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @return true if inserted
      */
     protected boolean insert_Tree(String treeType, int C_Element_ID) {
-        String tableName = MTree_Base.getNodeTableName(treeType);
+        String tableName = MTree_BaseKt.getNodeTableName(treeType);
 
         // check whether db have working generate_uuid function.
         boolean uuidFunction = isGenerateUUIDSupported();
@@ -241,7 +241,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         //	Duplicate Check
         sb.append(
                 " AND NOT EXISTS (SELECT * FROM "
-                        + MTree_Base.getNodeTableName(treeType)
+                        + MTree_BaseKt.getNodeTableName(treeType)
                         + " e "
                         + "WHERE e.AD_Tree_ID=t.AD_Tree_ID AND Node_ID=")
                 .append(getId())
@@ -271,7 +271,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         String value = getValue(idxValueCol).toString();
         if (value == null) return;
 
-        String tableName = MTree_Base.getNodeTableName(treeType);
+        String tableName = MTree_BaseKt.getNodeTableName(treeType);
         String sourceTableName;
         String whereTree;
         Object[] parameters;
@@ -280,7 +280,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             whereTree = "TreeType=? AND AD_Table_ID=?";
             parameters = new Object[]{treeType, this.getTableId()};
         } else {
-            sourceTableName = MTree_Base.getSourceTableName(treeType);
+            sourceTableName = MTree_BaseKt.getSourceTableName(treeType);
             if (MTree_Base.TREETYPE_ElementValue.equals(treeType) && this instanceof I_C_ElementValue) {
                 whereTree = "TreeType=? AND AD_Tree_ID=?";
                 parameters =
@@ -352,18 +352,18 @@ public abstract class PO extends org.idempiere.orm.PO {
         // IDEMPIERE-2453
         StringBuilder countSql =
                 new StringBuilder("SELECT COUNT(*) FROM ")
-                        .append(MTree_Base.getNodeTableName(treeType))
+                        .append(MTree_BaseKt.getNodeTableName(treeType))
                         .append(" n JOIN AD_Tree t ON n.AD_Tree_ID=t.AD_Tree_ID")
                         .append(" WHERE Parent_ID=? AND t.TreeType=?");
         if (MTree_Base.TREETYPE_CustomTable.equals(treeType))
             countSql.append(" AND t.AD_Table_ID=").append(getTableId());
         int cnt = getSQLValueEx(countSql.toString(), id, treeType);
         if (cnt > 0)
-            throw new AdempiereException(Msg.getMsg("NoParentDelete", new Object[]{cnt}));
+            throw new AdempiereException(MsgKt.getMsg("NoParentDelete", new Object[]{cnt}));
 
         StringBuilder sb =
                 new StringBuilder("DELETE FROM ")
-                        .append(MTree_Base.getNodeTableName(treeType))
+                        .append(MTree_BaseKt.getNodeTableName(treeType))
                         .append(" n WHERE Node_ID=")
                         .append(id)
                         .append(
@@ -412,7 +412,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         // Check if the role has access to this client
         // Don't check role System as webstore works with this role - see IDEMPIERE-401
         if ( /*(Env.getRoleId(Env.getCtx()) != 0) DAP
-                &&*/ 0 != 0 && !MRole.getDefault().isClientAccess(getClientId(), true)) {
+                &&*/ 0 != 0 && !MRoleKt.getDefaultRole().isClientAccess(getClientId(), true)) {
             log.warning("You cannot delete this record, role doesn't have access");
             log.saveError("AccessCannotDelete", "", false);
             return false;

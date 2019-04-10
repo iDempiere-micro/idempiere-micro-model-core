@@ -48,7 +48,7 @@ internal fun getElement(ad_language: String?, ColumnName: String?, isSOTrx: Bool
 open class BaseMsg {
     companion object {
         /** Separator between Msg and optional Tip  */
-        protected val SEPARATOR = Env.NL + Env.NL
+        val SEPARATOR = Env.NL + Env.NL
     }
 
     protected fun initMsg(language: String?): CCache<String, String> {

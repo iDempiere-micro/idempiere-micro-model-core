@@ -16,30 +16,6 @@ import java.math.BigDecimal;
 public class X_AD_Role extends BasePOName implements I_AD_Role {
 
     /**
-     * Client = C
-     */
-    public static final String PREFERENCETYPE_Client = "C";
-    /**
-     * Organization = O
-     */
-    public static final String PREFERENCETYPE_Organization = "O";
-    /**
-     * System = S
-     */
-    public static final String USERLEVEL_System = "S  ";
-    /**
-     * Client = C
-     */
-    public static final String USERLEVEL_Client = " C ";
-    /**
-     * Organization = O
-     */
-    public static final String USERLEVEL_Organization = "  O";
-    /**
-     * Client+Organization = CO
-     */
-    public static final String USERLEVEL_ClientPlusOrganization = " CO";
-    /**
      *
      */
     private static final long serialVersionUID = 20171031L;
@@ -49,20 +25,6 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      */
     public X_AD_Role(int AD_Role_ID) {
         super(AD_Role_ID);
-        /**
-         * if (AD_Role_ID == 0) { setRoleId (0); setAllow_Info_Account (true); // Y
-         * setAllow_Info_Asset (true); // Y setAllow_Info_BPartner (true); // Y setAllow_Info_InOut
-         * (true); // Y setAllow_Info_Invoice (true); // Y setAllow_Info_Order (true); // Y
-         * setAllow_Info_Payment (true); // Y setAllow_Info_Product (true); // Y setAllow_Info_Resource
-         * (true); // Y setAllow_Info_Schedule (true); // Y setConfirmQueryRecords (0); // 0
-         * setIsAccessAllOrgs (false); // N setIsCanApproveOwnDoc (false); setIsCanExport (true); // Y
-         * setIsCanReport (true); // Y setIsChangeLog (false); // N setIsDiscountAllowedOnTotal (false);
-         * setIsDiscountUptoLimitPrice (false); setIsManual (true); // Y setIsMasterRole (false); // N
-         * setIsMenuAutoExpand (false); // N setIsPersonalAccess (false); // N setIsPersonalLock
-         * (false); // N setIsShowAcct (false); // N setIsUseUserOrgAccess (false); // N
-         * setMaxQueryRecords (0); // 0 setName (null); setOverwritePriceLimit (false); // N
-         * setPreferenceType (null); // O setUserLevel (null); }
-         */
     }
 
     /**

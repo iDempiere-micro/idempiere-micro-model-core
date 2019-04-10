@@ -2,43 +2,20 @@ package software.hsharp.core.orm
 
 import kotliquery.Row
 import org.compiere.orm.MColumnAccess
-import org.compiere.orm.MRole
 import org.compiere.orm.MTableAccess
 import org.compiere.orm.X_AD_Role
 import org.compiere.orm.MRecordAccess
 import org.compiere.orm.MRoleOrgAccess
-import org.compiere.orm.MTree_Base
 import org.compiere.orm.MUserOrgAccess
 import org.compiere.orm.getClient
 import org.compiere.orm.getOrg
-import org.compiere.util.Msg
+import org.compiere.orm.getTree
+import org.compiere.util.translate
 import org.idempiere.common.util.CLogger
-import org.idempiere.common.util.Env
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.queryOf
 import java.io.Serializable
 import java.util.logging.Level
-
-internal fun getOfClient(): kotlin.Array<MRole> {
-    val sql = "SELECT * FROM AD_Role WHERE AD_Client_ID=?"
-    val loadQuery = queryOf(sql, listOf(Env.getClientId())).map { MRole(it) }.asList
-    return DB.current.run(loadQuery).toTypedArray()
-} // 	getOfClient
-
-/**
- * Get Roles With where clause
- *
- * @param ctx context
- * @param whereClause where clause
- * @return roles of client
- */
-internal fun getOf(whereClause: String?): List<MRole> {
-    var sql = "SELECT * FROM AD_Role"
-    if (whereClause != null && whereClause.isNotEmpty()) sql += " WHERE $whereClause"
-
-    val query = queryOf(sql, listOf()).map { row -> MRole(row) }.asList
-    return DB.current.run(query)
-} // 	getOf
 
 open class MBaseRole : X_AD_Role {
     /** List of Table Access  */
@@ -111,11 +88,11 @@ open class MBaseRole : X_AD_Role {
             var orgName = "*"
             if (orgId != 0) orgName = getOrg(orgId).name
             val sb = StringBuilder()
-            sb.append(Msg.translate("AD_Client_ID"))
+            sb.append(translate("AD_Client_ID"))
                 .append("=")
                 .append(clientName)
                 .append(" - ")
-                .append(Msg.translate("AD_Org_ID"))
+                .append(translate("AD_Org_ID"))
                 .append("=")
                 .append(orgName)
             if (readOnly) sb.append(" r/o")
@@ -137,7 +114,7 @@ open class MBaseRole : X_AD_Role {
         val org = getOrg(oa.orgId)
         if (!org.isSummary) return
         // 	Summary Org - Get Dependents
-        val tree = MTree_Base.get(treeOrgId)
+        val tree = getTree(treeOrgId)
         val sql = ("SELECT AD_Client_ID, orgId FROM AD_Org " +
                 "WHERE IsActive='Y' AND orgId IN (SELECT Node_ID FROM " +
                 tree.nodeTableName +
@@ -173,8 +150,8 @@ open class MBaseRole : X_AD_Role {
      *
      * @param reload reload
      */
-    protected fun loadTableAccess(reload: Boolean): Array<MTableAccess> {
-        if (tableAccesses.isNotEmpty() && !reload) return tableAccesses.toTypedArray()
+    protected fun loadTableAccess(reload: Boolean): List<MTableAccess> {
+        if (tableAccesses.isNotEmpty() && !reload) return tableAccesses
         val sql = "SELECT * FROM AD_Table_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
         val loadQuery = queryOf(sql, listOf(roleId)).map { MTableAccess(it) }.asList
         val result = DB.current.run(loadQuery)
@@ -182,10 +159,10 @@ open class MBaseRole : X_AD_Role {
         tableAccesses.addAll(result)
 
         if (localLog.isLoggable(Level.FINE)) localLog.fine("#" + tableAccesses.size)
-        return result.toTypedArray()
+        return result
     } // 	loadTableAccess
 
-    protected fun setTableAccess(tableAccesses: Array<MTableAccess>) {
+    protected fun setTableAccess(tableAccesses: List<MTableAccess>) {
         this.tableAccesses.clear()
         this.tableAccesses.addAll(tableAccesses)
     }
@@ -239,7 +216,7 @@ open class MBaseRole : X_AD_Role {
     /** List of Column Access  MColumnAccess[] m_columnAccess */
     private val m_columnAccess: MutableList<MColumnAccess> = mutableListOf()
 
-    protected fun setColumnAccess(columnAccesses: Array<MColumnAccess>) {
+    protected fun setColumnAccess(columnAccesses: List<MColumnAccess>) {
         m_columnAccess.clear()
         m_columnAccess.addAll(columnAccesses)
     }
@@ -249,15 +226,15 @@ open class MBaseRole : X_AD_Role {
      *
      * @param reload reload
      */
-    protected fun loadColumnAccess(reload: Boolean): Array<MColumnAccess> {
-        if (m_columnAccess.isNotEmpty() && !reload) return m_columnAccess.toTypedArray()
+    protected fun loadColumnAccess(reload: Boolean): List<MColumnAccess> {
+        if (m_columnAccess.isNotEmpty() && !reload) return m_columnAccess
         val sql = "SELECT * FROM AD_Column_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
         val loadQuery = queryOf(sql, listOf(roleId)).map { MColumnAccess(it) }.asList
         val result = DB.current.run(loadQuery)
         m_columnAccess.clear()
         m_columnAccess.addAll(result)
         if (localLog.isLoggable(Level.FINE)) localLog.fine("#" + m_columnAccess.size)
-        return result.toTypedArray()
+        return result
     } // 	loadColumnAccess
 
     /**
@@ -284,8 +261,8 @@ open class MBaseRole : X_AD_Role {
      */
     protected var recordAccess = mutableListOf<MRecordAccess>()
 
-    protected fun getRecordAccessArray(): Array<MRecordAccess> = recordAccess.toTypedArray()
-    protected fun setRecordAccessArray(value: Array<MRecordAccess>) {
+    protected fun getRecordAccessArray(): List<MRecordAccess> = recordAccess
+    protected fun setRecordAccessArray(value: List<MRecordAccess>) {
         recordAccess.clear()
         recordAccess.addAll(value)
     }
@@ -295,8 +272,8 @@ open class MBaseRole : X_AD_Role {
      */
     protected var recordDependentAccess = mutableListOf<MRecordAccess>()
 
-    protected fun getRecordDependentAccessArray(): Array<MRecordAccess> = recordDependentAccess.toTypedArray()
-    protected fun setRecordDependentAccessArray(value: Array<MRecordAccess>) {
+    protected fun getRecordDependentAccessArray(): List<MRecordAccess> = recordDependentAccess
+    protected fun setRecordDependentAccessArray(value: List<MRecordAccess>) {
         recordDependentAccess.clear()
         recordDependentAccess.addAll(value)
     }

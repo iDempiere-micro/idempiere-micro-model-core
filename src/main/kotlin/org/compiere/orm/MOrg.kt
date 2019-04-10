@@ -1,10 +1,10 @@
 package org.compiere.orm
 
-import arrow.syntax.function.memoize
 import kotliquery.Row
 import org.compiere.model.I_AD_Org
 import org.idempiere.common.util.factory
 import org.idempiere.common.util.loadUsing
+import org.idempiere.common.util.memoize
 import software.hsharp.core.util.asResource
 
 import software.hsharp.core.util.getSQLValue
@@ -51,7 +51,7 @@ class MOrg : X_AD_Org {
      * @return Org Info
      */
     val info: MOrgInfo?
-        get() = MOrgInfo.get(orgId) // 	getMOrgInfo
+        get() = getOrganizationInfo(orgId) // 	getMOrgInfo
 
     /**
      * Get Linked BPartner
@@ -106,7 +106,7 @@ class MOrg : X_AD_Org {
             info.saveEx()
             // 	Access
             MRoleOrgAccess.createForOrg(this)
-            val role = MRole.getDefault(true) // 	reload
+            val role = getDefaultRole(true) // 	reload
             role.loadAccess(true) // reload org access within transaction
             // 	TreeNode
             insert_Tree(MTree_Base.TREETYPE_Organization)

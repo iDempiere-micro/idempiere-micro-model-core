@@ -40,8 +40,7 @@ public class X_AD_EntityType extends BasePOName implements I_AD_EntityType {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_EntityType[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_EntityType[" + getId() + "]";
     }
 
     /**

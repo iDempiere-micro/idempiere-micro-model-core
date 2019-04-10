@@ -26,7 +26,7 @@ public class PeriodClosedException extends AdempiereException {
                 "@PeriodClosed@ @Date@="
                         + dateAcct
                         + ", @DocBaseType@="
-                        + MRefList.getListName(
+                        + MRefListKt.getListName(
                         X_C_DocType.DOCBASETYPE_AD_Reference_ID, docBaseType));
     }
 }

@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 
+import static org.compiere.orm.MRoleKt.getClientRoles;
 import static software.hsharp.core.util.DBKt.prepareStatement;
 
 /**
@@ -99,7 +100,7 @@ public class MRoleOrgAccess extends X_AD_Role_OrgAccess {
      */
     public static boolean createForOrg(MOrg org) {
         int counter = 0;
-        MRole[] roles = MRole.getOfClient();
+        MRole[] roles = getClientRoles();
         for (MRole role : roles) {
             if (!role.isManual()) {
                 MRoleOrgAccess orgAccess = new MRoleOrgAccess(org, role.getRoleId());

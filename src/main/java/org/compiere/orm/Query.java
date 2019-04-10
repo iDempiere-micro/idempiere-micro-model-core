@@ -351,7 +351,7 @@ public class Query extends BaseQuery {
         }
         String sql = sqlBuffer.toString();
         if (applyAccessFilter) {
-            MRole role = MRole.getDefault(false);
+            MRole role = MRoleKt.getDefaultRole(false);
             sql =
                     role.addAccessSQL(
                             sql, table.getDbTableName(), applyAccessFilterFullyQualified, applyAccessFilterRW);

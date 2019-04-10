@@ -2,7 +2,7 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 import org.compiere.model.I_AD_User_Roles;
-import org.compiere.util.Msg;
+import org.compiere.util.MsgKt;
 import org.idempiere.common.util.CLogger;
 
 import java.util.List;
@@ -28,7 +28,6 @@ public class MUserRoles extends X_AD_User_Roles {
      * ************************************************************************ Persistence
      * Constructor
      *
-     * @param ctx     context
      * @param ignored invalid
      */
     public MUserRoles(int ignored) {
@@ -38,8 +37,6 @@ public class MUserRoles extends X_AD_User_Roles {
 
     /**
      * Load constructor
-     *
-     * @param ctx context
      */
     public MUserRoles(Row row) {
         super(row);
@@ -48,7 +45,6 @@ public class MUserRoles extends X_AD_User_Roles {
     /**
      * Full Constructor
      *
-     * @param ctx        context
      * @param AD_User_ID user
      * @param AD_Role_ID role
      */
@@ -61,7 +57,6 @@ public class MUserRoles extends X_AD_User_Roles {
     /**
      * Get User Roles Of Role
      *
-     * @param ctx        context
      * @param AD_Role_ID role
      * @return array of user roles
      */
@@ -82,7 +77,7 @@ public class MUserRoles extends X_AD_User_Roles {
      * @param AD_User_ID user
      */
     public void setUserId(int AD_User_ID) {
-        setValueNoCheck("AD_User_ID", new Integer(AD_User_ID));
+        setValueNoCheck("AD_User_ID", AD_User_ID);
     } //	setUserId
 
     /**
@@ -91,23 +86,23 @@ public class MUserRoles extends X_AD_User_Roles {
      * @param AD_Role_ID role
      */
     public void setRoleId(int AD_Role_ID) {
-        setValueNoCheck("AD_Role_ID", new Integer(AD_Role_ID));
+        setValueNoCheck("AD_Role_ID", AD_Role_ID);
     } //	setRoleId
 
     @Override
     protected boolean beforeSave(boolean newRecord) {
         // IDEMPIERE-1410
-        if (!MRole.getDefault().isAccessAdvanced()) {
+        if (!MRoleKt.getDefaultRole().isAccessAdvanced()) {
             MRole role = new MRole(getRoleId());
             if (role.isAccessAdvanced()) {
-                log.saveError("Error", Msg.getMsg("ActionNotAllowedHere"));
+                log.saveError("Error", MsgKt.getMsg("ActionNotAllowedHere"));
                 return false;
             }
             if (!newRecord && isValueChanged(I_AD_User_Roles.COLUMNNAME_AD_Role_ID)) {
                 MRole oldrole =
                         new MRole(getValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID));
                 if (oldrole.isAccessAdvanced()) {
-                    log.saveError("Error", Msg.getMsg("ActionNotAllowedHere"));
+                    log.saveError("Error", MsgKt.getMsg("ActionNotAllowedHere"));
                     return false;
                 }
             }
@@ -119,10 +114,10 @@ public class MUserRoles extends X_AD_User_Roles {
     @Override
     protected boolean beforeDelete() {
         // IDEMPIERE-1410
-        if (!MRole.getDefault().isAccessAdvanced()) {
+        if (!MRoleKt.getDefaultRole().isAccessAdvanced()) {
             MRole role = new MRole(getRoleId());
             if (role.isAccessAdvanced()) {
-                log.saveError("Error", Msg.getMsg("ActionNotAllowedHere"));
+                log.saveError("Error", MsgKt.getMsg("ActionNotAllowedHere"));
                 return false;
             }
         }

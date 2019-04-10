@@ -56,7 +56,7 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
         // Message
         String msg = getMessage();
         if (msg != null && msg.length() > 0) {
-            sb.append(Msg.parseTranslation(msg));
+            sb.append(MsgKt.parseTranslation(msg));
         } else {
             msg = null;
         }
@@ -72,7 +72,7 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
                 } else {
                     sb.append(", ");
                 }
-                sb.append(Msg.parseTranslation(name));
+                sb.append(MsgKt.parseTranslation(name));
                 String svalue = getStringValue(value);
                 if (value != null && svalue.length() > 0) sb.append(" ").append(svalue);
                 cnt++;
@@ -96,7 +96,7 @@ public class ArhRuntimeException extends AdempiereExceptionEx {
         if (value == null) {
             svalue = "-";
         } else if (value instanceof Boolean) {
-            svalue = Msg.getMsg(((Boolean) value).booleanValue() ? "Yes" : "No");
+            svalue = MsgKt.getMsg((Boolean) value ? "Yes" : "No");
         } else if (value instanceof Timestamp) {
             SimpleDateFormat df = DisplayType.getDateFormat();
             svalue = df.format((Timestamp) value);

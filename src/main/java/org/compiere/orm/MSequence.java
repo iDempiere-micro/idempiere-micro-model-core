@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import static org.compiere.orm.MSystemKt.getSystem;
 import static software.hsharp.core.orm.MBaseSequenceKt.PREFIX_DOCSEQ;
 import static software.hsharp.core.orm.MBaseSequenceKt.doGetDocumentNoFromSeq;
 import static software.hsharp.core.orm.MBaseSequenceKt.doGetNextIDImpl;
@@ -240,7 +241,8 @@ public class MSequence extends MBaseSequence {
                 // take from po
                 if (po.getColumnIndex(token) >= 0) {
                     Object v = po.getValue(token);
-                    MColumn colToken = MColumn.get(po.getTableName(), token);
+                    // MColumn.get
+                    MColumn colToken = MColumnKt.getColumn(po.getTableName(), token);
                     String foreignTable = colToken.getReferenceTableName();
                     if (v != null) {
                         if (format != null && format.length() > 0) {
@@ -347,7 +349,7 @@ public class MSequence extends MBaseSequence {
             return null;
         }
 
-        MDocType dt = MDocType.get(C_DocType_ID); // 	wrong for SERVER, but r/o
+        MDocType dt = MDocTypeKt.getDocumentType(C_DocType_ID); // 	wrong for SERVER, but r/o
         if (dt != null && !dt.isDocNoControlled()) {
             if (s_log.isLoggable(Level.FINER))
                 s_log.finer("DocType_ID=" + C_DocType_ID + " Not DocNo controlled");
@@ -448,7 +450,7 @@ public class MSequence extends MBaseSequence {
                                 + "_ID'");
         if (AD_Column_ID <= 0) return null;
         //
-        MSystem system = MSystem.get();
+        MSystem system = getSystem();
         int IDRangeEnd = 0;
         if (system.getIDRangeEnd() != null) IDRangeEnd = system.getIDRangeEnd().intValue();
 

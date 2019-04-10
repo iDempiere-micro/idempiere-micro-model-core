@@ -4,6 +4,13 @@ import org.idempiere.icommon.model.IPO
 import java.util.Enumeration
 import java.util.concurrent.ConcurrentHashMap
 
+private class Memoize0<R>(val f: () -> R) : () -> R {
+    private val values = ConcurrentHashMap<Int, R>()
+    override fun invoke(): R {
+        return values.getOrPut(0) { f() }
+    }
+    internal fun clear() = values.clear()
+}
 private class Memoize1<T, R>(val f: (T) -> R) : (T) -> R {
     private val values = ConcurrentHashMap<T, R>()
     override fun invoke(x: T): R {
@@ -15,11 +22,35 @@ private class Memoize1<T, R>(val f: (T) -> R) : (T) -> R {
     }
 
     fun getAll(): Enumeration<R> = values.elements()
+    internal fun clear() = values.clear()
+}
+private class Memoize2<P1, P2, R>(val f: (P1, P2) -> R) : (P1, P2) -> R {
+    private val values = ConcurrentHashMap<Pair<P1, P2>, R>()
+    override fun invoke(p1: P1, p2: P2): R {
+        return values.getOrPut(Pair(p1, p2)) { f(p1, p2) }
+    }
+    internal fun clear() = values.clear()
+}
+private class Memoize3<P1, P2, P3, R>(val f: (P1, P2, P3) -> R) : (P1, P2, P3) -> R {
+    private val values = ConcurrentHashMap<Triple<P1, P2, P3>, R>()
+    override fun invoke(p1: P1, p2: P2, p3: P3): R {
+        return values.getOrPut(Triple(p1, p2, p3)) { f(p1, p2, p3) }
+    }
+    internal fun clear() = values.clear()
 }
 
+internal fun <R> (() -> R).memoize(): () -> R = Memoize0(this)
 internal fun <T, R> ((T) -> R).memoize(): (T) -> R = Memoize1(this)
+internal fun <P1, P2, R> ((P1, P2) -> R).memoize(): (P1, P2) -> R = Memoize2(this)
+internal fun <P1, P2, P3, R> ((P1, P2, P3) -> R).memoize(): (P1, P2, P3) -> R = Memoize3(this)
+
+internal fun <R> (() -> R).memoClear() = (this as Memoize0).clear()
+internal fun <T, R> ((T) -> R).memoClear() = (this as Memoize1).clear()
+internal fun <P1, P2, R> ((P1, P2) -> R).memoClear() = (this as Memoize2).clear()
+internal fun <P1, P2, P3, R> ((P1, P2, P3) -> R).memoClear() = (this as Memoize3).clear()
 
 fun <T : IPO> factory(initializer: (Int) -> T): (Int) -> T = initializer
+fun <T : IPO> factoryString(initializer: (String) -> T): (String) -> T = initializer
 fun <T : IPO> factory(allValues: List<T>, initializer: (Int) -> T): (Int) -> T {
     val newInitializer = getOrPutMemoizedInitializer(initializer)
     @Suppress("UNCHECKED_CAST")
@@ -29,12 +60,19 @@ fun <T : IPO> factory(allValues: List<T>, initializer: (Int) -> T): (Int) -> T {
 }
 
 private val memoizedInitializers = ConcurrentHashMap<(Int) -> IPO, (Int) -> IPO>()
+private val memoizedInitializersString = ConcurrentHashMap<(String) -> IPO, (String) -> IPO>()
 
 private fun <T : IPO> getOrPutMemoizedInitializer(initializer: (Int) -> T): (Int) -> IPO =
     memoizedInitializers.getOrPut(initializer) { initializer.memoize() }
 
 infix fun <T : IPO> Int.loadUsing(initializer: (Int) -> T): T {
     val memoizedInitializer = getOrPutMemoizedInitializer(initializer)
+    @Suppress("UNCHECKED_CAST")
+    return memoizedInitializer(this) as T
+}
+
+infix fun <T : IPO> String.loadUsing(initializer: (String) -> T): T {
+    val memoizedInitializer = memoizedInitializersString.getOrPut(initializer) { initializer.memoize() }
     @Suppress("UNCHECKED_CAST")
     return memoizedInitializer(this) as T
 }

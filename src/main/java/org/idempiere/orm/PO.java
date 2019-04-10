@@ -2,7 +2,7 @@ package org.idempiere.orm;
 
 import kotliquery.Row;
 import org.compiere.util.DisplayType;
-import org.compiere.util.Msg;
+import org.compiere.util.MsgKt;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.CCache;
@@ -810,8 +810,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     protected boolean beforeSave(boolean newRecord) {
         /**
-         * Prevents saving log.saveError("Error", Msg.parseTranslation("@C_Currency_ID@
-         * = @C_Currency_ID@")); log.saveError("FillMandatory", Msg.getElement(
+         * Prevents saving log.saveError("Error", MsgKt.parseTranslation("@C_Currency_ID@
+         * = @C_Currency_ID@")); log.saveError("FillMandatory", MsgKt.getElementTranslation(
          * "PriceEntered")); /** Issues message log.saveWarning(AD_Message, message); log.saveInfo
          * (AD_Message, message);
          */
@@ -894,7 +894,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return true if record can be deleted
      */
     protected boolean beforeDelete() {
-        //	log.saveError("Error", Msg.getMsg( "CannotDelete"));
+        //	log.saveError("Error", MsgKt.getMsg( "CannotDelete"));
         return true;
     } //	beforeDelete
 
@@ -1331,14 +1331,14 @@ public abstract class PO extends software.hsharp.core.orm.PO
             if (setError != null) {
                 log.saveError(
                         setError.getValue(),
-                        Msg.getElement(p_info.getColumnName(i)) + " - " + setError.getName());
+                        MsgKt.getElementTranslation(p_info.getColumnName(i)) + " - " + setError.getName());
                 return false;
             }
         }
 
         //	Organization Check
         if (getOrgId() == 0 && (getAccessLevel() == ACCESSLEVEL_ORG)) {
-            log.saveError("FillMandatory", Msg.getElement("AD_Org_ID"));
+            log.saveError("FillMandatory", MsgKt.getElementTranslation("AD_Org_ID"));
             return false;
         }
         //	Should be Org 0

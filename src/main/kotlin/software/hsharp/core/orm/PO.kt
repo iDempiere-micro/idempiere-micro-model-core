@@ -6,7 +6,7 @@ import mu.KotlinLogging
 import org.compiere.model.I_AD_Column
 import org.compiere.model.I_AD_Element
 import org.compiere.model.I_AD_Field
-import org.compiere.orm.MColumn
+import org.compiere.orm.getColumn
 import org.compiere.util.DisplayType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.SecureEngine
@@ -37,7 +37,7 @@ internal abstract class PO(row: Row?) : IPO {
             if (from.javaClass != to.javaClass) {
                 for (i1 in 0 until from.oldValues.size) {
                     val colName = from.p_info.getColumnName(i1)
-                    val column = MColumn.get(from.p_info.getColumnId(colName))
+                    val column = getColumn(from.p_info.getColumnId(colName))
                     if (column.isVirtualColumn ||
                         column.isKey || // 	KeyColumn
 
@@ -59,7 +59,7 @@ internal abstract class PO(row: Row?) : IPO {
             {
                 for (i in 0 until from.oldValues.size) {
                     val colName = from.p_info.getColumnName(i)
-                    val column = MColumn.get(from.p_info.getColumnId(colName))
+                    val column = getColumn(from.p_info.getColumnId(colName))
                     if (column.isVirtualColumn ||
                         column.isKey || // 	KeyColumn
 

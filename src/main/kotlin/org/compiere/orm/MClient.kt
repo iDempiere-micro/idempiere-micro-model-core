@@ -42,7 +42,7 @@ open class MClient : X_AD_Client {
      */
     open val info: I_AD_ClientInfo?
         get() {
-            if (m_info == null) m_info = MClientInfo.get(clientId)
+            if (m_info == null) m_info = getClientInfo(clientId)
             return m_info
         } // 	getMClientInfo
 

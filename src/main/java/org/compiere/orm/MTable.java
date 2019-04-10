@@ -232,7 +232,7 @@ public class MTable extends MBaseTable {
         }
 
         String tableName = getDbTableName();
-        if (Record_ID != 0 && !isSingleKey()) {
+        if (!isSingleKey()) {
             log.log(Level.WARNING, "(id) - Multi-Key " + tableName);
             return null;
         }

@@ -3,7 +3,7 @@ package org.compiere.orm;
 import kotliquery.Row;
 import org.compiere.model.HasName;
 import org.compiere.model.I_AD_Element;
-import org.compiere.util.Msg;
+import org.compiere.util.MsgKt;
 import org.idempiere.common.exceptions.DBException;
 
 import java.util.logging.Level;
@@ -66,7 +66,6 @@ public class M_Element extends X_AD_Element {
     public static M_Element get(String columnName) {
         if (columnName == null || columnName.length() == 0) return null;
         //
-        // TODO: caching if trxName == null
         final String whereClause = "UPPER(ColumnName)=?";
         return new Query(I_AD_Element.Table_Name, whereClause)
                 .setParameters(columnName.toUpperCase())
@@ -90,7 +89,7 @@ public class M_Element extends X_AD_Element {
             if (no > 0) {
                 log.saveError(
                         DBException.SAVE_ERROR_NOT_UNIQUE_MSG,
-                        Msg.getElement(I_AD_Element.COLUMNNAME_ColumnName));
+                        MsgKt.getElementTranslation(I_AD_Element.COLUMNNAME_ColumnName));
                 return false;
             }
         }
@@ -106,7 +105,7 @@ public class M_Element extends X_AD_Element {
      * @return success
      */
     protected boolean afterSave(boolean newRecord, boolean success) {
-        if (!success) return success;
+        if (!success) return false;
         //	Update Columns, Fields, Parameters, Print Info
         if (!newRecord) {
             StringBuilder sql;
@@ -221,7 +220,7 @@ public class M_Element extends X_AD_Element {
                 if (log.isLoggable(Level.FINE)) log.fine("PrintFormatItem updated #" + no);
             }
         }
-        return success;
+        return true;
     } //	afterSave
 
     /**

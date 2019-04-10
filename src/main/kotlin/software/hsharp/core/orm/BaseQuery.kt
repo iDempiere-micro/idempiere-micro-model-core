@@ -84,7 +84,7 @@ abstract class BaseQuery(val table: MTable) {
         return this as Query
     }
 
-    private fun <T : PO> doFindFirst(): List<T> {
+    private fun <T : IPO> doFindFirst(): List<T> {
         val sql = buildSQL(null, true)
         val params = getQueryParameters()
         val sqlQuery =
@@ -105,7 +105,7 @@ abstract class BaseQuery(val table: MTable) {
      * @see {@link .first
      */
     @Throws(DBException::class)
-    fun <T : PO> firstOnly(): T? {
+    fun <T : IPO> firstOnly(): T? {
         val result = doFindFirst<T>()
         if (result.count() > 1) throw DBException("QueryMoreThanOneRecordsFound")
         return result.firstOrNull()

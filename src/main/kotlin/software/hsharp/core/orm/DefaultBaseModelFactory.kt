@@ -6,11 +6,12 @@ import org.compiere.orm.IModelFactory
 import org.compiere.orm.MTable
 import org.compiere.orm.MTree_Base
 import org.compiere.orm.M_Element
-import org.compiere.orm.MEntityType
+import org.compiere.orm.getEntityType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.CCache
 import org.idempiere.common.util.Util
 import org.idempiere.icommon.model.IPO
+import org.idempiere.orm.PO.ENTITYTYPE_Dictionary
 import java.lang.reflect.Modifier
 import java.util.Properties
 import kotlin.collections.set
@@ -123,9 +124,9 @@ abstract class DefaultBaseModelFactory : IModelFactory {
         // 	Import Tables (Name conflict)
         //  Import Tables doesn't manage model M classes, just X_
         if (tableName.startsWith("I_")) {
-            val et = MEntityType.get(entityType)
-            var etmodelpackage: String? = et!!.modelPackage
-            if (etmodelpackage == null || MEntityType.ENTITYTYPE_Dictionary == entityType)
+            val et = getEntityType(entityType)
+            var etmodelpackage: String? = et.modelPackage
+            if (etmodelpackage == null || ENTITYTYPE_Dictionary == entityType)
                 etmodelpackage = "org.compiere.impl" // fallback for dictionary or empty model package on entity type
             val clazz = getPOclass("$etmodelpackage.X_$tableName", tableName)
             if (clazz != null) {
@@ -146,9 +147,9 @@ abstract class DefaultBaseModelFactory : IModelFactory {
         }
 
         // begin [ 1784588 ] Use ModelPackage of EntityType to Find Model Class - vpj-cd
-        if (MEntityType.ENTITYTYPE_Dictionary != entityType) {
-            val et = MEntityType.get(entityType)
-            val etmodelpackage = et!!.modelPackage
+        if (ENTITYTYPE_Dictionary != entityType) {
+            val et = getEntityType(entityType)
+            val etmodelpackage = et.modelPackage
             if (etmodelpackage != null) {
                 var clazz: Class<*>? = getPOclass(etmodelpackage + ".M" + Util.replace(tableName, "_", ""), tableName)
                 if (clazz != null) {
