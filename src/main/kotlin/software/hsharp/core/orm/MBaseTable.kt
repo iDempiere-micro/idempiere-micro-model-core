@@ -110,6 +110,13 @@ abstract class MBaseTable : X_AD_Table {
         return factoryList?.map { it.getPO<T>(tableName, row) }?.first()
     } // 	getPO
 
+    fun <T : IPO> getPO(id: Int): T? {
+        val tableName = dbTableName
+
+        val factoryList = getFactoryList()
+        return factoryList?.map { it.getPO<T>(tableName, id) }?.first()
+    } // 	getPO
+
     /**
      * Get PO class instance
      *

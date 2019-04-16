@@ -1648,8 +1648,8 @@ class MRole : MBaseRole {
             val ASPFilter = ""
 
             val sql = "SELECT AD_InfoWindow_ID, IsActive FROM AD_InfoWindow_Access WHERE AD_Role_ID=?$ASPFilter"
-            var pstmt: PreparedStatement? = null
-            var rs: ResultSet? = null
+            val pstmt: PreparedStatement?
+            val rs: ResultSet?
             val directAccess = HashMap<Int, Boolean>(100)
             try {
                 pstmt = prepareStatement(sql)

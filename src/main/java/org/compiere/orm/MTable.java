@@ -221,43 +221,6 @@ public class MTable extends MBaseTable {
     } //	getKeyColumns
 
     /**
-     * ************************************************************************ Get PO Class Instance
-     *
-     * @param Record_ID record
-     * @return PO for Record or null
-     */
-    public IPO getPO(int Record_ID) {
-        if (Record_ID == 0) {
-            return null;
-        }
-
-        String tableName = getDbTableName();
-        if (!isSingleKey()) {
-            log.log(Level.WARNING, "(id) - Multi-Key " + tableName);
-            return null;
-        }
-
-        IPO po = null;
-        IModelFactory[] factoryList = getFactoryList();
-        if (factoryList != null) {
-            for (IModelFactory factory : factoryList) {
-                po = factory.getPO(tableName, Record_ID);
-                if (po != null) {
-                    if (po.getId() != Record_ID && Record_ID > 0) po = null;
-                    else break;
-                }
-            }
-        }
-
-        if (po == null) {
-            po = new GenericPO(Record_ID);
-            if (po.getId() != Record_ID && Record_ID > 0) po = null;
-        }
-
-        return po;
-    } //	getPO
-
-    /**
      * Before Save
      *
      * @param newRecord new

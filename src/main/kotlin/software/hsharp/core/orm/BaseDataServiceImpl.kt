@@ -1,5 +1,6 @@
 package software.hsharp.core.orm
 
+import org.compiere.orm.MTable
 import org.compiere.orm.Query
 import org.idempiere.icommon.model.IPO
 import software.hsharp.core.services.BaseDataService
@@ -14,7 +15,6 @@ open class BaseDataServiceImpl<T : IPO> (
     private val tableName: String,
     private val shared: Boolean
 ) : BaseDataService<T> {
-
     protected open fun andWhere(): String = "1=1"
 
     /**
@@ -29,4 +29,12 @@ open class BaseDataServiceImpl<T : IPO> (
             .setParameters(environmentService.clientId)
             .list()
     }
+
+    /**
+     * Get [T] for the current client by id
+     */
+    override fun getById(id: Int): T? {
+        return MTable.get(tableName).getPO(id)
+    }
+
 }

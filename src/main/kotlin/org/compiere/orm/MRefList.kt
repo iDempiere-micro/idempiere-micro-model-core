@@ -19,8 +19,6 @@ import software.hsharp.core.util.prepareStatement
  * @return List or ""
  */
 private fun doGetListName(AD_Language: String, AD_Reference_ID: Int, Value: String): String {
-    val key = AD_Language + "_" + AD_Reference_ID + "_" + Value
-
     val isBaseLanguage = Env.isBaseLanguage(AD_Language, "AD_Ref_List")
     val sql = if (isBaseLanguage)
         "SELECT Name FROM AD_Ref_List " + "WHERE AD_Reference_ID=? AND Value=?"
@@ -57,8 +55,7 @@ fun getListName(AD_Language: String, AD_Reference_ID: Int, Value: String): Strin
  * @return List or ""
  */
 fun getListName(AD_Reference_ID: Int, Value: String): String {
-    val AD_Language = Env.getADLanguage()
-    return getListName(AD_Language, AD_Reference_ID, Value)
+    return getListName(Env.getADLanguage(), AD_Reference_ID, Value)
 }
 
 /**
@@ -88,7 +85,7 @@ class MRefList : X_AD_Ref_List {
      * Load Contructor
      *
      */
-    constructor(row: Row) : super(row) {} // 	MRef_List
+    constructor(row: Row) : super(row) // 	MRef_List
 
     /**
      * String Representation
@@ -100,6 +97,6 @@ class MRefList : X_AD_Ref_List {
     } // 	toString
 
     companion object {
-        private val serialVersionUID = -3612793187620297377L
+        private const val serialVersionUID = -3612793187620297377L
     }
 } // 	MRef_List
