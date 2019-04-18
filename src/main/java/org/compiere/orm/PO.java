@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_C_ElementValue;
+import org.compiere.model.AccountingElementValue;
 import org.compiere.util.MsgKt;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
@@ -9,7 +9,7 @@ import org.idempiere.common.util.AdempiereUserError;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.CacheMgt;
 import org.idempiere.common.util.ValueNamePair;
-import org.idempiere.icommon.model.IPO;
+import org.idempiere.icommon.model.PersistentObject;
 import org.idempiere.orm.Null;
 import org.idempiere.orm.POInfo;
 
@@ -45,7 +45,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      */
     public static void copyValues(PO from, PO to, int AD_Client_ID, int AD_Org_ID) {
         Companion.copyValues(from, to);
-        to.setADClientID(AD_Client_ID);
+        to.setClientId(AD_Client_ID);
         to.setOrgId(AD_Org_ID);
     } //	copyValues
 
@@ -71,7 +71,7 @@ public abstract class PO extends org.idempiere.orm.PO {
             if (getIds()[i].equals(I_ZERO) || getIds()[i] == Null.NULL) continue;
             return false; //	one value is non-zero
         }
-        return !MTable.isZeroIDTable(getTableName());
+        return !MTableKt.isZeroIDTable(getTableName());
     } //	isNew
 
     /**
@@ -80,8 +80,8 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param AD_Client_ID client
      * @param AD_Org_ID    org
      */
-    protected void setClientOrg(int AD_Client_ID, int AD_Org_ID) {
-        if (AD_Client_ID != getClientId()) setADClientID(AD_Client_ID);
+    public void setClientOrg(int AD_Client_ID, int AD_Org_ID) {
+        if (AD_Client_ID != getClientId()) setClientId(AD_Client_ID);
         if (AD_Org_ID != getOrgId()) setOrgId(AD_Org_ID);
     } //	setClientOrg
 
@@ -90,16 +90,16 @@ public abstract class PO extends org.idempiere.orm.PO {
      *
      * @param AD_Client_ID client
      */
-    public void setADClientID(int AD_Client_ID) {
-        setValueNoCheck("AD_Client_ID", new Integer(AD_Client_ID));
-    } //	setADClientID
+    public void setClientId(int AD_Client_ID) {
+        setValueNoCheck("AD_Client_ID", AD_Client_ID);
+    } //	setClientId
 
     /**
      * Overwrite Client Org if different
      *
      * @param po persistent object
      */
-    protected void setClientOrg(IPO po) {
+    public void setClientOrg(PersistentObject po) {
         setClientOrg(po.getClientId(), po.getOrgId());
     } //	setClientOrg
 
@@ -215,13 +215,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         if (uuidColumnId > 0 && uuidFunction)
             sb.append(", ").append(org.idempiere.orm.PO.getUUIDColumnName(tableName)).append(") ");
         else sb.append(") ");
-        sb.append(
-                "SELECT t.AD_Client_ID, 0, 'Y', SysDate, "
-                        + getUpdatedBy()
-                        + ", SysDate, "
-                        + getUpdatedBy()
-                        + ","
-                        + "t.AD_Tree_ID, ")
+        sb.append("SELECT t.AD_Client_ID, 0, 'Y', SysDate, ").append(getUpdatedBy()).append(", SysDate, ").append(getUpdatedBy()).append(",").append("t.AD_Tree_ID, ")
                 .append(getId())
                 .append(", 0, 999");
         if (uuidColumnId > 0 && uuidFunction) sb.append(", Generate_UUID() ");
@@ -239,11 +233,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         if (MTree_Base.TREETYPE_CustomTable.equals(treeType))
             sb.append(" AND t.AD_Table_ID=").append(getTableId());
         //	Duplicate Check
-        sb.append(
-                " AND NOT EXISTS (SELECT * FROM "
-                        + MTree_BaseKt.getNodeTableName(treeType)
-                        + " e "
-                        + "WHERE e.AD_Tree_ID=t.AD_Tree_ID AND Node_ID=")
+        sb.append(" AND NOT EXISTS (SELECT * FROM ").append(MTree_BaseKt.getNodeTableName(treeType)).append(" e ").append("WHERE e.AD_Tree_ID=t.AD_Tree_ID AND Node_ID=")
                 .append(getId())
                 .append(")");
         int no = executeUpdate(sb.toString());
@@ -281,10 +271,10 @@ public abstract class PO extends org.idempiere.orm.PO {
             parameters = new Object[]{treeType, this.getTableId()};
         } else {
             sourceTableName = MTree_BaseKt.getSourceTableName(treeType);
-            if (MTree_Base.TREETYPE_ElementValue.equals(treeType) && this instanceof I_C_ElementValue) {
+            if (MTree_Base.TREETYPE_ElementValue.equals(treeType) && this instanceof AccountingElementValue) {
                 whereTree = "TreeType=? AND AD_Tree_ID=?";
                 parameters =
-                        new Object[]{treeType, ((I_C_ElementValue) this).getElement().getTreeId()};
+                        new Object[]{treeType, ((AccountingElementValue) this).getElement().getTreeId()};
             } else {
                 whereTree = "TreeType=?";
                 parameters = new Object[]{treeType};
@@ -318,13 +308,13 @@ public abstract class PO extends org.idempiere.orm.PO {
 
         for (X_AD_Tree tree : trees) {
             if (tree.isTreeDrivenByValue()) {
-                int newParentID = -1;
-                if (I_C_ElementValue.Table_Name.equals(sourceTableName)) {
+                int newParentID;
+                if (AccountingElementValue.Table_Name.equals(sourceTableName)) {
                     newParentID =
                             retrieveIdOfElementValue(
                                     value,
                                     getClientId(),
-                                    ((I_C_ElementValue) this).getElement().getElementId()
+                                    ((AccountingElementValue) this).getElement().getElementId()
                             );
                 } else {
                     newParentID = retrieveIdOfParentValue(value, sourceTableName, getClientId());
@@ -438,7 +428,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                             .append(p_info.getTableName())
                             .append(" WHERE ")
                             .append(getWhereClause(true));
-            int no = 0;
+            int no;
             if (isUseTimeoutForUpdate()) no = executeUpdateEx(sql.toString());
             else no = executeUpdate(sql.toString());
             success = no == 1;
@@ -454,12 +444,6 @@ public abstract class PO extends org.idempiere.orm.PO {
         if (!success) {
             log.warning("Not deleted");
             throw new Error("Not deleted");
-        } else {
-            if (success) {
-
-            } else {
-                log.warning("Not deleted");
-            }
         }
 
         try {
@@ -476,13 +460,11 @@ public abstract class PO extends org.idempiere.orm.PO {
             throw new Error("not success");
         }
         //	Reset
-        if (success) {
-            // osgi event handler
+        // osgi event handler
 
-            m_idOld = 0;
-            clearNewValues();
-            CacheMgt.get().reset(p_info.getTableName());
-        }
+        m_idOld = 0;
+        clearNewValues();
+        CacheMgt.get().reset(p_info.getTableName());
         return success;
     } //	delete
 
@@ -502,7 +484,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param value
      */
     public final void set_ValueOfColumn(String columnName, Object value) {
-        set_ValueOfColumnReturningBoolean(columnName, value);
+        setValueOfColumnReturningBoolean(columnName, value);
     }
 
     /**
@@ -512,10 +494,10 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param value
      * @returns boolean indicating success or failure
      */
-    public final boolean set_ValueOfColumnReturningBoolean(String columnName, Object value) {
+    public final boolean setValueOfColumnReturningBoolean(String columnName, Object value) {
         POInfo p_info = super.getP_info();
         int AD_Column_ID = p_info.getColumnId(columnName);
-        if (AD_Column_ID > 0) return set_ValueOfColumnReturningBoolean(AD_Column_ID, value);
+        if (AD_Column_ID > 0) return setValueOfColumnReturningBoolean(AD_Column_ID, value);
         else return false;
     }
 
@@ -526,7 +508,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param value        value
      * @returns boolean indicating success or failure
      */
-    public final boolean set_ValueOfColumnReturningBoolean(int AD_Column_ID, Object value) {
+    public final boolean setValueOfColumnReturningBoolean(int AD_Column_ID, Object value) {
         POInfo p_info = super.getP_info();
         int index = p_info.getColumnIndex(AD_Column_ID);
         if (index < 0) throw new AdempiereUserError("Not found - AD_Column_ID=" + AD_Column_ID);

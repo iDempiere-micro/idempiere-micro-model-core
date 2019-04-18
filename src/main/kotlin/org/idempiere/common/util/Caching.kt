@@ -1,6 +1,6 @@
 package org.idempiere.common.util
 
-import org.idempiere.icommon.model.IPO
+import org.idempiere.icommon.model.PersistentObject
 import java.util.Enumeration
 import java.util.concurrent.ConcurrentHashMap
 
@@ -49,9 +49,9 @@ internal fun <T, R> ((T) -> R).memoClear() = (this as Memoize1).clear()
 internal fun <P1, P2, R> ((P1, P2) -> R).memoClear() = (this as Memoize2).clear()
 internal fun <P1, P2, P3, R> ((P1, P2, P3) -> R).memoClear() = (this as Memoize3).clear()
 
-fun <T : IPO> factory(initializer: (Int) -> T): (Int) -> T = initializer
-fun <T : IPO> factoryString(initializer: (String) -> T): (String) -> T = initializer
-fun <T : IPO> factory(allValues: List<T>, initializer: (Int) -> T): (Int) -> T {
+fun <T : PersistentObject> factory(initializer: (Int) -> T): (Int) -> T = initializer
+fun <T : PersistentObject> factoryString(initializer: (String) -> T): (String) -> T = initializer
+fun <T : PersistentObject> factory(allValues: List<T>, initializer: (Int) -> T): (Int) -> T {
     val newInitializer = getOrPutMemoizedInitializer(initializer)
     @Suppress("UNCHECKED_CAST")
     val memoize1: Memoize1<Int, T> = newInitializer as Memoize1<Int, T>
@@ -59,25 +59,25 @@ fun <T : IPO> factory(allValues: List<T>, initializer: (Int) -> T): (Int) -> T {
     return initializer
 }
 
-private val memoizedInitializers = ConcurrentHashMap<(Int) -> IPO, (Int) -> IPO>()
-private val memoizedInitializersString = ConcurrentHashMap<(String) -> IPO, (String) -> IPO>()
+private val memoizedInitializers = ConcurrentHashMap<(Int) -> PersistentObject, (Int) -> PersistentObject>()
+private val memoizedInitializersString = ConcurrentHashMap<(String) -> PersistentObject, (String) -> PersistentObject>()
 
-private fun <T : IPO> getOrPutMemoizedInitializer(initializer: (Int) -> T): (Int) -> IPO =
+private fun <T : PersistentObject> getOrPutMemoizedInitializer(initializer: (Int) -> T): (Int) -> PersistentObject =
     memoizedInitializers.getOrPut(initializer) { initializer.memoize() }
 
-infix fun <T : IPO> Int.loadUsing(initializer: (Int) -> T): T {
+infix fun <T : PersistentObject> Int.loadUsing(initializer: (Int) -> T): T {
     val memoizedInitializer = getOrPutMemoizedInitializer(initializer)
     @Suppress("UNCHECKED_CAST")
     return memoizedInitializer(this) as T
 }
 
-infix fun <T : IPO> String.loadUsing(initializer: (String) -> T): T {
+infix fun <T : PersistentObject> String.loadUsing(initializer: (String) -> T): T {
     val memoizedInitializer = memoizedInitializersString.getOrPut(initializer) { initializer.memoize() }
     @Suppress("UNCHECKED_CAST")
     return memoizedInitializer(this) as T
 }
 
-fun <T : IPO> getCachedOrLoadAll(id: Int, allValues: List<T>, initializer: (Int) -> T): T {
+fun <T : PersistentObject> getCachedOrLoadAll(id: Int, allValues: List<T>, initializer: (Int) -> T): T {
     val potentialMemoizedInitializer = memoizedInitializers[initializer]
     @Suppress("UNCHECKED_CAST")
     return if (potentialMemoizedInitializer != null)
@@ -90,7 +90,7 @@ fun <T : IPO> getCachedOrLoadAll(id: Int, allValues: List<T>, initializer: (Int)
     }
 }
 
-fun <T : IPO> ((Int) -> T).all(): List<T> {
+fun <T : PersistentObject> ((Int) -> T).all(): List<T> {
     @Suppress("UNCHECKED_CAST")
     val memoizedInitializer = getOrPutMemoizedInitializer(this) as Memoize1<Int, T>
     return memoizedInitializer.getAll().toList()

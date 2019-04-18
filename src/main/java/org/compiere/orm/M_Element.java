@@ -2,7 +2,7 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 import org.compiere.model.HasName;
-import org.compiere.model.I_AD_Element;
+import org.compiere.model.Element;
 import org.compiere.util.MsgKt;
 import org.idempiere.common.exceptions.DBException;
 
@@ -63,11 +63,11 @@ public class M_Element extends X_AD_Element {
      * @param columnName case insensitive column name
      * @return case sensitive column name
      */
-    public static M_Element get(String columnName) {
+    public static Element get(String columnName) {
         if (columnName == null || columnName.length() == 0) return null;
         //
         final String whereClause = "UPPER(ColumnName)=?";
-        return new Query(I_AD_Element.Table_Name, whereClause)
+        return new Query<Element>(Element.Table_Name, whereClause)
                 .setParameters(columnName.toUpperCase())
                 .firstOnly();
     } //	get
@@ -78,7 +78,7 @@ public class M_Element extends X_AD_Element {
     @Override
     protected boolean beforeSave(boolean newRecord) {
         // Column AD_Element.ColumnName should be unique - teo_sarca [ 1613107 ]
-        if (newRecord || isValueChanged(I_AD_Element.COLUMNNAME_ColumnName)) {
+        if (newRecord || isValueChanged(Element.COLUMNNAME_ColumnName)) {
             String columnName = getColumnName().trim();
             if (getColumnName().length() != columnName.length()) setColumnName(columnName);
 
@@ -89,7 +89,7 @@ public class M_Element extends X_AD_Element {
             if (no > 0) {
                 log.saveError(
                         DBException.SAVE_ERROR_NOT_UNIQUE_MSG,
-                        MsgKt.getElementTranslation(I_AD_Element.COLUMNNAME_ColumnName));
+                        MsgKt.getElementTranslation(Element.COLUMNNAME_ColumnName));
                 return false;
             }
         }

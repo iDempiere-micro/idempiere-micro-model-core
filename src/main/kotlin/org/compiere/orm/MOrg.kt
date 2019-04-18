@@ -1,7 +1,7 @@
 package org.compiere.orm
 
 import kotliquery.Row
-import org.compiere.model.I_AD_Org
+import org.compiere.model.ClientOrganization
 import org.idempiere.common.util.factory
 import org.idempiere.common.util.loadUsing
 import org.idempiere.common.util.memoize
@@ -22,12 +22,12 @@ fun getOrg(orgId: Int) = orgId loadUsing orgFactory
  * @param po persistent object
  * @return array of orgs
  */
-fun getClientOrganizations(po: PO): Array<MOrg> {
-    val list = Query(I_AD_Org.Table_Name, "AD_Client_ID=?")
-        .setOrderBy(I_AD_Org.COLUMNNAME_Value)
+fun getClientOrganizations(po: PO): Array<ClientOrganization> {
+    val list = Query<ClientOrganization>(ClientOrganization.Table_Name, "AD_Client_ID=?")
+        .setOrderBy(ClientOrganization.COLUMNNAME_Value)
         .setOnlyActiveRecords(true)
         .setParameters(po.clientId)
-        .list<MOrg>()
+        .list()
     return list.map { getOrg(it.id) }.toTypedArray()
 } // 	getOfClient
 
@@ -86,7 +86,7 @@ class MOrg : X_AD_Org {
      * @param orgName name
      */
     constructor(client: MClient, value: String, orgName: String) : this(0) {
-        setADClientID(client.clientId)
+        setClientId(client.clientId)
         searchKey = value
         name = orgName
     } // 	MOrg
@@ -111,7 +111,7 @@ class MOrg : X_AD_Org {
             // 	TreeNode
             insert_Tree(MTree_Base.TREETYPE_Organization)
         }
-        if (newRecord || isValueChanged(I_AD_Org.COLUMNNAME_Value))
+        if (newRecord || isValueChanged(ClientOrganization.COLUMNNAME_Value))
             update_Tree(MTree_Base.TREETYPE_Organization)
 
         return true

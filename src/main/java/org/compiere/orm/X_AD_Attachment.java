@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Attachment;
+import org.compiere.model.Attachment;
 
 /**
  * Generated Model for AD_Attachment
@@ -36,7 +36,7 @@ public class X_AD_Attachment extends PO {
      * @return 6 - System - Client
      */
     protected int getAccessLevel() {
-        return I_AD_Attachment.accessLevel.intValue();
+        return Attachment.accessLevel.intValue();
     }
 
     public String toString() {
@@ -49,7 +49,7 @@ public class X_AD_Attachment extends PO {
      * @return Attachment for the document
      */
     public int getAD_AttachmentId() {
-        Integer ii = (Integer) getValue(I_AD_Attachment.COLUMNNAME_AD_Attachment_ID);
+        Integer ii = (Integer) getValue(Attachment.COLUMNNAME_AD_Attachment_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -60,8 +60,8 @@ public class X_AD_Attachment extends PO {
      * @param AD_Table_ID Database Table information
      */
     public void setRowTableId(int AD_Table_ID) {
-        if (AD_Table_ID < 1) setValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, null);
-        else setValueNoCheck(I_AD_Attachment.COLUMNNAME_AD_Table_ID, AD_Table_ID);
+        if (AD_Table_ID < 1) setValueNoCheck(Attachment.COLUMNNAME_AD_Table_ID, null);
+        else setValueNoCheck(Attachment.COLUMNNAME_AD_Table_ID, AD_Table_ID);
     }
 
     /**
@@ -70,8 +70,8 @@ public class X_AD_Attachment extends PO {
      * @param Record_ID Direct internal record ID
      */
     public void setRecordId(int Record_ID) {
-        if (Record_ID < 0) setValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, null);
-        else setValueNoCheck(I_AD_Attachment.COLUMNNAME_Record_ID, Record_ID);
+        if (Record_ID < 0) setValueNoCheck(Attachment.COLUMNNAME_Record_ID, null);
+        else setValueNoCheck(Attachment.COLUMNNAME_Record_ID, Record_ID);
     }
 
     /**
@@ -80,7 +80,7 @@ public class X_AD_Attachment extends PO {
      * @param TextMsg Text Message
      */
     public void setTextMsg(String TextMsg) {
-        setValue(I_AD_Attachment.COLUMNNAME_TextMsg, TextMsg);
+        setValue(Attachment.COLUMNNAME_TextMsg, TextMsg);
     }
 
     /**
@@ -89,7 +89,7 @@ public class X_AD_Attachment extends PO {
      * @return Name this entity is referred to as
      */
     public String getTitle() {
-        return (String) getValue(I_AD_Attachment.COLUMNNAME_Title);
+        return (String) getValue(Attachment.COLUMNNAME_Title);
     }
 
     /**
@@ -98,12 +98,12 @@ public class X_AD_Attachment extends PO {
      * @param Title Name this entity is referred to as
      */
     public void setTitle(String Title) {
-        setValue(I_AD_Attachment.COLUMNNAME_Title, Title);
+        setValue(Attachment.COLUMNNAME_Title, Title);
     }
 
     @Override
     public int getTableId() {
-        return I_AD_Attachment.Table_ID;
+        return Attachment.Table_ID;
     }
 
     /**
@@ -112,7 +112,7 @@ public class X_AD_Attachment extends PO {
      * @param BinaryData Binary Data
      */
     public void setBinaryData(byte[] BinaryData) {
-        setValueNoCheck(I_AD_Attachment.COLUMNNAME_BinaryData, BinaryData);
+        setValueNoCheck(Attachment.COLUMNNAME_BinaryData, BinaryData);
     }
 
 

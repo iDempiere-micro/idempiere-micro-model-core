@@ -1,7 +1,7 @@
 package org.compiere.orm
 
 import kotliquery.Row
-import org.compiere.model.I_AD_Client.COLUMNNAME_Value
+import org.compiere.model.Client.COLUMNNAME_Value
 
 abstract class BasePONameValue : BasePOName {
     constructor(ID: Int) : super(ID)

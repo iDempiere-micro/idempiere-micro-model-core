@@ -1,6 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
+import org.compiere.model.ViewComponent;
 
 public class MViewColumn extends X_AD_ViewColumn {
 
@@ -12,7 +13,6 @@ public class MViewColumn extends X_AD_ViewColumn {
     /**
      * Standard constructor
      *
-     * @param ctx              context
      * @param AD_ViewColumn_ID view column
      */
     public MViewColumn(int AD_ViewColumn_ID) {
@@ -22,7 +22,6 @@ public class MViewColumn extends X_AD_ViewColumn {
     /**
      * Load constructor
      *
-     * @param ctx context
      */
     public MViewColumn(Row row) {
         super(row);
@@ -33,7 +32,7 @@ public class MViewColumn extends X_AD_ViewColumn {
      *
      * @param parent parent
      */
-    public MViewColumn(MViewComponent parent) {
+    public MViewColumn(ViewComponent parent) {
         this(0);
         setClientOrg(parent);
         setViewComponentId(parent.getViewComponentId());

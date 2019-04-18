@@ -2,58 +2,53 @@ package software.hsharp.core.orm
 
 import kotliquery.Row
 import kotliquery.queryOf
-import org.compiere.model.I_AD_Table
+import org.compiere.model.Column
+import org.compiere.model.Table
 import org.compiere.orm.DefaultModelFactory
-import org.compiere.orm.IModelFactory
-import org.idempiere.common.util.CCache
+import org.compiere.orm.ModelFactory
 import software.hsharp.core.util.DB
 import kotlin.collections.set
 import org.compiere.orm.MTable
 import org.compiere.orm.X_AD_Table
 import org.compiere.orm.MColumn
-import org.compiere.orm.GenericPO
-import org.idempiere.icommon.model.IPO
+import org.idempiere.common.exceptions.AdempiereException
+import org.idempiere.common.util.factory
+import org.idempiere.common.util.factoryString
+import org.idempiere.common.util.loadUsing
+import org.idempiere.icommon.model.PersistentObject
 import org.idempiere.orm.POInfo
+import software.hsharp.core.util.asResource
 
-internal val tableCache = CCache<Int, MTable>(I_AD_Table.Table_Name, 20)
+private fun doLoadTable(tableName: String): Table {
+    return "/sql/loadTableByName.sql".asResource { sql ->
+        val loadQuery = queryOf(sql, tableName.toUpperCase()).map { MTable(it) }.asSingle
+        DB.current.run(loadQuery) ?: throw AdempiereException("Table $tableName not found")
+    }
+}
+
+private val tableFactoryString = factoryString { doLoadTable(it) }
+private val tableFactory = factory { MTable(it) }
 
 /**
- * Get Table from Cache
- *
- * @param ctx context
- * @param tableName case insensitive table name
- * @return Table
+ * Get Table by Name
  */
-internal fun get(tableName: String?): MTable? {
-    if (tableName == null) return null
-    for (retValue in tableCache.values) {
-        if (tableName.equals(retValue.dbTableName, ignoreCase = true)) {
-            return retValue
-        }
-    }
-    //
-    val sql = "SELECT * FROM AD_Table WHERE UPPER(TableName)=?"
-    val loadQuery = queryOf(sql, tableName.toUpperCase()).map { MTable(it) }.asSingle
-    val retValue = DB.current.run(loadQuery)
+fun getTable(tableName: String) = tableName loadUsing tableFactoryString
+/**
+ * Get Table by Id
+ */
+fun getTable(id: Int) = id loadUsing tableFactory
 
-    if (retValue != null) {
-        val key = retValue.tableTableId
-        tableCache[key] = retValue
-    }
-    return retValue
-} // 	get
-
-internal fun getFactoryList(): Array<IModelFactory>? {
+internal fun getFactoryList(): Array<ModelFactory>? {
     return arrayOf(DefaultModelFactory())
 }
 
 private data class MBaseTableDetail(
-    val m_columns: Array<MColumn>,
+    val m_columns: List<MColumn>,
     val m_columnNameMap: MutableMap<String, Int>,
     val m_columnIdMap: MutableMap<Int, Int>
 )
 
-abstract class MBaseTable : X_AD_Table {
+abstract class MBaseTable : X_AD_Table, Table {
     constructor(AD_Table_ID: Int) : super(AD_Table_ID)
     constructor(row: Row?) : super(row)
 
@@ -67,23 +62,23 @@ abstract class MBaseTable : X_AD_Table {
             columnNameMap[column.columnName.toUpperCase()] = index
             columnIdMap[column.columnId] = index
         }
-        val columns = r.toTypedArray()
-        return MBaseTableDetail(columns, columnNameMap, columnIdMap)
+        return MBaseTableDetail(r, columnNameMap, columnIdMap)
     }
 
     private val detail: MBaseTableDetail = initDetail()
 
     /** Columns  */
-    protected val columns: Array<MColumn> = detail.m_columns
+    protected val columns: Array<MColumn> = detail.m_columns.toTypedArray()
     /** column name to index map *  */
     protected val columnNameMap: MutableMap<String, Int> = detail.m_columnNameMap
 
     @Synchronized
-    fun getColumns(requery: Boolean): Array<MColumn> {
-        if (columns.isNotEmpty() && !requery) return columns
-        return initDetail().m_columns
+    override fun getColumns(requery: Boolean): Array<Column> {
+        if (columns.isNotEmpty() && !requery) return columns.map { it as Column }.toTypedArray()
+        return initDetail().m_columns.toTypedArray()
     } // 	getColumns
 
+    /*
     fun getPO(row: Row): org.idempiere.orm.PO {
         val tableName = dbTableName
 
@@ -92,7 +87,6 @@ abstract class MBaseTable : X_AD_Table {
         if (factoryList != null) {
             for (factory in factoryList) {
                 po = factory.getPO(tableName, row)
-                if (po != null) break
             }
         }
 
@@ -101,20 +95,13 @@ abstract class MBaseTable : X_AD_Table {
         }
 
         return po
-    } // 	getPO
+    } // 	getPO*/
 
-    fun <T : IPO> getPO(row: Row): T? {
+    override fun <T : PersistentObject> getPO(row: Row): T? {
         val tableName = dbTableName
 
         val factoryList = getFactoryList()
         return factoryList?.map { it.getPO<T>(tableName, row) }?.first()
-    } // 	getPO
-
-    fun <T : IPO> getPO(id: Int): T? {
-        val tableName = dbTableName
-
-        val factoryList = getFactoryList()
-        return factoryList?.map { it.getPO<T>(tableName, id) }?.first()
     } // 	getPO
 
     /**
@@ -124,7 +111,7 @@ abstract class MBaseTable : X_AD_Table {
      * @param params
      * @return
      */
-    fun getPO(whereClause: String?, params: Array<Any?>?): org.idempiere.orm.PO? {
+    fun <T : PersistentObject> getPO(whereClause: String?, params: Array<Any?>?): T? {
         if (whereClause == null || whereClause.isEmpty()) return null
 
         val info = POInfo.getPOInfo(tableTableId) ?: return null
@@ -133,11 +120,10 @@ abstract class MBaseTable : X_AD_Table {
         val sql = sqlBuffer.toString()
 
         val sqlQuery =
-            @Suppress("UNCHECKED_CAST")
             (if (params == null) queryOf(sql) else software.hsharp.core.util.queryOf(
                 sql,
                 params.toList()
-            )).map { row -> getPO(row) }.asSingle
+            )).map { row -> getPO<T>(row) }.asSingle
         return DB.current.run(sqlQuery)
     }
 }

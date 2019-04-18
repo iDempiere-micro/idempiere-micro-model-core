@@ -1,6 +1,10 @@
 package software.hsharp.core.orm
 
 import kotliquery.Row
+import org.compiere.model.ColumnAccess
+import org.compiere.model.RecordAccess
+import org.compiere.model.TableAccess
+import org.compiere.model.OrganizationAccessSummary
 import org.compiere.orm.MColumnAccess
 import org.compiere.orm.MTableAccess
 import org.compiere.orm.X_AD_Role
@@ -17,9 +21,9 @@ import software.hsharp.core.util.queryOf
 import java.io.Serializable
 import java.util.logging.Level
 
-open class MBaseRole : X_AD_Role {
+abstract class MBaseRole : X_AD_Role {
     /** List of Table Access  */
-    private val tableAccesses: MutableList<MTableAccess> = mutableListOf()
+    private val tableAccesses: MutableList<TableAccess> = mutableListOf()
 
     constructor(Id: Int) : super(Id)
     constructor(row: Row) : super(row)
@@ -40,13 +44,13 @@ open class MBaseRole : X_AD_Role {
      * @param ad_Org_ID org
      * @param readonly r/o
      */
-        (ad_Client_ID: Int, ad_Org_ID: Int, readonly: Boolean) : Serializable {
+        (ad_Client_ID: Int, ad_Org_ID: Int, readonly: Boolean) : Serializable, OrganizationAccessSummary {
         /** Client  */
-        var clientId = 0
+        override var clientId = 0
         /** Organization  */
-        var orgId = 0
+        override var orgId = 0
         /** Read Only  */
-        var readOnly = true
+        override var readOnly = true
 
         init {
             this.clientId = ad_Client_ID
@@ -106,7 +110,7 @@ open class MBaseRole : X_AD_Role {
      * @param list list
      * @param oa org access
      */
-    protected fun loadOrgAccessAdd(list: ArrayList<MBaseRole.OrgAccess>, oa: MBaseRole.OrgAccess) {
+    protected fun loadOrgAccessAdd(list: MutableList<OrganizationAccessSummary>, oa: MBaseRole.OrgAccess) {
         if (list.contains(oa)) return
         list.add(oa)
         // 	Do we look for trees?
@@ -133,7 +137,7 @@ open class MBaseRole : X_AD_Role {
      *
      * @param list list
      */
-    protected fun loadOrgAccessRole(list: ArrayList<OrgAccess>) {
+    protected fun loadOrgAccessRole(list: MutableList<OrganizationAccessSummary>) {
         fun load(row: Row): Boolean {
             val oa = MRoleOrgAccess(row)
             loadOrgAccessAdd(list, OrgAccess(oa.clientId, oa.orgId, oa.isReadOnly))
@@ -150,7 +154,7 @@ open class MBaseRole : X_AD_Role {
      *
      * @param reload reload
      */
-    protected fun loadTableAccess(reload: Boolean): List<MTableAccess> {
+    override fun loadTableAccess(reload: Boolean): List<TableAccess> {
         if (tableAccesses.isNotEmpty() && !reload) return tableAccesses
         val sql = "SELECT * FROM AD_Table_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
         val loadQuery = queryOf(sql, listOf(roleId)).map { MTableAccess(it) }.asList
@@ -162,7 +166,7 @@ open class MBaseRole : X_AD_Role {
         return result
     } // 	loadTableAccess
 
-    protected fun setTableAccess(tableAccesses: List<MTableAccess>) {
+    protected fun setTableAccess(tableAccesses: List<TableAccess>) {
         this.tableAccesses.clear()
         this.tableAccesses.addAll(tableAccesses)
     }
@@ -214,9 +218,9 @@ open class MBaseRole : X_AD_Role {
     } // 	loadTableAccessLevel
 
     /** List of Column Access  MColumnAccess[] m_columnAccess */
-    private val m_columnAccess: MutableList<MColumnAccess> = mutableListOf()
+    private val m_columnAccess: MutableList<ColumnAccess> = mutableListOf()
 
-    protected fun setColumnAccess(columnAccesses: List<MColumnAccess>) {
+    protected fun setColumnAccess(columnAccesses: List<ColumnAccess>) {
         m_columnAccess.clear()
         m_columnAccess.addAll(columnAccesses)
     }
@@ -226,7 +230,7 @@ open class MBaseRole : X_AD_Role {
      *
      * @param reload reload
      */
-    protected fun loadColumnAccess(reload: Boolean): List<MColumnAccess> {
+    override fun loadColumnAccess(reload: Boolean): List<ColumnAccess> {
         if (m_columnAccess.isNotEmpty() && !reload) return m_columnAccess
         val sql = "SELECT * FROM AD_Column_Access " + "WHERE AD_Role_ID=? AND IsActive='Y'"
         val loadQuery = queryOf(sql, listOf(roleId)).map { MColumnAccess(it) }.asList
@@ -242,7 +246,7 @@ open class MBaseRole : X_AD_Role {
      *
      * @param list list
      */
-    protected fun loadOrgAccessUser(list: java.util.ArrayList<OrgAccess>) {
+    protected fun loadOrgAccessUser(list: MutableList<OrganizationAccessSummary>) {
         val sql = "SELECT * FROM AD_User_OrgAccess " + "WHERE AD_User_ID=? AND IsActive='Y'"
 
         fun load(row: Row): Int {
@@ -259,10 +263,10 @@ open class MBaseRole : X_AD_Role {
     /**
      * List of Record Access
      */
-    protected var recordAccess = mutableListOf<MRecordAccess>()
+    protected var recordAccess = mutableListOf<RecordAccess>()
 
-    protected fun getRecordAccessArray(): List<MRecordAccess> = recordAccess
-    protected fun setRecordAccessArray(value: List<MRecordAccess>) {
+    override fun getRecordAccessArray(): List<RecordAccess> = recordAccess
+    protected fun setRecordAccessArray(value: List<RecordAccess>) {
         recordAccess.clear()
         recordAccess.addAll(value)
     }
@@ -270,10 +274,10 @@ open class MBaseRole : X_AD_Role {
     /**
      * List of Dependent Record Access
      */
-    protected var recordDependentAccess = mutableListOf<MRecordAccess>()
+    protected var recordDependentAccess = mutableListOf<RecordAccess>()
 
-    protected fun getRecordDependentAccessArray(): List<MRecordAccess> = recordDependentAccess
-    protected fun setRecordDependentAccessArray(value: List<MRecordAccess>) {
+    override fun getRecordDependentAccessArray(): List<RecordAccess> = recordDependentAccess
+    protected fun setRecordDependentAccessArray(value: List<RecordAccess>) {
         recordDependentAccess.clear()
         recordDependentAccess.addAll(value)
     }

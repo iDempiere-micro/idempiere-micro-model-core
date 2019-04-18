@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_IndexColumn;
+import org.compiere.model.IndexColumn;
 
 /**
  * Generated Model for AD_IndexColumn
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_IndexColumn;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_IndexColumn extends PO implements I_AD_IndexColumn {
+public class X_AD_IndexColumn extends PO implements IndexColumn {
 
     /**
      *

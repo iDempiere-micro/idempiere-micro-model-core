@@ -2,7 +2,7 @@ package software.hsharp.core.orm
 
 import kotliquery.Row
 import kotliquery.queryOf
-import org.compiere.model.I_AD_Table
+import org.compiere.model.Table
 import org.compiere.util.DisplayType
 import org.idempiere.common.exceptions.AdempiereException
 import org.idempiere.common.util.Env
@@ -68,7 +68,7 @@ open class POInfo(val tableId: Int, baseLanguageOnly: Boolean) {
 
             Pair(
                 POInfoDetail(
-                    tableName, hasKeyColumn, accessLevel ?: I_AD_Table.ACCESSLEVEL_Organization,
+                    tableName, hasKeyColumn, accessLevel ?: Table.ACCESSLEVEL_Organization,
                     isChangeLog, mutableMapOf(), mutableMapOf()
                 ),
                 POInfoColumn(

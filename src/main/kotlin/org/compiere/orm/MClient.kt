@@ -1,8 +1,8 @@
 package org.compiere.orm
 
 import kotliquery.Row
-import org.compiere.model.I_AD_Client
-import org.compiere.model.I_AD_ClientInfo
+import org.compiere.model.Client
+import org.compiere.model.ClientInfo
 import org.idempiere.common.util.Env
 import org.idempiere.common.util.Language
 import org.idempiere.common.util.all
@@ -10,7 +10,7 @@ import org.idempiere.common.util.factory
 import org.idempiere.common.util.loadUsing
 import software.hsharp.core.util.Environment
 
-private fun loadAllClients(): List<I_AD_Client> = Query(I_AD_Client.Table_Name, null).list()
+private fun loadAllClients() = Query<Client>(Client.Table_Name, null).list()
 
 private val clientFactory = factory(loadAllClients()) { MClient(it) }
 
@@ -40,7 +40,7 @@ open class MClient : X_AD_Client {
      *
      * @return Client Info
      */
-    open val info: I_AD_ClientInfo?
+    open val info: ClientInfo?
         get() {
             if (m_info == null) m_info = getClientInfo(clientId)
             return m_info

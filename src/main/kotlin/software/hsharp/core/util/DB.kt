@@ -11,7 +11,7 @@ import org.compiere.dbPort.ConvertPostgreSQL
 import org.compiere.orm.PO
 import org.idempiere.common.exceptions.AdempiereException
 import org.idempiere.common.exceptions.DBException
-import org.idempiere.icommon.model.IPO
+import org.idempiere.icommon.model.PersistentObject
 import java.math.BigDecimal
 import java.sql.PreparedStatement
 import java.sql.SQLException
@@ -248,7 +248,7 @@ internal fun getNextID(name: String): Int {
  * @param timeout
  * @return true if lock is granted
  */
-fun forUpdate(po: IPO): Boolean {
+fun forUpdate(po: PersistentObject): Boolean {
     val keyColumns = po.keyColumns
     val sqlBuffer = StringBuilder(" SELECT ")
     sqlBuffer.append(keyColumns[0]).append(" FROM ").append(po.tableName).append(" WHERE ")

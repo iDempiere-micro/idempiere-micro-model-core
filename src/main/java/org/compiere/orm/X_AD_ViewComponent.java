@@ -2,7 +2,7 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 import org.compiere.model.HasName;
-import org.compiere.model.I_AD_ViewComponent;
+import org.compiere.model.ViewComponent;
 
 /**
  * Generated Model for AD_ViewComponent
@@ -10,7 +10,7 @@ import org.compiere.model.I_AD_ViewComponent;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent {
+public abstract class X_AD_ViewComponent extends PO implements ViewComponent {
 
     /**
      *
@@ -22,11 +22,6 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent {
      */
     public X_AD_ViewComponent(int AD_ViewComponent_ID) {
         super(AD_ViewComponent_ID);
-        /**
-         * if (AD_ViewComponent_ID == 0) { setColumnTableId (0); setViewComponentId (0); setEntityType
-         * (null); // @SQL=select get_sysconfig('DEFAULT_ENTITYTYPE','U',0,0) from dual setFromClause
-         * (null); setName (null); }
-         */
     }
 
     /**
@@ -46,8 +41,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_ViewComponent[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_ViewComponent[" + getId() + "]";
     }
 
     /**
@@ -57,7 +51,7 @@ public class X_AD_ViewComponent extends PO implements I_AD_ViewComponent {
      */
     public void setViewTableId(int AD_Table_ID) {
         if (AD_Table_ID < 1) setValueNoCheck(COLUMNNAME_AD_Table_ID, null);
-        else setValueNoCheck(COLUMNNAME_AD_Table_ID, Integer.valueOf(AD_Table_ID));
+        else setValueNoCheck(COLUMNNAME_AD_Table_ID, AD_Table_ID);
     }
 
     /**

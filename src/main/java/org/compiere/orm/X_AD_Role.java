@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Role;
+import org.compiere.model.Role;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 
@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Role extends BasePOName implements I_AD_Role {
+public abstract class X_AD_Role extends BasePOName implements Role {
 
     /**
      *
@@ -44,8 +44,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_Role[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_Role[" + getId() + "]";
     }
 
     /**
@@ -121,7 +120,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      *                            (If not defined 500)
      */
     public void setConfirmQueryRecords(int ConfirmQueryRecords) {
-        setValue(COLUMNNAME_ConfirmQueryRecords, Integer.valueOf(ConfirmQueryRecords));
+        setValue(COLUMNNAME_ConfirmQueryRecords, ConfirmQueryRecords);
     }
 
     /**
@@ -142,7 +141,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsAccessAdvanced Access Advanced
      */
     public void setIsAccessAdvanced(boolean IsAccessAdvanced) {
-        setValue(COLUMNNAME_IsAccessAdvanced, Boolean.valueOf(IsAccessAdvanced));
+        setValue(COLUMNNAME_IsAccessAdvanced, IsAccessAdvanced);
     }
 
     /**
@@ -153,7 +152,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
     public boolean isAccessAdvanced() {
         Object oo = getValue(COLUMNNAME_IsAccessAdvanced);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -165,7 +164,7 @@ public class X_AD_Role extends BasePOName implements I_AD_Role {
      * @param IsAccessAllOrgs Access all Organizations (no org access control) of the client
      */
     public void setIsAccessAllOrgs(boolean IsAccessAllOrgs) {
-        setValue(COLUMNNAME_IsAccessAllOrgs, Boolean.valueOf(IsAccessAllOrgs));
+        setValue(COLUMNNAME_IsAccessAllOrgs, IsAccessAllOrgs);
     }
 
     /**

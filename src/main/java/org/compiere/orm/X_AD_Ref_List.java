@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Ref_List;
+import org.compiere.model.ReferenceList;
 
 /**
  * Generated Model for AD_Ref_List
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Ref_List;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List {
+public class X_AD_Ref_List extends BasePONameValue implements ReferenceList {
 
     /**
      *
@@ -40,8 +40,7 @@ public class X_AD_Ref_List extends BasePONameValue implements I_AD_Ref_List {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_Ref_List[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_Ref_List[" + getId() + "]";
     }
 
     /**

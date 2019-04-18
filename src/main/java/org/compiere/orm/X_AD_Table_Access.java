@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Table_Access;
+import org.compiere.model.TableAccess;
 
 /**
  * Generated Model for AD_Table_Access
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Table_Access;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Table_Access extends PO implements I_AD_Table_Access {
+public class X_AD_Table_Access extends PO implements TableAccess {
 
     /**
      * Accessing = A

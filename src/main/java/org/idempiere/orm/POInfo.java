@@ -1,6 +1,6 @@
 package org.idempiere.orm;
 
-import org.compiere.model.I_AD_Table;
+import org.compiere.model.Table;
 import org.idempiere.common.util.CCache;
 
 import java.io.Serializable;
@@ -24,7 +24,7 @@ public class POInfo extends software.hsharp.core.orm.POInfo implements Serializa
      * Cache of POInfo
      */
     private static CCache<Integer, POInfo> s_cache =
-            new CCache<>(I_AD_Table.Table_Name, "POInfo", 200);
+            new CCache<>(Table.Table_Name, "POInfo", 200);
 
     /**
      * ************************************************************************ Create Persistent Info

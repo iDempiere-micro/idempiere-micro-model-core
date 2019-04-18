@@ -17,7 +17,6 @@ public class MTree_NodePR extends X_AD_TreeNodePR {
     /**
      * Load Constructor
      *
-     * @param ctx context
      */
     public MTree_NodePR(Row row) {
         super(row);

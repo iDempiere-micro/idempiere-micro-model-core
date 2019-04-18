@@ -6,7 +6,7 @@ import org.idempiere.common.util.factory
 import org.idempiere.common.util.getCachedOrLoadAll
 import org.idempiere.common.util.loadUsing
 import org.idempiere.common.util.memoize
-import org.idempiere.icommon.model.IPO
+import org.idempiere.icommon.model.PersistentObject
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -20,7 +20,7 @@ private class Test(
     override val orgId: Int = 0,
     override val tableId: Int = 0,
     override val clientId: Int = 0
-) : IPO {
+) : PersistentObject {
     override fun isActive(): Boolean {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }

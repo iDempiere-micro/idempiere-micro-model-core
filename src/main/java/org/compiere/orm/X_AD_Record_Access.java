@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Record_Access;
+import org.compiere.model.RecordAccess;
 
 /**
  * Generated Model for AD_Record_Access
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Record_Access;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Record_Access extends PO implements I_AD_Record_Access {
+public abstract class X_AD_Record_Access extends PO implements RecordAccess {
 
     /**
      *
@@ -40,8 +40,7 @@ public class X_AD_Record_Access extends PO implements I_AD_Record_Access {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_Record_Access[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_Record_Access[" + getId() + "]";
     }
 
     /**

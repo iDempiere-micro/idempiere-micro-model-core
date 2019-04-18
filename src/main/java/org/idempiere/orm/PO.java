@@ -14,7 +14,7 @@ import org.idempiere.common.util.Evaluatee;
 import org.idempiere.common.util.SecureEngine;
 import org.idempiere.common.util.Trace;
 import org.idempiere.common.util.ValueNamePair;
-import org.idempiere.icommon.model.IPO;
+import org.idempiere.icommon.model.PersistentObject;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -76,7 +76,7 @@ import static software.hsharp.core.util.DBKt.isQueryTimeoutSupported;
  * @version $Id: PO.java,v 1.12 2006/08/09 16:38:47 jjanke Exp $
  */
 public abstract class PO extends software.hsharp.core.orm.PO
-        implements Serializable, Comparator<Object>, Evaluatee, Cloneable, IPO {
+        implements Serializable, Comparator<Object>, Evaluatee, Cloneable, PersistentObject {
     /**
      * User Maintained Entity Type
      */

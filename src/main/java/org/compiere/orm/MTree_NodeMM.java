@@ -17,7 +17,6 @@ public class MTree_NodeMM extends X_AD_TreeNodeMM {
     /**
      * Load Constructor
      *
-     * @param ctx context
      */
     public MTree_NodeMM(Row row) {
         super(row);

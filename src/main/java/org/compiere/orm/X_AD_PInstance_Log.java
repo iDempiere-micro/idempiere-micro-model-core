@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_PInstance_Log;
+import org.compiere.model.ProcessInstanceLog;
 
 /**
  * Generated Model for AD_PInstance_Log
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_PInstance_Log;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log {
+public class X_AD_PInstance_Log extends PO implements ProcessInstanceLog {
 
     /**
      *
@@ -21,7 +21,6 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log {
      */
     public X_AD_PInstance_Log(int AD_PInstance_Log_ID) {
         super(AD_PInstance_Log_ID);
-        /** if (AD_PInstance_Log_ID == 0) { setAD_PInstance_ID (0); setLog_ID (0); } */
     }
 
     /**
@@ -41,8 +40,7 @@ public class X_AD_PInstance_Log extends PO implements I_AD_PInstance_Log {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_PInstance_Log[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_PInstance_Log[" + getId() + "]";
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_C_DocType;
+import org.compiere.model.DocumentType;
 
 /**
  * Generated Model for C_DocType
@@ -9,7 +9,7 @@ import org.compiere.model.I_C_DocType;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_C_DocType extends BasePOName implements I_C_DocType {
+public class X_C_DocType extends BasePOName implements DocumentType {
 
     /**
      * DocBaseType AD_Reference_ID=183

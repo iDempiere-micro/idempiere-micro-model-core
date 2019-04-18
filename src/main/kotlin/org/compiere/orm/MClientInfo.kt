@@ -54,7 +54,7 @@ open class MClientInfo : X_AD_ClientInfo {
         AD_Tree_Campaign_ID: Int,
         AD_Tree_Activity_ID: Int
     ) : super(0) {
-        setADClientID(client.clientId) // 	to make sure
+        setClientId(client.clientId) // 	to make sure
         setOrgId(0)
         setIsDiscountLineAmt(false)
         //

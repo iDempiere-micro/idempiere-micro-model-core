@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Tree;
+import org.compiere.model.Tree;
 
 /**
  * Generated Model for AD_Tree
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Tree;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Tree extends BasePOName implements I_AD_Tree {
+public class X_AD_Tree extends BasePOName implements Tree {
     /**
      *
      */

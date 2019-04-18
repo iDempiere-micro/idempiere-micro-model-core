@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Client;
+import org.compiere.model.Client;
 
 /**
  * Generated Model for AD_Client
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Client;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Client extends BasePONameValue implements I_AD_Client {
+public class X_AD_Client extends BasePONameValue implements Client {
     /**
      *
      */

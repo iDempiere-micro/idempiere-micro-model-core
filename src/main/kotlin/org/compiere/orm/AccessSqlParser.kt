@@ -1,5 +1,6 @@
 package org.compiere.orm
 
+import org.compiere.model.SqlTableInfo
 import org.idempiere.common.util.CLogger
 
 import java.util.ArrayList
@@ -45,7 +46,7 @@ class AccessSqlParser
     /**
      * List of Arrays
      */
-    private val m_tableInfo = ArrayList<Array<TableInfo>>()
+    private val m_tableInfo = ArrayList<Array<SqlTableInfo>>()
 
     /**
      * Get index of main Statements
@@ -108,8 +109,6 @@ class AccessSqlParser
         if (m_sqlOriginal == null || m_sqlOriginal!!.length == 0)
             throw IllegalArgumentException("No SQL")
         //
-        // 	if (CLogMgt.isLevelFinest())
-        // 		log.fine(m_sqlOriginal);
         getSelectStatements()
         // 	analyse each select
         for (s in m_sql!!) {
@@ -187,7 +186,7 @@ class AccessSqlParser
      * @param sql sql
      * @return array of table info for sql
      */
-    private fun getTableInfo(sql: String): Array<TableInfo> {
+    private fun getTableInfo(sql: String): Array<SqlTableInfo> {
         var localSql = sql
         val list = ArrayList<TableInfo>()
         // 	remove ()
@@ -231,21 +230,19 @@ class AccessSqlParser
                 index = from.indexOf(ON)
             }
 
-            // 			log.fine("getTableInfo - " + from);
             val tableST = StringTokenizer(from, ",")
             while (tableST.hasMoreTokens()) {
                 val tableString = tableST.nextToken().trim { it <= ' ' }
                 val synST = StringTokenizer(
                     tableString,
                     " \r\n\t"
-                ) // teo_sarca [ 1652623 ] AccessSqlParser.getTableInfo(String) -
+                )
                 // tablename parsing bug
                 val tableInfo: TableInfo
                 if (synST.countTokens() > 1)
                     tableInfo = TableInfo(synST.nextToken(), synST.nextToken())
                 else
                     tableInfo = TableInfo(tableString)
-                // 				log.fine("getTableInfo -- " + tableInfo);
                 list.add(tableInfo)
             }
             //
@@ -281,7 +278,7 @@ class AccessSqlParser
      * @param index record index
      * @return table info
      */
-    fun getTableInfo(index: Int): Array<TableInfo>? {
+    fun getTableInfo(index: Int): Array<SqlTableInfo>? {
         return if (index < 0 || index > m_tableInfo.size) null else m_tableInfo[index]
     } // 	getTableInfo
 
@@ -327,16 +324,16 @@ class AccessSqlParser
          * @return table name
          */
         // 	getTableName
-        val tableName: String,
+        override val tableName: String,
         private val m_synonym: String? = null
-    ) {
+    ): SqlTableInfo {
 
         /**
          * Get Table Synonym
          *
          * @return synonym
          */
-        val synonym: String
+        override val synonym: String
             get() = m_synonym ?: "" // 	getSynonym
 
         /**

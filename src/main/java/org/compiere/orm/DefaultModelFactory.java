@@ -15,7 +15,7 @@ import java.util.logging.Level;
  * @author Jorg Janke
  * @author hengsin
  */
-public class DefaultModelFactory extends DefaultBaseModelFactory implements IModelFactory {
+public class DefaultModelFactory extends DefaultBaseModelFactory implements ModelFactory {
 
     private static final CLogger s_log = CLogger.getCLogger(DefaultModelFactory.class);
 

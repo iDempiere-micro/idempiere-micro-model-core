@@ -15,9 +15,7 @@ public class MTableAccess extends X_AD_Table_Access {
     /**
      * Persistency Constructor
      *
-     * @param ctx     context
      * @param ignored ignored
-     * @param trxName transaction
      */
     public MTableAccess(int ignored) {
         super(0);
@@ -27,7 +25,6 @@ public class MTableAccess extends X_AD_Table_Access {
     /**
      * Load Constructor
      *
-     * @param ctx context
      */
     public MTableAccess(Row row) {
         super(row);

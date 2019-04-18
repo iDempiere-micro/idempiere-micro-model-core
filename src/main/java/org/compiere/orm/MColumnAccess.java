@@ -13,14 +13,6 @@ public class MColumnAccess extends X_AD_Column_Access {
      *
      */
     private static final long serialVersionUID = -2362624234744824977L;
-    /**
-     * TableName
-     */
-    private String m_tableName;
-    /**
-     * ColumnName
-     */
-    private String m_columnName;
 
     /**
      * Persistency Constructor

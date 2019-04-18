@@ -1,7 +1,13 @@
 package org.compiere.orm
 
 import kotliquery.Row
-import org.compiere.model.I_AD_Role
+import org.compiere.model.ColumnAccess
+import org.compiere.model.RecordAccess
+import org.compiere.model.Role
+import org.compiere.model.RoleIncluded
+import org.compiere.model.Table.ACCESSLEVEL_Organization
+import org.compiere.model.TableAccess
+import org.compiere.model.OrganizationAccessSummary
 import org.compiere.util.SystemIDs.USER_SUPERUSER
 import org.compiere.util.getElementTranslation
 import org.idempiere.common.exceptions.AdempiereException
@@ -9,8 +15,8 @@ import org.idempiere.common.util.Env
 import org.idempiere.common.util.Trace
 import org.idempiere.common.util.memoClear
 import org.idempiere.common.util.memoize
-import org.idempiere.icommon.model.IPO
 import software.hsharp.core.orm.MBaseRole
+import software.hsharp.core.orm.getTable
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.Environment
 import software.hsharp.core.util.executeUpdateEx
@@ -20,7 +26,6 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
 import java.util.ArrayList
-import java.util.Collections
 import java.util.HashMap
 import java.util.HashSet
 import java.util.logging.Level
@@ -119,10 +124,22 @@ fun getFilteredRoles(whereClause: String?): List<MRole> {
  * Users
  */
 class MRole : MBaseRole {
+    override fun getOrgAccess(): List<OrganizationAccessSummary> {
+        return m_orgAccess
+    }
+
+    override fun getIncludedSeqNo(): Int {
+        return m_includedSeqNo
+    }
+
+    override fun setIncludedSeqNo(seqNo: Int) {
+        m_includedSeqNo = seqNo
+    }
+
     /**
      * Positive List of Organizational Access
      */
-    private var m_orgAccess: List<MBaseRole.OrgAccess>? = null
+    private var m_orgAccess =  mutableListOf<OrganizationAccessSummary>()
     /**
      * Window Access
      */
@@ -150,11 +167,11 @@ class MRole : MBaseRole {
     /**
      * List of included roles. Do not access directly
      */
-    private var m_includedRoles: MutableList<MRole>? = null
+    private val m_includedRoles: MutableList<Role> = mutableListOf()
     /**
      * Parent Role
      */
-    private var m_parent: MRole? = null
+    private var m_parent: Role? = null
 
     private var m_includedSeqNo = -1
 
@@ -467,7 +484,7 @@ class MRole : MBaseRole {
      *
      * @param reload re-load from disk
      */
-    fun loadAccess(reload: Boolean) {
+    override fun loadAccess(reload: Boolean) {
         loadOrgAccess(reload)
         loadTableAccess(reload)
         loadTableInfo(reload)
@@ -489,9 +506,9 @@ class MRole : MBaseRole {
      * @param reload reload
      */
     private fun loadOrgAccess(reload: Boolean) {
-        if (!(reload || m_orgAccess == null)) return
+        if (!(reload)) return
         //
-        val list = ArrayList<MBaseRole.OrgAccess>()
+        val list = ArrayList<OrganizationAccessSummary>()
 
         if (isUseUserOrgAccess)
             loadOrgAccessUser(list)
@@ -500,7 +517,7 @@ class MRole : MBaseRole {
 
         m_orgAccess = list
         if (log.isLoggable(Level.FINE))
-            log.fine("#" + m_orgAccess!!.size + if (reload) " - reload" else "")
+            log.fine("#" + m_orgAccess.size + if (reload) " - reload" else "")
     } // 	loadOrgAccess
 
     /**
@@ -537,7 +554,7 @@ class MRole : MBaseRole {
         val set = HashSet<String>()
         if (!rw) set.add("0")
         // 	Positive List
-        for (mOrgAccess in m_orgAccess!!) set.add(mOrgAccess.clientId.toString())
+        for (mOrgAccess in m_orgAccess) set.add(mOrgAccess.clientId.toString())
         //
         val sb = StringBuilder()
         val it = set.iterator()
@@ -580,7 +597,7 @@ class MRole : MBaseRole {
         //
         loadOrgAccess(false)
         // 	Positive List
-        for (mOrgAccess in m_orgAccess!!) {
+        for (mOrgAccess in m_orgAccess) {
             if (mOrgAccess.clientId == AD_Client_ID) {
                 if (!rw) return true
                 if (!mOrgAccess.readOnly)
@@ -604,7 +621,7 @@ class MRole : MBaseRole {
         val set = HashSet<String>()
         if (!rw) set.add("0")
         // 	Positive List
-        for (mOrgAccess in m_orgAccess!!) {
+        for (mOrgAccess in m_orgAccess) {
             if (!rw)
                 set.add(mOrgAccess.orgId.toString())
             else if (!mOrgAccess.readOnly)
@@ -738,7 +755,7 @@ class MRole : MBaseRole {
             return true
         if (userLevel[1] == 'C' && (roleAccessLevel == X_AD_Table.ACCESSLEVEL_ClientOnly || roleAccessLevel == X_AD_Table.ACCESSLEVEL_SystemPlusClient))
             return true
-        if (userLevel[2] == 'O' && (roleAccessLevel == X_AD_Table.ACCESSLEVEL_Organization || roleAccessLevel == X_AD_Table.ACCESSLEVEL_ClientPlusOrganization))
+        if (userLevel[2] == 'O' && (roleAccessLevel == ACCESSLEVEL_Organization || roleAccessLevel == X_AD_Table.ACCESSLEVEL_ClientPlusOrganization))
             return true
         if (log.isLoggable(Level.FINE))
             log.fine(
@@ -1211,15 +1228,15 @@ class MRole : MBaseRole {
         val excludes = ArrayList<Int>()
         val m_recordDependentAccess = recordDependentAccess
         for (i in m_recordDependentAccess.indices) {
-            val columnName = m_recordDependentAccess[i].getKeyColumnName(asp.getTableInfo(asp.mainSqlIndex)) ?: continue
+            val columnName = m_recordDependentAccess[i].getKeyColumnName(asp.getTableInfo(asp.mainSqlIndex) ?: continue ) ?: continue
 // 	no key column
 
             if (mainSql!!.toUpperCase().startsWith("SELECT COUNT(*) FROM ")) {
                 // globalqss - Carlos Ruiz - [ 1965744 ] Dependent entities access problem
                 // this is the count select, it doesn't have the column but needs to be filtered
-                val table = MTable.get(tableName) ?: continue
+                val table = getTable(tableName)
                 val column = table.getColumn(columnName)
-                if (column == null || column.isVirtualColumn || !column.isActive) continue
+                if (column == null || column.isVirtualColumn || !column.isActive()) continue
             } else {
                 val posColumn = mainSql.indexOf(columnName)
                 if (posColumn == -1) continue
@@ -1401,14 +1418,11 @@ class MRole : MBaseRole {
      * @param seqNo
      * @see metas-2009_0021_AP1_G94
      */
-    private fun includeRole(role: MRole, seqNo: Int) {
+    private fun includeRole(role: Role, seqNo: Int) {
         if (this.roleId == role.roleId) {
             return
         }
-        if (this.m_includedRoles == null) {
-            m_includedRoles = ArrayList()
-        }
-        for (r in this.m_includedRoles!!) {
+        for (r in this.m_includedRoles) {
             if (r.roleId == role.roleId) {
                 return
             }
@@ -1417,9 +1431,9 @@ class MRole : MBaseRole {
         if (s_log.isLoggable(Level.INFO)) s_log.info("Include $role")
 
         if (role.isActive()) {
-            this.m_includedRoles!!.add(role)
+            this.m_includedRoles.add(role)
             role.setParentRole(this)
-            role.m_includedSeqNo = seqNo
+            role.setIncludedSeqNo(seqNo)
         }
     }
 
@@ -1427,18 +1441,14 @@ class MRole : MBaseRole {
      * @return unmodifiable list of included roles
      * @see metas-2009_0021_AP1_G94
      */
-    fun getIncludedRoles(recursive: Boolean): List<MRole> {
+    override fun getIncludedRoles(recursive: Boolean): List<Role> {
         if (!recursive) {
-            var list = this.m_includedRoles
-            if (list == null) list = ArrayList()
-            return Collections.unmodifiableList(list)
+            return this.m_includedRoles.toList()
         } else {
-            val list = ArrayList<MRole>()
-            if (m_includedRoles != null) {
-                for (role in m_includedRoles!!) {
-                    list.add(role)
-                    list.addAll(role.getIncludedRoles(true))
-                }
+            val list = ArrayList<Role>()
+            for (role in m_includedRoles) {
+                list.add(role)
+                list.addAll(role.getIncludedRoles(true))
             }
             return list
         }
@@ -1459,45 +1469,46 @@ class MRole : MBaseRole {
         }
     }
 
-    private fun mergeAccesses(reload: Boolean) {
-        var orgAccess = listOf<MBaseRole.OrgAccess>()
-        var tableAccess = listOf<MTableAccess>()
-        var columnAccess = listOf<MColumnAccess>()
-        var recordAccess = listOf<MRecordAccess>()
-        var recordDependentAccess = listOf<MRecordAccess>()
+    override fun mergeAccesses(reload: Boolean) {
+        var orgAccess = listOf<OrganizationAccessSummary>()
+        var tableAccess = listOf<TableAccess>()
+        var columnAccess = listOf<ColumnAccess>()
+        var recordAccess = listOf<RecordAccess>()
+        var recordDependentAccess = listOf<RecordAccess>()
         //
-        var last_role: MRole? = null
+        var last_role: Role? = null
         for (role in getIncludedRoles(false)) {
             var override = false
             //
             // If roles have same SeqNo, then, the second role will override permissions from first role
             if (last_role != null &&
-                last_role.m_includedSeqNo >= 0 &&
-                role.m_includedSeqNo >= 0 &&
-                last_role.m_includedSeqNo == role.m_includedSeqNo
+                last_role.includedSeqNo >= 0 &&
+                role.includedSeqNo >= 0 &&
+                last_role.includedSeqNo == role.includedSeqNo
             ) {
                 override = true
             }
             //
             role.loadAccess(reload)
             role.mergeAccesses(reload)
-            orgAccess = mergeAccess<OrgAccess>(orgAccess, role.m_orgAccess, override)
-            tableAccess = mergeAccess<MTableAccess>(tableAccess, role.loadTableAccess(false), override)
-            columnAccess = mergeAccess<MColumnAccess>(columnAccess, role.loadColumnAccess(false), override)
-            recordAccess = mergeAccess<MRecordAccess>(recordAccess, role.getRecordAccessArray(), override)
+            orgAccess = mergeAccess<OrganizationAccessSummary>(orgAccess, role.orgAccess, override)
+            tableAccess = mergeAccess<TableAccess>(tableAccess, role.loadTableAccess(false), override)
+            columnAccess = mergeAccess<ColumnAccess>(columnAccess, role.loadColumnAccess(false), override)
+            recordAccess = mergeAccess<RecordAccess>(recordAccess, role.getRecordAccessArray(), override)
             recordDependentAccess =
-                mergeAccess<MRecordAccess>(recordDependentAccess, role.getRecordDependentAccessArray(), override)
+                mergeAccess<RecordAccess>(recordDependentAccess, role.getRecordDependentAccessArray(), override)
             //
             last_role = role
         }
         //
         // Merge permissions inside this role
-        this.m_orgAccess = mergeAccess<OrgAccess>(this.m_orgAccess, orgAccess, false)
-        this.setTableAccess(mergeAccess<MTableAccess>(this.loadTableAccess(false), tableAccess, false))
-        this.setColumnAccess(mergeAccess<MColumnAccess>(this.loadColumnAccess(false), columnAccess, false))
-        this.setRecordAccessArray(mergeAccess<MRecordAccess>(this.getRecordAccessArray(), recordAccess, false))
+        this.m_orgAccess.clear()
+        this.m_orgAccess.addAll( mergeAccess<OrganizationAccessSummary>(this.m_orgAccess, orgAccess, false) )
+        this.setTableAccess(mergeAccess<TableAccess>(this.loadTableAccess(false), tableAccess, false))
+        this.setColumnAccess(mergeAccess<ColumnAccess>(this.loadColumnAccess(false), columnAccess, false))
+        this.recordAccessArray = mergeAccess<RecordAccess>(this.recordAccessArray, recordAccess, false)
         this.setRecordDependentAccessArray(
-            mergeAccess<MRecordAccess>(this.getRecordDependentAccessArray(), recordDependentAccess, false)
+            mergeAccess<RecordAccess>(this.getRecordDependentAccessArray(), recordDependentAccess, false)
         )
     }
 
@@ -1507,7 +1518,7 @@ class MRole : MBaseRole {
      * @see metas-2009_0021_AP1_G94
      */
     private fun loadChildRoles() {
-        m_includedRoles = null // reset included roles
+        m_includedRoles.clear() // reset included roles
         val AD_User_ID = userId
         if (AD_User_ID < 0) {
             // throw new IllegalStateException("AD_User_ID is not set");
@@ -1515,7 +1526,7 @@ class MRole : MBaseRole {
         }
         //
         val whereClause = X_AD_Role_Included.COLUMNNAME_AD_Role_ID + "=?"
-        val list = Query(X_AD_Role_Included.Table_Name, whereClause)
+        val list = Query<RoleIncluded>(X_AD_Role_Included.Table_Name, whereClause)
             .setParameters(roleId)
             .setOnlyActiveRecords(true)
             .setOrderBy(
@@ -1523,7 +1534,7 @@ class MRole : MBaseRole {
                         "," +
                         X_AD_Role_Included.COLUMNNAME_Included_Role_ID
             )
-            .list<X_AD_Role_Included>()
+            .list()
         for (includedRole in list) {
             val role = getRole(includedRole.includedRoleId)
             includeRole(role, includedRole.seqNo)
@@ -1555,11 +1566,11 @@ class MRole : MBaseRole {
                 " AND (us.ValidTo IS NULL OR us.ValidTo >= SYSDATE)" +
                 " AND us.Substitute_ID=?)")
 
-        val list = Query(I_AD_Role.Table_Name, whereClause)
+        val list = Query<Role>(Role.Table_Name, whereClause)
             .setParameters(AD_User_ID)
             .setClientId()
-            .setOrderBy(I_AD_Role.COLUMNNAME_AD_Role_ID)
-            .list<MRole>()
+            .setOrderBy(Role.COLUMNNAME_AD_Role_ID)
+            .list()
         for (role in list) {
             includeRole(role, -1)
         }
@@ -1571,22 +1582,22 @@ class MRole : MBaseRole {
      * @param parent
      * @see metas-2009_0021_AP1_G94
      */
-    private fun setParentRole(parent: MRole) {
-        this.userId = parent.userId
+    override fun setParentRole(parent: Role) {
+        if (parent is MRole) this.userId = parent.userId
         this.m_parent = parent
     }
 
     private fun mergeIncludedAccess(varname: String) {
         var includedAccess = HashMap<Int, Boolean>()
-        var last_role: MRole? = null
+        var last_role: Role? = null
         for (role in getIncludedRoles(false)) {
             var override = false
             //
             // If roles have same SeqNo, then, the second role will override permissions from first role
             if (last_role != null &&
-                last_role.m_includedSeqNo >= 0 &&
-                role.m_includedSeqNo >= 0 &&
-                last_role.m_includedSeqNo == role.m_includedSeqNo
+                last_role.includedSeqNo >= 0 &&
+                role.includedSeqNo >= 0 &&
+                last_role.includedSeqNo == role.includedSeqNo
             ) {
                 override = true
             }
@@ -1596,7 +1607,7 @@ class MRole : MBaseRole {
         setAccessMap(varname, mergeAccess(getAccessMap(varname), includedAccess, false))
     }
 
-    private fun getAccessMap(varname: String): HashMap<Int, Boolean>? {
+    override fun getAccessMap(varname: String): HashMap<Int, Boolean>? {
         if ("m_windowAccess" == varname) {
             getWindowAccess(-1)
             return m_windowAccess
@@ -1673,10 +1684,6 @@ class MRole : MBaseRole {
         return m_infoAccess!![AD_InfoWindow_ID]
     }
 
-    public override fun setClientOrg(a: IPO) {
-        super.setClientOrg(a)
-    }
-
     companion object {
         /**
          * Access SQL Read Only
@@ -1739,9 +1746,9 @@ class MRole : MBaseRole {
             for (o2 in array2!!) {
                 var found = false
                 for (o1 in array1!!) {
-                    if (o1 is MBaseRole.OrgAccess) {
-                        val oa1 = o1 as MBaseRole.OrgAccess
-                        val oa2 = o2 as MBaseRole.OrgAccess
+                    if (o1 is OrgAccess) {
+                        val oa1 = o1 as OrgAccess
+                        val oa2 = o2 as OrgAccess
                         found = oa1 == oa2
                         if (found && override) {
                             // stronger permissions first

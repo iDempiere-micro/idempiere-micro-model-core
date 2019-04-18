@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_SysConfig;
+import org.compiere.model.SystemConfig;
 
 /**
  * Generated Model for AD_SysConfig
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_SysConfig;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_SysConfig extends BasePONameValue implements I_AD_SysConfig {
+public class X_AD_SysConfig extends BasePONameValue implements SystemConfig {
 
     /**
      * System = S

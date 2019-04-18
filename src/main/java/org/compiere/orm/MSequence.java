@@ -1,20 +1,23 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Sequence;
+import org.compiere.model.Column;
+import org.compiere.model.Sequence;
+import org.compiere.model.System;
+import org.compiere.model.Table;
 import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.util.CLogMgt;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Util;
-import org.idempiere.icommon.model.IPO;
+import org.idempiere.icommon.model.PersistentObject;
 import software.hsharp.core.orm.MBaseSequence;
+import software.hsharp.core.orm.MBaseTableKt;
 
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
 import java.util.logging.Level;
 
 import static org.compiere.orm.MSystemKt.getSystem;
@@ -33,7 +36,7 @@ import static software.hsharp.core.util.DBKt.getSQLValueString;
  * @see org.compiere.process.SequenceCheck
  */
 public class MSequence extends MBaseSequence {
-    /**
+    /**getNextIDImpl
      * Start Number
      */
     public static final int INIT_NO = 1000000; // 	1M
@@ -56,22 +59,15 @@ public class MSequence extends MBaseSequence {
      * Static Logger
      */
     private static CLogger s_log = CLogger.getCLogger(MSequence.class);
-    /**
-     * Test
-     */
-    private static Vector<Integer> s_list = null;
 
     /**
      * ************************************************************************ Standard Constructor
      *
-     * @param ctx            context
      * @param AD_Sequence_ID id
      */
     public MSequence(int AD_Sequence_ID) {
         super(AD_Sequence_ID);
         if (AD_Sequence_ID == 0) {
-            //	setName (null);
-            //
             setIsTableID(false);
             setStartNo(INIT_NO);
             setCurrentNext(INIT_NO);
@@ -93,7 +89,6 @@ public class MSequence extends MBaseSequence {
     /**
      * New Document Sequence Constructor
      *
-     * @param ctx          context
      * @param AD_Client_ID owner
      * @param tableName    name
      */
@@ -107,7 +102,6 @@ public class MSequence extends MBaseSequence {
     /**
      * New Document Sequence Constructor
      *
-     * @param ctx          context
      * @param AD_Client_ID owner
      * @param sequenceName name
      * @param StartNo      start
@@ -150,20 +144,19 @@ public class MSequence extends MBaseSequence {
         }
 
         return MSequence.getNextIDImpl(
-                AD_Client_ID, TableName); // it is ok to call deprecated method here
+                TableName); // it is ok to call deprecated method here
     } //	getNextID
 
     /**
      * Get next number for Key column = 0 is Error.
      *
-     * @param AD_Client_ID client
      * @param TableName    table name
      * @return next no or (-1=not found, -2=error)
      * <p>WARNING!! This method doesn't take into account the native sequence setting, it's just
      * to be called fromgetNextID()
      * @deprecated please usegetNextID (int, String, String)
      */
-    private static int getNextIDImpl(int AD_Client_ID, String TableName) {
+    private static int getNextIDImpl(String TableName) {
         return doGetNextIDImpl(TableName);
     } //	getNextID
 
@@ -195,11 +188,10 @@ public class MSequence extends MBaseSequence {
      *
      * @param expression
      * @param po
-     * @param trxName
      * @return String
      */
     public static String parseVariable(
-            String expression, IPO po, String trxName, boolean keepUnparseable) {
+            String expression, PersistentObject po, boolean keepUnparseable) {
         if (expression == null || expression.length() == 0) return "";
 
         String token;
@@ -242,7 +234,7 @@ public class MSequence extends MBaseSequence {
                 if (po.getColumnIndex(token) >= 0) {
                     Object v = po.getValue(token);
                     // MColumn.get
-                    MColumn colToken = MColumnKt.getColumn(po.getTableName(), token);
+                    Column colToken = MColumnKt.getColumn(po.getTableName(), token);
                     String foreignTable = colToken.getReferenceTableName();
                     if (v != null) {
                         if (format != null && format.length() > 0) {
@@ -251,10 +243,10 @@ public class MSequence extends MBaseSequence {
                                 String tableName = null;
                                 if (tblIndex > 0) tableName = format.substring(0, tblIndex);
                                 else tableName = foreignTable;
-                                MTable table = MTable.get(tableName);
+                                Table table = MBaseTableKt.getTable(tableName);
                                 if (table != null && tableName.equalsIgnoreCase(foreignTable)) {
                                     String columnName = tblIndex > 0 ? format.substring(tblIndex + 1) : format;
-                                    MColumn column = table.getColumn(columnName);
+                                    Column column = table.getColumn(columnName);
                                     if (column != null) {
                                         if (column.isSecure()) {
                                             outStr.append("********");
@@ -450,7 +442,7 @@ public class MSequence extends MBaseSequence {
                                 + "_ID'");
         if (AD_Column_ID <= 0) return null;
         //
-        MSystem system = getSystem();
+        System system = getSystem();
         int IDRangeEnd = 0;
         if (system.getIDRangeEnd() != null) IDRangeEnd = system.getIDRangeEnd().intValue();
 
@@ -527,33 +519,7 @@ public class MSequence extends MBaseSequence {
 
     @Override
     public String getOrgColumn() {
-        if (super.getOrgColumn() == null) return I_AD_Sequence.COLUMNNAME_AD_Org_ID;
+        if (super.getOrgColumn() == null) return Sequence.COLUMNNAME_AD_Org_ID;
         else return super.getOrgColumn();
     }
-
-    /**
-     * Test Sequence - Get IDs
-     *
-     * @author Jorg Janke
-     * @version $Id: MSequence.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
-     */
-    public static class GetIDs implements Runnable {
-        @SuppressWarnings("unused")
-        private int m_i;
-
-        /**
-         * Run
-         */
-        public void run() {
-            for (int i = 0; i < 100; i++) {
-                try {
-                    int no = MSequence.getNextID(0, "Test");
-                    s_list.add(no);
-                    //	System.out.println("#" + m_i + ": " + no);
-                } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                }
-            }
-        }
-    } //	GetIDs
 } //	MSequence

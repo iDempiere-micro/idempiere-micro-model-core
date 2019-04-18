@@ -2,7 +2,7 @@ package org.compiere.orm
 
 import kotliquery.Row
 import org.compiere.model.HasName
-import org.compiere.model.I_C_DocType
+import org.compiere.model.DocumentType
 import org.idempiere.common.util.Env
 import org.idempiere.common.util.factory
 import org.idempiere.common.util.loadUsing
@@ -35,13 +35,13 @@ fun getDocumentTypeDocType(DocBaseType: String): Int {
  * @param DocBaseType base document type
  * @return array of doc types
  */
-fun getDocumentTypeOfDocBaseType(DocBaseType: String): Array<MDocType> {
+fun getDocumentTypeOfDocBaseType(DocBaseType: String): Array<DocumentType> {
     val whereClause = "AD_Client_ID=? AND DocBaseType=?"
-    val list = Query(I_C_DocType.Table_Name, whereClause)
+    val list = Query<DocumentType>(DocumentType.Table_Name, whereClause)
         .setParameters(Env.getClientId(), DocBaseType)
         .setOnlyActiveRecords(true)
         .setOrderBy("IsDefault DESC, C_DocType_ID")
-        .list<MDocType>()
+        .list()
     return list.toTypedArray()
 } // 	getOfDocBaseType
 
@@ -50,12 +50,12 @@ fun getDocumentTypeOfDocBaseType(DocBaseType: String): Array<MDocType> {
  *
  * @return array of doc types
  */
-val getClientDocumentTypes: Array<MDocType>
+val getClientDocumentTypes: Array<DocumentType>
     get() {
-        val list = Query(I_C_DocType.Table_Name, null)
+        val list = Query<DocumentType>(DocumentType.Table_Name, null)
             .setClientId()
             .setOnlyActiveRecords(true)
-            .list<MDocType>()
+            .list()
         return list.toTypedArray()
     } // 	getOfClient
 
@@ -182,7 +182,7 @@ class MDocType : X_C_DocType {
      */
     fun getPrintName(AD_Language: String?): String {
         return if (AD_Language == null || AD_Language.length == 0) super.getPrintName() else get_Translation(
-            I_C_DocType.COLUMNNAME_PrintName,
+            DocumentType.COLUMNNAME_PrintName,
             AD_Language
         )
     } // 	getPrintName

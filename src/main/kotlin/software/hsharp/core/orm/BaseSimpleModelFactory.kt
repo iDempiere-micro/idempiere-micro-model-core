@@ -1,13 +1,13 @@
 package software.hsharp.core.orm
 
 import kotliquery.Row
-import org.compiere.orm.IModelFactory
+import org.compiere.orm.ModelFactory
 import org.idempiere.common.util.AdempiereSystemError
-import org.idempiere.icommon.model.IPO
+import org.idempiere.icommon.model.PersistentObject
 
-class BaseSimpleModelFactory : IModelFactory {
+class BaseSimpleModelFactory : ModelFactory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : IPO> getPO(tableName: String, recordId: Int): T {
+    override fun <T : PersistentObject> getPO(tableName: String, recordId: Int): T {
         return when (tableName) {
             "AD_Private_Access" -> org.compiere.orm.MPrivateAccess(recordId) as T
             "AD_User_OrgAccess" -> org.compiere.orm.MUserOrgAccess(recordId) as T
@@ -44,7 +44,7 @@ class BaseSimpleModelFactory : IModelFactory {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : IPO> getPO(tableName: String, row: Row): T {
+    override fun <T : PersistentObject> getPO(tableName: String, row: Row): T {
         return when (tableName) {
             "AD_Private_Access" -> org.compiere.orm.MPrivateAccess(row) as T
             "AD_User_OrgAccess" -> org.compiere.orm.MUserOrgAccess(row) as T

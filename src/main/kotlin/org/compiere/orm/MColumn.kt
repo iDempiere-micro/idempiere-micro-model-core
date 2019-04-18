@@ -1,8 +1,8 @@
 package org.compiere.orm
 
 import kotliquery.Row
-import org.compiere.model.I_AD_Column
-import org.compiere.model.I_AD_Table
+import org.compiere.model.Column
+import org.compiere.model.Table
 import org.compiere.util.DisplayType
 import org.compiere.util.getElementTranslation
 import org.idempiere.common.exceptions.DBException
@@ -11,6 +11,7 @@ import org.idempiere.common.util.Util
 import org.idempiere.common.util.factory
 import org.idempiere.common.util.loadUsing
 import org.idempiere.orm.PO
+import software.hsharp.core.orm.getTable
 import software.hsharp.core.util.getSQLValue
 import software.hsharp.core.util.getSQLValueEx
 import java.math.BigDecimal
@@ -32,8 +33,8 @@ fun getColumn(id: Int) = id loadUsing columnFactory
  *
  * @return MColumn
  */
-fun getColumn(tableName: String, columnName: String): MColumn? {
-    val table = MTable.get(tableName)
+fun getColumn(tableName: String, columnName: String): Column? {
+    val table = getTable(tableName)
     return table.getColumn(columnName)
 } // 	get
 
@@ -61,37 +62,34 @@ class MColumn : X_AD_Column {
      *
      * @return true for AD_Client_ID, etc.
      */
-    val isStandardColumn: Boolean
-        get() {
-            val columnName = columnName
-            return (columnName == "AD_Client_ID" ||
-                    columnName == "AD_Org_ID" ||
-                    columnName == "IsActive" ||
-                    columnName == "Processing" ||
-                    columnName == "Created" ||
-                    columnName == "CreatedBy" ||
-                    columnName == "Updated" ||
-                    columnName == "UpdatedBy")
-        } // 	isStandardColumn
+    override fun isStandardColumn(): Boolean {
+        val columnName = columnName
+        return (columnName == "AD_Client_ID" ||
+                columnName == "AD_Org_ID" ||
+                columnName == "IsActive" ||
+                columnName == "Processing" ||
+                columnName == "Created" ||
+                columnName == "CreatedBy" ||
+                columnName == "Updated" ||
+                columnName == "UpdatedBy")
+    } // 	isStandardColumn
 
     /**
      * Is UUID Column
      *
      * @return true for UUID column
      */
-    val isUUIDColumn: Boolean
-        get() = columnName == PO.getUUIDColumnName(columnTable.dbTableName)
+    override fun isUUIDColumn(): Boolean = columnName == PO.getUUIDColumnName(columnTable.dbTableName)
 
     /**
      * Is Virtual Column
      *
      * @return true if virtual column
      */
-    val isVirtualColumn: Boolean
-        get() {
-            val s = columnSQL
-            return s != null && s.length > 0
-        } // 	isVirtualColumn
+    override fun isVirtualColumn(): Boolean {
+        val s = columnSQL
+        return s != null && s.isNotEmpty()
+    } // 	isVirtualColumn
 
     /**
      * Is the Column Encrypted?
@@ -123,46 +121,45 @@ class MColumn : X_AD_Column {
             return DisplayType.getSQLDataType(dt, columnName, fieldLength)
         } // 	getSQLDataType
 
-    val referenceTableName: String?
-        get() {
-            var foreignTable: String? = null
-            val refid = referenceId
-            if (DisplayType.TableDir == refid || DisplayType.Search == refid && referenceValueId == 0) {
-                foreignTable = columnName.substring(0, columnName.length - 3)
-            } else if (DisplayType.Table == refid || DisplayType.Search == refid) {
-                val ref = X_AD_Reference(referenceValueId)
-                if (X_AD_Reference.VALIDATIONTYPE_TableValidation == ref.validationType) {
-                    val cnt = getSQLValueEx(
-                        "SELECT COUNT(*) FROM AD_Ref_Table WHERE AD_Reference_ID=?",
-                        referenceValueId
-                    )
-                    if (cnt == 1) {
-                        val rt = MRefTable(referenceValueId)
-                        foreignTable = rt.table.dbTableName
-                    }
+    override fun getReferenceTableName(): String? {
+        var foreignTable: String? = null
+        val refid = referenceId
+        if (DisplayType.TableDir == refid || DisplayType.Search == refid && referenceValueId == 0) {
+            foreignTable = columnName.substring(0, columnName.length - 3)
+        } else if (DisplayType.Table == refid || DisplayType.Search == refid) {
+            val ref = X_AD_Reference(referenceValueId)
+            if (X_AD_Reference.VALIDATIONTYPE_TableValidation == ref.validationType) {
+                val cnt = getSQLValueEx(
+                    "SELECT COUNT(*) FROM AD_Ref_Table WHERE AD_Reference_ID=?",
+                    referenceValueId
+                )
+                if (cnt == 1) {
+                    val rt = MRefTable(referenceValueId)
+                    foreignTable = rt.table.dbTableName
                 }
-            } else if (DisplayType.List == refid || DisplayType.Payment == refid) {
-                foreignTable = "AD_Ref_List"
-            } else if (DisplayType.Location == refid) {
-                foreignTable = "C_Location"
-            } else if (DisplayType.Account == refid) {
-                foreignTable = "C_ValidCombination"
-            } else if (DisplayType.Locator == refid) {
-                foreignTable = "M_Locator"
-            } else if (DisplayType.PAttribute == refid) {
-                foreignTable = "M_AttributeSetInstance"
-            } else if (DisplayType.Assignment == refid) {
-                foreignTable = "S_ResourceAssignment"
-            } else if (DisplayType.Image == refid) {
-                foreignTable = "AD_Image"
-            } else if (DisplayType.Color == refid) {
-                foreignTable = "AD_Color"
-            } else if (DisplayType.Chart == refid) {
-                foreignTable = "AD_Chart"
             }
-
-            return foreignTable
+        } else if (DisplayType.List == refid || DisplayType.Payment == refid) {
+            foreignTable = "AD_Ref_List"
+        } else if (DisplayType.Location == refid) {
+            foreignTable = "C_Location"
+        } else if (DisplayType.Account == refid) {
+            foreignTable = "C_ValidCombination"
+        } else if (DisplayType.Locator == refid) {
+            foreignTable = "M_Locator"
+        } else if (DisplayType.PAttribute == refid) {
+            foreignTable = "M_AttributeSetInstance"
+        } else if (DisplayType.Assignment == refid) {
+            foreignTable = "S_ResourceAssignment"
+        } else if (DisplayType.Image == refid) {
+            foreignTable = "AD_Image"
+        } else if (DisplayType.Color == refid) {
+            foreignTable = "AD_Color"
+        } else if (DisplayType.Chart == refid) {
+            foreignTable = "AD_Chart"
         }
+
+        return foreignTable
+    }
 
     /**
      * Is Advanced
@@ -255,7 +252,7 @@ class MColumn : X_AD_Column {
                 val valueMin = BigDecimal(valueMin)
                 if (valueMax.compareTo(valueMin) < 0) {
                     log.saveError(
-                        "MaxLessThanMin", getElementTranslation(I_AD_Column.COLUMNNAME_ValueMax)
+                        "MaxLessThanMin", getElementTranslation(Column.COLUMNNAME_ValueMax)
                     )
                     return false
                 }
@@ -278,7 +275,7 @@ class MColumn : X_AD_Column {
             if (cnt > 0) {
                 log.saveError(
                     DBException.SAVE_ERROR_NOT_UNIQUE_MSG,
-                    getElementTranslation(I_AD_Column.COLUMNNAME_SeqNo)
+                    getElementTranslation(Column.COLUMNNAME_SeqNo)
                 )
                 return false
             }
@@ -373,12 +370,12 @@ class MColumn : X_AD_Column {
      * @return info
      */
     override fun toString(): String {
-        return "MColumn[" + id + "-" + columnName + "]"
+        return "MColumn[$id-$columnName]"
     } // 	toString
 
     @Throws(RuntimeException::class)
-    override fun getColumnTable(): I_AD_Table {
-        return MTable.get(columnTableId)
+    override fun getColumnTable(): Table {
+        return getTable(columnTableId)
     }
 
     companion object {

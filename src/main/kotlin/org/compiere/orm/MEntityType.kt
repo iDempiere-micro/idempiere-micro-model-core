@@ -5,11 +5,11 @@ import kotliquery.Row
 import org.compiere.util.SystemIDs.ENTITYTYPE_ADEMPIERE
 import org.compiere.util.SystemIDs.ENTITYTYPE_DICTIONARY
 import org.idempiere.common.util.factoryString
-import org.compiere.model.I_AD_EntityType
+import org.compiere.model.EntityType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.loadUsing
 
-private fun load(entityType: String): I_AD_EntityType = Query(I_AD_EntityType.Table_Name, "EntityType=?")
+private fun load(entityType: String) = Query<EntityType>(EntityType.Table_Name, "EntityType=?")
     .setParameters(entityType)
     .firstOnly() ?: throw AdempiereSystemError("Entity type $entityType not found.")
 private val entityTypeFactory = factoryString { load(it) }

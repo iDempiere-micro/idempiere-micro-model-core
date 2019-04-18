@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_TableIndex;
+import org.compiere.model.TableIndex;
 
 /**
  * Generated Model for AD_TableIndex
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_TableIndex;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_TableIndex extends BasePOName implements I_AD_TableIndex {
+public class X_AD_TableIndex extends BasePOName implements TableIndex {
 
     /**
      *

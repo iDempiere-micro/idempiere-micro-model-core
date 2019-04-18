@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Private_Access;
+import org.compiere.model.PrivateAccess;
 
 /**
  * Generated Model for AD_Private_Access
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Private_Access;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Private_Access extends PO implements I_AD_Private_Access {
+public class X_AD_Private_Access extends PO implements PrivateAccess {
 
     /**
      *

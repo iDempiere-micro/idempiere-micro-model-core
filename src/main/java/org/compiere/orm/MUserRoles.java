@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_User_Roles;
+import org.compiere.model.UserRoles;
 import org.compiere.util.MsgKt;
 import org.idempiere.common.util.CLogger;
 
@@ -61,9 +61,9 @@ public class MUserRoles extends X_AD_User_Roles {
      * @return array of user roles
      */
     public static MUserRoles[] getOfRole(int AD_Role_ID) {
-        final String whereClause = I_AD_User_Roles.COLUMNNAME_AD_Role_ID + "=?";
+        final String whereClause = UserRoles.COLUMNNAME_AD_Role_ID + "=?";
         List<MUserRoles> list =
-                new Query(I_AD_User_Roles.Table_Name, whereClause)
+                new Query(UserRoles.Table_Name, whereClause)
                         .setParameters(AD_Role_ID)
                         .list();
         MUserRoles[] retValue = new MUserRoles[list.size()];
@@ -98,9 +98,9 @@ public class MUserRoles extends X_AD_User_Roles {
                 log.saveError("Error", MsgKt.getMsg("ActionNotAllowedHere"));
                 return false;
             }
-            if (!newRecord && isValueChanged(I_AD_User_Roles.COLUMNNAME_AD_Role_ID)) {
+            if (!newRecord && isValueChanged(UserRoles.COLUMNNAME_AD_Role_ID)) {
                 MRole oldrole =
-                        new MRole(getValueOldAsInt(I_AD_User_Roles.COLUMNNAME_AD_Role_ID));
+                        new MRole(getValueOldAsInt(UserRoles.COLUMNNAME_AD_Role_ID));
                 if (oldrole.isAccessAdvanced()) {
                     log.saveError("Error", MsgKt.getMsg("ActionNotAllowedHere"));
                     return false;

@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_TreeNode;
+import org.compiere.model.TreeNode;
 
 /**
  * Generated Model for AD_TreeNode
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_TreeNode;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_TreeNode extends PO implements I_AD_TreeNode {
+public class X_AD_TreeNode extends PO implements TreeNode {
 
     /**
      *

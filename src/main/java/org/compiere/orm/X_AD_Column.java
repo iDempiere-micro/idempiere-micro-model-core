@@ -2,9 +2,10 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 import org.compiere.model.HasName;
-import org.compiere.model.I_AD_Column;
-import org.compiere.model.I_AD_Reference;
-import org.compiere.model.I_AD_Table;
+import org.compiere.model.Column;
+import org.compiere.model.Reference;
+import org.compiere.model.Table;
+import software.hsharp.core.orm.MBaseTableKt;
 
 import java.math.BigDecimal;
 
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Column extends PO implements I_AD_Column {
+public abstract class X_AD_Column extends PO implements Column {
 
     /**
      * Window = N
@@ -37,16 +38,6 @@ public class X_AD_Column extends PO implements I_AD_Column {
      */
     public X_AD_Column(int AD_Column_ID) {
         super(AD_Column_ID);
-        /**
-         * if (AD_Column_ID == 0) { setColumnId (0); setElementId (0); setReferenceId (0);
-         * setColumnTableId (0); setColumnName (null); setEntityType (null); // @SQL=select
-         * get_sysconfig('DEFAULT_ENTITYTYPE','U',0,0) from dual setIsAllowCopy (true); // Y
-         * setIsAlwaysUpdateable (false); // N setIsAutocomplete (false); // N setIsEncrypted (null); //
-         * N setIsIdentifier (false); setIsKey (false); setIsMandatory (false); setIsParent (false);
-         * setIsSecure (false); // N setIsSelectionColumn (false); setIsToolbarButton (null); // Y
-         * setIsTranslated (false); setIsUpdateable (true); // Y setName (null); setVersion (Env.ZERO);
-         * }
-         */
     }
 
 
@@ -60,8 +51,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_Column[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_Column[" + getId() + "]";
     }
 
     /**
@@ -94,7 +84,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      */
     public void setElementId(int AD_Element_ID) {
         if (AD_Element_ID < 1) setValue(COLUMNNAME_AD_Element_ID, null);
-        else setValue(COLUMNNAME_AD_Element_ID, Integer.valueOf(AD_Element_ID));
+        else setValue(COLUMNNAME_AD_Element_ID, AD_Element_ID);
     }
 
     /**
@@ -108,9 +98,9 @@ public class X_AD_Column extends PO implements I_AD_Column {
         return ii;
     }
 
-    public I_AD_Reference getReference() throws RuntimeException {
-        return (I_AD_Reference)
-                MTable.get(I_AD_Reference.Table_Name).getPO(getReferenceId());
+    public Reference getReference() throws RuntimeException {
+        return (Reference)
+                MBaseTableKt.getTable(Reference.Table_Name).getPO(getReferenceId());
     }
 
     /**
@@ -145,8 +135,8 @@ public class X_AD_Column extends PO implements I_AD_Column {
         return ii;
     }
 
-    public I_AD_Table getColumnTable() throws RuntimeException {
-        return (I_AD_Table) MTable.get(I_AD_Table.Table_Name).getPO(getColumnTableId());
+    public Table getColumnTable() throws RuntimeException {
+        return (Table) MBaseTableKt.getTable(Table.Table_Name).getPO(getColumnTableId());
     }
 
     /**
@@ -242,7 +232,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param FieldLength Length of the column in the database
      */
     public void setFieldLength(int FieldLength) {
-        setValue(COLUMNNAME_FieldLength, Integer.valueOf(FieldLength));
+        setValue(COLUMNNAME_FieldLength, FieldLength);
     }
 
     /**
@@ -278,7 +268,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsAllowCopy Determine if a column must be copied when pushing the button to copy record
      */
     public void setIsAllowCopy(boolean IsAllowCopy) {
-        setValue(COLUMNNAME_IsAllowCopy, Boolean.valueOf(IsAllowCopy));
+        setValue(COLUMNNAME_IsAllowCopy, IsAllowCopy);
     }
 
     /**
@@ -289,7 +279,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     public boolean isAllowCopy() {
         Object oo = getValue(COLUMNNAME_IsAllowCopy);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -302,7 +292,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      *                           processed
      */
     public void setIsAlwaysUpdateable(boolean IsAlwaysUpdateable) {
-        setValue(COLUMNNAME_IsAlwaysUpdateable, Boolean.valueOf(IsAlwaysUpdateable));
+        setValue(COLUMNNAME_IsAlwaysUpdateable, IsAlwaysUpdateable);
     }
 
     /**
@@ -313,7 +303,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     public boolean isAlwaysUpdateable() {
         Object oo = getValue(COLUMNNAME_IsAlwaysUpdateable);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -344,7 +334,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsIdentifier This column is part of the record identifier
      */
     public void setIsIdentifier(boolean IsIdentifier) {
-        setValue(COLUMNNAME_IsIdentifier, Boolean.valueOf(IsIdentifier));
+        setValue(COLUMNNAME_IsIdentifier, IsIdentifier);
     }
 
     /**
@@ -355,7 +345,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     public boolean isIdentifier() {
         Object oo = getValue(COLUMNNAME_IsIdentifier);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -367,7 +357,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsKey This column is the key in this table
      */
     public void setIsKey(boolean IsKey) {
-        setValue(COLUMNNAME_IsKey, Boolean.valueOf(IsKey));
+        setValue(COLUMNNAME_IsKey, IsKey);
     }
 
     /**
@@ -378,7 +368,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     public boolean isKey() {
         Object oo = getValue(COLUMNNAME_IsKey);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -390,7 +380,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsMandatory Data entry is required in this column
      */
     public void setIsMandatory(boolean IsMandatory) {
-        setValue(COLUMNNAME_IsMandatory, Boolean.valueOf(IsMandatory));
+        setValue(COLUMNNAME_IsMandatory, IsMandatory);
     }
 
     /**
@@ -401,7 +391,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     public boolean isMandatory() {
         Object oo = getValue(COLUMNNAME_IsMandatory);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -414,7 +404,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      *                 Association key columns
      */
     public void setIsParent(boolean IsParent) {
-        setValue(COLUMNNAME_IsParent, Boolean.valueOf(IsParent));
+        setValue(COLUMNNAME_IsParent, IsParent);
     }
 
     /**
@@ -426,7 +416,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     public boolean isParent() {
         Object oo = getValue(COLUMNNAME_IsParent);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -440,7 +430,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     public boolean isSecure() {
         Object oo = getValue(COLUMNNAME_IsSecure);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -452,7 +442,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsSelectionColumn Is this column used for finding rows in windows
      */
     public void setIsSelectionColumn(boolean IsSelectionColumn) {
-        setValue(COLUMNNAME_IsSelectionColumn, Boolean.valueOf(IsSelectionColumn));
+        setValue(COLUMNNAME_IsSelectionColumn, IsSelectionColumn);
     }
 
     /**
@@ -480,7 +470,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsTranslated This column is translated
      */
     public void setIsTranslated(boolean IsTranslated) {
-        setValue(COLUMNNAME_IsTranslated, Boolean.valueOf(IsTranslated));
+        setValue(COLUMNNAME_IsTranslated, IsTranslated);
     }
 
     /**
@@ -491,7 +481,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     public boolean isTranslated() {
         Object oo = getValue(COLUMNNAME_IsTranslated);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -503,7 +493,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
      * @param IsUpdateable Determines, if the field can be updated
      */
     public void setIsUpdateable(boolean IsUpdateable) {
-        setValue(COLUMNNAME_IsUpdateable, Boolean.valueOf(IsUpdateable));
+        setValue(COLUMNNAME_IsUpdateable, IsUpdateable);
     }
 
     /**
@@ -514,7 +504,7 @@ public class X_AD_Column extends PO implements I_AD_Column {
     public boolean isUpdateable() {
         Object oo = getValue(COLUMNNAME_IsUpdateable);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;

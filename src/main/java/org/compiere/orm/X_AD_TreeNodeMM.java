@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_TreeNodeMM;
+import org.compiere.model.TreeNodeModelMenu;
 
 /**
  * Generated Model for AD_TreeNodeMM
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_TreeNodeMM;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM {
+public class X_AD_TreeNodeMM extends PO implements TreeNodeModelMenu {
 
     /**
      *
@@ -21,7 +21,6 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM {
      */
     public X_AD_TreeNodeMM(int AD_TreeNodeMM_ID) {
         super(AD_TreeNodeMM_ID);
-        /** if (AD_TreeNodeMM_ID == 0) { setTreeId (0); setNodeId (0); } */
     }
 
     /**
@@ -41,8 +40,7 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_TreeNodeMM[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_TreeNodeMM[" + getId() + "]";
     }
 
     /**
@@ -52,7 +50,7 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM {
      */
     public void setTreeId(int AD_Tree_ID) {
         if (AD_Tree_ID < 1) setValueNoCheck(COLUMNNAME_AD_Tree_ID, null);
-        else setValueNoCheck(COLUMNNAME_AD_Tree_ID, Integer.valueOf(AD_Tree_ID));
+        else setValueNoCheck(COLUMNNAME_AD_Tree_ID, AD_Tree_ID);
     }
 
     /**
@@ -62,7 +60,7 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM {
      */
     public void setNodeId(int Node_ID) {
         if (Node_ID < 0) setValueNoCheck(COLUMNNAME_Node_ID, null);
-        else setValueNoCheck(COLUMNNAME_Node_ID, Integer.valueOf(Node_ID));
+        else setValueNoCheck(COLUMNNAME_Node_ID, Node_ID);
     }
 
     /**
@@ -72,7 +70,7 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM {
      */
     public void setParentId(int Parent_ID) {
         if (Parent_ID < 1) setValue(COLUMNNAME_Parent_ID, null);
-        else setValue(COLUMNNAME_Parent_ID, Integer.valueOf(Parent_ID));
+        else setValue(COLUMNNAME_Parent_ID, Parent_ID);
     }
 
     /**
@@ -81,7 +79,7 @@ public class X_AD_TreeNodeMM extends PO implements I_AD_TreeNodeMM {
      * @param SeqNo Method of ordering records; lowest number comes first
      */
     public void setSeqNo(int SeqNo) {
-        setValue(COLUMNNAME_SeqNo, Integer.valueOf(SeqNo));
+        setValue(COLUMNNAME_SeqNo, SeqNo);
     }
 
     @Override

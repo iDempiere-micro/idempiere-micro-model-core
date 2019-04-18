@@ -20,8 +20,10 @@ import org.compiere.orm.MTree_Base.Companion.TREETYPE_User1
 import org.compiere.orm.MTree_Base.Companion.TREETYPE_User2
 import org.compiere.orm.MTree_Base.Companion.TREETYPE_User3
 import org.compiere.orm.MTree_Base.Companion.TREETYPE_User4
+import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.factory
 import org.idempiere.common.util.loadUsing
+import software.hsharp.core.orm.getTable
 
 private val treeFactory = factory { MTree_Base(it) }
 
@@ -183,7 +185,7 @@ open class MTree_Base : X_AD_Tree {
     fun getSourceTableName(tableNameOnly: Boolean): String? {
         var tableName = getSourceTableName(treeType)
         if (tableName == null) {
-            if (treeTableId > 0) tableName = MTable.getDbTableName(treeTableId)
+            if (treeTableId > 0) tableName = getDbTableName(treeTableId)
         }
         if (tableNameOnly) return tableName
         if ("M_Product" == tableName)
@@ -207,8 +209,8 @@ open class MTree_Base : X_AD_Tree {
     override fun beforeSave(newRecord: Boolean): Boolean {
         if (!isActive() || !isAllNodes) setIsDefault(false)
 
-        val tableName = getSourceTableName(true)
-        val table = MTable.get(tableName)
+        val tableName = getSourceTableName(true) ?: throw AdempiereSystemError("Table not found")
+        val table = getTable(tableName)
         if (table.getDbColumnIndex("IsSummary") < 0) {
             // IsSummary is mandatory column to have a tree
             log.saveError("Error", "IsSummary column required for tree tables")

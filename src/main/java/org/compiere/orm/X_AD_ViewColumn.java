@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_ViewColumn;
+import org.compiere.model.ViewColumn;
 
 /**
  * Generated Model for AD_ViewColumn
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_ViewColumn;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_ViewColumn extends PO implements I_AD_ViewColumn {
+public class X_AD_ViewColumn extends PO implements ViewColumn {
 
     /**
      *

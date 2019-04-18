@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Reference;
+import org.compiere.model.Reference;
 
 /**
  * Generated Model for AD_Reference
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Reference;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Reference extends BasePOName implements I_AD_Reference {
+public class X_AD_Reference extends BasePOName implements Reference {
 
     /**
      * Table Validation = T

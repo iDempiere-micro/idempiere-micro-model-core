@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Sequence;
+import org.compiere.model.Sequence;
 
 /**
  * Generated Model for AD_Sequence
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Sequence;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Sequence extends BasePOName implements I_AD_Sequence {
+public class X_AD_Sequence extends BasePOName implements Sequence {
 
     /**
      *

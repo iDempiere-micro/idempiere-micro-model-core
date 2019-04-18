@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Org;
+import org.compiere.model.ClientOrganization;
 
 /**
  * Generated Model for AD_Org
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Org;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Org extends BasePONameValue implements I_AD_Org {
+public class X_AD_Org extends BasePONameValue implements ClientOrganization {
 
     /**
      *

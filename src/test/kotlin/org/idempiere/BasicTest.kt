@@ -73,7 +73,7 @@ class BasicTest {
                 assertEquals(100, table.id)
                 assertEquals(0, table.clientId)
                 assertEquals(0, table.orgId)
-                assertEquals(true, table.isActive)
+                assertEquals(true, table.isActive())
                 assertEquals(Timestamp.valueOf("1999-05-21 00:00:00"), table.created)
                 assertEquals("Table", table.name)
                 assertEquals("Table for the Fields", table.description)
@@ -84,7 +84,7 @@ class BasicTest {
                 val columns = table.getColumns(false)
                 assertEquals(31, columns.size)
                 val tableIdColumn = columns.first { it.columnId == 100 }
-                assertEquals(true, tableIdColumn.isActive)
+                assertEquals(true, tableIdColumn.isActive())
                 assertEquals(Timestamp.valueOf("1999-05-21 00:00:00"), tableIdColumn.created)
                 assertEquals("AD_Table_ID", tableIdColumn.columnName)
                 assertEquals(22, tableIdColumn.fieldLength)

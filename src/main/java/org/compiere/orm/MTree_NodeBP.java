@@ -17,9 +17,6 @@ public class MTree_NodeBP extends X_AD_TreeNodeBP {
     /**
      * Load Constructor
      *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
      */
     public MTree_NodeBP(Row row) {
         super(row);

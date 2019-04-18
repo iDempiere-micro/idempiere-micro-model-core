@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Column_Access;
+import org.compiere.model.ColumnAccess;
 
 /**
  * Generated Model for AD_Column_Access
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Column_Access;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
+public class X_AD_Column_Access extends PO implements ColumnAccess {
 
     /**
      *
@@ -21,10 +21,6 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
      */
     public X_AD_Column_Access(int AD_Column_Access_ID) {
         super(AD_Column_Access_ID);
-        /**
-         * if (AD_Column_Access_ID == 0) { setColumnId (0); setRoleId (0); setIsExclude (true); // Y
-         * setIsReadOnly (false); }
-         */
     }
 
     /**
@@ -44,8 +40,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_Column_Access[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_Column_Access[" + getId() + "]";
     }
 
     /**
@@ -87,7 +82,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
      * @param IsExclude Exclude access to the data - if not selected Include access to the data
      */
     public void setIsExclude(boolean IsExclude) {
-        setValue(COLUMNNAME_IsExclude, Boolean.valueOf(IsExclude));
+        setValue(COLUMNNAME_IsExclude, IsExclude);
     }
 
     /**
@@ -98,7 +93,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
     public boolean isExclude() {
         Object oo = getValue(COLUMNNAME_IsExclude);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -110,7 +105,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
      * @param IsReadOnly Field is read only
      */
     public void setIsReadOnly(boolean IsReadOnly) {
-        setValue(COLUMNNAME_IsReadOnly, Boolean.valueOf(IsReadOnly));
+        setValue(COLUMNNAME_IsReadOnly, IsReadOnly);
     }
 
     /**
@@ -121,7 +116,7 @@ public class X_AD_Column_Access extends PO implements I_AD_Column_Access {
     public boolean isReadOnly() {
         Object oo = getValue(COLUMNNAME_IsReadOnly);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;

@@ -2,14 +2,14 @@ package software.hsharp.core.orm
 
 import kotliquery.Row
 import kotliquery.queryOf
-import org.compiere.model.I_AD_SysConfig
+import org.compiere.model.SystemConfig
 import org.compiere.orm.X_AD_SysConfig
 import org.idempiere.common.util.CCache
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.asResource
 
 /** Cache  */
-internal val sysConfigCache = CCache<String, String>(I_AD_SysConfig.Table_Name, 40, 0, true)
+internal val sysConfigCache = CCache<String, String>(SystemConfig.Table_Name, 40, 0, true)
 
 internal fun getValue(name: String, defaultValue: String?, clientId: Int, orgId: Int): String? {
     val key = "" + clientId + "_" + orgId + "_" + name

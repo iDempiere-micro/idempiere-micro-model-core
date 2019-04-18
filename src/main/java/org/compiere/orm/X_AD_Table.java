@@ -2,7 +2,9 @@ package org.compiere.orm;
 
 import kotliquery.Row;
 import org.compiere.model.HasName;
-import org.compiere.model.I_AD_Table;
+import org.compiere.model.Table;
+import org.compiere.model.ValidationRule;
+import software.hsharp.core.orm.MBaseTableKt;
 
 /**
  * Generated Model for AD_Table
@@ -10,7 +12,7 @@ import org.compiere.model.I_AD_Table;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Table extends PO implements I_AD_Table {
+public abstract class X_AD_Table extends PO implements Table {
 
     /**
      * Client+Organization = 3
@@ -65,8 +67,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("X_AD_Table[").append(getId()).append("]");
-        return sb.toString();
+        return "X_AD_Table[" + getId() + "]";
     }
 
     /**
@@ -99,9 +100,9 @@ public class X_AD_Table extends PO implements I_AD_Table {
         return ii;
     }
 
-    public org.compiere.model.I_AD_Val_Rule getValRule() throws RuntimeException {
-        return (org.compiere.model.I_AD_Val_Rule)
-                MTable.get(org.compiere.model.I_AD_Val_Rule.Table_Name)
+    public ValidationRule getValRule() throws RuntimeException {
+        return (ValidationRule)
+                MBaseTableKt.getTable(ValidationRule.Table_Name)
                         .getPO(getValRuleId());
     }
 
@@ -159,7 +160,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      * @param IsChangeLog Maintain a log of changes
      */
     public void setIsChangeLog(boolean IsChangeLog) {
-        setValue(COLUMNNAME_IsChangeLog, Boolean.valueOf(IsChangeLog));
+        setValue(COLUMNNAME_IsChangeLog, IsChangeLog);
     }
 
     /**
@@ -168,7 +169,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      * @param IsDeleteable Indicates if records can be deleted from the database
      */
     public void setIsDeleteable(boolean IsDeleteable) {
-        setValue(COLUMNNAME_IsDeleteable, Boolean.valueOf(IsDeleteable));
+        setValue(COLUMNNAME_IsDeleteable, IsDeleteable);
     }
 
     /**
@@ -179,7 +180,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
     public boolean isDeletable() {
         Object oo = getValue(COLUMNNAME_IsDeleteable);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;
@@ -191,7 +192,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      * @param IsHighVolume Use Search instead of Pick list
      */
     public void setIsHighVolume(boolean IsHighVolume) {
-        setValue(COLUMNNAME_IsHighVolume, Boolean.valueOf(IsHighVolume));
+        setValue(COLUMNNAME_IsHighVolume, IsHighVolume);
     }
 
     /**
@@ -201,7 +202,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      *                          Roles
      */
     public void setIsSecurityEnabled(boolean IsSecurityEnabled) {
-        setValue(COLUMNNAME_IsSecurityEnabled, Boolean.valueOf(IsSecurityEnabled));
+        setValue(COLUMNNAME_IsSecurityEnabled, IsSecurityEnabled);
     }
 
     /**
@@ -210,7 +211,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
      * @param IsView This is a view
      */
     public void setIsView(boolean IsView) {
-        setValue(COLUMNNAME_IsView, Boolean.valueOf(IsView));
+        setValue(COLUMNNAME_IsView, IsView);
     }
 
     /**
@@ -221,7 +222,7 @@ public class X_AD_Table extends PO implements I_AD_Table {
     public boolean isView() {
         Object oo = getValue(COLUMNNAME_IsView);
         if (oo != null) {
-            if (oo instanceof Boolean) return ((Boolean) oo).booleanValue();
+            if (oo instanceof Boolean) return (Boolean) oo;
             return "Y".equals(oo);
         }
         return false;

@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Sequence_No;
+import org.compiere.model.SequenceNumber;
 
 /**
  * Generated Model for AD_Sequence_No
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Sequence_No;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No {
+public class X_AD_Sequence_No extends PO implements SequenceNumber {
 
     /**
      *
@@ -21,10 +21,6 @@ public class X_AD_Sequence_No extends PO implements I_AD_Sequence_No {
      */
     public X_AD_Sequence_No(int AD_Sequence_No_ID) {
         super(AD_Sequence_No_ID);
-        /**
-         * if (AD_Sequence_No_ID == 0) { setSequenceId (0); setCalendarYearMonth (null);
-         * setCurrentNext (0); }
-         */
     }
 
     /**

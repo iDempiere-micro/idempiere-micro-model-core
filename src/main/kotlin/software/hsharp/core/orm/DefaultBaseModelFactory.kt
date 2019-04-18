@@ -2,15 +2,14 @@ package software.hsharp.core.orm
 
 import kotliquery.Row
 import mu.KotlinLogging
-import org.compiere.orm.IModelFactory
-import org.compiere.orm.MTable
+import org.compiere.orm.ModelFactory
 import org.compiere.orm.MTree_Base
 import org.compiere.orm.M_Element
 import org.compiere.orm.getEntityType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.CCache
 import org.idempiere.common.util.Util
-import org.idempiere.icommon.model.IPO
+import org.idempiere.icommon.model.PersistentObject
 import org.idempiere.orm.PO.ENTITYTYPE_Dictionary
 import java.lang.reflect.Modifier
 import java.util.Properties
@@ -57,7 +56,7 @@ private val s_packages = arrayOf(
     "org.compiere.validation"
 )
 
-abstract class DefaultBaseModelFactory : IModelFactory {
+abstract class DefaultBaseModelFactory : ModelFactory {
 
     /**
      * Get PO class
@@ -86,11 +85,11 @@ abstract class DefaultBaseModelFactory : IModelFactory {
                 }
             }
             // 	Make sure that it is a PO class
-            return if (IPO::class.java.isAssignableFrom(clazz)) {
+            return if (PersistentObject::class.java.isAssignableFrom(clazz)) {
                 log.trace("Use: $className")
                 clazz
             } else {
-                log.trace("Not found IPO-assignable: $className")
+                log.trace("Not found PersistentObject-assignable: $className")
                 null
             }
         } catch (e1: ClassNotFoundException) {
@@ -118,7 +117,7 @@ abstract class DefaultBaseModelFactory : IModelFactory {
             }
         }
 
-        val table = MTable.get(tableName)
+        val table = getTable(tableName)
         val entityType = table.entityType
 
         // 	Import Tables (Name conflict)
@@ -198,7 +197,7 @@ abstract class DefaultBaseModelFactory : IModelFactory {
         return null
     }
 
-    override fun <T : IPO> getPO(tableName: String, row: Row): T {
+    override fun <T : PersistentObject> getPO(tableName: String, row: Row): T {
         val clazz = getClass(tableName, true)
         try {
             try {

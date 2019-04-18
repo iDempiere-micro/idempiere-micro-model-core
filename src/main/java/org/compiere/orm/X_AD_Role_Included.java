@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Role_Included;
+import org.compiere.model.RoleIncluded;
 
 /**
  * Generated Model for AD_Role_Included
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Role_Included;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Role_Included extends PO implements I_AD_Role_Included {
+public class X_AD_Role_Included extends PO implements RoleIncluded {
 
     /**
      *

@@ -1,11 +1,15 @@
 package org.compiere.orm;
 
+import org.compiere.model.Table;
+import org.compiere.model.TypedQuery;
 import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Util;
+import org.idempiere.icommon.model.PersistentObject;
 import org.idempiere.orm.POInfo;
 import software.hsharp.core.orm.BaseQuery;
+import software.hsharp.core.orm.MBaseTableKt;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
@@ -40,7 +44,7 @@ import static software.hsharp.core.util.DBKt.setParameter;
  * log.info
  * <li>FR: [ 2214883 ] - to introduce .setClientId
  */
-public class Query extends BaseQuery {
+public class Query<T extends PersistentObject> extends BaseQuery<T> {
     public static final String AGGREGATE_COUNT = "COUNT";
 
     private static CLogger log = CLogger.getCLogger(Query.class);
@@ -54,13 +58,13 @@ public class Query extends BaseQuery {
     private boolean forUpdate = false;
     private boolean noVirtualColumn = false;
     private int queryTimeout = 0;
-    private List<String> joinClauseList = new ArrayList<String>();
+    private List<String> joinClauseList = new ArrayList<>();
 
     /**
      * @param table
      * @param whereClause
      */
-    public Query(MTable table, String whereClause) {
+    public Query(Table table, String whereClause) {
         super(table);
         this.whereClause = whereClause;
     }
@@ -70,9 +74,7 @@ public class Query extends BaseQuery {
      * @param whereClause
      */
     public Query(String tableName, String whereClause) {
-        this(MTable.get(tableName), whereClause);
-        MTable table = super.getTable();
-        if (table == null) throw new IllegalArgumentException("Table Name Not Found - " + tableName);
+        this(MBaseTableKt.getTable(tableName), whereClause);
     }
 
     /**
@@ -81,7 +83,7 @@ public class Query extends BaseQuery {
      *
      * @param orderBy SQL ORDER BY clause
      */
-    public Query setOrderBy(String orderBy) {
+    public Query<T> setOrderBy(String orderBy) {
         this.orderBy = orderBy != null ? orderBy.trim() : null;
         if (this.orderBy != null && this.orderBy.toUpperCase().startsWith("ORDER BY")) {
             this.orderBy = this.orderBy.substring(8);
@@ -104,17 +106,17 @@ public class Query extends BaseQuery {
      *
      * @param forUpdate
      */
-    public Query setForUpdate(boolean forUpdate) {
+    public TypedQuery<T> setForUpdate(boolean forUpdate) {
         this.forUpdate = forUpdate;
         return this;
     }
 
-    public Query setQueryTimeout(int seconds) {
+    public TypedQuery<T> setQueryTimeout(int seconds) {
         this.queryTimeout = seconds;
         return this;
     }
 
-    public Query addJoinClause(String joinClause) {
+    public TypedQuery<T> addJoinClause(String joinClause) {
         joinClauseList.add(joinClause);
         return this;
     }
@@ -130,7 +132,7 @@ public class Query extends BaseQuery {
     }
 
     private int firstId(boolean assumeOnlyOneResult) throws DBException {
-        MTable table = super.getTable();
+        Table table = super.getTable();
         String[] keys = table.getTableKeyColumns();
         if (keys.length != 1) {
             throw new DBException("Table " + table + " has 0 or more than 1 key columns");
@@ -193,13 +195,13 @@ public class Query extends BaseQuery {
             throw new DBException("No Aggregate Function defined");
         }
         if (Util.isEmpty(sqlExpression, true)) {
-            if (AGGREGATE_COUNT == sqlFunction) {
+            if (AGGREGATE_COUNT.equals(sqlFunction)) {
                 sqlExpression = "*";
             } else {
                 throw new DBException("No Expression defined");
             }
         }
-        MTable table = super.getTable();
+        Table table = super.getTable();
 
         StringBuilder sqlSelect =
                 new StringBuilder("SELECT ")
@@ -214,8 +216,8 @@ public class Query extends BaseQuery {
         T defaultValue = null;
 
         String sql = buildSQL(sqlSelect, false);
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        PreparedStatement pstmt;
+        ResultSet rs;
         try {
             pstmt = prepareStatement(sql);
             rs = createResultSet(pstmt);
@@ -243,9 +245,6 @@ public class Query extends BaseQuery {
             }
         } catch (SQLException e) {
             throw new DBException(e, sql);
-        } finally {
-            rs = null;
-            pstmt = null;
         }
         //
         if (value == null) {
@@ -271,7 +270,7 @@ public class Query extends BaseQuery {
      * @throws DBException
      */
     public boolean match() throws DBException {
-        MTable table = super.getTable();
+        Table table = super.getTable();
         String sql = buildSQL(new StringBuilder("SELECT 1 FROM ").append(table.getDbTableName()), false);
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -281,7 +280,6 @@ public class Query extends BaseQuery {
             if (rs.next()) return true;
         } catch (SQLException e) {
             throw new DBException(e, sql);
-        } finally {
         }
         return false;
     }
@@ -293,7 +291,7 @@ public class Query extends BaseQuery {
      * @return final SQL
      */
     protected final String buildSQL(StringBuilder selectClause, boolean useOrderByClause) {
-        MTable table = super.getTable();
+        Table table = super.getTable();
         if (selectClause == null) {
             POInfo info = POInfo.getPOInfo(table.getTableTableId());
             if (info == null) {

@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_ClientInfo;
+import org.compiere.model.ClientInfo;
 
 /**
  * Generated Model for AD_ClientInfo
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_ClientInfo;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_ClientInfo extends PO implements I_AD_ClientInfo {
+public class X_AD_ClientInfo extends PO implements ClientInfo {
 
     /**
      *

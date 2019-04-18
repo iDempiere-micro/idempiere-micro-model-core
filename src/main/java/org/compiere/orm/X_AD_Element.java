@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_Element;
+import org.compiere.model.Element;
 
 /**
  * Generated Model for AD_Element
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_Element;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_Element extends BasePOName implements I_AD_Element {
+public class X_AD_Element extends BasePOName implements Element {
 
     /**
      *

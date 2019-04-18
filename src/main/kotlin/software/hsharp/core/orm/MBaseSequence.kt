@@ -139,7 +139,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
     // 	create DocumentNo
     val doc = StringBuilder()
     if (prefix != null && prefix.isNotEmpty()) {
-        val prefixValue = parseVariable(prefix, po, null, false)
+        val prefixValue = parseVariable(prefix, po, false)
         if (!Util.isEmpty(prefixValue)) doc.append(prefixValue)
     }
 
@@ -149,7 +149,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
         doc.append(next)
 
     if (suffix != null && suffix.isNotEmpty()) {
-        val suffixValue = parseVariable(suffix, po, null, false)
+        val suffixValue = parseVariable(suffix, po, false)
         if (!Util.isEmpty(suffixValue)) doc.append(suffixValue)
     }
 

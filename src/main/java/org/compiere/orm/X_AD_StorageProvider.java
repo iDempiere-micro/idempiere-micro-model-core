@@ -1,7 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
-import org.compiere.model.I_AD_StorageProvider;
+import org.compiere.model.StorageProvider;
 
 /**
  * Generated Model for AD_StorageProvider
@@ -9,7 +9,7 @@ import org.compiere.model.I_AD_StorageProvider;
  * @author iDempiere (generated)
  * @version Release 5.1 - $Id$
  */
-public class X_AD_StorageProvider extends PO implements I_AD_StorageProvider {
+public class X_AD_StorageProvider extends PO implements StorageProvider {
 
     /**
      *

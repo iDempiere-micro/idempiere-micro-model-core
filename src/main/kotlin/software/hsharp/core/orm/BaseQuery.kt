@@ -1,16 +1,16 @@
 package software.hsharp.core.orm
 
 import kotliquery.queryOf
-import org.compiere.orm.MTable
-import org.compiere.orm.PO
+import org.compiere.model.Table
+import org.compiere.model.TypedQuery
 import org.compiere.orm.Query
 import org.idempiere.common.exceptions.DBException
-import org.idempiere.icommon.model.IPO
+import org.idempiere.icommon.model.PersistentObject
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.Environment
 import software.hsharp.core.util.convert
 
-abstract class BaseQuery(val table: MTable) {
+abstract class BaseQuery<T:PersistentObject>(val table: Table) : TypedQuery<T> {
     protected abstract fun buildSQL(selectClause: StringBuilder?, useOrderByClause: Boolean): String
 
     protected var parameters: Array<Any>? = null
@@ -44,9 +44,9 @@ abstract class BaseQuery(val table: MTable) {
      *
      * @param parameters
      */
-    fun setParameters(vararg queryParameters: Any): Query {
+    override fun setParameters(vararg queryParameters: Any): TypedQuery<T> {
         this.parameters = arrayOf(*queryParameters)
-        return this as Query
+        return this
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class BaseQuery(val table: MTable) {
      *
      * @param parameters collection of parameters
      */
-    fun setParameters(queryParameters: List<Any>?): Query {
+    fun setParameters(queryParameters: List<Any>?): Query<T> {
         if (queryParameters == null) {
             this.parameters = null
             return this as Query
@@ -68,29 +68,28 @@ abstract class BaseQuery(val table: MTable) {
      *
      * @param onlyActiveRecords
      */
-    fun setOnlyActiveRecords(onlyActiveRecords: Boolean): Query {
+    override fun setOnlyActiveRecords(onlyActiveRecords: Boolean): TypedQuery<T> {
         this.onlyActiveRecords = onlyActiveRecords
-        return this as Query
+        return this
     }
 
     /** Set Client_ID true for WhereClause routine to include clientId  */
-    fun setClientId(): Query {
+    override fun setClientId(): Query<T> {
         return setClientId(true)
     }
 
     /** Set include or not include clientId in where clause  */
-    fun setClientId(isIncludeClient: Boolean): Query {
+    fun setClientId(isIncludeClient: Boolean): Query<T> {
         this.onlyClientId = isIncludeClient
         return this as Query
     }
 
-    private fun <T : IPO> doFindFirst(): List<T> {
+    private fun <T : PersistentObject> doFindFirst(): List<T> {
         val sql = buildSQL(null, true)
         val params = getQueryParameters()
         val sqlQuery =
             (if (params == null) queryOf(sql) else queryOf(sql, *params)).map { row ->
-                @Suppress("UNCHECKED_CAST")
-                table.getPO(row) as T
+                table.getPO<T>(row)
             }.asList
         val result = DB.current.run(sqlQuery)
         return result
@@ -104,8 +103,7 @@ abstract class BaseQuery(val table: MTable) {
      * @throws DBException
      * @see {@link .first
      */
-    @Throws(DBException::class)
-    fun <T : IPO> firstOnly(): T? {
+    override fun firstOnly(): T? {
         val result = doFindFirst<T>()
         if (result.count() > 1) throw DBException("QueryMoreThanOneRecordsFound")
         return result.firstOrNull()
@@ -117,8 +115,7 @@ abstract class BaseQuery(val table: MTable) {
      * @return first PO
      * @throws DBException
      */
-    @Throws(DBException::class)
-    fun <T : PO> first(): T? {
+    override fun first(): T? {
         val result = doFindFirst<T>()
         if (result.count() > 1) throw DBException("QueryMoreThanOneRecordsFound")
         return result.firstOrNull()
@@ -130,16 +127,14 @@ abstract class BaseQuery(val table: MTable) {
      * @return List
      * @throws DBException
      */
-    @Throws(DBException::class)
-    fun <T : IPO> list(): List<T> {
+    override fun list(): List<T> {
         val sql = convert.convertAll(buildSQL(null, true))
         val params = getQueryParameters()
         val sqlQuery =
-            @Suppress("UNCHECKED_CAST")
             (if (params == null) queryOf(sql) else software.hsharp.core.util.queryOf(
                 sql,
                 params.toList()
-            )).map { row -> table.getPO(row) as T }.asList
+            )).map { row -> table.getPO<T>(row) }.asList
         return DB.current.run(sqlQuery)
     }
 }

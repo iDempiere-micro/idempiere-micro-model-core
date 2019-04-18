@@ -1,0 +1,1 @@
+SELECT * FROM AD_Table WHERE UPPER(TableName)=?

@@ -3,14 +3,14 @@ package software.hsharp.core.orm
 import kotliquery.Row
 import kotliquery.queryOf
 import mu.KotlinLogging
-import org.compiere.model.I_AD_Column
-import org.compiere.model.I_AD_Element
-import org.compiere.model.I_AD_Field
+import org.compiere.model.Column
+import org.compiere.model.Element
+import org.compiere.model.Field
 import org.compiere.orm.getColumn
 import org.compiere.util.DisplayType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.SecureEngine
-import org.idempiere.icommon.model.IPO
+import org.idempiere.icommon.model.PersistentObject
 import org.idempiere.orm.POInfo.getPOInfo
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
@@ -28,7 +28,7 @@ private val log = KotlinLogging.logger {}
 /** Zero Integer  */
 const val I_ZERO = 0
 
-internal abstract class PO(row: Row?) : IPO {
+internal abstract class PO(row: Row?) : PersistentObject {
 
     companion object {
         fun copyValues(from: PO, to: PO) {
@@ -267,9 +267,9 @@ internal abstract class PO(row: Row?) : IPO {
             else if (clazz == String::class.java || clazz == POInfoColumn.ColumnClass_String) {
                 var value: String? = decrypt(index, row.stringOrNull(columnName)) as String?
                 if (value != null) {
-                    if (tableId == I_AD_Column.Table_ID ||
-                        tableId == I_AD_Element.Table_ID ||
-                        tableId == I_AD_Field.Table_ID
+                    if (tableId == Column.Table_ID ||
+                        tableId == Element.Table_ID ||
+                        tableId == Field.Table_ID
                     ) {
                         if ("Description" == columnName || "Help" == columnName) {
                             value = value.intern()

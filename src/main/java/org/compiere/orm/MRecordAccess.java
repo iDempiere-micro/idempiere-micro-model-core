@@ -1,6 +1,7 @@
 package org.compiere.orm;
 
 import kotliquery.Row;
+import org.compiere.model.SqlTableInfo;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,9 +26,6 @@ public class MRecordAccess extends X_AD_Record_Access {
     /**
      * Load Constructor
      *
-     * @param ctx     context
-     * @param rs      result set
-     * @param trxName transaction
      */
     public MRecordAccess(Row row) {
         super(row);
@@ -45,8 +43,8 @@ public class MRecordAccess extends X_AD_Record_Access {
                 "SELECT ColumnName "
                         + "FROM AD_Column "
                         + "WHERE AD_Table_ID=? AND IsKey='Y' AND IsActive='Y'";
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        PreparedStatement pstmt;
+        ResultSet rs;
         try {
             pstmt = prepareStatement(sql);
             pstmt.setInt(1, getRecordTableId());
@@ -58,9 +56,6 @@ public class MRecordAccess extends X_AD_Record_Access {
             }
         } catch (Exception e) {
             log.log(Level.SEVERE, sql, e);
-        } finally {
-            rs = null;
-            pstmt = null;
         }
         if (m_keyColumnName == null)
             log.log(Level.SEVERE, "Record Access requires Table with one key column");
@@ -86,17 +81,17 @@ public class MRecordAccess extends X_AD_Record_Access {
      * @param tableInfo
      * @return key column name
      */
-    public String getKeyColumnName(AccessSqlParser.TableInfo[] tableInfo) {
+    public String getKeyColumnName(SqlTableInfo[] tableInfo) {
         String columnSyn = getSynonym();
         if (columnSyn == null) return m_keyColumnName;
         //	We have a synonym - ignore it if base table inquired
-        for (int i = 0; i < tableInfo.length; i++) {
+        for (SqlTableInfo info : tableInfo) {
             if (m_keyColumnName.equals("AD_User_ID")) {
                 //	List of tables where not to use SalesRep_ID
-                if (tableInfo[i].getTableName().equals("AD_User")) return m_keyColumnName;
+                if (info.getTableName().equals("AD_User")) return m_keyColumnName;
             } else if (m_keyColumnName.equals("AD_ElementValue_ID")) {
                 //	List of tables where not to use Account_ID
-                if (tableInfo[i].getTableName().equals("AD_ElementValue")) return m_keyColumnName;
+                if (info.getTableName().equals("AD_ElementValue")) return m_keyColumnName;
             }
         } //	tables to be ignored
         return columnSyn;
@@ -108,23 +103,21 @@ public class MRecordAccess extends X_AD_Record_Access {
      * @return info
      */
     public String toString() {
-        StringBuffer sb =
-                new StringBuffer("MRecordAccess[AD_Role_ID=")
-                        .append(getRoleId())
-                        .append(",AD_Table_ID=")
-                        .append(getRecordTableId())
-                        .append(",Record_ID=")
-                        .append(getRecordId())
-                        .append(",Active=")
-                        .append(isActive())
-                        .append(",Exclude=")
-                        .append(isExclude())
-                        .append(",ReadOnly=")
-                        .append(super.isReadOnly())
-                        .append(",Dependent=")
-                        .append(isDependentEntities())
-                        .append("]");
-        return sb.toString();
+        return "MRecordAccess[AD_Role_ID=" +
+                getRoleId() +
+                ",AD_Table_ID=" +
+                getRecordTableId() +
+                ",Record_ID=" +
+                getRecordId() +
+                ",Active=" +
+                isActive() +
+                ",Exclude=" +
+                isExclude() +
+                ",ReadOnly=" +
+                super.isReadOnly() +
+                ",Dependent=" +
+                isDependentEntities() +
+                "]";
     } //	toString
 
 } //	MRecordAccess
