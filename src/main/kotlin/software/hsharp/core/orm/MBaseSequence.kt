@@ -78,7 +78,7 @@ internal fun doGetDocumentNoFromSeq(seq: MSequence, po: PO?): String? {
                     SimpleDateFormat("yyyy")
 
             if (po != null && dateColumn != null && dateColumn.isNotEmpty()) {
-                val docDate = po.getValue(dateColumn) as Date
+                val docDate : Date? = po.getValue(dateColumn)
                 sdf.format(docDate)
             } else {
                 sdf.format(Date())

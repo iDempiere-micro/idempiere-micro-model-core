@@ -21,24 +21,24 @@ private class Test(
     override val tableId: Int = 0,
     override val clientId: Int = 0
 ) : PersistentObject {
-    override fun isActive(): Boolean {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getValueOfColumn(columnId: Int): Any {
-        TODO("not implemented")
+    override fun <T> getValueOfColumn(columnId: Int): T? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getColumnIndex(columnName: String): Int {
-        TODO("not implemented")
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getValue(columnName: String): Any? {
-        TODO("not implemented")
+    override fun <T> getValue(columnName: String): T? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getValue(index: Int): Any? {
-        TODO("not implemented")
+    override fun <T> getValue(index: Int): T? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun isActive(): Boolean {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun save(): Boolean {

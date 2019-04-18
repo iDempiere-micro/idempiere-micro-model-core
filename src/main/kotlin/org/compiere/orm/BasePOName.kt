@@ -2,6 +2,7 @@ package org.compiere.orm
 
 import kotliquery.Row
 import org.compiere.model.HasName
+import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.KeyNamePair
 
 abstract class BasePOName : PO {
@@ -9,7 +10,7 @@ abstract class BasePOName : PO {
     constructor(r: Row) : super(r)
 
     open var name: String
-        get() = getValue(HasName.COLUMNNAME_Name) as String
+        get() = getValue(HasName.COLUMNNAME_Name) ?: throw AdempiereSystemError("Does not have a name")
         set(Name) {
             setValue(HasName.COLUMNNAME_Name, Name)
         }

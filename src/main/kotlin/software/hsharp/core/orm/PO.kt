@@ -11,6 +11,7 @@ import org.compiere.util.DisplayType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.SecureEngine
 import org.idempiere.icommon.model.PersistentObject
+import org.idempiere.orm.Null
 import org.idempiere.orm.POInfo.getPOInfo
 import org.idempiere.orm.POInfoColumn
 import software.hsharp.core.util.DB
@@ -303,7 +304,7 @@ internal abstract class PO(row: Row?) : PersistentObject {
                         arrayOf(ii)
                     log.trace { "(PK) $ColumnName=$ii" }
                 } else {
-                    val oo = getValue(i)
+                    val oo : Any? = getValue(i)
                     ids = if (oo == null)
                         arrayOf(null)
                     else
@@ -453,7 +454,7 @@ internal abstract class PO(row: Row?) : PersistentObject {
      * @return int value or 0
      */
     fun getValueAsInt(index: Int): Int {
-        val value = getValue(index) ?: return 0
+        val value :  Any = getValue(index) ?: return 0
         if (value is Int) return value
         return try {
             Integer.parseInt(value.toString())
@@ -475,6 +476,65 @@ internal abstract class PO(row: Row?) : PersistentObject {
             0
         } else getValueAsInt(idx)
     }
+
+    /**
+     * Get Column Index
+     *
+     * @param columnName column name
+     * @return index of column with ColumnName or -1 if not found
+     */
+    override fun getColumnIndex(columnName: String): Int {
+        return p_info.getColumnIndex(columnName)
+    } //  getColumnIndex
+
+    /**
+     * ************************************************************************ Get Value
+     *
+     * @param index index
+     * @return value
+     */
+    @Suppress("UNCHECKED_CAST")
+    override fun <T> getValue(index: Int): T? {
+        val columnCount = p_info.columnCount
+        if (index < 0 || index >= columnCount ) {
+            return null
+        }
+        val newValues = newValues
+
+        return if (newValues[index] != null) {
+            if (newValues[index] == Null.NULL) null else newValues[index] as T
+        } else oldValues[index] as T
+    } //  get_Value
+
+    /**
+     * Get Value
+     *
+     * @param columnName column name
+     * @return value or null
+     */
+    override fun <T> getValue(columnName: String): T? {
+        val index = getColumnIndex(columnName)
+        if (index < 0) {
+            return null
+        }
+        return getValue(index)
+    } //  get_Value
+
+    /**
+     * Get Value of Column
+     *
+     * @param columnId column
+     * @return value or null
+     */
+    override fun <T> getValueOfColumn(columnId: Int): T? {
+        val index = p_info.getColumnIndex(columnId)
+        if (index < 0) {
+            return null
+        }
+        return getValue(index)
+    } //  get_ValueOfColumn
+
+
 }
 
 fun getAllIDs(tableName: String, whereClause: String?): IntArray {

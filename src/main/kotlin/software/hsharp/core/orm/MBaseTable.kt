@@ -78,25 +78,6 @@ abstract class MBaseTable : X_AD_Table, Table {
         return initDetail().m_columns.toTypedArray()
     } // 	getColumns
 
-    /*
-    fun getPO(row: Row): org.idempiere.orm.PO {
-        val tableName = dbTableName
-
-        var po: org.idempiere.orm.PO? = null
-        val factoryList = getFactoryList()
-        if (factoryList != null) {
-            for (factory in factoryList) {
-                po = factory.getPO(tableName, row)
-            }
-        }
-
-        if (po == null) {
-            po = GenericPO(row)
-        }
-
-        return po
-    } // 	getPO*/
-
     override fun <T : PersistentObject> getPO(row: Row): T? {
         val tableName = dbTableName
 

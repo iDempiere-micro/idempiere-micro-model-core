@@ -5,6 +5,7 @@ import org.compiere.model.Column
 import org.compiere.model.Table
 import org.compiere.model.ViewComponent
 import org.compiere.model.TypedQuery
+import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.memoize
 import org.idempiere.icommon.model.PersistentObject
 import software.hsharp.core.orm.MBaseTable
@@ -19,7 +20,7 @@ import java.util.ArrayList
  * Get Table Name
  *
  * @param tableId table
- * @return tavle name
+ * @return table name
  */
 fun getDbTableName(tableId: Int): String {
     return getTable(tableId).dbTableName
@@ -80,12 +81,7 @@ fun isZeroIDTable(tableName: String): Boolean {
  * @version $Id: MTable.java,v 1.3 2006/07/30 00:58:04 jjanke Exp $
  */
 class MTable : MBaseTable {
-    /**
-     * Get view components
-     *
-     * @param reload reload data
-     * @return array of view component
-     */
+
     private fun doLoadViewComponents(): List<ViewComponent>? {
         if (!isView || !isActive()) return null
 
@@ -101,26 +97,15 @@ class MTable : MBaseTable {
     private val loadViewComponents = { doLoadViewComponents() }.memoize()
 
     /**
-     * Table has a single Key
-     *
-     * @return true if table has single key column
-     */
-    val isSingleKey: Boolean
-        get() {
-            val keys = tableKeyColumns
-            return keys.size == 1
-        } //	isSingleKey
-
-    /**
      * Get Key Columns of Table
      *
      * @return key columns
      */
     //
     override fun getTableKeyColumns(): Array<String> {
-        val m_columns = getColumns(false)
+        val columns = getColumns(false)
         val list = ArrayList<String>()
-        for (column in m_columns) {
+        for (column in columns) {
             if (column.isKey) return arrayOf(column.columnName)
             if (column.isParent) list.add(column.columnName)
         }
@@ -130,10 +115,10 @@ class MTable : MBaseTable {
     /**
      * ************************************************************************ Standard Constructor
      *
-     * @param AD_Table_ID id
+     * @param tableId id
      */
-    constructor(AD_Table_ID: Int) : super(AD_Table_ID) {
-        if (AD_Table_ID == 0) {
+    constructor(tableId: Int) : super(tableId) {
+        if (tableId == 0) {
             tableAccessLevel = ACCESSLEVEL_SystemOnly // 4
             entityType = org.idempiere.orm.PO.ENTITYTYPE_UserMaintained // U
             setIsChangeLog(false)
@@ -185,8 +170,6 @@ class MTable : MBaseTable {
         //
         return true
     } //	beforeSave
-
-    // globalqss
 
     /**
      * After Save
@@ -250,17 +233,17 @@ class MTable : MBaseTable {
      *
      * @return Access Level required
      */
+    override fun getTableAccessLevel(): String = getValue(Table.COLUMNNAME_AccessLevel) ?: throw AdempiereSystemError("Does not have a data access level")
     /**
      * Set Data Access Level.
      *
      * @param AccessLevel Access Level required
      */
-    override fun getTableAccessLevel(): String = getValue(Table.COLUMNNAME_AccessLevel) as String
     override fun setTableAccessLevel(AccessLevel: String) {
         setValue(Table.COLUMNNAME_AccessLevel, AccessLevel)
     }
 
     companion object {
-        private val serialVersionUID = -8757836873040013402L
+        private const val serialVersionUID = -8757836873040013402L
     }
 } //	MTable

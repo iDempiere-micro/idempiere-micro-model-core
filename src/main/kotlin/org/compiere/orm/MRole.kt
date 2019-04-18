@@ -1608,26 +1608,32 @@ class MRole : MBaseRole {
     }
 
     override fun getAccessMap(varname: String): HashMap<Int, Boolean>? {
-        if ("m_windowAccess" == varname) {
-            getWindowAccess(-1)
-            return m_windowAccess
-        } else if ("m_processAccess" == varname) {
-            getProcessAccess(-1)
-            return m_processAccess
-        } else if ("m_taskAccess" == varname) {
-            getTaskAccess(-1)
-            return m_taskAccess
-        } else if ("m_workflowAccess" == varname) {
-            getWorkflowAccess(-1)
-            return m_workflowAccess
-        } else if ("m_formAccess" == varname) {
-            getFormAccess(-1)
-            return m_formAccess
-        } else if ("m_infoAccess" == varname) {
-            getInfoAccess(-1)
-            return m_infoAccess
-        } else {
-            throw IllegalArgumentException("varname not supported - $varname")
+        when (varname) {
+            "m_windowAccess" -> {
+                getWindowAccess(-1)
+                return m_windowAccess
+            }
+            "m_processAccess" -> {
+                getProcessAccess(-1)
+                return m_processAccess
+            }
+            "m_taskAccess" -> {
+                getTaskAccess(-1)
+                return m_taskAccess
+            }
+            "m_workflowAccess" -> {
+                getWorkflowAccess(-1)
+                return m_workflowAccess
+            }
+            "m_formAccess" -> {
+                getFormAccess(-1)
+                return m_formAccess
+            }
+            "m_infoAccess" -> {
+                getInfoAccess(-1)
+                return m_infoAccess
+            }
+            else -> throw IllegalArgumentException("varname not supported - $varname")
         }
     }
 

@@ -316,41 +316,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         return m_idOld;
     } //  getID
 
-    /**
-     * ************************************************************************ Get Value
-     *
-     * @param index index
-     * @return value
-     */
-    public final Object getValue(int index) {
-        if (index < 0 || index >= get_ColumnCount()) {
-            log.log(Level.WARNING, "Index invalid - " + index);
-            return null;
-        }
-        Object[] newValues = getNewValues();
-
-        if (newValues[index] != null) {
-            if (newValues[index].equals(Null.NULL)) return null;
-            return newValues[index];
-        }
-        return getOldValues()[index];
-    } //  get_Value
-
-    /**
-     * Get Value
-     *
-     * @param columnName column name
-     * @return value or null
-     */
-    public final Object getValue(@NotNull String columnName) {
-        int index = getColumnIndex(columnName);
-        if (index < 0) {
-            log.log(Level.WARNING, "Column not found - " + columnName);
-            Trace.printStack();
-            return null;
-        }
-        return getValue(index);
-    } //  get_Value
 
     /**
      * Get Column Value
@@ -363,22 +328,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         if (value == null) return "";
         return value.toString();
     } //	get_ValueAsString
-
-    /**
-     * Get Value of Column
-     *
-     * @param AD_Column_ID column
-     * @return value or null
-     */
-    public final Object getValueOfColumn(int AD_Column_ID) {
-        POInfo p_info = super.getP_info();
-        int index = p_info.getColumnIndex(AD_Column_ID);
-        if (index < 0) {
-            log.log(Level.WARNING, "Not found - AD_Column_ID=" + AD_Column_ID);
-            return null;
-        }
-        return getValue(index);
-    } //  get_ValueOfColumn
 
     /**
      * Get Old Value
@@ -494,18 +443,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         POInfo p_info = super.getP_info();
         return p_info.getColumnName(index);
     } //  getColumnName
-
-    /**
-     * Get Column Index
-     *
-     * @param columnName column name
-     * @return index of column with ColumnName or -1 if not found
-     */
-    public final int getColumnIndex(String columnName) {
-
-        POInfo p_info = super.getP_info();
-        return p_info.getColumnIndex(columnName);
-    } //  getColumnIndex
 
     /**
      * ************************************************************************ Load record with ID

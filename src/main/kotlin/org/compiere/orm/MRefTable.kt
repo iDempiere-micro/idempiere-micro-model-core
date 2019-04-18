@@ -5,6 +5,9 @@ import org.compiere.model.Table
 import org.idempiere.orm.PO
 import software.hsharp.core.orm.*
 
+/**
+ * Reference table
+ */
 class MRefTable : X_AD_Ref_Table {
 
     /**
@@ -24,7 +27,7 @@ class MRefTable : X_AD_Ref_Table {
      * Load Constructor
      *
      */
-    constructor(row: Row) : super(row) {} //	MRefTable
+    constructor(row: Row) : super(row) //	MRefTable
 
     @Throws(RuntimeException::class)
     override fun getTable(): Table {

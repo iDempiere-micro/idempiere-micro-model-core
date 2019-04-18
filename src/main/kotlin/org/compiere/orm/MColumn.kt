@@ -122,43 +122,34 @@ class MColumn : X_AD_Column {
         } // 	getSQLDataType
 
     override fun getReferenceTableName(): String? {
-        var foreignTable: String? = null
         val refid = referenceId
-        if (DisplayType.TableDir == refid || DisplayType.Search == refid && referenceValueId == 0) {
-            foreignTable = columnName.substring(0, columnName.length - 3)
-        } else if (DisplayType.Table == refid || DisplayType.Search == refid) {
-            val ref = X_AD_Reference(referenceValueId)
-            if (X_AD_Reference.VALIDATIONTYPE_TableValidation == ref.validationType) {
-                val cnt = getSQLValueEx(
-                    "SELECT COUNT(*) FROM AD_Ref_Table WHERE AD_Reference_ID=?",
-                    referenceValueId
-                )
-                if (cnt == 1) {
-                    val rt = MRefTable(referenceValueId)
-                    foreignTable = rt.table.dbTableName
-                }
-            }
-        } else if (DisplayType.List == refid || DisplayType.Payment == refid) {
-            foreignTable = "AD_Ref_List"
-        } else if (DisplayType.Location == refid) {
-            foreignTable = "C_Location"
-        } else if (DisplayType.Account == refid) {
-            foreignTable = "C_ValidCombination"
-        } else if (DisplayType.Locator == refid) {
-            foreignTable = "M_Locator"
-        } else if (DisplayType.PAttribute == refid) {
-            foreignTable = "M_AttributeSetInstance"
-        } else if (DisplayType.Assignment == refid) {
-            foreignTable = "S_ResourceAssignment"
-        } else if (DisplayType.Image == refid) {
-            foreignTable = "AD_Image"
-        } else if (DisplayType.Color == refid) {
-            foreignTable = "AD_Color"
-        } else if (DisplayType.Chart == refid) {
-            foreignTable = "AD_Chart"
-        }
 
-        return foreignTable
+        return when {
+            DisplayType.TableDir == refid || DisplayType.Search == refid && referenceValueId == 0 -> columnName.substring(0, columnName.length - 3)
+            DisplayType.Table == refid || DisplayType.Search == refid -> {
+                val ref = X_AD_Reference(referenceValueId)
+                if (X_AD_Reference.VALIDATIONTYPE_TableValidation == ref.validationType) {
+                    val cnt = getSQLValueEx(
+                        "SELECT COUNT(*) FROM AD_Ref_Table WHERE AD_Reference_ID=?",
+                        referenceValueId
+                    )
+                    if (cnt == 1) {
+                        val rt = MRefTable(referenceValueId)
+                        rt.table.dbTableName
+                    } else null
+                } else null
+            }
+            DisplayType.List == refid || DisplayType.Payment == refid -> "AD_Ref_List"
+            DisplayType.Location == refid -> "C_Location"
+            DisplayType.Account == refid -> "C_ValidCombination"
+            DisplayType.Locator == refid -> "M_Locator"
+            DisplayType.PAttribute == refid -> "M_AttributeSetInstance"
+            DisplayType.Assignment == refid -> "S_ResourceAssignment"
+            DisplayType.Image == refid -> "AD_Image"
+            DisplayType.Color == refid -> "AD_Color"
+            DisplayType.Chart == refid -> "AD_Chart"
+            else -> null
+        }
     }
 
     /**
