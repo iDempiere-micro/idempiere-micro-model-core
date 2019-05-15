@@ -30,22 +30,22 @@ public class CacheMgt {
                 int max = 0;
                 try {
                     max = Integer.parseInt(maxSize.trim());
-                } catch (Throwable t) {
+                } catch (Throwable ignored) {
                 }
                 if (max > 0) MAX_SIZE = max;
             }
-        } catch (Throwable t) {
+        } catch (Throwable ignored) {
         }
     }
 
     /**
      * List of Instances
      */
-    private ArrayList<CacheInterface> m_instances = new ArrayList<CacheInterface>();
+    private ArrayList<CacheInterface> m_instances = new ArrayList<>();
     /**
      * List of Table Names
      */
-    private ArrayList<String> m_tableNames = new ArrayList<String>();
+    private ArrayList<String> m_tableNames = new ArrayList<>();
 
     /**
      * Private Constructor
@@ -67,55 +67,34 @@ public class CacheMgt {
      * ************************************************************************ Create Cache Instance
      *
      * @param instance    Cache
-     * @param distributed
      * @return true if added
      */
-    public synchronized <K, V> Map<K, V> register(CCache<K, V> instance, boolean distributed) {
+    public synchronized <K, V> Map<K, V> register(CCache<K, V> instance) {
         if (instance == null) return null;
 
-        String name = instance.getName();
         String tableName = instance.getTableName();
         if (tableName != null) m_tableNames.add(tableName);
 
         m_instances.add(instance);
-        Map<K, V> map = null;
 
-        if (map == null) {
-            map = Collections.synchronizedMap(new MaxSizeHashMap<K, V>(instance.getMaxSize()));
-        }
-        return map;
+        return Collections.synchronizedMap(new MaxSizeHashMap<>(instance.getMaxSize()));
     } //	register
-
-    /**
-     * do a cluster wide cache reset
-     *
-     * @return number of deleted cache entries
-     */
-    private int clusterReset() {
-        return clusterReset(null, -1);
-    }
 
     /**
      * do a cluster wide cache reset for tableName with recordId key
      *
-     * @param tableName
-     * @param recordId  record id for the cache entries to delete. pass -1 if you don't want to delete
-     *                  cache entries by record id
      * @return number of deleted cache entries
      */
-    private int clusterReset(String tableName, int recordId) {
+    private int clusterReset() {
         return 0;
     }
 
     /**
      * do a cluster wide cache reset for tableName with recordId key
      *
-     * @param tableName
-     * @param recordId  record id for the cache entries to delete. pass -1 if you don't want to delete
-     *                  cache entries by record id
      * @return number of deleted cache entries
      */
-    private void clusterNewRecord(String tableName, int recordId) {
+    private void clusterNewRecord() {
     }
 
     /**
@@ -125,28 +104,6 @@ public class CacheMgt {
      */
     public int reset() {
         return clusterReset();
-    }
-
-    /**
-     * do a cluster wide cache reset for tableName
-     *
-     * @param tableName table name
-     * @return number of deleted cache entries
-     */
-    public int reset(String tableName) {
-        return reset(tableName, -1);
-    }
-
-    /**
-     * do a cluster wide cache reset for tableName with recordId key
-     *
-     * @param tableName
-     * @param Record_ID record id for the cache entries to delete. pass -1 if you don't want to delete
-     *                  cache entries by record id
-     * @return number of deleted cache entries
-     */
-    public int reset(String tableName, int Record_ID) {
-        return clusterReset(tableName, Record_ID);
     }
 
     /**
@@ -242,13 +199,11 @@ public class CacheMgt {
      * @return info
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("CacheMgt[");
-        sb.append("Instances=").append(m_instances.size()).append("]");
-        return sb.toString();
+        return "CacheMgt[" + "Instances=" + m_instances.size() + "]";
     } //	toString
 
-    public void newRecord(String tableName, int recordId) {
-        clusterNewRecord(tableName, recordId);
+    public void newRecord() {
+        clusterNewRecord();
     }
 
     private static class MaxSizeHashMap<K, V> extends LinkedHashMap<K, V> {

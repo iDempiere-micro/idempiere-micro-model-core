@@ -20,9 +20,7 @@ data class POInfoDetail(
 
 open class POInfo(val tableId: Int, baseLanguageOnly: Boolean) {
     private val detail: Pair<POInfoDetail, Array<POInfoColumn>> = loadInfo(
-        if (baseLanguageOnly) true else Env.isBaseLanguage(
-            "AD_Table"
-        )
+        if (baseLanguageOnly) true else Env.isBaseLanguage()
     )
 
     protected val columnNameMap: MutableMap<String, Int> = detail.first.columnNameMap
@@ -78,20 +76,15 @@ open class POInfo(val tableId: Int, baseLanguageOnly: Boolean) {
                     AD_Reference_ID,
                     IsMandatory,
                     IsUpdateable,
-                    DefaultLogic,
                     Name,
                     Description,
                     IsKey,
                     IsParent,
-                    AD_Reference_Value_ID,
-                    ValidationCode,
                     FieldLength,
                     ValueMin,
                     ValueMax,
                     IsTranslated,
-                    IsEncrypted,
-                    IsAllowLogging,
-                    IsAllowCopy
+                    IsEncrypted
                 )
             )
         }

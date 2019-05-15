@@ -64,7 +64,7 @@ public final class Env {
      */
     private static CLogger log = CLogger.getCLogger(Env.class);
 
-    /** Static initializer */
+    /* Static initializer */
     static {
         try {
             //  Set English as default Language
@@ -87,23 +87,6 @@ public final class Env {
     }
 
     /**
-     * @param provider
-     * @deprecated
-     */
-    public static void setContextProvider(ContextProvider provider) {
-    }
-
-    /**
-     * Set Global Context to Value
-     *
-     * @param context context key
-     * @param value   context value
-     */
-    public static void setContext(String context, String value) {
-        throw new Error("Setting properties is no longer supported!");
-    } //	setContext
-
-    /**
      * JDBC Timestamp Format yyyy-mm-dd hh:mm:ss
      *
      * @return timestamp format
@@ -111,31 +94,6 @@ public final class Env {
     public static SimpleDateFormat getTimestampFormat_Default() {
         return new SimpleDateFormat(DEFAULT_TIMESTAMP_FORMAT);
     } //  getTimestampFormat_JDBC
-
-    /**
-     * Set Global Context to (int) Value
-     *
-     * @param context context key
-     * @param value   context value
-     */
-    public static void setContext(String context, int value) {
-        throw new Error("Setting properties is no longer supported!");
-    } //	setContext
-
-    /**
-     * Set Context for Window to int Value
-     *
-     * @param WindowNo window no
-     * @param context  context key
-     * @param value    context value
-     */
-    public static void setContext(int WindowNo, String context, int value) {
-        throw new Error("Setting properties is no longer supported!");
-    } //	setContext
-
-    private static String convert(boolean value) {
-        return value ? "Y" : "N";
-    }
 
     /**
      * Get global Value of Context
@@ -171,31 +129,6 @@ public final class Env {
     } //	getContext
 
     /**
-     * Get Value of Context for Window & Tab, if not found global context if available. If TabNo is
-     * TAB_INFO only tab's context will be checked.
-     *
-     * @param WindowNo   window no
-     * @param TabNo      tab no
-     * @param context    context key
-     * @param onlyTab    if true, no window value is searched
-     * @param onlyWindow if true, no global context will be searched
-     * @return value or ""
-     */
-    public static String getContext(
-            int WindowNo,
-            int TabNo,
-            String context,
-            boolean onlyTab,
-            boolean onlyWindow) {
-        String s = Environment.Companion.getCurrent().getContext().getProperty(WindowNo + "|" + TabNo + "|" + context);
-        // If TAB_INFO, don't check Window and Global context - teo_sarca BF [ 2017987 ]
-        if (TAB_INFO == TabNo) return s != null ? s : "";
-        //
-        if (Util.isEmpty(s) && !onlyTab) return getContext(WindowNo, context, onlyWindow);
-        return s;
-    } //	getContext
-
-    /**
      * Get Context and convert it to an integer (0 if error)
      *
      * @param context context key
@@ -225,15 +158,6 @@ public final class Env {
         return s == null || !s.equals("N");*/
         return false;
     } //	isSOTrx
-
-    /**
-     * Set SO Trx
-     *
-     * @param isSOTrx SO Context
-     */
-    public static void setSOTrx(boolean isSOTrx) {
-        throw new Error("Setting properties is no longer supported!");
-    } //	setSOTrx
 
     /**
      * Get Context and convert it to a Timestamp if error return today's date
@@ -313,10 +237,9 @@ public final class Env {
     /**
      * Check Base Language
      *
-     * @param tableName table to be translated
      * @return true if base language and table not translated
      */
-    public static boolean isBaseLanguage(String tableName) {
+    public static boolean isBaseLanguage() {
         return Language.isBaseLanguage(getADLanguage());
     } //	isBaseLanguage
 
@@ -324,10 +247,9 @@ public final class Env {
      * Check Base Language
      *
      * @param AD_Language language
-     * @param tableName   table to be translated
      * @return true if base language and table not translated
      */
-    public static boolean isBaseLanguage(String AD_Language, String tableName) {
+    public static boolean isBaseLanguage(String AD_Language) {
         return Language.isBaseLanguage(AD_Language);
     } //	isBaseLanguage
 

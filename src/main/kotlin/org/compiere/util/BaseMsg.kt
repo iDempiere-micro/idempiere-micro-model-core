@@ -24,7 +24,7 @@ internal fun getElement(ad_language: String?, ColumnName: String?, isSOTrx: Bool
     }
 
     val loadQuery =
-        if (AD_Language == null || AD_Language.length == 0 || Env.isBaseLanguage(AD_Language, "AD_Element")) {
+        if (AD_Language == null || AD_Language.length == 0 || Env.isBaseLanguage(AD_Language)) {
             "/sql/getElementBase.sql".asResource { sql ->
                 queryOf(sql, listOf(ColumnName.toUpperCase())).map { map(it) }.asSingle
             }
@@ -71,7 +71,7 @@ open class BaseMsg {
         val loadQuery =
             if (language == null ||
                 language.isEmpty() ||
-                Env.isBaseLanguage(language, "AD_Language")
+                Env.isBaseLanguage(language)
             ) {
                 "/sql/initMsgBase.sql".asResource { sql ->
                     queryOf(sql, listOf()).map { processRow(it) }.asList

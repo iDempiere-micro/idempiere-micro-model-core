@@ -69,7 +69,7 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
 
     public CCache(
             String name, int initialCapacity, int expireMinutes, boolean distributed, int maxSize) {
-        this(name, name, initialCapacity, expireMinutes, distributed, maxSize);
+        this(name, name, expireMinutes, distributed, maxSize);
     }
 
     /**
@@ -88,14 +88,12 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
 
     public CCache(
             String tableName, String name, int initialCapacity, int expireMinutes, boolean distributed) {
-        this(tableName, name, initialCapacity, expireMinutes, distributed, CacheMgt.MAX_SIZE);
+        this(tableName, name, expireMinutes, distributed, CacheMgt.MAX_SIZE);
     }
 
     /**
      * Adempiere Cache
-     *
-     * @param name            (table) name of the cache
-     * @param initialCapacity initial capacity
+     *  @param name            (table) name of the cache
      * @param expireMinutes   expire after minutes (0=no expire)
      * @param distributed
      * @param maxSize         ignore if distributed=true
@@ -103,7 +101,6 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
     public CCache(
             String tableName,
             String name,
-            int initialCapacity,
             int expireMinutes,
             boolean distributed,
             int maxSize) {
@@ -111,7 +108,7 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
         m_tableName = tableName;
         setExpireMinutes(expireMinutes);
         m_maxSize = maxSize;
-        cache = CacheMgt.get().register(this, distributed);
+        cache = CacheMgt.get().register(this);
         m_distributed = distributed;
 
         if (nullList == null) {

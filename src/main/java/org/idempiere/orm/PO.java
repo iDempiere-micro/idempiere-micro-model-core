@@ -12,10 +12,8 @@ import org.idempiere.common.util.CacheMgt;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Evaluatee;
 import org.idempiere.common.util.SecureEngine;
-import org.idempiere.common.util.Trace;
 import org.idempiere.common.util.ValueNamePair;
 import org.idempiere.icommon.model.PersistentObject;
-import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import software.hsharp.core.util.DB;
@@ -172,7 +170,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *  you need to set the IDs for multi-key records explicitly.
      * </pre>
      *
-     * @param ID the ID if 0, the record defaults are applied - ignored if re exists
      */
     public PO(Row row) {
         super(row);
@@ -511,7 +508,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
         int size = get_ColumnCount();
         boolean success = true;
-        int index = 0;
+        int index;
         POInfo p_info = super.getP_info();
         log.finest("(hm)");
         //  load column values
@@ -627,7 +624,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return is active
      */
     public final boolean isActive() {
-        Boolean bb = (Boolean) getValue("IsActive");
+        Boolean bb = getValue("IsActive");
         if (bb != null) return bb;
         return false;
     } //	isActive
@@ -706,7 +703,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             //
             // Check if NOT base language and column is translated => load trl from db
             POInfo p_info = super.getP_info();
-            if (!Env.isBaseLanguage(AD_Language, getTableName())
+            if (!Env.isBaseLanguage(AD_Language)
                     && p_info.isColumnTranslated(p_info.getColumnIndex(columnName))) {
                 // Load translation from database
                 int ID = (Integer) getIds()[0];
@@ -1434,8 +1431,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
             clearNewValues();
             setCreateNew(false);
         }
-        if (!newRecord) CacheMgt.get().reset(p_info.getTableName());
-        else if (getId() > 0 && success) CacheMgt.get().newRecord(p_info.getTableName(), getId());
+        if (!newRecord) CacheMgt.get().reset();
+        else if (getId() > 0 && success) CacheMgt.get().newRecord();
 
         return success;
     } //	saveFinish

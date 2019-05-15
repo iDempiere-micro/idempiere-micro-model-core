@@ -153,14 +153,6 @@ public class CLogErrorBuffer extends Handler {
                         && loggerName.indexOf("Issue") == -1
                         && loggerName.indexOf("CConnection") == -1) {
                     setIssueError(false);
-                    try {
-                        MIssue.create(record);
-                        setIssueError(true);
-                    } catch (Throwable e) {
-                        // failed to save exception to db, print to console
-                        System.err.println(getFormatter().format(record));
-                        setIssueError(false);
-                    }
                 } else {
                     // display to user if database connection not available
                     if (methodName != null
@@ -239,12 +231,4 @@ public class CLogErrorBuffer extends Handler {
                 .append("]");
         return sb.toString();
     } //	toString
-
-    private static class Msg {
-    }
-
-    private static class MIssue {
-        private static void create(LogRecord record) {
-        }
-    }
 } //	CLogErrorBuffer

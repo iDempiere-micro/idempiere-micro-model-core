@@ -394,7 +394,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         if (!force) {
             int iProcessed = getColumnIndex("Processed");
             if (iProcessed != -1) {
-                Boolean processed = (Boolean) getValue(iProcessed);
+                Boolean processed = getValue(iProcessed);
                 if (processed != null && processed) {
                     log.warning("Record processed"); // 	CannotDeleteTrx
                     log.saveError("Processed", "Processed", false);
@@ -469,7 +469,7 @@ public abstract class PO extends org.idempiere.orm.PO {
 
         m_idOld = 0;
         clearNewValues();
-        CacheMgt.get().reset(p_info.getTableName());
+        CacheMgt.get().reset();
         return success;
     } //	delete
 

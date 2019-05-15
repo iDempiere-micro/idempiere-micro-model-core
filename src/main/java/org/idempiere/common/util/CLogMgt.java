@@ -132,7 +132,7 @@ public class CLogMgt {
         if (isClient && !handlerNames.contains(CLogConsole.class.getName()))
             addHandler(CONSOLE_HANDLER);
         if (!handlerNames.contains(CLogFile.class.getName())) {
-            if (fileHandler == null) fileHandler = new CLogFile(null, true, isClient);
+            if (fileHandler == null) fileHandler = new CLogFile(true, isClient);
 
             addHandler(fileHandler);
         }

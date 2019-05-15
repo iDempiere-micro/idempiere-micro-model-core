@@ -100,27 +100,21 @@ public class POInfoColumn implements Serializable {
 
     /**
      * Constructor
-     *
-     * @param ad_Column_ID          Column ID
+     *  @param ad_Column_ID          Column ID
      * @param columnName            Column name
      * @param columnSQL             virtual column
      * @param displayType           Display Type
      * @param isMandatory           Mandatory
      * @param isUpdateable          Updateable
-     * @param defaultLogic          Default Logic
      * @param columnLabel           Column Label
      * @param columnDescription     Column Description
      * @param isKey                 true if key
      * @param isParent              true if parent
-     * @param ad_Reference_Value_ID reference value
-     * @param validationCode        sql validation code
      * @param fieldLength           Field Length
      * @param valueMin              minimal value
      * @param valueMax              maximal value
      * @param isTranslated          translated
      * @param isEncrypted           encrypted
-     * @param isAllowLogging        allow logging
-     * @param isAllowCopy           allow copy
      */
     public POInfoColumn(
             int ad_Column_ID,
@@ -129,35 +123,38 @@ public class POInfoColumn implements Serializable {
             int displayType,
             boolean isMandatory,
             boolean isUpdateable,
-            String defaultLogic,
             String columnLabel,
             String columnDescription,
             boolean isKey,
             boolean isParent,
-            int ad_Reference_Value_ID,
-            String validationCode,
             int fieldLength,
             String valueMin,
             String valueMax,
             boolean isTranslated,
-            boolean isEncrypted,
-            boolean isAllowLogging,
-            boolean isAllowCopy) {
+            boolean isEncrypted) {
         AD_Column_ID = ad_Column_ID;
         ColumnName = columnName;
         ColumnSQL = columnSQL;
         DisplayType = displayType;
-        if (columnName.equals("AD_Language") || columnName.equals("EntityType")) {
-            DisplayType = org.compiere.util.DisplayType.String;
-            ColumnClass = String.class;
-        } else if (columnName.equals("Posted")
-                || columnName.equals("Processed")
-                || columnName.equals("Processing")) {
-            ColumnClass = Boolean.class;
-        } else if (columnName.equals("Record_ID")) {
-            DisplayType = org.compiere.util.DisplayType.ID;
-            ColumnClass = Integer.class;
-        } else ColumnClass = org.compiere.util.DisplayType.getClass(displayType, true);
+        switch (columnName) {
+            case "AD_Language":
+            case "EntityType":
+                DisplayType = org.compiere.util.DisplayType.String;
+                ColumnClass = String.class;
+                break;
+            case "Posted":
+            case "Processed":
+            case "Processing":
+                ColumnClass = Boolean.class;
+                break;
+            case "Record_ID":
+                DisplayType = org.compiere.util.DisplayType.ID;
+                ColumnClass = Integer.class;
+                break;
+            default:
+                ColumnClass = org.compiere.util.DisplayType.getClass(displayType, true);
+                break;
+        }
         IsMandatory = isMandatory;
         IsUpdateable = isUpdateable;
         ColumnLabel = columnLabel;
@@ -189,7 +186,7 @@ public class POInfoColumn implements Serializable {
      * @return info
      */
     public String toString() {
-        String sb = "POInfo.Column[" + ColumnName +
+        return "POInfo.Column[" + ColumnName +
                 ",ID=" +
                 AD_Column_ID +
                 ",DisplayType=" +
@@ -197,6 +194,5 @@ public class POInfoColumn implements Serializable {
                 ",ColumnClass=" +
                 ColumnClass +
                 "]";
-        return sb;
     } //	toString
 } //	POInfoColumn

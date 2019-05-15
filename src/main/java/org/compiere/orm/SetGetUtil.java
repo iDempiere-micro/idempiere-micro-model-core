@@ -94,7 +94,7 @@ public class SetGetUtil {
             rs = pstmt.executeQuery();
             updateColumns(models, columnNames, rs);
         } catch (SQLException e) {
-            throw new DBException(e, sql);
+            throw new DBException(e);
         }
     } //	updateColumns
 

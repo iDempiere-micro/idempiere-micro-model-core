@@ -19,7 +19,7 @@ import software.hsharp.core.util.prepareStatement
  * @return List or ""
  */
 private fun doGetListName(AD_Language: String, AD_Reference_ID: Int, Value: String): String {
-    val isBaseLanguage = Env.isBaseLanguage(AD_Language, "AD_Ref_List")
+    val isBaseLanguage = Env.isBaseLanguage(AD_Language)
     val sql = if (isBaseLanguage)
         "SELECT Name FROM AD_Ref_List " + "WHERE AD_Reference_ID=? AND Value=?"
     else

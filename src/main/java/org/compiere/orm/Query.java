@@ -157,7 +157,7 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
                 throw new DBException("QueryMoreThanOneRecordsFound"); // TODO : translate
             }
         } catch (SQLException e) {
-            throw new DBException(e, sql);
+            throw new DBException(e);
         } finally {
             rs = null;
             pstmt = null;
@@ -244,7 +244,7 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
                 throw new DBException("QueryMoreThanOneRecordsFound"); // TODO : translate
             }
         } catch (SQLException e) {
-            throw new DBException(e, sql);
+            throw new DBException(e);
         }
         //
         if (value == null) {
@@ -272,14 +272,14 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
     public boolean match() throws DBException {
         Table table = super.getTable();
         String sql = buildSQL(new StringBuilder("SELECT 1 FROM ").append(table.getDbTableName()), false);
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        PreparedStatement pstmt;
+        ResultSet rs;
         try {
             pstmt = prepareStatement(sql);
             rs = createResultSet(pstmt);
             if (rs.next()) return true;
         } catch (SQLException e) {
-            throw new DBException(e, sql);
+            throw new DBException(e);
         }
         return false;
     }
