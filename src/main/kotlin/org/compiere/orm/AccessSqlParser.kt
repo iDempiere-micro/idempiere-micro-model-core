@@ -91,12 +91,13 @@ class AccessSqlParser
      */
     fun setSql(sql: String?) {
         if (sql == null) throw IllegalArgumentException("No SQL")
-        m_sqlOriginal = sql
-        var index = m_sqlOriginal!!.indexOf("\nFROM ")
-        if (index != -1) m_sqlOriginal = m_sqlOriginal!!.replace("\nFROM ", FROM)
-        index = m_sqlOriginal!!.indexOf("\nWHERE ")
-        if (index != -1) m_sqlOriginal = m_sqlOriginal!!.replace("\nWHERE ", WHERE)
+        var changedSql = sql
+        var index = changedSql.indexOf("\nFROM ")
+        if (index != -1) changedSql = changedSql.replace("\nFROM ", FROM)
+        index = changedSql.indexOf("\nWHERE ")
+        if (index != -1) changedSql = changedSql.replace("\nWHERE ", WHERE)
         //
+        m_sqlOriginal = changedSql
         parse()
     } // 	setSQL
 

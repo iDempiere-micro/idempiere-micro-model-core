@@ -94,16 +94,6 @@ fun executeUpdateEx(sql: String, objects: List<Any>): Int =
     DB.current.run(queryOf(convert.convertAll(sql), objects.map { param -> convertParameter(param) }).asUpdate)
 
 fun executeUpdate(sql: String, param: Int): Int = executeUpdateEx(sql, listOf(param))
-fun executeUpdate(sql: String, ignoreError: Boolean): Int {
-    return try {
-        executeUpdateEx(sql, listOf())
-    } catch (e: Exception) {
-        if (ignoreError) {
-            -1
-        }
-        throw e
-    }
-}
 
 // STATEMENT
 fun prepareStatement(
