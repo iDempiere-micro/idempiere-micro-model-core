@@ -109,10 +109,10 @@ class MOrg : X_AD_Org {
             val role = getDefaultRole(true) // 	reload
             role.loadAccess(true) // reload org access within transaction
             // 	TreeNode
-            insert_Tree(MTree_Base.TREETYPE_Organization)
+            insertTree(MTree_Base.TREETYPE_Organization)
         }
         if (newRecord || isValueChanged(ClientOrganization.COLUMNNAME_Value))
-            update_Tree(MTree_Base.TREETYPE_Organization)
+            updateTree(MTree_Base.TREETYPE_Organization)
 
         return true
     } // 	afterSave
@@ -124,7 +124,7 @@ class MOrg : X_AD_Org {
      * @return deleted
      */
     override fun afterDelete(success: Boolean): Boolean {
-        if (success) delete_Tree(MTree_Base.TREETYPE_Organization)
+        if (success) deleteTree(MTree_Base.TREETYPE_Organization)
         return success
     } // 	afterDelete
 

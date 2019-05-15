@@ -388,6 +388,14 @@ internal abstract class PO(row: Row?) : PersistentObject {
         return getValue("UpdatedBy") as Int? ?: return 0
     } // 	getUpdatedBy
 
+    /**
+     * Insert Accounting Records
+     *
+     * @param acctTable accounting sub table
+     * @param acctBaseTable acct table to get data from
+     * @param whereClause optional where clause with alias "p" for acctBaseTable
+     * @return true if records inserted
+     */
     protected fun insertAccounting(acctTable: String, acctBaseTable: String, whereClause: String?): Boolean {
         val s_acctColumns = setAccountingColumns(acctTable)
         val tableName = p_info.tableName

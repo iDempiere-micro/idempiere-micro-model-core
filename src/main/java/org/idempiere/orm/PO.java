@@ -345,7 +345,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @return ID or 0
      */
-    public int get_IDOld() {
+    public int getDeletedSingleKeyRecordId() {
         return m_idOld;
     } //  getID
 
@@ -1361,10 +1361,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
             int no = saveNew_getID();
             if (no <= 0) throw new AdempiereException("no <= 0");
             // the primary key is not overwrite with the local sequence
-            if (isReplication()) {
-                if (getId() > 0) {
-                    no = getId();
-                }
+            if (isReplication() && getId() > 0) {
+                no = getId();
             }
             if (no <= 0) {
                 log.severe("No NextID (" + no + ")");
@@ -1376,7 +1374,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         // uuid secondary key
         int uuidIndex = p_info.getColumnIndex(getUUIDColumnName());
         if (uuidIndex >= 0) {
-            String value = (String) getValue(uuidIndex);
+            String value = getValue(uuidIndex);
             if (p_info.getColumn(uuidIndex).FieldLength == 36 && (value == null || value.length() == 0)) {
                 UUID uuid = UUID.randomUUID();
                 setValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());

@@ -401,7 +401,7 @@ public abstract class X_AD_Role extends BasePOName implements Role {
      * @return System Client Organization
      */
     public String getUserLevel() {
-        return (String) getValue(COLUMNNAME_UserLevel);
+        return getValue(COLUMNNAME_UserLevel);
     }
 
     /**

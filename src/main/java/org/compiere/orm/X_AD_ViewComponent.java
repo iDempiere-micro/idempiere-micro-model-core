@@ -71,7 +71,7 @@ public abstract class X_AD_ViewComponent extends PO implements ViewComponent {
      * @return Dictionary Entity Type; Determines ownership and synchronization
      */
     public String getEntityType() {
-        return (String) getValue(COLUMNNAME_EntityType);
+        return getValue(COLUMNNAME_EntityType);
     }
 
     /**
@@ -90,7 +90,7 @@ public abstract class X_AD_ViewComponent extends PO implements ViewComponent {
      * @return Alphanumeric identifier of the entity
      */
     public String getName() {
-        return (String) getValue(HasName.COLUMNNAME_Name);
+        return getValue(HasName.COLUMNNAME_Name);
     }
 
     @Override

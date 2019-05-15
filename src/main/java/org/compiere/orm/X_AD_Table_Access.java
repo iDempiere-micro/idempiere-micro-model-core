@@ -66,7 +66,7 @@ public class X_AD_Table_Access extends PO implements TableAccess {
      * @return The type of access for this rule
      */
     public String getAccessTypeRule() {
-        return (String) getValue(COLUMNNAME_AccessTypeRule);
+        return getValue(COLUMNNAME_AccessTypeRule);
     }
 
     /**

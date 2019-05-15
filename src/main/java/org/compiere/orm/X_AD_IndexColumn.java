@@ -85,7 +85,7 @@ public class X_AD_IndexColumn extends PO implements IndexColumn {
      * @return Virtual Column (r/o)
      */
     public String getColumnSQL() {
-        return (String) getValue(COLUMNNAME_ColumnSQL);
+        return getValue(COLUMNNAME_ColumnSQL);
     }
 
     /**

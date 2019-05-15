@@ -54,7 +54,7 @@ public class X_AD_Reference extends BasePOName implements Reference {
      * @return Different method of validating data
      */
     public String getValidationType() {
-        return (String) getValue(COLUMNNAME_ValidationType);
+        return getValue(COLUMNNAME_ValidationType);
     }
 
     @Override

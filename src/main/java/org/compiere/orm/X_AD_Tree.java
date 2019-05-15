@@ -71,7 +71,7 @@ public class X_AD_Tree extends BasePOName implements Tree {
      * @return Optional short description of the record
      */
     public String getDescription() {
-        return (String) getValue(COLUMNNAME_Description);
+        return getValue(COLUMNNAME_Description);
     }
 
     /**
@@ -135,7 +135,7 @@ public class X_AD_Tree extends BasePOName implements Tree {
      * @return Element this tree is built on (i.e Product, Business Partner)
      */
     public String getTreeType() {
-        return (String) getValue(COLUMNNAME_TreeType);
+        return getValue(COLUMNNAME_TreeType);
     }
 
     /**

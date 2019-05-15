@@ -76,7 +76,7 @@ public abstract class X_AD_Table extends PO implements Table {
      * @return Access Level required
      */
     public String getTableAccessLevel() {
-        return (String) getValue(COLUMNNAME_AccessLevel);
+        return getValue(COLUMNNAME_AccessLevel);
     }
 
     /**
@@ -123,7 +123,7 @@ public abstract class X_AD_Table extends PO implements Table {
      * @return Optional short description of the record
      */
     public String getDescription() {
-        return (String) getValue(COLUMNNAME_Description);
+        return getValue(COLUMNNAME_Description);
     }
 
     /**
@@ -132,7 +132,7 @@ public abstract class X_AD_Table extends PO implements Table {
      * @return Dictionary Entity Type; Determines ownership and synchronization
      */
     public String getEntityType() {
-        return (String) getValue(COLUMNNAME_EntityType);
+        return getValue(COLUMNNAME_EntityType);
     }
 
     /**
@@ -151,7 +151,7 @@ public abstract class X_AD_Table extends PO implements Table {
      * @return Comment or Hint
      */
     public String getHelp() {
-        return (String) getValue(COLUMNNAME_Help);
+        return getValue(COLUMNNAME_Help);
     }
 
     /**
@@ -236,7 +236,7 @@ public abstract class X_AD_Table extends PO implements Table {
      * HasName.COLUMNNAME_Name
      */
     public String getName() {
-        return (String) getValue(HasName.COLUMNNAME_Name);
+        return getValue(HasName.COLUMNNAME_Name);
     }
 
     /**
@@ -255,7 +255,7 @@ public abstract class X_AD_Table extends PO implements Table {
      * @return Name of the table in the database
      */
     public String getDbTableName() {
-        return (String) getValue(COLUMNNAME_TableName);
+        return getValue(COLUMNNAME_TableName);
     }
 
     @Override

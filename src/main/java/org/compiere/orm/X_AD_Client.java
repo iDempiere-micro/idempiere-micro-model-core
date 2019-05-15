@@ -48,7 +48,7 @@ public class X_AD_Client extends BasePONameValue implements Client {
      * @return Language for this entity
      */
     public String getADLanguage() {
-        return (String) getValue(COLUMNNAME_AD_Language);
+        return getValue(COLUMNNAME_AD_Language);
     }
 
     /**
@@ -192,7 +192,7 @@ public class X_AD_Client extends BasePONameValue implements Client {
      * @return Material Movement Policy
      */
     public String getMMPolicy() {
-        return (String) getValue(COLUMNNAME_MMPolicy);
+        return getValue(COLUMNNAME_MMPolicy);
     }
 
     /**
@@ -211,7 +211,7 @@ public class X_AD_Client extends BasePONameValue implements Client {
      * @return List of data model validation classes separated by ;
      */
     public String getModelValidationClasses() {
-        return (String) getValue(COLUMNNAME_ModelValidationClasses);
+        return getValue(COLUMNNAME_ModelValidationClasses);
     }
 
     /**
@@ -221,7 +221,7 @@ public class X_AD_Client extends BasePONameValue implements Client {
      * (fully qualified)
      */
     public String getRequestEMail() {
-        return (String) getValue(COLUMNNAME_RequestEMail);
+        return getValue(COLUMNNAME_RequestEMail);
     }
 
     /**
@@ -230,7 +230,7 @@ public class X_AD_Client extends BasePONameValue implements Client {
      * @return User Name (ID) of the email owner
      */
     public String getRequestUser() {
-        return (String) getValue(COLUMNNAME_RequestUser);
+        return getValue(COLUMNNAME_RequestUser);
     }
 
     /**
@@ -239,7 +239,7 @@ public class X_AD_Client extends BasePONameValue implements Client {
      * @return Password of the user name (ID) for mail processing
      */
     public String getRequestUserPW() {
-        return (String) getValue(COLUMNNAME_RequestUserPW);
+        return getValue(COLUMNNAME_RequestUserPW);
     }
 
     /**
@@ -248,7 +248,7 @@ public class X_AD_Client extends BasePONameValue implements Client {
      * @return Hostname of Mail Server for SMTP and IMAP
      */
     public String getSMTPHost() {
-        return (String) getValue(COLUMNNAME_SMTPHost);
+        return getValue(COLUMNNAME_SMTPHost);
     }
 
     /**

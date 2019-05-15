@@ -129,7 +129,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return Logical type of document
      */
     public String getDocBaseType() {
-        return (String) getValue(COLUMNNAME_DocBaseType);
+        return getValue(COLUMNNAME_DocBaseType);
     }
 
     /**
@@ -169,7 +169,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return Inventory Sub Type
      */
     public String getDocSubTypeInv() {
-        return (String) getValue(COLUMNNAME_DocSubTypeInv);
+        return getValue(COLUMNNAME_DocSubTypeInv);
     }
 
     /**
@@ -188,7 +188,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return Sales Order Sub Type
      */
     public String getDocSubTypeSO() {
-        return (String) getValue(COLUMNNAME_DocSubTypeSO);
+        return getValue(COLUMNNAME_DocSubTypeSO);
     }
 
     /**
@@ -509,7 +509,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return The label text to be printed on a document or correspondence.
      */
     public String getPrintName() {
-        return (String) getValue(COLUMNNAME_PrintName);
+        return getValue(COLUMNNAME_PrintName);
     }
 
     /**

@@ -62,7 +62,7 @@ public class X_AD_SysConfig extends BasePONameValue implements SystemConfig {
      * @return Configuration Level for this parameter
      */
     public String getConfigurationLevel() {
-        return (String) getValue(COLUMNNAME_ConfigurationLevel);
+        return getValue(COLUMNNAME_ConfigurationLevel);
     }
 
     /**
@@ -81,7 +81,7 @@ public class X_AD_SysConfig extends BasePONameValue implements SystemConfig {
      * @return Dictionary Entity Type; Determines ownership and synchronization
      */
     public String getEntityType() {
-        return (String) getValue(COLUMNNAME_EntityType);
+        return getValue(COLUMNNAME_EntityType);
     }
 
     @Override

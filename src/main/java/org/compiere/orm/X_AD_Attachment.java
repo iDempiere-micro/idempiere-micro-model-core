@@ -89,7 +89,7 @@ public class X_AD_Attachment extends PO {
      * @return Name this entity is referred to as
      */
     public String getTitle() {
-        return (String) getValue(Attachment.COLUMNNAME_Title);
+        return getValue(Attachment.COLUMNNAME_Title);
     }
 
     /**

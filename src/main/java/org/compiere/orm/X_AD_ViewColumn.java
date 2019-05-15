@@ -65,7 +65,7 @@ public class X_AD_ViewColumn extends PO implements ViewColumn {
      * @return Name of the column in the database
      */
     public String getColumnName() {
-        return (String) getValue(COLUMNNAME_ColumnName);
+        return getValue(COLUMNNAME_ColumnName);
     }
 
     /**

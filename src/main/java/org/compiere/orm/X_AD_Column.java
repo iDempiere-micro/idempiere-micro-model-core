@@ -166,7 +166,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Name of the column in the database
      */
     public String getColumnName() {
-        return (String) getValue(COLUMNNAME_ColumnName);
+        return getValue(COLUMNNAME_ColumnName);
     }
 
     /**
@@ -184,7 +184,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Virtual Column (r/o)
      */
     public String getColumnSQL() {
-        return (String) getValue(COLUMNNAME_ColumnSQL);
+        return getValue(COLUMNNAME_ColumnSQL);
     }
 
     /**
@@ -193,7 +193,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Default value hierarchy, separated by ;
      */
     public String getDefaultValue() {
-        return (String) getValue(COLUMNNAME_DefaultValue);
+        return getValue(COLUMNNAME_DefaultValue);
     }
 
     /**
@@ -241,7 +241,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return The pattern used to format a number or date.
      */
     public String getFormatPattern() {
-        return (String) getValue(COLUMNNAME_FormatPattern);
+        return getValue(COLUMNNAME_FormatPattern);
     }
 
     /**
@@ -315,7 +315,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Display or Storage is encrypted
      */
     public String getIsEncrypted() {
-        return (String) getValue(COLUMNNAME_IsEncrypted);
+        return getValue(COLUMNNAME_IsEncrypted);
     }
 
     /**
@@ -451,7 +451,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Show the button on the toolbar, the window, or both
      */
     public String getIsToolbarButton() {
-        return (String) getValue(COLUMNNAME_IsToolbarButton);
+        return getValue(COLUMNNAME_IsToolbarButton);
     }
 
     /**
@@ -516,7 +516,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Alphanumeric identifier of the entity
      */
     public String getName() {
-        return (String) getValue(HasName.COLUMNNAME_Name);
+        return getValue(HasName.COLUMNNAME_Name);
     }
 
     /**
@@ -545,7 +545,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Maximum Value for a field
      */
     public String getValueMax() {
-        return (String) getValue(COLUMNNAME_ValueMax);
+        return getValue(COLUMNNAME_ValueMax);
     }
 
     /**
@@ -554,7 +554,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Minimum Value for a field
      */
     public String getValueMin() {
-        return (String) getValue(COLUMNNAME_ValueMin);
+        return getValue(COLUMNNAME_ValueMin);
     }
 
     /**

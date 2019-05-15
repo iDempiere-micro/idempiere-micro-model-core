@@ -60,7 +60,7 @@ public class X_AD_EntityType extends BasePOName implements EntityType {
      * @return Java Package of the model classes
      */
     public String getModelPackage() {
-        return (String) getValue(COLUMNNAME_ModelPackage);
+        return getValue(COLUMNNAME_ModelPackage);
     }
 
     @Override

@@ -98,7 +98,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Fully qualified date column
      */
     public String getDateColumn() {
-        return (String) getValue(COLUMNNAME_DateColumn);
+        return getValue(COLUMNNAME_DateColumn);
     }
 
     /**
@@ -107,7 +107,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Java Decimal Pattern
      */
     public String getDecimalPattern() {
-        return (String) getValue(COLUMNNAME_DecimalPattern);
+        return getValue(COLUMNNAME_DecimalPattern);
     }
 
     /**
@@ -200,7 +200,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Fully qualified Organization column (AD_Org_ID)
      */
     public String getOrgColumn() {
-        return (String) getValue(COLUMNNAME_OrgColumn);
+        return getValue(COLUMNNAME_OrgColumn);
     }
 
     /**
@@ -209,7 +209,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Prefix before the sequence number
      */
     public String getPrefix() {
-        return (String) getValue(COLUMNNAME_Prefix);
+        return getValue(COLUMNNAME_Prefix);
     }
 
     /**
@@ -284,7 +284,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Suffix after the number
      */
     public String getSuffix() {
-        return (String) getValue(COLUMNNAME_Suffix);
+        return getValue(COLUMNNAME_Suffix);
     }
 
     @Override
