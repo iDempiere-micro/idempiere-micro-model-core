@@ -1414,7 +1414,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             if (s_docWFMgr == null) {
                 try {
                     Class.forName("org.compiere.wf.DocWorkflowManager");
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
             if (s_docWFMgr != null) s_docWFMgr.process(this, p_info.getRowTableId());
@@ -1431,8 +1431,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
             clearNewValues();
             setCreateNew(false);
         }
-        if (!newRecord) CacheMgt.get().reset();
-        else if (getId() > 0 && success) CacheMgt.get().newRecord();
+        // DAP: if (!newRecord) CacheMgt.get().reset();
+        // DAP: else if (getId() > 0 && success) CacheMgt.get().newRecord();
 
         return success;
     } //	saveFinish

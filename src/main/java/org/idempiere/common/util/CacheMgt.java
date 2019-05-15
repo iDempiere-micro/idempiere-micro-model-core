@@ -81,117 +81,12 @@ public class CacheMgt {
     } //	register
 
     /**
-     * do a cluster wide cache reset for tableName with recordId key
-     *
-     * @return number of deleted cache entries
-     */
-    private int clusterReset() {
-        return 0;
-    }
-
-    /**
-     * do a cluster wide cache reset for tableName with recordId key
-     *
-     * @return number of deleted cache entries
-     */
-    private void clusterNewRecord() {
-    }
-
-    /**
-     * do a cluster wide cache reset
-     *
-     * @return number of deleted cache entries
-     */
-    public int reset() {
-        return clusterReset();
-    }
-
-    /**
-     * ************************************************************************ Reset local Cache
-     *
-     * @return number of deleted cache entries
-     */
-    public int resetLocalCache() {
-        int counter = 0;
-        int total = 0;
-        CacheInterface[] instances = getInstancesAsArray();
-        for (CacheInterface stored : instances) {
-            if (stored != null && stored.size() > 0) {
-                if (log.isLoggable(Level.FINE)) log.fine(stored.toString());
-                total += stored.reset();
-                counter++;
-            }
-        }
-        if (log.isLoggable(Level.FINE)) log.fine("#" + counter + " (" + total + ")");
-        return total;
-    }
-
-    /**
      * @return
      */
     protected synchronized CacheInterface[] getInstancesAsArray() {
         return m_instances.toArray(new CacheInterface[0]);
     }
 
-    /**
-     * Reset local Cache
-     *
-     * @param tableName table name
-     * @param Record_ID record if applicable or 0 for all
-     * @return number of deleted cache entries
-     */
-    protected int resetLocalCache(String tableName, int Record_ID) {
-        if (tableName == null) return resetLocalCache();
-        if (!m_tableNames.contains(tableName)) return 0;
-        //
-        int counter = 0;
-        int total = 0;
-        CacheInterface[] instances = getInstancesAsArray();
-        for (CacheInterface stored : instances) {
-            if (stored != null && stored instanceof CCache) {
-                CCache<?, ?> cc = (CCache<?, ?>) stored;
-                if (cc.getTableName() != null
-                        && cc.getTableName().startsWith(tableName)) // 	reset lines/dependent too
-                {
-                    {
-                        if (log.isLoggable(Level.FINE)) log.fine("(all) - " + stored);
-                        total += stored.reset(Record_ID);
-                        counter++;
-                    }
-                }
-            }
-        }
-        if (log.isLoggable(Level.FINE)) log.fine(tableName + ": #" + counter + " (" + total + ")");
-
-        return total;
-    }
-
-    /**
-     * Reset local Cache
-     *
-     * @param tableName table name
-     * @param Record_ID record if applicable or 0 for all
-     * @return number of deleted cache entries
-     */
-    protected void localNewRecord(String tableName, int Record_ID) {
-        if (tableName == null) return;
-
-        if (!m_tableNames.contains(tableName)) return;
-        //
-        CacheInterface[] instances = getInstancesAsArray();
-        for (CacheInterface stored : instances) {
-            if (stored != null && stored instanceof CCache) {
-                CCache<?, ?> cc = (CCache<?, ?>) stored;
-                if (cc.getTableName() != null
-                        && cc.getTableName().startsWith(tableName)) // 	reset lines/dependent too
-                {
-                    {
-                        stored.newRecord(Record_ID);
-                    }
-                }
-            }
-        }
-    }
 
     /**
      * String Representation
@@ -201,10 +96,6 @@ public class CacheMgt {
     public String toString() {
         return "CacheMgt[" + "Instances=" + m_instances.size() + "]";
     } //	toString
-
-    public void newRecord() {
-        clusterNewRecord();
-    }
 
     private static class MaxSizeHashMap<K, V> extends LinkedHashMap<K, V> {
         /**

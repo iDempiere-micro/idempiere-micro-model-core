@@ -23,7 +23,7 @@ public class CacheNewRecordCallable implements Callable<Integer>, Serializable {
 
     @Override
     public Integer call() throws Exception {
-        CacheMgt.get().localNewRecord(tableName, Record_ID);
+        // DAP: CacheMgt.get().localNewRecord(tableName, Record_ID);
         return 1;
     }
 }

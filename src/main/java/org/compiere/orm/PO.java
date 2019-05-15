@@ -469,7 +469,7 @@ public abstract class PO extends org.idempiere.orm.PO {
 
         m_idOld = 0;
         clearNewValues();
-        CacheMgt.get().reset();
+        // DAP: CacheMgt.get().reset();
         return success;
     } //	delete
 

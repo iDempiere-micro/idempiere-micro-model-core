@@ -23,6 +23,7 @@ public class ResetCacheCallable implements Callable<Integer>, Serializable {
 
     @Override
     public Integer call() throws Exception {
-        return CacheMgt.get().resetLocalCache(tableName, Record_ID);
+        //DAP: return CacheMgt.get().resetLocalCache(tableName, Record_ID);
+        return 0;
     }
 }
