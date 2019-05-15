@@ -26,6 +26,6 @@ abstract class BasePOUser : PO {
      * @return User within the system - Internal or Business Partner Contact
      */
     fun getUserId(): Int {
-        return getValue(User.COLUMNNAME_AD_User_ID) as Int? ?: return 0
+        return getValue(User.COLUMNNAME_AD_User_ID) ?: return 0
     }
 }

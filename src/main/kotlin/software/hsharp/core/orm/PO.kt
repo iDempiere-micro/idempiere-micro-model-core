@@ -385,7 +385,7 @@ internal abstract class PO(row: Row?) : PersistentObject {
      */
     fun getUpdatedBy(): Int {
         @Suppress("UNCHECKED_CAST")
-        return getValue("UpdatedBy") as Int? ?: return 0
+        return getValue("UpdatedBy") ?: return 0
     } // 	getUpdatedBy
 
     /**
