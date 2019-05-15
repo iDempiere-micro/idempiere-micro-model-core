@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * Adempiere Cache Management
@@ -18,10 +17,6 @@ public class CacheMgt {
      * Singleton
      */
     private static CacheMgt s_cache = null;
-    /**
-     * Logger
-     */
-    private static CLogger log = CLogger.getCLogger(CacheMgt.class);
 
     static {
         try {

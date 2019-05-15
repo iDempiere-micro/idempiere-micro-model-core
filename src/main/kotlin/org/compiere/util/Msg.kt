@@ -198,9 +198,9 @@ private constructor() // 	Mag
     /**
      * The Map
      */
-    private val m_languages = CCache<String, CCache<String, String>>(null, "msg_lang", 2, 0, false)
+    private val m_languages = CCache<String, CCache<String, String>>(null, "msg_lang", 0, false)
 
-    private val m_elementCache = CCache<String, CCache<String, String>>(null, "msg_element", 2, 0, false)
+    private val m_elementCache = CCache<String, CCache<String, String>>(null, "msg_element", 0, false)
 
     /**
      * Get Language specific Message Map
@@ -230,7 +230,7 @@ private constructor() // 	Mag
         var retValue: CCache<String, String>? = m_elementCache[AD_Language]
         if (retValue != null && retValue.size > 0) return retValue
 
-        retValue = CCache("element", 100, 0, false, 0)
+        retValue = CCache("element", 0, false, 0)
         m_elementCache[AD_Language] = retValue
         return retValue
     }

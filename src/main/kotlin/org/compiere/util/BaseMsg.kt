@@ -52,7 +52,7 @@ open class BaseMsg {
     }
 
     protected fun initMsg(language: String?): CCache<String, String> {
-        val msg = CCache<String, String>("AD_Message", MAP_SIZE, 0, false, 0)
+        val msg = CCache<String, String>("AD_Message", 0, false, 0)
 
         fun processRow(row: Row): Boolean {
             val message = row.stringOrNull(1)

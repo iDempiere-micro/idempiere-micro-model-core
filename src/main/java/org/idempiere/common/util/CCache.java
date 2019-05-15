@@ -55,20 +55,20 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
      */
     private VetoableChangeSupport m_changeSupport = null;
 
-    public CCache(String name, int initialCapacity) {
-        this(name, name, initialCapacity);
+    public CCache(String name) {
+        this(name, name, false);
     }
 
-    public CCache(String name, int initialCapacity, int expireMinutes) {
-        this(name, initialCapacity, expireMinutes, false);
+    public CCache(String name, int expireMinutes) {
+        this(name, expireMinutes, false);
     }
 
-    public CCache(String name, int initialCapacity, int expireMinutes, boolean distributed) {
-        this(name, name, initialCapacity, expireMinutes, distributed);
+    public CCache(String name, int expireMinutes, boolean distributed) {
+        this(name, name, expireMinutes, distributed);
     }
 
     public CCache(
-            String name, int initialCapacity, int expireMinutes, boolean distributed, int maxSize) {
+            String name, int expireMinutes, boolean distributed, int maxSize) {
         this(name, name, expireMinutes, distributed, maxSize);
     }
 
@@ -82,12 +82,12 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
         this(tableName, name, initialCapacity, false);
     } //	CCache
 
-    public CCache(String tableName, String name, int initialCapacity, boolean distributed) {
-        this(tableName, name, initialCapacity, 60, distributed);
+    public CCache(String tableName, String name, boolean distributed) {
+        this(tableName, name, 60, distributed);
     }
 
     public CCache(
-            String tableName, String name, int initialCapacity, int expireMinutes, boolean distributed) {
+            String tableName, String name, int expireMinutes, boolean distributed) {
         this(tableName, name, expireMinutes, distributed, CacheMgt.MAX_SIZE);
     }
 

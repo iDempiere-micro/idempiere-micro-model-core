@@ -9,7 +9,7 @@ import software.hsharp.core.util.DB
 import software.hsharp.core.util.asResource
 
 /** Cache  */
-internal val sysConfigCache = CCache<String, String>(SystemConfig.Table_Name, 40, 0, true)
+internal val sysConfigCache = CCache<String, String>(SystemConfig.Table_Name, 0, true)
 
 internal fun getValue(name: String, defaultValue: String?, clientId: Int, orgId: Int): String? {
     val key = "" + clientId + "_" + orgId + "_" + name
