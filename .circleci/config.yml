@@ -40,6 +40,11 @@ jobs:
             DOCKERIZE_VERSION: v0.6.1
 
       - run:
+          name: Update apt
+          command: |
+            sudo apt-get update
+
+      - run:
           name: Installing Dependencies
           command: |
             sudo apt-get install postgresql-client
