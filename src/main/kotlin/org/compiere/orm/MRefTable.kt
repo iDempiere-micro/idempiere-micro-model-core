@@ -3,7 +3,7 @@ package org.compiere.orm
 import kotliquery.Row
 import org.compiere.model.Table
 import org.idempiere.orm.PO
-import software.hsharp.core.orm.*
+import software.hsharp.core.orm.getTable
 
 /**
  * Reference table
@@ -21,13 +21,13 @@ class MRefTable : X_AD_Ref_Table {
             setEntityType(PO.ENTITYTYPE_UserMaintained) // U
             setIsValueDisplayed(false)
         }
-    } //	MRefTable
+    } // 	MRefTable
 
     /**
      * Load Constructor
      *
      */
-    constructor(row: Row) : super(row) //	MRefTable
+    constructor(row: Row) : super(row) // 	MRefTable
 
     @Throws(RuntimeException::class)
     override fun getTable(): Table {
@@ -37,4 +37,4 @@ class MRefTable : X_AD_Ref_Table {
     companion object {
         private const val serialVersionUID = 380648726485603193L
     }
-} //	MRefTable
+} // 	MRefTable

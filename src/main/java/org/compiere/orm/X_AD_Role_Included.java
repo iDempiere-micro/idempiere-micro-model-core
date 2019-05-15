@@ -55,7 +55,7 @@ public class X_AD_Role_Included extends PO implements RoleIncluded {
      * @return Included Role
      */
     public int getIncludedRoleId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_Included_Role_ID);
+        Integer ii = getValue(COLUMNNAME_Included_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -66,7 +66,7 @@ public class X_AD_Role_Included extends PO implements RoleIncluded {
      * @return Method of ordering records; lowest number comes first
      */
     public int getSeqNo() {
-        Integer ii = (Integer) getValue(COLUMNNAME_SeqNo);
+        Integer ii = getValue(COLUMNNAME_SeqNo);
         if (ii == null) return 0;
         return ii;
     }

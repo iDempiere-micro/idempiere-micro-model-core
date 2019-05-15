@@ -24,7 +24,7 @@ import java.util.ArrayList
  */
 fun getDbTableName(tableId: Int): String {
     return getTable(tableId).dbTableName
-} //	getTableName
+} // 	getTableName
 
 /**
  * Grant independence to GenerateModel from AD_Table_ID
@@ -33,7 +33,7 @@ fun getDbTableName(tableId: Int): String {
  */
 fun getTableId(tableName: String): Int {
     return "/sql/getTableId.sql".asResource {
-        sql -> getSQLValueEx( sql, listOf(tableName) )
+        sql -> getSQLValueEx(sql, listOf(tableName))
     }
 }
 
@@ -43,22 +43,20 @@ fun getTableId(tableName: String): Int {
  * @return true if table has zero ID
  */
 fun isZeroIDTable(tableName: String): Boolean {
-    return (tableName == "AD_Org"
-            || tableName == "AD_OrgInfo"
-            || tableName == "AD_Client"
-            || // IDEMPIERE-668
+    return (tableName == "AD_Org" ||
+            tableName == "AD_OrgInfo" ||
+            tableName == "AD_Client" ||
+            // IDEMPIERE-668
 
-            tableName == "AD_ReportView"
-            || tableName == "AD_Role"
-            || tableName == "AD_System"
-            || tableName == "AD_User"
-            || tableName == "C_DocType"
-            || tableName == "GL_Category"
-            || tableName == "M_AttributeSet"
-            || tableName == "M_AttributeSetInstance")
+            tableName == "AD_ReportView" ||
+            tableName == "AD_Role" ||
+            tableName == "AD_System" ||
+            tableName == "AD_User" ||
+            tableName == "C_DocType" ||
+            tableName == "GL_Category" ||
+            tableName == "M_AttributeSet" ||
+            tableName == "M_AttributeSetInstance")
 }
-
-
 
 /**
  * Persistent Table Model
@@ -110,7 +108,7 @@ class MTable : MBaseTable {
             if (column.isParent) list.add(column.columnName)
         }
         return list.toTypedArray()
-    } //	getKeyColumns
+    } // 	getKeyColumns
 
     /**
      * ************************************************************************ Standard Constructor
@@ -128,7 +126,7 @@ class MTable : MBaseTable {
             setIsView(false) // N
             setReplicationType(REPLICATIONTYPE_Local)
         }
-    } //	MTable
+    } // 	MTable
 
     /**
      * Load Constructor
@@ -144,7 +142,7 @@ class MTable : MBaseTable {
     override fun getColumn(columnName: String): Column? {
         return getColumns(false)
             .firstOrNull { columnName.equals(it.columnName, ignoreCase = true) }
-    } //	getColumn
+    } // 	getColumn
 
     /**
      * Get Column Index
@@ -156,7 +154,6 @@ class MTable : MBaseTable {
     override fun getDbColumnIndex(ColumnName: String): Int {
         val i = columnNameMap[ColumnName.toUpperCase()]
         return i ?: -1
-
     } //  getColumnIndex
 
     /**
@@ -169,18 +166,18 @@ class MTable : MBaseTable {
         if (isView && isDeletable) setIsDeleteable(false)
         //
         return true
-    } //	beforeSave
+    } // 	beforeSave
 
     /**
      * After Save
      *
      * @param newRecord new
-     * @param success   success
+     * @param success success
      * @return success
      */
     override fun afterSave(newRecord: Boolean, success: Boolean): Boolean {
         if (!success) return success
-        //	Sync Table ID
+        // 	Sync Table ID
         val seq = MSequence.get(dbTableName)
         if (seq == null || seq.id == 0)
             MSequence.createTableSequence(dbTableName)
@@ -190,7 +187,7 @@ class MTable : MBaseTable {
         }
 
         return success
-    } //	afterSave
+    } // 	afterSave
 
     /**
      * Create query to retrieve one or more PO.
@@ -198,7 +195,7 @@ class MTable : MBaseTable {
      * @param whereClause
      * @return Query
      */
-    override fun <T:PersistentObject> createQuery(whereClause: String): TypedQuery<T> {
+    override fun <T : PersistentObject> createQuery(whereClause: String): TypedQuery<T> {
         return Query(this, whereClause)
     }
 
@@ -219,7 +216,7 @@ class MTable : MBaseTable {
      */
     override fun toString(): String {
         return "MTable[$id-$dbTableName]"
-    } //	toString
+    } // 	toString
 
     override fun <T : PersistentObject> getPO(id: Int): T? {
         val tableName = dbTableName
@@ -246,4 +243,4 @@ class MTable : MBaseTable {
     companion object {
         private const val serialVersionUID = -8757836873040013402L
     }
-} //	MTable
+} // 	MTable

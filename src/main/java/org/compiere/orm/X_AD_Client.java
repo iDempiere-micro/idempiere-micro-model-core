@@ -257,7 +257,7 @@ public class X_AD_Client extends BasePONameValue implements Client {
      * @return SMTP Port Number
      */
     public int getSMTPPort() {
-        Integer ii = (Integer) getValue(COLUMNNAME_SMTPPort);
+        Integer ii = getValue(COLUMNNAME_SMTPPort);
         if (ii == null) return 0;
         return ii;
     }

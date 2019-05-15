@@ -10,7 +10,7 @@ import software.hsharp.core.util.DB
 import software.hsharp.core.util.Environment
 import software.hsharp.core.util.convert
 
-abstract class BaseQuery<T:PersistentObject>(val table: Table) : TypedQuery<T> {
+abstract class BaseQuery<T : PersistentObject>(val table: Table) : TypedQuery<T> {
     protected abstract fun buildSQL(selectClause: StringBuilder?, useOrderByClause: Boolean): String
 
     protected var parameters: Array<Any>? = null

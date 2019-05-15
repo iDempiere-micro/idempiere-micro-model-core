@@ -50,7 +50,7 @@ public class X_AD_Element extends BasePOName implements Element {
      * @return System Element enables the central maintenance of column description and help.
      */
     public int getElementId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Element_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Element_ID);
         if (ii == null) return 0;
         return ii;
     }

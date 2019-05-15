@@ -60,7 +60,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Column in the table
      */
     public int getColumnId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Column_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Column_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -71,7 +71,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return System Element enables the central maintenance of column description and help.
      */
     public int getElementId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Element_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Element_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -93,7 +93,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Process or Report
      */
     public int getProcessId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Process_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Process_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -109,7 +109,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return System Reference and Validation
      */
     public int getReferenceId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Reference_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Reference_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -130,7 +130,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Required to specify, if data type is Table or List
      */
     public int getReferenceValueId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Reference_Value_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Reference_Value_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -145,7 +145,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Database Table information
      */
     public int getColumnTableId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -221,7 +221,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Length of the column in the database
      */
     public int getFieldLength() {
-        Integer ii = (Integer) getValue(COLUMNNAME_FieldLength);
+        Integer ii = getValue(COLUMNNAME_FieldLength);
         if (ii == null) return 0;
         return ii;
     }
@@ -534,7 +534,7 @@ public abstract class X_AD_Column extends PO implements Column {
      * @return Method of ordering records; lowest number comes first
      */
     public int getSeqNo() {
-        Integer ii = (Integer) getValue(COLUMNNAME_SeqNo);
+        Integer ii = getValue(COLUMNNAME_SeqNo);
         if (ii == null) return 0;
         return ii;
     }

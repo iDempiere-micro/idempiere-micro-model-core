@@ -159,6 +159,21 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     private ArrayList<PO_LOB> m_lobInfo = null;
 
+    /**
+     * Create & Load existing Persistent Object.
+     *
+     * <pre>
+     *  You load
+     * 		- an existing single key record with 	new PO (Record_ID)
+     * 		- a new single key record with			new PO (0)
+     * 		- an existing multi key record with		new PO (rs)
+     * 		- a new multi key record with			new PO (null)
+     *  The ID for new single key records is created automatically,
+     *  you need to set the IDs for multi-key records explicitly.
+     * </pre>
+     *
+     * @param ID the ID if 0, the record defaults are applied - ignored if re exists
+     */
     public PO(Row row) {
         super(row);
         int size = getP_info().getColumnCount();
@@ -172,10 +187,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * <pre>
      *  You load
      * 		- an existing single key record with 	new PO (Record_ID)
-     * 			or									new PO (Record_ID)
-     * 			or									new PO (rs, null)
      * 		- a new single key record with			new PO (0)
-     * 		- an existing multi key record with		new PO (rs, null)
+     * 		- an existing multi key record with		new PO (rs)
      * 		- a new multi key record with			new PO (null)
      *  The ID for new single key records is created automatically,
      *  you need to set the IDs for multi-key records explicitly.
@@ -194,6 +207,29 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
         load(ID);
     } //  PO
+
+    /**
+     * Create & Load existing Persistent Object.
+     *
+     * <pre>
+     *  You load
+     * 		- an existing single key record with 	new PO (null, Record_ID)
+     * 		- a new single key record with			new PO (null, 0)
+     * 		- an existing multi key record with		new PO (rs, ignored)
+     * 		- a new multi key record with			new PO (null, 0)
+     *  The ID for new single key records is created automatically,
+     *  you need to set the IDs for multi-key records explicitly.
+     * </pre>
+     *
+     * @param ID the ID if 0, the record defaults are applied - ignored if re exists
+     */
+    public PO(Row row, int ID) {
+        super(row);
+        int size = getP_info().getColumnCount();
+        clearNewValues();
+        m_setErrors = new ValueNamePair[size];
+        if (row == null) load(ID);
+    }
 
     /**
      * Returns the summary node with the corresponding value
@@ -571,7 +607,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return AD_Org_ID
      */
     public int getOrgId() {
-        Integer ii = (Integer) getValue("AD_Org_ID");
+        Integer ii = getValue("AD_Org_ID");
         if (ii == null) return 0;
         return ii;
     } //	getOrgId
@@ -620,7 +656,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return AD_User_ID
      */
     public final int getCreatedBy() {
-        Integer ii = (Integer) getValue("CreatedBy");
+        Integer ii = getValue("CreatedBy");
         if (ii == null) return 0;
         return ii;
     } //	getCreateddBy

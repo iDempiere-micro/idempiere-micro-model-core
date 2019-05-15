@@ -49,7 +49,7 @@ public abstract class X_AD_Record_Access extends PO implements RecordAccess {
      * @return Responsibility Role
      */
     public int getRoleId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -60,7 +60,7 @@ public abstract class X_AD_Record_Access extends PO implements RecordAccess {
      * @return Database Table information
      */
     public int getRecordTableId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -140,7 +140,7 @@ public abstract class X_AD_Record_Access extends PO implements RecordAccess {
      * @return Direct internal record ID
      */
     public int getRecordId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_Record_ID);
+        Integer ii = getValue(COLUMNNAME_Record_ID);
         if (ii == null) return 0;
         return ii;
     }

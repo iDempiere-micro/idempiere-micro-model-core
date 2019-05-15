@@ -49,7 +49,7 @@ public class X_AD_Attachment extends PO {
      * @return Attachment for the document
      */
     public int getAD_AttachmentId() {
-        Integer ii = (Integer) getValue(Attachment.COLUMNNAME_AD_Attachment_ID);
+        Integer ii = getValue(Attachment.COLUMNNAME_AD_Attachment_ID);
         if (ii == null) return 0;
         return ii;
     }

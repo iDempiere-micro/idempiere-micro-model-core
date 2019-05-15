@@ -47,7 +47,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Document Sequence
      */
     public int getSequenceId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Sequence_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Sequence_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -58,7 +58,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return The next number to be used
      */
     public int getCurrentNext() {
-        Integer ii = (Integer) getValue(COLUMNNAME_CurrentNext);
+        Integer ii = getValue(COLUMNNAME_CurrentNext);
         if (ii == null) return 0;
         return ii;
     }
@@ -78,7 +78,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Next sequence for system use
      */
     public int getCurrentNextSys() {
-        Integer ii = (Integer) getValue(COLUMNNAME_CurrentNextSys);
+        Integer ii = getValue(COLUMNNAME_CurrentNextSys);
         if (ii == null) return 0;
         return ii;
     }
@@ -125,7 +125,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return The number to increment the last document number by
      */
     public int getIncrementNo() {
-        Integer ii = (Integer) getValue(COLUMNNAME_IncrementNo);
+        Integer ii = getValue(COLUMNNAME_IncrementNo);
         if (ii == null) return 0;
         return ii;
     }
@@ -264,7 +264,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Starting number/position
      */
     public int getStartNo() {
-        Integer ii = (Integer) getValue(COLUMNNAME_StartNo);
+        Integer ii = getValue(COLUMNNAME_StartNo);
         if (ii == null) return 0;
         return ii;
     }

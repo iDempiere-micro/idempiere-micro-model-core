@@ -95,7 +95,7 @@ public abstract class X_AD_Table extends PO implements Table {
      * @return Database Table information
      */
     public int getTableTableId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -112,7 +112,7 @@ public abstract class X_AD_Table extends PO implements Table {
      * @return Dynamic Validation Rule
      */
     public int getValRuleId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Val_Rule_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Val_Rule_ID);
         if (ii == null) return 0;
         return ii;
     }

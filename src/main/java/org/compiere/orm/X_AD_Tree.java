@@ -49,7 +49,7 @@ public class X_AD_Tree extends BasePOName implements Tree {
      * @return Database Table information
      */
     public int getTreeTableId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -60,7 +60,7 @@ public class X_AD_Tree extends BasePOName implements Tree {
      * @return Identifies a Tree
      */
     public int getTreeId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Tree_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Tree_ID);
         if (ii == null) return 0;
         return ii;
     }

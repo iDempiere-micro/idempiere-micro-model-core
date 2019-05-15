@@ -37,7 +37,8 @@ private val log = KotlinLogging.logger {}
 internal val sessionUrl = System.getenv("SESSION_URL") ?: "jdbc:postgresql://localhost:5433/idempiere"
 
 private val environment = EnvironmentServiceImpl(0, 0, 0)
-private val baseModule = BaseModuleImpl(environmentService = environment, modelFactory = BaseSimpleModelFactory())
+private val baseModule = BaseModuleImpl(environmentService = environment, modelFactory = BaseSimpleModelFactory(
+    simpleMapperId, simpleMapperRow))
 
 class BasicTest {
     init {
@@ -48,7 +49,7 @@ class BasicTest {
 
     @Test
     fun `database connection works`() {
-        Environment.run(baseModule) {
+        Environment(baseModule).run {
             DB.run {
                 val allIdsQuery =
                     queryOf("select ad_table_id from adempiere.ad_table").map { row -> row.int("ad_table_id") }.asList
@@ -61,7 +62,7 @@ class BasicTest {
 
     @Test
     fun `can get a table from a row`() {
-        Environment.run(baseModule) {
+        Environment(baseModule).run {
             DB.run {
                 val toTable: (Row) -> MTable = { row ->
                     MTable(row)
@@ -80,7 +81,6 @@ class BasicTest {
                 assertNull(table.help)
                 assertEquals(false, table.isView)
                 assertEquals(4, table.accessLevel)
-                assertNull(table.valRule)
                 val columns = table.getColumns(false)
                 assertEquals(31, columns.size)
                 val tableIdColumn = columns.first { it.columnId == 100 }
@@ -97,7 +97,7 @@ class BasicTest {
 
     @Test
     fun `can create a new column to a table and then delete it`() {
-        Environment.run(baseModule) {
+        Environment(baseModule).run {
             DB.run {
                 val table = MTable(101)
                 val randomName = randomString(10)
@@ -121,7 +121,7 @@ class BasicTest {
 
     @Test
     fun `can run query to get data`() {
-        Environment.run(baseModule) {
+        Environment(baseModule).run {
             DB.run {
                 val element = M_Element.get("IsPrimary")
                 assertEquals(398, element.id)
@@ -131,7 +131,7 @@ class BasicTest {
 
     @Test
     fun `can get MOrg`() {
-        Environment.run(baseModule) {
+        Environment(baseModule).run {
             DB.run {
                 val org = getOrg(11)
                 assertEquals("HQ", org.name)
@@ -143,7 +143,7 @@ class BasicTest {
 
     @Test
     fun `can get MOrg of PO`() {
-        Environment.run(baseModule) {
+        Environment(baseModule).run {
             DB.run {
                 val org = getOrg(11)
                 val orgs = getClientOrganizations(org)
@@ -155,7 +155,7 @@ class BasicTest {
 
     @Test
     fun `can get MOrg linked business partner`() {
-        Environment.run(baseModule) {
+        Environment(baseModule).run {
             DB.run {
                 val org = getOrg(50005)
                 val partnerId1 = org.linkedBusinessPartnerId

@@ -75,7 +75,7 @@ public class X_AD_Table_Access extends PO implements TableAccess {
      * @return Responsibility Role
      */
     public int getRoleId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -86,7 +86,7 @@ public class X_AD_Table_Access extends PO implements TableAccess {
      * @return Database Table information
      */
     public int getAccessTableId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }

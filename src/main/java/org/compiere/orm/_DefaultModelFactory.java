@@ -15,9 +15,9 @@ import java.util.logging.Level;
  * @author Jorg Janke
  * @author hengsin
  */
-public class DefaultModelFactory extends DefaultBaseModelFactory implements ModelFactory {
+class _DefaultModelFactory extends DefaultBaseModelFactory implements ModelFactory {
 
-    private static final CLogger s_log = CLogger.getCLogger(DefaultModelFactory.class);
+    private static final CLogger s_log = CLogger.getCLogger(_DefaultModelFactory.class);
 
     @Override
     public PO getPO(String tableName, int recordId) {

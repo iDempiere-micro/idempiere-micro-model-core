@@ -50,7 +50,7 @@ public class X_AD_TableIndex extends BasePOName implements TableIndex {
      * @return Database Table information
      */
     public int getIndexTableId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -61,7 +61,7 @@ public class X_AD_TableIndex extends BasePOName implements TableIndex {
      * @return Table Index
      */
     public int getTableIndexId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_TableIndex_ID);
+        Integer ii = getValue(COLUMNNAME_AD_TableIndex_ID);
         if (ii == null) return 0;
         return ii;
     }

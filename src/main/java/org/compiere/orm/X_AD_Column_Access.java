@@ -49,7 +49,7 @@ public class X_AD_Column_Access extends PO implements ColumnAccess {
      * @return Column in the table
      */
     public int getColumnId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Column_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Column_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -60,7 +60,7 @@ public class X_AD_Column_Access extends PO implements ColumnAccess {
      * @return Responsibility Role
      */
     public int getRoleId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -71,7 +71,7 @@ public class X_AD_Column_Access extends PO implements ColumnAccess {
      * @return Database Table information
      */
     public int getColumnTableId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Table_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Table_ID);
         if (ii == null) return 0;
         return ii;
     }

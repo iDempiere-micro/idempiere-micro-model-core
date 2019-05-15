@@ -4,7 +4,7 @@ import kotliquery.Row
 import org.compiere.model.ReferenceTable
 import org.compiere.model.Table
 import org.idempiere.common.util.AdempiereSystemError
-import software.hsharp.core.orm.*
+import software.hsharp.core.orm.getTable
 
 /**
  * Generated Model for AD_Ref_Table

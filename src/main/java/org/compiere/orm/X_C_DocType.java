@@ -54,7 +54,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return Document type for generating in dispute Shipments
      */
     public int getDocTypeDifferenceId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_DocTypeDifference_ID);
+        Integer ii = getValue(COLUMNNAME_C_DocTypeDifference_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -65,7 +65,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return Document type or rules
      */
     public int getDocTypeId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_DocType_ID);
+        Integer ii = getValue(COLUMNNAME_C_DocType_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -76,7 +76,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return Document type used for invoices generated from this sales document
      */
     public int getDocTypeInvoiceId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_DocTypeInvoice_ID);
+        Integer ii = getValue(COLUMNNAME_C_DocTypeInvoice_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -97,7 +97,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return Document type used for shipments generated from this sales document
      */
     public int getDocTypeShipmentId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_DocTypeShipment_ID);
+        Integer ii = getValue(COLUMNNAME_C_DocTypeShipment_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -118,7 +118,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return Definite Sequence
      */
     public int getDefiniteSequenceId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_DefiniteSequence_ID);
+        Integer ii = getValue(COLUMNNAME_DefiniteSequence_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -148,7 +148,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return Document sequence determines the numbering of documents
      */
     public int getDocNoSequenceId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_DocNoSequence_ID);
+        Integer ii = getValue(COLUMNNAME_DocNoSequence_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -216,7 +216,7 @@ public class X_C_DocType extends BasePOName implements DocumentType {
      * @return General Ledger Category
      */
     public int getGLCategoryId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_GL_Category_ID);
+        Integer ii = getValue(COLUMNNAME_GL_Category_ID);
         if (ii == null) return 0;
         return ii;
     }

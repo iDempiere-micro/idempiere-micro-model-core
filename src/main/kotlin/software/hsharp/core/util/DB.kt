@@ -300,6 +300,7 @@ object HikariCPI {
         config.username = username
         config.password = password
         config.isAutoCommit = false
+        config.transactionIsolation = "TRANSACTION_READ_COMMITTED"
         config.addDataSourceProperty("cachePrepStmts", "true")
         config.addDataSourceProperty("prepStmtCacheSize", "250")
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")

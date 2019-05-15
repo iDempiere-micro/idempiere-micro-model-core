@@ -326,7 +326,7 @@ class AccessSqlParser
         // 	getTableName
         override val tableName: String,
         private val m_synonym: String? = null
-    ): SqlTableInfo {
+    ) : SqlTableInfo {
 
         /**
          * Get Table Synonym

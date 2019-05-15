@@ -35,6 +35,11 @@ public abstract class PO extends org.idempiere.orm.PO {
         super(row);
     }
 
+    public PO(Row row, int ID) {
+        super(row, ID);
+    }
+
+
     /**
      * Copy old values of From to new values of To. Does not copy Keys
      *

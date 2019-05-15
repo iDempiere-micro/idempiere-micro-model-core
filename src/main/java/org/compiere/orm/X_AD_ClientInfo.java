@@ -54,7 +54,7 @@ public class X_AD_ClientInfo extends PO implements ClientInfo {
      * @return Storage Provider
      */
     public int getStorageProviderId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_StorageProvider_ID);
+        Integer ii = getValue(COLUMNNAME_AD_StorageProvider_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -105,7 +105,7 @@ public class X_AD_ClientInfo extends PO implements ClientInfo {
      * @return Trees are used for (financial) reporting and security access (via role)
      */
     public int getTreeOrgId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Tree_Org_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Tree_Org_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -157,7 +157,7 @@ public class X_AD_ClientInfo extends PO implements ClientInfo {
      * @return Primary rules for accounting
      */
     public int getAcctSchema1Id() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_AcctSchema1_ID);
+        Integer ii = getValue(COLUMNNAME_C_AcctSchema1_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -168,7 +168,7 @@ public class X_AD_ClientInfo extends PO implements ClientInfo {
      * @return Business Partner used for creating new Business Partners on the fly
      */
     public int getBPartnerCashTrxId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_BPartnerCashTrx_ID);
+        Integer ii = getValue(COLUMNNAME_C_BPartnerCashTrx_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -179,7 +179,7 @@ public class X_AD_ClientInfo extends PO implements ClientInfo {
      * @return Accounting Calendar Name
      */
     public int getCalendarId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_Calendar_ID);
+        Integer ii = getValue(COLUMNNAME_C_Calendar_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -190,7 +190,7 @@ public class X_AD_ClientInfo extends PO implements ClientInfo {
      * @return Charge for Freight
      */
     public int getChargeFreightId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_ChargeFreight_ID);
+        Integer ii = getValue(COLUMNNAME_C_ChargeFreight_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -201,7 +201,7 @@ public class X_AD_ClientInfo extends PO implements ClientInfo {
      * @return Standard Unit of Measure for Length
      */
     public int getUOMLengthId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_UOM_Length_ID);
+        Integer ii = getValue(COLUMNNAME_C_UOM_Length_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -212,7 +212,7 @@ public class X_AD_ClientInfo extends PO implements ClientInfo {
      * @return Standard Unit of Measure for Weight
      */
     public int getUOMWeightId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_UOM_Weight_ID);
+        Integer ii = getValue(COLUMNNAME_C_UOM_Weight_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -232,7 +232,7 @@ public class X_AD_ClientInfo extends PO implements ClientInfo {
      * @return Product for Freight
      */
     public int getProductFreightId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_M_ProductFreight_ID);
+        Integer ii = getValue(COLUMNNAME_M_ProductFreight_ID);
         if (ii == null) return 0;
         return ii;
     }

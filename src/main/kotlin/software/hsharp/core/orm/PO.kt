@@ -304,7 +304,7 @@ internal abstract class PO(row: Row?) : PersistentObject {
                         arrayOf(ii)
                     log.trace { "(PK) $ColumnName=$ii" }
                 } else {
-                    val oo : Any? = getValue(i)
+                    val oo: Any? = getValue(i)
                     ids = if (oo == null)
                         arrayOf(null)
                     else
@@ -454,7 +454,7 @@ internal abstract class PO(row: Row?) : PersistentObject {
      * @return int value or 0
      */
     fun getValueAsInt(index: Int): Int {
-        val value :  Any = getValue(index) ?: return 0
+        val value: Any = getValue(index) ?: return 0
         if (value is Int) return value
         return try {
             Integer.parseInt(value.toString())
@@ -496,7 +496,7 @@ internal abstract class PO(row: Row?) : PersistentObject {
     @Suppress("UNCHECKED_CAST")
     override fun <T> getValue(index: Int): T? {
         val columnCount = p_info.columnCount
-        if (index < 0 || index >= columnCount ) {
+        if (index < 0 || index >= columnCount) {
             return null
         }
         val newValues = newValues
@@ -533,8 +533,6 @@ internal abstract class PO(row: Row?) : PersistentObject {
         }
         return getValue(index)
     } //  get_ValueOfColumn
-
-
 }
 
 fun getAllIDs(tableName: String, whereClause: String?): IntArray {

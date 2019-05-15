@@ -60,7 +60,7 @@ public abstract class X_AD_ViewComponent extends PO implements ViewComponent {
      * @return Database View Component
      */
     public int getViewComponentId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_ViewComponent_ID);
+        Integer ii = getValue(COLUMNNAME_AD_ViewComponent_ID);
         if (ii == null) return 0;
         return ii;
     }
