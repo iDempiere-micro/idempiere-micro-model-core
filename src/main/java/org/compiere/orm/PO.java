@@ -9,7 +9,6 @@ import org.idempiere.common.util.AdempiereUserError;
 import org.idempiere.common.util.CLogger;
 import org.idempiere.common.util.ValueNamePair;
 import org.idempiere.icommon.model.PersistentObject;
-import org.idempiere.orm.Null;
 import org.idempiere.orm.POInfo;
 
 import java.util.List;
@@ -17,7 +16,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import static software.hsharp.core.orm.POKt.I_ZERO;
 import static software.hsharp.core.util.DBKt.executeUpdate;
 import static software.hsharp.core.util.DBKt.executeUpdateEx;
 import static software.hsharp.core.util.DBKt.getSQLValue;
@@ -117,7 +115,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                 && p_info.getHasKeyColumn()
                 && getM_keyColumns()[0].endsWith("_ID")) // 	AD_Language, EntityType
         {
-            int no = saveNew_getID();
+            int no = saveNewGetID();
             if (no <= 0) no = MSequence.getNextID(getClientId(), p_info.getTableName());
             // the primary key is not overwrite with the local sequence
             if (isReplication() && getId() > 0) {

@@ -341,19 +341,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         return m_idOld;
     } //  getID
 
-
-    /**
-     * Get Column Value
-     *
-     * @param variableName name
-     * @return value or ""
-     */
-    public String get_ValueAsString(String variableName) {
-        Object value = getValue(variableName);
-        if (value == null) return "";
-        return value.toString();
-    } //	get_ValueAsString
-
     /**
      * Get Old Value
      *
@@ -439,7 +426,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param ColumnName column name
      * @param value      value
      */
-    protected void set_Keys(String ColumnName, Object value) {
+    protected void setKeys(String ColumnName, Object value) {
         //	Update if KeyColumn
         for (int i = 0; i < getIds().length; i++) {
             if (ColumnName.equals(getM_keyColumns()[i])) {
@@ -804,12 +791,12 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @return ID to be used or 0 for default logic
      */
-    protected int saveNew_getID() {
+    protected int saveNewGetID() {
         int result = getId();
         if (result > 0 && result < 999999) // 2Pack assigns official ID's when importing
             return result;
         return 0;
-    } //	saveNew_getID
+    } //	saveNewGetID
 
     /**
      * Save Special Data. To be extended by sub-classes
@@ -1113,7 +1100,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 log.finest(
                         ColumnName + " = " + newValues[index] + " (OldValue=" + getOldValues()[index] + ")");
         }
-        set_Keys(ColumnName, newValues[index]);
+        setKeys(ColumnName, newValues[index]);
 
         return true;
     } //  setValue
@@ -1261,7 +1248,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 && p_info.getHasKeyColumn()
                 && getM_keyColumns()[0].endsWith("_ID")) // 	AD_Language, EntityType
         {
-            int no = saveNew_getID();
+            int no = saveNewGetID();
             if (no <= 0) throw new AdempiereException("no <= 0");
             // the primary key is not overwrite with the local sequence
             if (isReplication() && getId() > 0) {
