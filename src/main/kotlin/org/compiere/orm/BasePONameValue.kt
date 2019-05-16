@@ -8,7 +8,7 @@ abstract class BasePONameValue : BasePOName {
     constructor(ID: Int) : super(ID)
     constructor(r: Row) : super(r)
 
-    protected open fun doGetSearchKey() : String = getValue(COLUMNNAME_Value) ?: throw AdempiereSystemError("Does not have a search key")
+    protected open fun doGetSearchKey(): String = getValue(COLUMNNAME_Value) ?: throw AdempiereSystemError("Does not have a search key")
     protected open fun doSetSearchKey(Value: String) {
         setValue(COLUMNNAME_Value, Value)
     }

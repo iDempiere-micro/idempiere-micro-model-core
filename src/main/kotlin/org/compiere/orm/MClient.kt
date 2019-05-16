@@ -72,7 +72,7 @@ open class MClient : X_AD_Client {
                 setIsSmtpAuthorization(false)
                 setIsUseBetaFunctions(true)
                 setIsServerEMail(false)
-                adLanguage = Language.getBaseAD_Language()
+                adLanguage = Language.getBaseLanguageCode()
                 setAutoArchive(AUTOARCHIVE_None)
                 mmPolicy = MMPOLICY_FiFo // F
                 setIsPostImmediate(false)

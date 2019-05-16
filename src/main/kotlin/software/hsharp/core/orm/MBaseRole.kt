@@ -22,7 +22,6 @@ import java.io.Serializable
 import java.util.logging.Level
 
 abstract class MBaseRole : X_AD_Role {
-    /** List of Table Access  */
     private val tableAccesses: MutableList<TableAccess> = mutableListOf()
 
     constructor(Id: Int) : super(Id)
@@ -66,8 +65,7 @@ abstract class MBaseRole : X_AD_Role {
          */
         override fun equals(other: Any?): Boolean {
             if (other != null && other is OrgAccess) {
-                val comp = other as OrgAccess?
-                return comp!!.clientId == clientId && comp.orgId == orgId
+                return other.clientId == clientId && other.orgId == orgId
             }
             return false
         } // 	equals

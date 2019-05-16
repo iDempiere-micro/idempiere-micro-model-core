@@ -157,7 +157,7 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
                 throw new DBException("QueryMoreThanOneRecordsFound"); // TODO : translate
             }
         } catch (SQLException e) {
-            throw new DBException(e, sql);
+            throw new DBException(e);
         } finally {
             rs = null;
             pstmt = null;
@@ -191,12 +191,13 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
     @SuppressWarnings("unchecked")
     public <T> T aggregate(String sqlExpression, String sqlFunction, Class<T> returnType)
             throws DBException {
+        String sqlExpression2 = sqlExpression;
         if (Util.isEmpty(sqlFunction, true)) {
             throw new DBException("No Aggregate Function defined");
         }
-        if (Util.isEmpty(sqlExpression, true)) {
+        if (Util.isEmpty(sqlExpression2, true)) {
             if (AGGREGATE_COUNT.equals(sqlFunction)) {
-                sqlExpression = "*";
+                sqlExpression2 = "*";
             } else {
                 throw new DBException("No Expression defined");
             }
@@ -207,7 +208,7 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
                 new StringBuilder("SELECT ")
                         .append(sqlFunction)
                         .append("(")
-                        .append(sqlExpression)
+                        .append(sqlExpression2)
                         .append(")")
                         .append(" FROM ")
                         .append(table.getDbTableName());
@@ -244,7 +245,7 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
                 throw new DBException("QueryMoreThanOneRecordsFound"); // TODO : translate
             }
         } catch (SQLException e) {
-            throw new DBException(e, sql);
+            throw new DBException(e);
         }
         //
         if (value == null) {
@@ -272,14 +273,14 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
     public boolean match() throws DBException {
         Table table = super.getTable();
         String sql = buildSQL(new StringBuilder("SELECT 1 FROM ").append(table.getDbTableName()), false);
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        PreparedStatement pstmt;
+        ResultSet rs;
         try {
             pstmt = prepareStatement(sql);
             rs = createResultSet(pstmt);
             if (rs.next()) return true;
         } catch (SQLException e) {
-            throw new DBException(e, sql);
+            throw new DBException(e);
         }
         return false;
     }
@@ -291,18 +292,19 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
      * @return final SQL
      */
     protected final String buildSQL(StringBuilder selectClause, boolean useOrderByClause) {
+        StringBuilder selectClause2 = selectClause;
         Table table = super.getTable();
-        if (selectClause == null) {
+        if (selectClause2 == null) {
             POInfo info = POInfo.getPOInfo(table.getTableTableId());
             if (info == null) {
                 throw new IllegalStateException(
                         "No POInfo found for AD_Table_ID=" + table.getTableTableId());
             }
-            selectClause = info.buildSelect(!joinClauseList.isEmpty(), noVirtualColumn);
+            selectClause2 = info.buildSelect(!joinClauseList.isEmpty(), noVirtualColumn);
         }
         if (!joinClauseList.isEmpty()) {
             for (String joinClause : joinClauseList) {
-                selectClause.append(" ").append(joinClause);
+                selectClause2.append(" ").append(joinClause);
             }
         }
 
@@ -340,7 +342,7 @@ public class Query<T extends PersistentObject> extends BaseQuery<T> {
                             + ")");
         }
 
-        StringBuilder sqlBuffer = new StringBuilder(selectClause);
+        StringBuilder sqlBuffer = new StringBuilder(selectClause2);
         if (whereBuffer.length() > 0) {
             sqlBuffer.append(" WHERE ").append(whereBuffer);
         }

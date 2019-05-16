@@ -50,7 +50,7 @@ public class X_AD_Element extends BasePOName implements Element {
      * @return System Element enables the central maintenance of column description and help.
      */
     public int getElementId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Element_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Element_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -61,7 +61,7 @@ public class X_AD_Element extends BasePOName implements Element {
      * @return Name of the column in the database
      */
     public String getColumnName() {
-        return (String) getValue(COLUMNNAME_ColumnName);
+        return getValue(COLUMNNAME_ColumnName);
     }
 
     /**
@@ -79,7 +79,7 @@ public class X_AD_Element extends BasePOName implements Element {
      * @return Optional short description of the record
      */
     public String getDescription() {
-        return (String) getValue(COLUMNNAME_Description);
+        return getValue(COLUMNNAME_Description);
     }
 
     /**
@@ -107,7 +107,7 @@ public class X_AD_Element extends BasePOName implements Element {
      * @return Comment or Hint
      */
     public String getHelp() {
-        return (String) getValue(COLUMNNAME_Help);
+        return getValue(COLUMNNAME_Help);
     }
 
     /**
@@ -125,7 +125,7 @@ public class X_AD_Element extends BasePOName implements Element {
      * @return The label text to be printed on a document or correspondence.
      */
     public String getPrintName() {
-        return (String) getValue(COLUMNNAME_PrintName);
+        return getValue(COLUMNNAME_PrintName);
     }
 
     /**

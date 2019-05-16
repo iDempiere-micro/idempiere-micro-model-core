@@ -51,7 +51,7 @@ public class X_AD_StorageProvider extends PO implements StorageProvider {
      * @return Method
      */
     public String getMethod() {
-        return (String) getValue(COLUMNNAME_Method);
+        return getValue(COLUMNNAME_Method);
     }
 
     @Override

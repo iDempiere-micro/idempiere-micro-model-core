@@ -18,7 +18,7 @@ public class CLogFile extends Handler {
     /**
      * idempiere Home
      */
-    private String m_idempiereHome = null;
+    private String m_idempiereHome;
     /**
      * Printed header
      */
@@ -44,12 +44,10 @@ public class CLogFile extends Handler {
 
     /**
      * ************************************************************************ Constructor
-     *
-     * @param idempiereHome idempiere home
-     * @param createLogDir  create log directory if missing
+     *  @param createLogDir  create log directory if missing
      * @param isClient      client
      */
-    public CLogFile(String idempiereHome, boolean createLogDir, boolean isClient) {
+    public CLogFile(boolean createLogDir, boolean isClient) {
         //
         m_idempiereHome = null;
         initialize(m_idempiereHome, createLogDir, isClient);
@@ -221,7 +219,7 @@ public class CLogFile extends Handler {
         rotateLog(record.getMillis());
 
         //	Format
-        String msg = null;
+        String msg;
         try {
             msg = getFormatter().format(record);
         } catch (Exception ex) {

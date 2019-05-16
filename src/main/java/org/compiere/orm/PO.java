@@ -7,10 +7,8 @@ import org.idempiere.common.exceptions.AdempiereException;
 import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.AdempiereUserError;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.CacheMgt;
 import org.idempiere.common.util.ValueNamePair;
 import org.idempiere.icommon.model.PersistentObject;
-import org.idempiere.orm.Null;
 import org.idempiere.orm.POInfo;
 
 import java.util.List;
@@ -18,7 +16,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import static software.hsharp.core.orm.POKt.I_ZERO;
 import static software.hsharp.core.util.DBKt.executeUpdate;
 import static software.hsharp.core.util.DBKt.executeUpdateEx;
 import static software.hsharp.core.util.DBKt.getSQLValue;
@@ -34,6 +31,11 @@ public abstract class PO extends org.idempiere.orm.PO {
     public PO(Row row) {
         super(row);
     }
+
+    public PO(Row row, int ID) {
+        super(row, ID);
+    }
+
 
     /**
      * Copy old values of From to new values of To. Does not copy Keys
@@ -58,21 +60,6 @@ public abstract class PO extends org.idempiere.orm.PO {
     public static void copyValues(PO from, PO to) {
         Companion.copyValues(from, to);
     } //	copyValues
-
-    /**
-     * Is new record
-     *
-     * @return true if new
-     */
-    public boolean isNew() {
-        if (getCreateNew()) return true;
-        //
-        for (int i = 0; i < getIds().length; i++) {
-            if (getIds()[i].equals(I_ZERO) || getIds()[i] == Null.NULL) continue;
-            return false; //	one value is non-zero
-        }
-        return !MTableKt.isZeroIDTable(getTableName());
-    } //	isNew
 
     /**
      * Overwrite Client Org if different
@@ -128,13 +115,11 @@ public abstract class PO extends org.idempiere.orm.PO {
                 && p_info.getHasKeyColumn()
                 && getM_keyColumns()[0].endsWith("_ID")) // 	AD_Language, EntityType
         {
-            int no = saveNew_getID();
+            int no = saveNewGetID();
             if (no <= 0) no = MSequence.getNextID(getClientId(), p_info.getTableName());
             // the primary key is not overwrite with the local sequence
-            if (isReplication()) {
-                if (getId() > 0) {
-                    no = getId();
-                }
+            if (isReplication() && getId() > 0) {
+                no = getId();
             }
             if (no <= 0) {
                 log.severe("No NextID (" + no + ")");
@@ -146,7 +131,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         // uuid secondary key
         int uuidIndex = p_info.getColumnIndex(getUUIDColumnName());
         if (uuidIndex >= 0) {
-            String value = (String) getValue(uuidIndex);
+            String value = getValue(uuidIndex);
             if (p_info.getColumn(uuidIndex).FieldLength == 36 && (value == null || value.length() == 0)) {
                 UUID uuid = UUID.randomUUID();
                 setValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
@@ -159,7 +144,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         String columnName = "DocumentNo";
         int index = p_info.getColumnIndex(columnName);
         if (index != -1) {
-            String value = (String) getValue(index);
+            String value = getValue(index);
             if (value != null && value.startsWith("<") && value.endsWith(">")) value = null;
             if (value == null || value.length() == 0) {
                 int dt = p_info.getColumnIndex("C_DocTypeTarget_ID");
@@ -182,9 +167,9 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param treeType MTree TREETYPE_*
      * @return true if inserted
      */
-    protected boolean insert_Tree(String treeType) {
-        return insert_Tree(treeType, 0);
-    } //	insert_Tree
+    protected boolean insertTree(String treeType) {
+        return insertTree(treeType, 0);
+    } //	insertTree
 
     /**
      * Insert id data into Tree
@@ -193,7 +178,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param C_Element_ID element for accounting element values
      * @return true if inserted
      */
-    protected boolean insert_Tree(String treeType, int C_Element_ID) {
+    protected boolean insertTree(String treeType, int C_Element_ID) {
         String tableName = MTree_BaseKt.getNodeTableName(treeType);
 
         // check whether db have working generate_uuid function.
@@ -245,7 +230,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         }
 
         return no > 0;
-    } //	insert_Tree
+    } //	insertTree
 
     /**
      * Update parent key and seqno based on value if the tree is driven by value
@@ -253,7 +238,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param treeType MTree TREETYPE_*
      * @return true if inserted
      */
-    public void update_Tree(String treeType) {
+    public void updateTree(String treeType) {
         int idxValueCol = getColumnIndex("Value");
         if (idxValueCol < 0) return;
         int idxValueIsSummary = getColumnIndex("IsSummary");
@@ -327,7 +312,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                         update, new Object[]{seqNo, newParentID, getId(), tree.getTreeId()});
             }
         }
-    } //	update_Tree
+    } //	updateTree
 
     /**
      * Delete ID Tree Nodes
@@ -335,9 +320,9 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param treeType MTree TREETYPE_*
      * @return true if deleted
      */
-    protected boolean delete_Tree(String treeType) {
+    protected boolean deleteTree(String treeType) {
         int id = getId();
-        if (id == 0) id = get_IDOld();
+        if (id == 0) id = getDeletedSingleKeyRecordId();
 
         // IDEMPIERE-2453
         StringBuilder countSql =
@@ -372,7 +357,7 @@ public abstract class PO extends org.idempiere.orm.PO {
                 log.warning("#" + no + " - TreeType=" + treeType);
         }
         return no > 0;
-    } //	delete_Tree
+    } //	deleteTree
 
     /**
      * ************************************************************************ Delete Current Record
@@ -389,7 +374,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         if (!force) {
             int iProcessed = getColumnIndex("Processed");
             if (iProcessed != -1) {
-                Boolean processed = (Boolean) getValue(iProcessed);
+                Boolean processed = getValue(iProcessed);
                 if (processed != null && processed) {
                     log.warning("Record processed"); // 	CannotDeleteTrx
                     log.saveError("Processed", "Processed", false);
@@ -419,7 +404,7 @@ public abstract class PO extends org.idempiere.orm.PO {
         try {
             //
             if (getColumnIndex("IsSummary") >= 0) {
-                delete_Tree(MTree_Base.TREETYPE_CustomTable);
+                deleteTree(MTree_Base.TREETYPE_CustomTable);
             }
 
             //	The Delete Statement
@@ -464,7 +449,7 @@ public abstract class PO extends org.idempiere.orm.PO {
 
         m_idOld = 0;
         clearNewValues();
-        CacheMgt.get().reset(p_info.getTableName());
+        // DAP: CacheMgt.get().reset();
         return success;
     } //	delete
 
@@ -483,7 +468,7 @@ public abstract class PO extends org.idempiere.orm.PO {
      * @param columnName
      * @param value
      */
-    public final void set_ValueOfColumn(String columnName, Object value) {
+    public final void setValueOfColumn(String columnName, Object value) {
         setValueOfColumnReturningBoolean(columnName, value);
     }
 
@@ -549,16 +534,4 @@ public abstract class PO extends org.idempiere.orm.PO {
             throw new AdempiereException(msg);
         }
     }
-
-    /**
-     * Insert Accounting Records
-     *
-     * @param acctTable     accounting sub table
-     * @param acctBaseTable acct table to get data from
-     * @param whereClause   optional where clause with alias "p" for acctBaseTable
-     * @return true if records inserted
-     */
-    protected boolean insert_Accounting(String acctTable, String acctBaseTable, String whereClause) {
-        return insertAccounting(acctTable, acctBaseTable, whereClause);
-    } //	insert_Accounting
 }

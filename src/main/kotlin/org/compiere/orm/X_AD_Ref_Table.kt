@@ -4,7 +4,7 @@ import kotliquery.Row
 import org.compiere.model.ReferenceTable
 import org.compiere.model.Table
 import org.idempiere.common.util.AdempiereSystemError
-import software.hsharp.core.orm.*
+import software.hsharp.core.orm.getTable
 
 /**
  * Generated Model for AD_Ref_Table
@@ -51,7 +51,7 @@ open class X_AD_Ref_Table : PO, ReferenceTable {
      * @return Database Table information
      */
     override fun getRefTableId(): Int {
-        return getValue(ReferenceTable.COLUMNNAME_AD_Table_ID) as Int? ?: return 0
+        return getValue(ReferenceTable.COLUMNNAME_AD_Table_ID) ?: return 0
     }
 
     /**
@@ -60,7 +60,6 @@ open class X_AD_Ref_Table : PO, ReferenceTable {
      * @param EntityType Dictionary Entity Type; Determines ownership and synchronization
      */
     override fun setEntityType(EntityType: String) {
-
         setValue(ReferenceTable.COLUMNNAME_EntityType, EntityType)
     }
 

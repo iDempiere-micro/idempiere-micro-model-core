@@ -1,6 +1,5 @@
 package org.idempiere.common.util;
 
-import javax.print.attribute.standard.MediaSize;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DecimalFormatSymbols;
@@ -24,14 +23,6 @@ public class Language implements Serializable {
      */
     private static final long serialVersionUID = 8855937839841807335L;
 
-    /** */
-    /**
-     * ************************************************************************ Languages
-     * http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt Countries
-     * http://www.iso.org/iso/country_codes/iso_3166_code_lists/english_country_names_and_code_elements.htm
-     * ***********************************************************************
-     */
-
     /**
      * Base Language
      */
@@ -41,12 +32,12 @@ public class Language implements Serializable {
      * * System Languages. If you want to add a language, use the method getLanguage which extends the
      * array
      */
-    private static List<Language> s_languages = new ArrayList<Language>();
+    private static List<Language> s_languages = new ArrayList<>();
 
     /**
      * Base Language
      */
-    private static Language s_baseLanguage = null;
+    private static Language s_baseLanguage;
 
     /**
      * Logger
@@ -55,7 +46,7 @@ public class Language implements Serializable {
 
     static {
         s_languages.add(
-                new Language("English", AD_Language_en_US, Locale.US, null, null, MediaSize.NA.LETTER));
+                new Language("English", AD_Language_en_US, Locale.US, null, null));
         s_baseLanguage = s_languages.get(0);
     }
 
@@ -78,23 +69,20 @@ public class Language implements Serializable {
 
     /**
      * ************************************************************************ Define Language
-     *
-     * @param name            - displayed value, e.g. English
+     *  @param name            - displayed value, e.g. English
      * @param AD_Language     - the code of system supported language, e.g. en_US (might be different than
      *                        Locale - i.e. if the system does not support the language)
      * @param locale          - the Locale, e.g. Locale.US
      * @param decimalPoint    true if Decimal Point - if null, derived from Locale
      * @param javaDatePattern Java date pattern as not all locales are defined - if null, derived from
-     *                        Locale
-     * @param mediaSize       default media size
+*                        Locale
      */
     public Language(
             String name,
             String AD_Language,
             Locale locale,
             Boolean decimalPoint,
-            String javaDatePattern,
-            MediaSize mediaSize) {
+            String javaDatePattern) {
         if (name == null || AD_Language == null || locale == null)
             throw new IllegalArgumentException("Language - parameter is null");
         m_name = name;
@@ -114,7 +102,7 @@ public class Language implements Serializable {
      * @param locale      - the Locale, e.g. Locale.US
      */
     public Language(String name, String AD_Language, Locale locale) {
-        this(name, AD_Language, locale, null, null, null);
+        this(name, AD_Language, locale, null, null);
     } //	Language
 
     /**
@@ -183,14 +171,13 @@ public class Language implements Serializable {
                 ll = new Language(lang, lang, locale);
             }
             if (log.isLoggable(Level.INFO)) {
-                StringBuilder msglog =
-                        new StringBuilder("Adding Language=")
-                                .append(language)
-                                .append(", Country=")
-                                .append(country)
-                                .append(", Locale=")
-                                .append(locale);
-                log.info(msglog.toString());
+                String msglog = "Adding Language=" +
+                        language +
+                        ", Country=" +
+                        country +
+                        ", Locale=" +
+                        locale;
+                log.info(msglog);
             }
             if (idxReplace >= 0) {
                 s_languages.set(idxReplace, ll);
@@ -227,8 +214,7 @@ public class Language implements Serializable {
     } //  getBase
 
     public static void setBaseLanguage(String baselang) {
-        Language lang = getLanguage(baselang);
-        s_baseLanguage = lang;
+        s_baseLanguage = getLanguage(baselang);
     }
 
     /**
@@ -236,7 +222,7 @@ public class Language implements Serializable {
      *
      * @return Base Language
      */
-    public static String getBaseAD_Language() {
+    public static String getBaseLanguageCode() {
         return s_baseLanguage.getADLanguage();
     } //  getBase
 
@@ -294,9 +280,9 @@ public class Language implements Serializable {
     public boolean isDecimalPoint() {
         if (m_decimalPoint == null) {
             DecimalFormatSymbols dfs = new DecimalFormatSymbols(m_locale);
-            m_decimalPoint = new Boolean(dfs.getDecimalSeparator() == '.');
+            m_decimalPoint = dfs.getDecimalSeparator() == '.';
         }
-        return m_decimalPoint.booleanValue();
+        return m_decimalPoint;
     } //  isDecimalPoint
 
     /**
@@ -310,7 +296,7 @@ public class Language implements Serializable {
             m_dateFormat = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, m_locale);
             String sFormat = m_dateFormat.toPattern();
             //	some short formats have only one M and/or d (e.g. ths US)
-            if (sFormat.indexOf("MM") == -1 || sFormat.indexOf("dd") == -1) {
+            if (!sFormat.contains("MM") || !sFormat.contains("dd")) {
                 sFormat = sFormat.replaceFirst("d+", "dd");
                 sFormat = sFormat.replaceFirst("M+", "MM");
                 //	log.finer(sFormat + " => " + nFormat);
@@ -320,7 +306,7 @@ public class Language implements Serializable {
             if (m_dateFormat.toPattern().length() != 8) m_dateFormat.applyPattern("yyyy-MM-dd");
 
             //	4 digit year
-            if (m_dateFormat.toPattern().indexOf("yyyy") == -1) {
+            if (!m_dateFormat.toPattern().contains("yyyy")) {
                 sFormat = m_dateFormat.toPattern();
                 StringBuilder nFormat = new StringBuilder();
                 for (int i = 0; i < sFormat.length(); i++) {
@@ -359,12 +345,10 @@ public class Language implements Serializable {
      * ?????? 'm' ????'
      */
     public SimpleDateFormat getDateTimeFormat() {
-        SimpleDateFormat retValue =
-                (SimpleDateFormat)
-                        DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, m_locale);
         //	if (log.isLoggable(Level.FINER)) log.finer("Pattern=" + retValue.toLocalizedPattern() + ",
         // Loc=" + retValue.toLocalizedPattern());
-        return retValue;
+        return (SimpleDateFormat)
+                DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, m_locale);
     } //	getDateTimeFormat
 
     /**
@@ -391,18 +375,16 @@ public class Language implements Serializable {
      * @return string representation
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("Language=[");
-        sb.append(m_name)
-                .append(",Locale=")
-                .append(m_locale.toString())
-                .append(",AD_Language=")
-                .append(m_AD_Language)
-                .append(",DatePattern=")
-                .append(getDBdatePattern())
-                .append(",DecimalPoint=")
-                .append(isDecimalPoint())
-                .append("]");
-        return sb.toString();
+        return "Language=[" + m_name +
+                ",Locale=" +
+                m_locale.toString() +
+                ",AD_Language=" +
+                m_AD_Language +
+                ",DatePattern=" +
+                getDBdatePattern() +
+                ",DecimalPoint=" +
+                isDecimalPoint() +
+                "]";
     } //  toString
 
     /**

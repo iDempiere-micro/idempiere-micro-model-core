@@ -7,6 +7,7 @@ import org.compiere.model.Column
 import org.compiere.model.Element
 import org.compiere.model.Field
 import org.compiere.orm.getColumn
+import org.compiere.orm.isZeroIDTable
 import org.compiere.util.DisplayType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.SecureEngine
@@ -304,7 +305,7 @@ internal abstract class PO(row: Row?) : PersistentObject {
                         arrayOf(ii)
                     log.trace { "(PK) $ColumnName=$ii" }
                 } else {
-                    val oo : Any? = getValue(i)
+                    val oo: Any? = getValue(i)
                     ids = if (oo == null)
                         arrayOf(null)
                     else
@@ -385,9 +386,17 @@ internal abstract class PO(row: Row?) : PersistentObject {
      */
     fun getUpdatedBy(): Int {
         @Suppress("UNCHECKED_CAST")
-        return getValue("UpdatedBy") as Int? ?: return 0
+        return getValue("UpdatedBy") ?: return 0
     } // 	getUpdatedBy
 
+    /**
+     * Insert Accounting Records
+     *
+     * @param acctTable accounting sub table
+     * @param acctBaseTable acct table to get data from
+     * @param whereClause optional where clause with alias "p" for acctBaseTable
+     * @return true if records inserted
+     */
     protected fun insertAccounting(acctTable: String, acctBaseTable: String, whereClause: String?): Boolean {
         val s_acctColumns = setAccountingColumns(acctTable)
         val tableName = p_info.tableName
@@ -454,7 +463,7 @@ internal abstract class PO(row: Row?) : PersistentObject {
      * @return int value or 0
      */
     fun getValueAsInt(index: Int): Int {
-        val value :  Any = getValue(index) ?: return 0
+        val value: Any = getValue(index) ?: return 0
         if (value is Int) return value
         return try {
             Integer.parseInt(value.toString())
@@ -496,7 +505,7 @@ internal abstract class PO(row: Row?) : PersistentObject {
     @Suppress("UNCHECKED_CAST")
     override fun <T> getValue(index: Int): T? {
         val columnCount = p_info.columnCount
-        if (index < 0 || index >= columnCount ) {
+        if (index < 0 || index >= columnCount) {
             return null
         }
         val newValues = newValues
@@ -534,7 +543,19 @@ internal abstract class PO(row: Row?) : PersistentObject {
         return getValue(index)
     } //  get_ValueOfColumn
 
+    /**
+     * Is new record
+     *
+     * @return true if new
+     */
+    override val isNew: Boolean get() {
+        if (createNew) return true
 
+        val id = ids.firstOrNull { it != I_ZERO && it != Null.NULL }
+        if (id != null) return false
+
+        return !isZeroIDTable(tableName)
+    } // 	isNew
 }
 
 fun getAllIDs(tableName: String, whereClause: String?): IntArray {

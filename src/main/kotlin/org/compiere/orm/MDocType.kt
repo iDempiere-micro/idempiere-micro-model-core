@@ -96,7 +96,7 @@ class MDocType : X_C_DocType {
     // warning: to cache this translation you need to change the cache to include language (see i.e.
     // MWFNode)
     val nameTrl: String
-        get() = get_Translation(HasName.COLUMNNAME_Name, Env.getADLanguage()) // 	getNameTrl
+        get() = getTranslation(HasName.COLUMNNAME_Name, Env.getADLanguage()) // 	getNameTrl
 
     /**
      * ************************************************************************ Standard Constructor
@@ -181,7 +181,7 @@ class MDocType : X_C_DocType {
      * @return print Name if available translated
      */
     fun getPrintName(AD_Language: String?): String {
-        return if (AD_Language == null || AD_Language.length == 0) super.getPrintName() else get_Translation(
+        return if (AD_Language == null || AD_Language.length == 0) super.getPrintName() else getTranslation(
             DocumentType.COLUMNNAME_PrintName,
             AD_Language
         )

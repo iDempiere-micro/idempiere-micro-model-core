@@ -15,7 +15,7 @@ internal fun getElement(ad_language: String?, ColumnName: String?, isSOTrx: Bool
     if (ColumnName == null || ColumnName == "") return ""
     var AD_Language: String? = ad_language
     if (AD_Language == null || AD_Language.length == 0)
-        AD_Language = Language.getBaseAD_Language()
+        AD_Language = Language.getBaseLanguageCode()
 
     var retStr: String?
 
@@ -24,7 +24,7 @@ internal fun getElement(ad_language: String?, ColumnName: String?, isSOTrx: Bool
     }
 
     val loadQuery =
-        if (AD_Language == null || AD_Language.length == 0 || Env.isBaseLanguage(AD_Language, "AD_Element")) {
+        if (AD_Language == null || AD_Language.length == 0 || Env.isBaseLanguage(AD_Language)) {
             "/sql/getElementBase.sql".asResource { sql ->
                 queryOf(sql, listOf(ColumnName.toUpperCase())).map { map(it) }.asSingle
             }
@@ -52,7 +52,7 @@ open class BaseMsg {
     }
 
     protected fun initMsg(language: String?): CCache<String, String> {
-        val msg = CCache<String, String>("AD_Message", MAP_SIZE, 0, false, 0)
+        val msg = CCache<String, String>("AD_Message", 0, 0)
 
         fun processRow(row: Row): Boolean {
             val message = row.stringOrNull(1)
@@ -71,7 +71,7 @@ open class BaseMsg {
         val loadQuery =
             if (language == null ||
                 language.isEmpty() ||
-                Env.isBaseLanguage(language, "AD_Language")
+                Env.isBaseLanguage(language)
             ) {
                 "/sql/initMsgBase.sql".asResource { sql ->
                     queryOf(sql, listOf()).map { processRow(it) }.asList

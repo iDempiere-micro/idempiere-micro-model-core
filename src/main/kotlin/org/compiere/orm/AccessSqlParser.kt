@@ -1,6 +1,7 @@
 package org.compiere.orm
 
 import org.compiere.model.SqlTableInfo
+import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.CLogger
 
 import java.util.ArrayList
@@ -55,11 +56,12 @@ class AccessSqlParser
      */
     val mainSqlIndex: Int
         get() {
-            if (m_sql == null)
+            val sql = m_sql
+            if (sql == null)
                 return -1
-            else if (m_sql!!.size == 1) return 0
-            for (i in m_sql!!.indices.reversed()) {
-                if (m_sql!![i][0] != '(') return i
+            else if (sql.size == 1) return 0
+            for (i in sql.indices.reversed()) {
+                if (sql[i][0] != '(') return i
             }
             return -1
         } // 	getMainSqlIndex
@@ -71,11 +73,11 @@ class AccessSqlParser
      */
     val mainSql: String?
         get() {
-            if (m_sql == null) return m_sqlOriginal
+            val sql = m_sql ?: return m_sqlOriginal
 
-            if (m_sql!!.size == 1) return m_sql!![0]
-            for (i in m_sql!!.indices.reversed()) {
-                if (m_sql!![i][0] != '(') return m_sql!![i]
+            if (sql.size == 1) return sql[0]
+            for (i in sql.indices.reversed()) {
+                if (sql[i][0] != '(') return sql[i]
             }
             return ""
         } // 	getMainSql
@@ -91,12 +93,13 @@ class AccessSqlParser
      */
     fun setSql(sql: String?) {
         if (sql == null) throw IllegalArgumentException("No SQL")
-        m_sqlOriginal = sql
-        var index = m_sqlOriginal!!.indexOf("\nFROM ")
-        if (index != -1) m_sqlOriginal = m_sqlOriginal!!.replace("\nFROM ", FROM)
-        index = m_sqlOriginal!!.indexOf("\nWHERE ")
-        if (index != -1) m_sqlOriginal = m_sqlOriginal!!.replace("\nWHERE ", WHERE)
+        var changedSql = sql
+        var index = changedSql.indexOf("\nFROM ")
+        if (index != -1) changedSql = changedSql.replace("\nFROM ", FROM)
+        index = changedSql.indexOf("\nWHERE ")
+        if (index != -1) changedSql = changedSql.replace("\nWHERE ", WHERE)
         //
+        m_sqlOriginal = changedSql
         parse()
     } // 	setSQL
 
@@ -106,12 +109,14 @@ class AccessSqlParser
      * @return true if pased
      */
     fun parse(): Boolean {
-        if (m_sqlOriginal == null || m_sqlOriginal!!.length == 0)
+        val sqlOriginal = m_sqlOriginal
+        if (sqlOriginal == null || sqlOriginal.isEmpty())
             throw IllegalArgumentException("No SQL")
         //
         getSelectStatements()
         // 	analyse each select
-        for (s in m_sql!!) {
+        val sql = m_sql ?: throw AdempiereSystemError("sql is null")
+        for (s in sql) {
             val info = getTableInfo(s.trim { it <= ' ' })
             m_tableInfo.add(info)
         }
@@ -326,7 +331,7 @@ class AccessSqlParser
         // 	getTableName
         override val tableName: String,
         private val m_synonym: String? = null
-    ): SqlTableInfo {
+    ) : SqlTableInfo {
 
         /**
          * Get Table Synonym

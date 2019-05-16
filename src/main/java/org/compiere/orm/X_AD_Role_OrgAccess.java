@@ -51,7 +51,7 @@ public class X_AD_Role_OrgAccess extends PO implements RoleOrganizationAccess {
      * @return Responsibility Role
      */
     public int getRoleId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
     }

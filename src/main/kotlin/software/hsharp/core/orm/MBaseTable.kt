@@ -4,7 +4,6 @@ import kotliquery.Row
 import kotliquery.queryOf
 import org.compiere.model.Column
 import org.compiere.model.Table
-import org.compiere.orm.DefaultModelFactory
 import org.compiere.orm.ModelFactory
 import software.hsharp.core.util.DB
 import kotlin.collections.set
@@ -17,6 +16,8 @@ import org.idempiere.common.util.factoryString
 import org.idempiere.common.util.loadUsing
 import org.idempiere.icommon.model.PersistentObject
 import org.idempiere.orm.POInfo
+import software.hsharp.core.modules.BaseModule
+import software.hsharp.core.util.Environment
 import software.hsharp.core.util.asResource
 
 private fun doLoadTable(tableName: String): Table {
@@ -39,7 +40,7 @@ fun getTable(tableName: String) = tableName loadUsing tableFactoryString
 fun getTable(id: Int) = id loadUsing tableFactory
 
 internal fun getFactoryList(): Array<ModelFactory>? {
-    return arrayOf(DefaultModelFactory())
+    return arrayOf(Environment<BaseModule>().module.modelFactory)
 }
 
 private data class MBaseTableDetail(

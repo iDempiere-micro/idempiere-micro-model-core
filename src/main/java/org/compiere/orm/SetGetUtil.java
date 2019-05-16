@@ -94,7 +94,7 @@ public class SetGetUtil {
             rs = pstmt.executeQuery();
             updateColumns(models, columnNames, rs);
         } catch (SQLException e) {
-            throw new DBException(e, sql);
+            throw new DBException(e);
         }
     } //	updateColumns
 
@@ -175,7 +175,7 @@ public class SetGetUtil {
         }
         //
         int copiedFields = 0;
-        for (int idx_from = 0; idx_from < from.get_ColumnCount(); idx_from++) {
+        for (int idx_from = 0; idx_from < from.getColumnCount(); idx_from++) {
             String colName = from.getP_info().getColumnName(idx_from);
             boolean isExcluded = false;
             //
@@ -283,11 +283,11 @@ public class SetGetUtil {
      * @param name
      * @return int value
      */
-    public static int get_AttrValueAsInt(SetGetModel model, String name) {
+    public static int getAttrValueAsInt(SetGetModel model, String name) {
         Object o = model.getAttrValue(name);
         if (o instanceof Number) return ((Number) o).intValue();
         return 0;
-    } //	get_AttrValueAsInt
+    } //	getAttrValueAsInt
 
     /**
      * Get Value as BigDecimal
@@ -296,11 +296,11 @@ public class SetGetUtil {
      * @param name
      * @return BigDecimal or {@link BigDecimal#ZERO}
      */
-    public static BigDecimal get_AttrValueAsBigDecimal(SetGetModel model, String name) {
+    public static BigDecimal getAttrValueAsBigDecimal(SetGetModel model, String name) {
         Object o = model.getAttrValue(name);
         if (o instanceof BigDecimal) return (BigDecimal) o;
         return BigDecimal.ZERO;
-    } //	get_AttrValueAsBigDecimal
+    } //	getAttrValueAsBigDecimal
 
     /**
      * Check if given object is persistent object

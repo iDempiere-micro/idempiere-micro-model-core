@@ -47,7 +47,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Document Sequence
      */
     public int getSequenceId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Sequence_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Sequence_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -58,7 +58,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return The next number to be used
      */
     public int getCurrentNext() {
-        Integer ii = (Integer) getValue(COLUMNNAME_CurrentNext);
+        Integer ii = getValue(COLUMNNAME_CurrentNext);
         if (ii == null) return 0;
         return ii;
     }
@@ -78,7 +78,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Next sequence for system use
      */
     public int getCurrentNextSys() {
-        Integer ii = (Integer) getValue(COLUMNNAME_CurrentNextSys);
+        Integer ii = getValue(COLUMNNAME_CurrentNextSys);
         if (ii == null) return 0;
         return ii;
     }
@@ -98,7 +98,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Fully qualified date column
      */
     public String getDateColumn() {
-        return (String) getValue(COLUMNNAME_DateColumn);
+        return getValue(COLUMNNAME_DateColumn);
     }
 
     /**
@@ -107,7 +107,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Java Decimal Pattern
      */
     public String getDecimalPattern() {
-        return (String) getValue(COLUMNNAME_DecimalPattern);
+        return getValue(COLUMNNAME_DecimalPattern);
     }
 
     /**
@@ -125,7 +125,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return The number to increment the last document number by
      */
     public int getIncrementNo() {
-        Integer ii = (Integer) getValue(COLUMNNAME_IncrementNo);
+        Integer ii = getValue(COLUMNNAME_IncrementNo);
         if (ii == null) return 0;
         return ii;
     }
@@ -200,7 +200,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Fully qualified Organization column (AD_Org_ID)
      */
     public String getOrgColumn() {
-        return (String) getValue(COLUMNNAME_OrgColumn);
+        return getValue(COLUMNNAME_OrgColumn);
     }
 
     /**
@@ -209,7 +209,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Prefix before the sequence number
      */
     public String getPrefix() {
-        return (String) getValue(COLUMNNAME_Prefix);
+        return getValue(COLUMNNAME_Prefix);
     }
 
     /**
@@ -264,7 +264,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Starting number/position
      */
     public int getStartNo() {
-        Integer ii = (Integer) getValue(COLUMNNAME_StartNo);
+        Integer ii = getValue(COLUMNNAME_StartNo);
         if (ii == null) return 0;
         return ii;
     }
@@ -284,7 +284,7 @@ public class X_AD_Sequence extends BasePOName implements Sequence {
      * @return Suffix after the number
      */
     public String getSuffix() {
-        return (String) getValue(COLUMNNAME_Suffix);
+        return getValue(COLUMNNAME_Suffix);
     }
 
     @Override

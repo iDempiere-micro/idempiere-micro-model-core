@@ -30,9 +30,6 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
     private Set<K> nullList = null;
     private String m_tableName;
 
-    @SuppressWarnings("unused")
-    private boolean m_distributed;
-
     private int m_maxSize = 0;
     /**
      * Name
@@ -55,64 +52,44 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
      */
     private VetoableChangeSupport m_changeSupport = null;
 
-    public CCache(String name, int initialCapacity) {
-        this(name, name, initialCapacity);
+    public CCache(String name) {
+        this(name, name);
     }
 
-    public CCache(String name, int initialCapacity, int expireMinutes) {
-        this(name, initialCapacity, expireMinutes, false);
-    }
-
-    public CCache(String name, int initialCapacity, int expireMinutes, boolean distributed) {
-        this(name, name, initialCapacity, expireMinutes, distributed);
+    public CCache(String name, int expireMinutes) {
+        this(name, name, expireMinutes);
     }
 
     public CCache(
-            String name, int initialCapacity, int expireMinutes, boolean distributed, int maxSize) {
-        this(name, name, initialCapacity, expireMinutes, distributed, maxSize);
+            String name, int expireMinutes, int maxSize) {
+        this(name, name, expireMinutes, maxSize);
     }
 
-    /**
-     * Adempiere Cache - expires after 2 hours
-     *
-     * @param name            (table) name of the cache
-     * @param initialCapacity initial capacity
-     */
-    public CCache(String tableName, String name, int initialCapacity) {
-        this(tableName, name, initialCapacity, false);
-    } //	CCache
-
-    public CCache(String tableName, String name, int initialCapacity, boolean distributed) {
-        this(tableName, name, initialCapacity, 60, distributed);
+    public CCache(String tableName, String name) {
+        this(tableName, name, 60);
     }
 
     public CCache(
-            String tableName, String name, int initialCapacity, int expireMinutes, boolean distributed) {
-        this(tableName, name, initialCapacity, expireMinutes, distributed, CacheMgt.MAX_SIZE);
+            String tableName, String name, int expireMinutes) {
+        this(tableName, name, expireMinutes, CacheMgt.MAX_SIZE);
     }
 
     /**
      * Adempiere Cache
-     *
      * @param name            (table) name of the cache
-     * @param initialCapacity initial capacity
      * @param expireMinutes   expire after minutes (0=no expire)
-     * @param distributed
      * @param maxSize         ignore if distributed=true
      */
     public CCache(
             String tableName,
             String name,
-            int initialCapacity,
             int expireMinutes,
-            boolean distributed,
             int maxSize) {
         m_name = name;
         m_tableName = tableName;
         setExpireMinutes(expireMinutes);
         m_maxSize = maxSize;
-        cache = CacheMgt.get().register(this, distributed);
-        m_distributed = distributed;
+        cache = CacheMgt.get().register(this);
 
         if (nullList == null) {
             nullList = Collections.synchronizedSet(new HashSet<K>());
@@ -344,15 +321,9 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
     public int reset(int recordId) {
         if (recordId <= 0) return reset();
 
-        if (!nullList.isEmpty()) {
-            if (nullList.remove(recordId)) return 1;
-        }
+        if (!nullList.isEmpty() && nullList.remove(recordId)) return 1;
         V removed = cache.remove(recordId);
         return removed != null ? 1 : 0;
-    }
-
-    @Override
-    public void newRecord(int record_ID) {
     }
 
     public int getMaxSize() {

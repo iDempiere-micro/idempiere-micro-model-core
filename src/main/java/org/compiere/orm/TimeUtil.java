@@ -117,7 +117,8 @@ public class TimeUtil {
      * @param elapsedMS time in ms
      * @return formatted time string 1'23:59:59.999 - d'hh:mm:ss.xxx
      */
-    public static String formatElapsed(long elapsedMS) {
+    public static String formatElapsed(long elapsedMS1) {
+        long elapsedMS = elapsedMS1;
         if (elapsedMS == 0) return "0";
         StringBuilder sb = new StringBuilder();
         if (elapsedMS < 0) {
@@ -180,7 +181,8 @@ public class TimeUtil {
      * @param day day
      * @return last day with 00:00
      */
-    public static Timestamp getMonthLastDay(Timestamp day) {
+    public static Timestamp getMonthLastDay(Timestamp day1) {
+        Timestamp day = day1;
         if (day == null) day = new Timestamp(System.currentTimeMillis());
         GregorianCalendar cal = new GregorianCalendar(Language.getLoginLanguage().getLocale());
         cal.setTimeInMillis(day.getTime());

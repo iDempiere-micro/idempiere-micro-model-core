@@ -22,19 +22,19 @@ private class Test(
     override val clientId: Int = 0
 ) : PersistentObject {
     override fun <T> getValueOfColumn(columnId: Int): T? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getColumnIndex(columnName: String): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun <T> getValue(columnName: String): T? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun <T> getValue(index: Int): T? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun isActive(): Boolean {

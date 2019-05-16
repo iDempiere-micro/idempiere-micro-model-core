@@ -35,5 +35,4 @@ open class BaseDataServiceImpl<T : PersistentObject> (
     override fun getById(id: Int): T? {
         return getTable(tableName).getPO(id)
     }
-
 }

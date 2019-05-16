@@ -138,11 +138,12 @@ public class Secure implements SecureInterface {
     /**
      * Decryption. The methods must recognize clear text values
      *
-     * @param value        encrypted value
+     * @param value1        encrypted value
      * @param AD_Client_ID
      * @return decrypted String
      */
-    public String decrypt(String value, int AD_Client_ID) {
+    public String decrypt(String value1, int AD_Client_ID) {
+        String value = value1;
         if (value == null || value.length() == 0) return value;
         boolean isEncrypted =
                 value.startsWith(ENCRYPTEDVALUE_START) && value.endsWith(ENCRYPTEDVALUE_END);
@@ -214,9 +215,7 @@ public class Secure implements SecureInterface {
      * @return info
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("Secure[");
-        sb.append(m_keyStore.getAlgorithm()).append("]");
-        return sb.toString();
+        return "Secure[" + m_keyStore.getAlgorithm() + "]";
     } //	toString
 
     /**

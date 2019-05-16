@@ -48,8 +48,8 @@ public class X_AD_Attachment extends PO {
      *
      * @return Attachment for the document
      */
-    public int getAD_AttachmentId() {
-        Integer ii = (Integer) getValue(Attachment.COLUMNNAME_AD_Attachment_ID);
+    public int getAttachmentId() {
+        Integer ii = getValue(Attachment.COLUMNNAME_AD_Attachment_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -89,7 +89,7 @@ public class X_AD_Attachment extends PO {
      * @return Name this entity is referred to as
      */
     public String getTitle() {
-        return (String) getValue(Attachment.COLUMNNAME_Title);
+        return getValue(Attachment.COLUMNNAME_Title);
     }
 
     /**

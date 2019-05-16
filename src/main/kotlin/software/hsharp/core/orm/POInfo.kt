@@ -20,9 +20,7 @@ data class POInfoDetail(
 
 open class POInfo(val tableId: Int, baseLanguageOnly: Boolean) {
     private val detail: Pair<POInfoDetail, Array<POInfoColumn>> = loadInfo(
-        if (baseLanguageOnly) true else Env.isBaseLanguage(
-            "AD_Table"
-        )
+        if (baseLanguageOnly) true else Env.isBaseLanguage()
     )
 
     protected val columnNameMap: MutableMap<String, Int> = detail.first.columnNameMap
@@ -43,15 +41,12 @@ open class POInfo(val tableId: Int, baseLanguageOnly: Boolean) {
             val AD_Reference_ID = row.int(3)
             val IsMandatory = "Y" == row.stringOrNull(4)
             val IsUpdateable = "Y" == row.stringOrNull(5)
-            val DefaultLogic = row.stringOrNull(6)
             val Name = row.stringOrNull(7)
             val Description = row.stringOrNull(8)
             val AD_Column_ID = row.int(9)
             val IsKey = "Y" == row.stringOrNull(10)
             val hasKeyColumn = IsKey
             val IsParent = "Y" == row.stringOrNull(11)
-            val AD_Reference_Value_ID = row.intOrNull(12) ?: 0
-            val ValidationCode = row.stringOrNull(13)
             val FieldLength = row.int(14)
             val ValueMin = row.stringOrNull(15)
             val ValueMax = row.stringOrNull(16)
@@ -62,8 +57,6 @@ open class POInfo(val tableId: Int, baseLanguageOnly: Boolean) {
             if (ColumnSQL != null && ColumnSQL.contains("@"))
                 ColumnSQL = Env.parseContext(-1, ColumnSQL, false, true)
             val IsEncrypted = "Y" == row.stringOrNull(20)
-            val IsAllowLogging = "Y" == row.stringOrNull(21)
-            val IsAllowCopy = "Y" == row.stringOrNull(22)
             val isChangeLog = "Y" == row.stringOrNull(23)
 
             Pair(
@@ -78,20 +71,15 @@ open class POInfo(val tableId: Int, baseLanguageOnly: Boolean) {
                     AD_Reference_ID,
                     IsMandatory,
                     IsUpdateable,
-                    DefaultLogic,
                     Name,
                     Description,
                     IsKey,
                     IsParent,
-                    AD_Reference_Value_ID,
-                    ValidationCode,
                     FieldLength,
                     ValueMin,
                     ValueMax,
                     IsTranslated,
-                    IsEncrypted,
-                    IsAllowLogging,
-                    IsAllowCopy
+                    IsEncrypted
                 )
             )
         }

@@ -38,16 +38,6 @@ public class DBException extends AdempiereException {
     }
 
     /**
-     * Create a new DBException based on a SQLException and SQL Query
-     *
-     * @param e   exception
-     * @param sql sql query
-     */
-    public DBException(SQLException e, String sql) {
-        this(e);
-    }
-
-    /**
      * Create a new DBException
      *
      * @param msg Message

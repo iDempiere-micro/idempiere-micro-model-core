@@ -71,7 +71,7 @@ public class CLogConsole extends Handler {
      * @throws java.io.UnsupportedEncodingException
      */
     public void setEncoding(String encoding)
-            throws SecurityException, java.io.UnsupportedEncodingException {
+            throws SecurityException, UnsupportedEncodingException {
         super.setEncoding(encoding);
         // Replace the current writer with a writer for the new encoding.
         flush();
@@ -103,7 +103,7 @@ public class CLogConsole extends Handler {
         if (!isLoggable(record) || m_writerOut == null) return;
 
         //	Format
-        String msg = null;
+        String msg;
         try {
             msg = getFormatter().format(record);
         } catch (Exception ex) {
@@ -187,8 +187,6 @@ public class CLogConsole extends Handler {
      * @return info
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("CLogConsole[");
-        sb.append("Level=").append(getLevel()).append("]");
-        return sb.toString();
+        return "CLogConsole[" + "Level=" + getLevel() + "]";
     } //	toString
 } // CLogConsole

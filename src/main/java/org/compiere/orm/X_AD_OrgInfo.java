@@ -63,7 +63,7 @@ public class X_AD_OrgInfo extends PO implements ClientOrganizationInfo {
      * @return Accounting Calendar Name
      */
     public int getCalendarId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_Calendar_ID);
+        Integer ii = getValue(COLUMNNAME_C_Calendar_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -74,7 +74,7 @@ public class X_AD_OrgInfo extends PO implements ClientOrganizationInfo {
      * @return Location or Address
      */
     public int getLocationId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_Location_ID);
+        Integer ii = getValue(COLUMNNAME_C_Location_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -95,7 +95,7 @@ public class X_AD_OrgInfo extends PO implements ClientOrganizationInfo {
      * @return The (logical) warehouse to use for recording drop ship receipts and shipments.
      */
     public int getDropShipWarehouseId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_DropShip_Warehouse_ID);
+        Integer ii = getValue(COLUMNNAME_DropShip_Warehouse_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -133,7 +133,7 @@ public class X_AD_OrgInfo extends PO implements ClientOrganizationInfo {
      * @return Storage Warehouse and Service Point
      */
     public int getWarehouseId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_M_Warehouse_ID);
+        Integer ii = getValue(COLUMNNAME_M_Warehouse_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -154,7 +154,7 @@ public class X_AD_OrgInfo extends PO implements ClientOrganizationInfo {
      * @return Parent (superior) Organization
      */
     public int getParentOrgId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_Parent_Org_ID);
+        Integer ii = getValue(COLUMNNAME_Parent_Org_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -183,7 +183,7 @@ public class X_AD_OrgInfo extends PO implements ClientOrganizationInfo {
      * @return Supervisor for this user/organization - used for escalation and approval
      */
     public int getSupervisorId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_Supervisor_ID);
+        Integer ii = getValue(COLUMNNAME_Supervisor_ID);
         if (ii == null) return 0;
         return ii;
     }

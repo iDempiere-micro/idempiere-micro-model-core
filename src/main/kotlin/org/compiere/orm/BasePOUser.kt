@@ -9,6 +9,7 @@ import org.compiere.model.User
 abstract class BasePOUser : PO {
     constructor(ID: Int) : super(ID)
     constructor (row: Row) : super(row)
+    constructor (row: Row?, ID: Int) : super(row, ID)
 
     /** Set User/Contact.
      * @param AD_User_ID
@@ -25,6 +26,6 @@ abstract class BasePOUser : PO {
      * @return User within the system - Internal or Business Partner Contact
      */
     fun getUserId(): Int {
-        return getValue(User.COLUMNNAME_AD_User_ID) as Int? ?: return 0
+        return getValue(User.COLUMNNAME_AD_User_ID) ?: return 0
     }
 }

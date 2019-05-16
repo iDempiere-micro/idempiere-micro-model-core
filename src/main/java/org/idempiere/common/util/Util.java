@@ -132,10 +132,11 @@ public class Util {
     /**
      * Clean Ampersand (used to indicate shortcut)
      *
-     * @param in input
+     * @param param input
      * @return cleaned string
      */
-    public static String cleanAmp(String in) {
+    public static String cleanAmp(String param) {
+        String in = param;
         if (in == null || in.length() == 0) return in;
         int pos = in.indexOf('&');
         if (pos == -1) return in;

@@ -1,7 +1,6 @@
 package software.hsharp.core.orm
 
 import kotliquery.queryOf
-import org.compiere.orm.MTable
 import org.compiere.orm.getTableId
 import software.hsharp.core.util.DB
 import software.hsharp.core.util.asResource

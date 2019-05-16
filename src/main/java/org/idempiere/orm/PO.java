@@ -8,22 +8,14 @@ import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.CLogMgt;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.CacheMgt;
 import org.idempiere.common.util.Env;
-import org.idempiere.common.util.Evaluatee;
 import org.idempiere.common.util.SecureEngine;
-import org.idempiere.common.util.Trace;
 import org.idempiere.common.util.ValueNamePair;
 import org.idempiere.icommon.model.PersistentObject;
-import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import software.hsharp.core.util.DB;
 import software.hsharp.core.util.DBKt;
 import software.hsharp.core.util.Environment;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -33,7 +25,6 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -53,10 +44,10 @@ import static software.hsharp.core.util.DBKt.isQueryTimeoutSupported;
  * @author Jorg Janke
  * @author Teo Sarca, SC ARHIPAC SERVICE SRL
  * <li>FR [ 1675490 ] ModelValidator on modelChange after events
- * <li>BF [ 1704828 ] PO.is_Changed() and PO.isValueChanged are not consistent
+ * <li>BF [ 1704828 ] PO.isChanged() and PO.isValueChanged are not consistent
  * <li>FR [ 1720995 ] Add PO.saveEx() and PO.deleteEx() methods
  * <li>BF [ 1990856 ] PO.setValue* : truncate string more than needed
- * <li>FR [ 2042844 ] PO.get_Translation improvements
+ * <li>FR [ 2042844 ] PO.getTranslation improvements
  * <li>FR [ 2818369 ] Implement PO.get_ValueAs*(columnName)
  * https://sourceforge.net/tracker/?func=detail&aid=2818369&group_id=176962&atid=879335
  * <li>BF [ 2849122 ] PO.AfterSave is not rollback on error
@@ -76,7 +67,7 @@ import static software.hsharp.core.util.DBKt.isQueryTimeoutSupported;
  * @version $Id: PO.java,v 1.12 2006/08/09 16:38:47 jjanke Exp $
  */
 public abstract class PO extends software.hsharp.core.orm.PO
-        implements Serializable, Comparator<Object>, Evaluatee, Cloneable, PersistentObject {
+        implements Serializable, Comparator<Object>, Cloneable, PersistentObject {
     /**
      * User Maintained Entity Type
      */
@@ -136,12 +127,11 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     protected static CCache<String, String> trl_cache = new CCache<String, String>("po_trl", 5);
 
-    protected String m_columnNamePrefix = null;
     protected transient CLogger log = CLogger.getCLogger(getClass());
     /**
      * Errors when setting
      */
-    protected ValueNamePair[] m_setErrors = null;
+    protected ValueNamePair[] m_setErrors;
     /**
      * Deleted ID
      */
@@ -159,6 +149,20 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     private ArrayList<PO_LOB> m_lobInfo = null;
 
+    /**
+     * Create & Load existing Persistent Object.
+     *
+     * <pre>
+     *  You load
+     * 		- an existing single key record with 	new PO (Record_ID)
+     * 		- a new single key record with			new PO (0)
+     * 		- an existing multi key record with		new PO (rs)
+     * 		- a new multi key record with			new PO (null)
+     *  The ID for new single key records is created automatically,
+     *  you need to set the IDs for multi-key records explicitly.
+     * </pre>
+     *
+     */
     public PO(Row row) {
         super(row);
         int size = getP_info().getColumnCount();
@@ -172,10 +176,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * <pre>
      *  You load
      * 		- an existing single key record with 	new PO (Record_ID)
-     * 			or									new PO (Record_ID)
-     * 			or									new PO (rs, null)
      * 		- a new single key record with			new PO (0)
-     * 		- an existing multi key record with		new PO (rs, null)
+     * 		- an existing multi key record with		new PO (rs)
      * 		- a new multi key record with			new PO (null)
      *  The ID for new single key records is created automatically,
      *  you need to set the IDs for multi-key records explicitly.
@@ -194,6 +196,29 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
         load(ID);
     } //  PO
+
+    /**
+     * Create & Load existing Persistent Object.
+     *
+     * <pre>
+     *  You load
+     * 		- an existing single key record with 	new PO (null, Record_ID)
+     * 		- a new single key record with			new PO (null, 0)
+     * 		- an existing multi key record with		new PO (rs, ignored)
+     * 		- a new multi key record with			new PO (null, 0)
+     *  The ID for new single key records is created automatically,
+     *  you need to set the IDs for multi-key records explicitly.
+     * </pre>
+     *
+     * @param ID the ID if 0, the record defaults are applied - ignored if re exists
+     */
+    public PO(Row row, int ID) {
+        super(row);
+        int size = getP_info().getColumnCount();
+        clearNewValues();
+        m_setErrors = new ValueNamePair[size];
+        if (row == null) load(ID);
+    }
 
     /**
      * Returns the summary node with the corresponding value
@@ -312,22 +337,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @return ID or 0
      */
-    public int get_IDOld() {
+    public int getDeletedSingleKeyRecordId() {
         return m_idOld;
     } //  getID
-
-
-    /**
-     * Get Column Value
-     *
-     * @param variableName name
-     * @return value or ""
-     */
-    public String get_ValueAsString(String variableName) {
-        Object value = getValue(variableName);
-        if (value == null) return "";
-        return value.toString();
-    } //	get_ValueAsString
 
     /**
      * Get Old Value
@@ -336,7 +348,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return value
      */
     public final Object getValueOld(int index) {
-        if (index < 0 || index >= get_ColumnCount()) {
+        if (index < 0 || index >= getColumnCount()) {
             log.log(Level.WARNING, "Index invalid - " + index);
             return null;
         }
@@ -383,7 +395,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return true if changed
      */
     public final boolean isValueChanged(int index) {
-        if (index < 0 || index >= get_ColumnCount()) {
+        if (index < 0 || index >= getColumnCount()) {
             log.log(Level.WARNING, "Index invalid - " + index);
             return false;
         }
@@ -414,7 +426,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param ColumnName column name
      * @param value      value
      */
-    protected void set_Keys(String ColumnName, Object value) {
+    protected void setKeys(String ColumnName, Object value) {
         //	Update if KeyColumn
         for (int i = 0; i < getIds().length; i++) {
             if (ColumnName.equals(getM_keyColumns()[i])) {
@@ -428,7 +440,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @return column count
      */
-    public int get_ColumnCount() {
+    public int getColumnCount() {
         POInfo p_info = super.getP_info();
         return p_info.getColumnCount();
     } //  getColumnCount
@@ -439,7 +451,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param index index
      * @return ColumnName
      */
-    public String get_ColumnName(int index) {
+    public String getColumnName(int index) {
         POInfo p_info = super.getP_info();
         return p_info.getColumnName(index);
     } //  getColumnName
@@ -473,9 +485,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
     protected boolean loadFromMap(HashMap<String, String> hmIn) {
         if (hmIn == null) return load();
 
-        int size = get_ColumnCount();
+        int size = getColumnCount();
         boolean success = true;
-        int index = 0;
+        int index;
         POInfo p_info = super.getP_info();
         log.finest("(hm)");
         //  load column values
@@ -544,7 +556,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * Set Default values. Client, Org, Created/Updated, *By, IsActive
      */
     protected void setStandardDefaults() {
-        int size = get_ColumnCount();
+        int size = getColumnCount();
         POInfo p_info = super.getP_info();
         Object[] newValues = getNewValues();
         for (int i = 0; i < size; i++) {
@@ -571,7 +583,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return AD_Org_ID
      */
     public int getOrgId() {
-        Integer ii = (Integer) getValue("AD_Org_ID");
+        Integer ii = getValue("AD_Org_ID");
         if (ii == null) return 0;
         return ii;
     } //	getOrgId
@@ -591,7 +603,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return is active
      */
     public final boolean isActive() {
-        Boolean bb = (Boolean) getValue("IsActive");
+        Boolean bb = getValue("IsActive");
         if (bb != null) return bb;
         return false;
     } //	isActive
@@ -620,29 +632,18 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return AD_User_ID
      */
     public final int getCreatedBy() {
-        Integer ii = (Integer) getValue("CreatedBy");
+        Integer ii = getValue("CreatedBy");
         if (ii == null) return 0;
         return ii;
     } //	getCreateddBy
 
-    public String get_Translation(String columnName, String AD_Language) {
-        return get_Translation(columnName, AD_Language, false, true);
+    public String getTranslation(String columnName, String AD_Language) {
+        return getTranslation(columnName, AD_Language, false, true);
     }
 
-    /**
-     * Get Translation of column (if needed). It checks if the base language is used or the column is
-     * not translated. If there is no translation then it fallback to original value.
-     *
-     * @param columnName
-     * @param AD_Language
-     * @param reload      don't use cache, reload from DB
-     * @param fallback    fallback to base if no translation found
-     * @return translated string
-     * @throws IllegalArgumentException if columnName or AD_Language is null or model has multiple PK
-     */
-    public String get_Translation(
-            String columnName, String AD_Language, boolean reload, boolean fallback) {
-        //
+    private void checkTranslation(
+            String columnName, String AD_Language) {
+
         // Check if columnName, AD_Language is valid or table support translation (has 1 PK) => error
         if (columnName == null
                 || AD_Language == null
@@ -660,6 +661,23 @@ public abstract class PO extends software.hsharp.core.orm.PO
                             + getIds()[0]);
         }
 
+    }
+
+    /**
+     * Get Translation of column (if needed). It checks if the base language is used or the column is
+     * not translated. If there is no translation then it fallback to original value.
+     *
+     * @param columnName
+     * @param AD_Language
+     * @param reload      don't use cache, reload from DB
+     * @param fallback    fallback to base if no translation found
+     * @return translated string
+     * @throws IllegalArgumentException if columnName or AD_Language is null or model has multiple PK
+     */
+    public String getTranslation(
+            String columnName, String AD_Language, boolean reload, boolean fallback) {
+        checkTranslation(columnName, AD_Language);
+
         String key = getTrlCacheKey(columnName, AD_Language);
         String retValue = null;
         if (!reload && trl_cache.containsKey(key)) {
@@ -670,20 +688,19 @@ public abstract class PO extends software.hsharp.core.orm.PO
             //
             // Check if NOT base language and column is translated => load trl from db
             POInfo p_info = super.getP_info();
-            if (!Env.isBaseLanguage(AD_Language, getTableName())
+            if (!Env.isBaseLanguage(AD_Language)
                     && p_info.isColumnTranslated(p_info.getColumnIndex(columnName))) {
                 // Load translation from database
                 int ID = (Integer) getIds()[0];
-                StringBuilder sql =
-                        new StringBuilder("SELECT ")
-                                .append(columnName)
-                                .append(" FROM ")
-                                .append(p_info.getTableName())
-                                .append("_Trl WHERE ")
-                                .append(getM_keyColumns()[0])
-                                .append("=?")
-                                .append(" AND AD_Language=?");
-                retValue = getSQLValueString(sql.toString(), ID, AD_Language);
+                String sql = "SELECT " +
+                        columnName +
+                        " FROM " +
+                        p_info.getTableName() +
+                        "_Trl WHERE " +
+                        getM_keyColumns()[0] +
+                        "=?" +
+                        " AND AD_Language=?";
+                retValue = getSQLValueString(sql, ID, AD_Language);
             }
         }
         //
@@ -695,7 +712,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         trl_cache.put(key, retValue);
         //
         return retValue;
-    } //	get_Translation
+    } //	getTranslation
 
     /**
      * Return the key used in the translation cache
@@ -709,8 +726,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @param columnName
      */
-    public String get_Translation(String columnName) {
-        return get_Translation(columnName, true);
+    public String getTranslation(String columnName) {
+        return getTranslation(columnName, true);
     }
 
     /**
@@ -720,8 +737,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @param fallback   fallback to base if no translation found
      * @return translation
      */
-    public String get_Translation(String columnName, boolean fallback) {
-        return get_Translation(columnName, Env.getADLanguage(), false, fallback);
+    public String getTranslation(String columnName, boolean fallback) {
+        return getTranslation(columnName, Env.getADLanguage(), false, fallback);
     }
 
     /**
@@ -729,8 +746,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @return true if record changed
      */
-    public boolean is_Changed() {
-        int size = get_ColumnCount();
+    public boolean isChanged() {
+        int size = getColumnCount();
         for (int i = 0; i < size; i++) {
             // Test if the column has changed - teo_sarca [ 1704828 ]
             if (isValueChanged(i)) return true;
@@ -746,12 +763,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return true if record can be saved
      */
     protected boolean beforeSave(boolean newRecord) {
-        /**
-         * Prevents saving log.saveError("Error", MsgKt.parseTranslation("@C_Currency_ID@
-         * = @C_Currency_ID@")); log.saveError("FillMandatory", MsgKt.getElementTranslation(
-         * "PriceEntered")); /** Issues message log.saveWarning(AD_Message, message); log.saveInfo
-         * (AD_Message, message);
-         */
         return true;
     } //	beforeSave
 
@@ -780,12 +791,12 @@ public abstract class PO extends software.hsharp.core.orm.PO
      *
      * @return ID to be used or 0 for default logic
      */
-    protected int saveNew_getID() {
+    protected int saveNewGetID() {
         int result = getId();
         if (result > 0 && result < 999999) // 2Pack assigns official ID's when importing
             return result;
         return 0;
-    } //	saveNew_getID
+    } //	saveNewGetID
 
     /**
      * Save Special Data. To be extended by sub-classes
@@ -846,17 +857,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
     } //	afterDelete
 
     /**
-     * Delete Accounting records. NOP - done by database constraints
-     *
-     * @param acctTable accounting sub table
-     * @return true
-     */
-    @Deprecated // see IDEMPIERE-2088
-    protected boolean delete_Accounting(String acctTable) {
-        return true;
-    } //	delete_Accounting
-
-    /**
      * Returns the summary node from C_ElementValue with the corresponding value
      */
     protected int retrieveIdOfElementValue(
@@ -879,7 +879,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
     public void dump() {
         if (CLogMgt.isLevelFinest()) {
             log.finer(getWhereClause(true));
-            for (int i = 0; i < get_ColumnCount(); i++) dump(i);
+            for (int i = 0; i < getColumnCount(); i++) dump(i);
         }
     } //  dump
 
@@ -890,13 +890,13 @@ public abstract class PO extends software.hsharp.core.orm.PO
      */
     public void dump(int index) {
         StringBuilder sb = new StringBuilder(" ").append(index);
-        if (index < 0 || index >= get_ColumnCount()) {
+        if (index < 0 || index >= getColumnCount()) {
             if (log.isLoggable(Level.FINEST)) log.finest(sb.append(": invalid").toString());
             return;
         }
         Object[] newValues = getNewValues();
         sb.append(": ")
-                .append(get_ColumnName(index))
+                .append(getColumnName(index))
                 .append(" = ")
                 .append(getOldValues()[index])
                 .append(" (")
@@ -925,7 +925,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         PO_LOB lob =
                 new PO_LOB(
                         p_info.getTableName(),
-                        get_ColumnName(index),
+                        getColumnName(index),
                         getWhereClause(true),
                         displayType,
                         value);
@@ -951,75 +951,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         lobReset();
         return retValue;
     } //	saveLOB
-
-    /**
-     * Get XML Document representation
-     *
-     * @return XML document
-     */
-    public Document get_xmlDocument() {
-        Document document = null;
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.newDocument();
-      /*if (!noComment)
-      document.appendChild(document.createComment(Adempiere.getI().getSummaryAscii())); DAP */
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "", e);
-        }
-        //	Root
-        Element root = document.createElement(getTableName());
-        root.setAttribute(XML_ATTRIBUTE_AD_Table_ID, String.valueOf(getTableId()));
-        root.setAttribute(XML_ATTRIBUTE_Record_ID, String.valueOf(getId()));
-        document.appendChild(root);
-        //	Columns
-        int size = get_ColumnCount();
-        POInfo p_info = super.getP_info();
-        for (int i = 0; i < size; i++) {
-            if (p_info.isVirtualColumn(i)) continue;
-
-            Element col = document.createElement(p_info.getColumnName(i));
-            //
-            Object value = getValue(i);
-            //	Display Type
-            int dt = p_info.getColumnDisplayType(i);
-            //  Based on class of definition, not class of value
-            Class<?> c = p_info.getColumnClass(i);
-            if (value == null || value.equals(Null.NULL)) ;
-            else if (c == Object.class) col.appendChild(document.createCDATASection(value.toString()));
-            else if (value instanceof Integer || value instanceof BigDecimal)
-                col.appendChild(document.createTextNode(value.toString()));
-            else if (c == Boolean.class) {
-                boolean bValue = false;
-                if (value instanceof Boolean) bValue = (Boolean) value;
-                else bValue = "Y".equals(value);
-                col.appendChild(document.createTextNode(bValue ? "Y" : "N"));
-            } else if (value instanceof Timestamp)
-                col.appendChild(document.createTextNode(value.toString()));
-            else if (c == String.class) col.appendChild(document.createCDATASection((String) value));
-            else if (DisplayType.isLOB(dt))
-                col.appendChild(document.createCDATASection(value.toString()));
-            else col.appendChild(document.createCDATASection(value.toString()));
-            //
-            root.appendChild(col);
-        }
-        //	Custom Columns
-        if (m_custom != null) {
-            Iterator<String> it = m_custom.keySet().iterator();
-            while (it.hasNext()) {
-                String columnName = it.next();
-                //				int index = p_info.getColumnIndex(columnName);
-                String value = m_custom.get(columnName);
-                //
-                Element col = document.createElement(columnName);
-                if (value != null) col.appendChild(document.createTextNode(value));
-                root.appendChild(col);
-            }
-            m_custom = null;
-        }
-        return document;
-    } //	getDocument
 
     public boolean isReplication() {
         return m_isReplication;
@@ -1054,7 +985,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
      * @return true if value set
      */
     protected boolean setValue(int index, Object value, boolean checkWritable) {
-        if (index < 0 || index >= get_ColumnCount()) {
+        if (index < 0 || index >= getColumnCount()) {
             log.log(Level.WARNING, "Index invalid - " + index);
             return false;
         }
@@ -1169,7 +1100,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 log.finest(
                         ColumnName + " = " + newValues[index] + " (OldValue=" + getOldValues()[index] + ")");
         }
-        set_Keys(ColumnName, newValues[index]);
+        setKeys(ColumnName, newValues[index]);
 
         return true;
     } //  setValue
@@ -1258,7 +1189,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         CLogger.resetLast();
         POInfo p_info = super.getP_info();
         boolean newRecord = isNew(); // 	save locally as load resets
-        if (!newRecord && !is_Changed()) {
+        if (!newRecord && !isChanged()) {
             if (log.isLoggable(Level.FINE)) log.fine("Nothing changed - " + p_info.getTableName());
             return true;
         }
@@ -1281,14 +1212,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         //	Should be Org 0
         if (getOrgId() != 0) {
             boolean reset = getAccessLevel() == ACCESSLEVEL_SYSTEM;
-            if (!reset && false) // isOrgLevelOnly default is false
-            {
-                reset =
-                        getAccessLevel() == ACCESSLEVEL_CLIENT
-                                || getAccessLevel() == ACCESSLEVEL_SYSTEMCLIENT
-                                || getAccessLevel() == ACCESSLEVEL_ALL
-                                || getAccessLevel() == ACCESSLEVEL_CLIENTORG;
-            }
             if (reset) {
                 log.warning("Set Org to 0");
                 setOrgId(0);
@@ -1325,13 +1248,11 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 && p_info.getHasKeyColumn()
                 && getM_keyColumns()[0].endsWith("_ID")) // 	AD_Language, EntityType
         {
-            int no = saveNew_getID();
+            int no = saveNewGetID();
             if (no <= 0) throw new AdempiereException("no <= 0");
             // the primary key is not overwrite with the local sequence
-            if (isReplication()) {
-                if (getId() > 0) {
-                    no = getId();
-                }
+            if (isReplication() && getId() > 0) {
+                no = getId();
             }
             if (no <= 0) {
                 log.severe("No NextID (" + no + ")");
@@ -1343,7 +1264,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         // uuid secondary key
         int uuidIndex = p_info.getColumnIndex(getUUIDColumnName());
         if (uuidIndex >= 0) {
-            String value = (String) getValue(uuidIndex);
+            String value = getValue(uuidIndex);
             if (p_info.getColumn(uuidIndex).FieldLength == 36 && (value == null || value.length() == 0)) {
                 UUID uuid = UUID.randomUUID();
                 setValueNoCheck(p_info.getColumnName(uuidIndex), uuid.toString());
@@ -1381,7 +1302,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
             if (s_docWFMgr == null) {
                 try {
                     Class.forName("org.compiere.wf.DocWorkflowManager");
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
             if (s_docWFMgr != null) s_docWFMgr.process(this, p_info.getRowTableId());
@@ -1398,8 +1319,8 @@ public abstract class PO extends software.hsharp.core.orm.PO
             clearNewValues();
             setCreateNew(false);
         }
-        if (!newRecord) CacheMgt.get().reset(p_info.getTableName());
-        else if (getId() > 0 && success) CacheMgt.get().newRecord(p_info.getTableName(), getId());
+        // DAP: if (!newRecord) CacheMgt.get().reset();
+        // DAP: else if (getId() > 0 && success) CacheMgt.get().newRecord();
 
         return success;
     } //	saveFinish
@@ -1417,7 +1338,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
     protected boolean doUpdate(boolean withValues) {
         // params for insert statement
-        List<Object> params = new ArrayList<Object>();
+        List<Object> params = new ArrayList<>();
 
         String where = getWhereClause(true);
         //
@@ -1429,7 +1350,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         boolean updatedBy = false;
         lobReset();
 
-        int size = get_ColumnCount();
+        int size = getColumnCount();
         Object[] newValues = getNewValues();
         for (int i = 0; i < size; i++) {
             Object value = newValues[i];
@@ -1465,8 +1386,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 String strValue = (String) value;
                 if (strValue.startsWith("<") && strValue.endsWith(">")) {
                     value = null;
-                    int index = p_info.getColumnIndex("C_DocTypeTarget_ID");
-                    if (index == -1) index = p_info.getColumnIndex("C_DocType_ID");
                 } else if (log.isLoggable(Level.INFO))
                     log.info("DocumentNo updated: " + getOldValues()[i] + " -> " + value);
             }
@@ -1480,7 +1399,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 if (value == Null.NULL) sql.append("NULL");
                 else if (value instanceof Integer || value instanceof BigDecimal) sql.append(value);
                 else if (c == Boolean.class) {
-                    boolean bValue = false;
+                    boolean bValue;
                     if (value instanceof Boolean) bValue = (Boolean) value;
                     else bValue = "Y".equals(value);
                     sql.append(encrypt(i, bValue ? "'Y'" : "'N'"));
@@ -1506,7 +1425,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 if (value == Null.NULL) {
                     params.add(null);
                 } else if (c == Boolean.class) {
-                    boolean bValue = false;
+                    boolean bValue;
                     if (value instanceof Boolean) bValue = (Boolean) value;
                     else bValue = "Y".equals(value);
                     params.add(encrypt(i, bValue ? "Y" : "N"));
@@ -1530,13 +1449,12 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 if (changes) sql.append(", ");
                 changes = true;
                 //
-                String column = s;
-                String value = m_custom.get(column);
-                int index = p_info.getColumnIndex(column);
+                String value = m_custom.get(s);
+                int index = p_info.getColumnIndex(s);
                 if (withValues) {
-                    sql.append(column).append("=").append(encrypt(index, value));
+                    sql.append(s).append("=").append(encrypt(index, value));
                 } else {
-                    sql.append(column).append("=?");
+                    sql.append(s).append("=?");
                     if (value == null || value.length() == 0) {
                         params.add(null);
                     } else {
@@ -1617,7 +1535,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
         StringBuilder sqlInsert = new StringBuilder("INSERT INTO ");
         sqlInsert.append(p_info.getTableName()).append(" (");
         StringBuilder sqlValues = new StringBuilder(") VALUES (");
-        int size = get_ColumnCount();
+        int size = getColumnCount();
         boolean doComma = false;
         for (int i = 0; i < size; i++) {
             Object value = getValue(i);
@@ -1644,10 +1562,10 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 try {
                     if (c == Object.class) //  may have need to deal with null values differently
                         sqlValues.append(saveNewSpecial(value, i));
-                    else if (value == null || value.equals(Null.NULL)) sqlValues.append("NULL");
+                    else if (value.equals(Null.NULL)) sqlValues.append("NULL");
                     else if (value instanceof Integer || value instanceof BigDecimal) sqlValues.append(value);
                     else if (c == Boolean.class) {
-                        boolean bValue = false;
+                        boolean bValue;
                         if (value instanceof Boolean) bValue = (Boolean) value;
                         else bValue = "Y".equals(value);
                         sqlValues.append(encrypt(i, bValue ? "'Y'" : "'N'"));
@@ -1662,12 +1580,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                 } catch (Exception e) {
                     String msg = "";
                     msg +=
-                            p_info.toString(i)
-                                    + " - Value="
-                                    + value
-                                    + "("
-                                    + (value == null ? "null" : value.getClass().getName())
-                                    + ")";
+                            p_info.toString(i) + " - Value=" + value + "(" + value.getClass().getName() + ")";
                     log.log(Level.SEVERE, msg, e);
                     throw new DBException(e); // 	fini
                 }
@@ -1678,10 +1591,10 @@ public abstract class PO extends software.hsharp.core.orm.PO
 
                 if (DisplayType.isLOB(dt)) {
                     params.add(null);
-                } else if (value == null || value.equals(Null.NULL)) {
+                } else if (value.equals(Null.NULL)) {
                     params.add(null);
                 } else if (c == Boolean.class) {
-                    boolean bValue = false;
+                    boolean bValue;
                     if (value instanceof Boolean) bValue = (Boolean) value;
                     else bValue = "Y".equals(value);
                     params.add(encrypt(i, bValue ? "Y" : "N"));
@@ -1711,7 +1624,7 @@ public abstract class PO extends software.hsharp.core.orm.PO
                     sqlValues.append(encrypt(index, value));
                 } else {
                     sqlValues.append("?");
-                    if (value == null || value.length() == 0) {
+                    if (value.length() == 0) {
                         params.add(null);
                     } else {
                         params.add(encrypt(index, value));

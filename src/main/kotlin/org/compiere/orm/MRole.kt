@@ -139,7 +139,7 @@ class MRole : MBaseRole {
     /**
      * Positive List of Organizational Access
      */
-    private var m_orgAccess =  mutableListOf<OrganizationAccessSummary>()
+    private var m_orgAccess = mutableListOf<OrganizationAccessSummary>()
     /**
      * Window Access
      */
@@ -1228,7 +1228,7 @@ class MRole : MBaseRole {
         val excludes = ArrayList<Int>()
         val m_recordDependentAccess = recordDependentAccess
         for (i in m_recordDependentAccess.indices) {
-            val columnName = m_recordDependentAccess[i].getKeyColumnName(asp.getTableInfo(asp.mainSqlIndex) ?: continue ) ?: continue
+            val columnName = m_recordDependentAccess[i].getKeyColumnName(asp.getTableInfo(asp.mainSqlIndex) ?: continue) ?: continue
 // 	no key column
 
             if (mainSql!!.toUpperCase().startsWith("SELECT COUNT(*) FROM ")) {
@@ -1503,7 +1503,7 @@ class MRole : MBaseRole {
         //
         // Merge permissions inside this role
         this.m_orgAccess.clear()
-        this.m_orgAccess.addAll( mergeAccess<OrganizationAccessSummary>(this.m_orgAccess, orgAccess, false) )
+        this.m_orgAccess.addAll(mergeAccess<OrganizationAccessSummary>(this.m_orgAccess, orgAccess, false))
         this.setTableAccess(mergeAccess<TableAccess>(this.loadTableAccess(false), tableAccess, false))
         this.setColumnAccess(mergeAccess<ColumnAccess>(this.loadColumnAccess(false), columnAccess, false))
         this.recordAccessArray = mergeAccess<RecordAccess>(this.recordAccessArray, recordAccess, false)

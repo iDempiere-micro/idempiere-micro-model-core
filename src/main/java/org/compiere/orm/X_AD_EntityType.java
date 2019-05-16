@@ -49,7 +49,7 @@ public class X_AD_EntityType extends BasePOName implements EntityType {
      * @return System Entity Type
      */
     public int getEntityTypeId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_EntityType_ID);
+        Integer ii = getValue(COLUMNNAME_AD_EntityType_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -60,7 +60,7 @@ public class X_AD_EntityType extends BasePOName implements EntityType {
      * @return Java Package of the model classes
      */
     public String getModelPackage() {
-        return (String) getValue(COLUMNNAME_ModelPackage);
+        return getValue(COLUMNNAME_ModelPackage);
     }
 
     @Override

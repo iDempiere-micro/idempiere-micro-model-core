@@ -485,7 +485,7 @@ public class MSequence extends MBaseSequence {
                 changeMsg = getName() + " Sys " + currentNextSysValue + " -> " + maxTableSysID;
             else changeMsg += " - " + getName() + " Sys " + currentNextSysValue + " -> " + maxTableSysID;
         }
-        if (info != null) if (log.isLoggable(Level.FINE)) log.fine(getName() + " - " + info);
+        if (info != null && log.isLoggable(Level.FINE)) log.fine(getName() + " - " + info);
 
         return changeMsg;
     } //	validate

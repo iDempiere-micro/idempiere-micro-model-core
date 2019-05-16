@@ -224,8 +224,7 @@ public class CLogger extends Logger implements Serializable {
         ValueNamePair lastWarning = new ValueNamePair(AD_Message, message);
         Env.getCtx().put(LAST_WARNING, lastWarning);
         //  print it
-        if (true) //	issueError
-            warning(AD_Message + " - " + message);
+        warning(AD_Message + " - " + message);
         return true;
     } //  saveWarning
 
@@ -240,25 +239,6 @@ public class CLogger extends Logger implements Serializable {
      * @return info
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("CLogger[");
-        sb.append(getName()).append(",Level=").append(getLevel()).append("]");
-        return sb.toString();
+        return "CLogger[" + getName() + ",Level=" + getLevel() + "]";
     } //	toString
-
-    /**
-     * Write Object - Serialization
-     *
-     * @param out out
-     * @throws IOException
-     *     <p>private void writeObject (ObjectOutputStream out) throws IOException {
-     *     out.writeObject(getName()); System.out.println("====writeObject:" + getName()); } //
-     *     writeObject
-     *     <p>private String m_className = null;
-     *     <p>private void readObject (ObjectInputStream in) throws IOException { try { m_className =
-     *     (String)in.readObject(); } catch (Exception e) { e.printStackTrace(); }
-     *     System.out.println("====readObject:" + m_className); }
-     *     <p>protected Object readResolve() throws ObjectStreamException {
-     *     System.out.println("====readResolve:" + m_className); return getLogger(m_className); } /**
-     *     *
-     */
 } //	CLogger

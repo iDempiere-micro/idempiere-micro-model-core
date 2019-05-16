@@ -428,22 +428,22 @@ public final class DisplayType {
      *
      * @return date format
      */
-    public static SimpleDateFormat getDateFormat_JDBC() {
+    public static SimpleDateFormat getDateFormatInJDBC() {
         return new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-    } //  getDateFormat_JDBC
+    } //  getDateFormatInJDBC
 
     /**
      * JDBC Timestamp Format yyyy-mm-dd hh:mm:ss
      *
      * @return timestamp format
      */
-    public static SimpleDateFormat getTimestampFormat_Default() {
+    public static SimpleDateFormat getDefaultTimestampFormat() {
         return new SimpleDateFormat(DEFAULT_TIMESTAMP_FORMAT);
     } //  getTimestampFormat_JDBC
 
-    public static SimpleDateFormat getTimeFormat_Default() {
+    public static SimpleDateFormat getDefaultTimeFormat() {
         return new SimpleDateFormat(DEFAULT_TIME_FORMAT);
-    } //  getTimeFormat_Default
+    } //  getDefaultTimeFormat
 
     /**
      * Return Storage Class. (used for MiniTable)
@@ -475,12 +475,12 @@ public final class DisplayType {
      * @return SQL Data Type in Oracle Notation
      */
     public static String getSQLDataType(int displayType, String columnName, int fieldLength) {
-        if (columnName.equals("EntityType") || columnName.equals("AD_Language"))
+        if ("EntityType".equals(columnName) || "AD_Language".equals(columnName))
             return "VARCHAR2(" + fieldLength + ")";
         //	ID
         if (DisplayType.isID(displayType)) {
             if (displayType == DisplayType.Image // 	FIXTHIS
-                    && columnName.equals("BinaryData")) return "BLOB";
+                    && "BinaryData".equals(columnName)) return "BLOB";
                 //	ID, CreatedBy/UpdatedBy, Acct
             else if (columnName.endsWith("_ID")
                     || columnName.endsWith("tedBy")

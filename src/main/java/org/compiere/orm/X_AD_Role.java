@@ -53,7 +53,7 @@ public abstract class X_AD_Role extends BasePOName implements Role {
      * @return Responsibility Role
      */
     public int getRoleId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Role_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Role_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -64,7 +64,7 @@ public abstract class X_AD_Role extends BasePOName implements Role {
      * @return Trees are used for (financial) reporting and security access (via role)
      */
     public int getTreeOrgId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Tree_Org_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Tree_Org_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -75,7 +75,7 @@ public abstract class X_AD_Role extends BasePOName implements Role {
      * @return The approval amount limit for this role
      */
     public BigDecimal getAmtApproval() {
-        BigDecimal bd = (BigDecimal) getValue(COLUMNNAME_AmtApproval);
+        BigDecimal bd = getValue(COLUMNNAME_AmtApproval);
         if (bd == null) return Env.ZERO;
         return bd;
     }
@@ -86,7 +86,7 @@ public abstract class X_AD_Role extends BasePOName implements Role {
      * @return The approval amount limit for this role accumulated on a period
      */
     public BigDecimal getAmtApprovalAccum() {
-        BigDecimal bd = (BigDecimal) getValue(COLUMNNAME_AmtApprovalAccum);
+        BigDecimal bd = getValue(COLUMNNAME_AmtApprovalAccum);
         if (bd == null) return Env.ZERO;
         return bd;
     }
@@ -97,7 +97,7 @@ public abstract class X_AD_Role extends BasePOName implements Role {
      * @return The Currency for this record
      */
     public int getCurrencyId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_C_Currency_ID);
+        Integer ii = getValue(COLUMNNAME_C_Currency_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -108,7 +108,7 @@ public abstract class X_AD_Role extends BasePOName implements Role {
      * @return Require Confirmation if more records will be returned by the query (If not defined 500)
      */
     public int getConfirmQueryRecords() {
-        Integer ii = (Integer) getValue(COLUMNNAME_ConfirmQueryRecords);
+        Integer ii = getValue(COLUMNNAME_ConfirmQueryRecords);
         if (ii == null) return 0;
         return ii;
     }
@@ -130,7 +130,7 @@ public abstract class X_AD_Role extends BasePOName implements Role {
      * approval amount.
      */
     public int getDaysApprovalAccum() {
-        Integer ii = (Integer) getValue(COLUMNNAME_DaysApprovalAccum);
+        Integer ii = getValue(COLUMNNAME_DaysApprovalAccum);
         if (ii == null) return 0;
         return ii;
     }
@@ -401,7 +401,7 @@ public abstract class X_AD_Role extends BasePOName implements Role {
      * @return System Client Organization
      */
     public String getUserLevel() {
-        return (String) getValue(COLUMNNAME_UserLevel);
+        return getValue(COLUMNNAME_UserLevel);
     }
 
     /**

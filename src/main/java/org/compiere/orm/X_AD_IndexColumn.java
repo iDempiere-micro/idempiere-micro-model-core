@@ -54,7 +54,7 @@ public class X_AD_IndexColumn extends PO implements IndexColumn {
      * @return Column in the table
      */
     public int getColumnId() {
-        Integer ii = (Integer) getValue(COLUMNNAME_AD_Column_ID);
+        Integer ii = getValue(COLUMNNAME_AD_Column_ID);
         if (ii == null) return 0;
         return ii;
     }
@@ -85,7 +85,7 @@ public class X_AD_IndexColumn extends PO implements IndexColumn {
      * @return Virtual Column (r/o)
      */
     public String getColumnSQL() {
-        return (String) getValue(COLUMNNAME_ColumnSQL);
+        return getValue(COLUMNNAME_ColumnSQL);
     }
 
     /**

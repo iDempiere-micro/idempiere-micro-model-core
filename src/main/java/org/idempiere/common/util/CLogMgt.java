@@ -21,25 +21,9 @@ import java.util.logging.Logger;
  * @version $Id: CLogMgt.java,v 1.4 2006/07/30 00:54:36 jjanke Exp $
  */
 public class CLogMgt {
-    /**
-     * LOG Levels
-     */
-    public static final Level[] LEVELS =
-            new Level[]{
-                    Level.OFF,
-                    Level.SEVERE,
-                    Level.WARNING,
-                    Level.INFO,
-                    Level.CONFIG,
-                    Level.FINE,
-                    Level.FINER,
-                    Level.FINEST,
-                    Level.ALL
-            };
-
     private static final CLogConsole CONSOLE_HANDLER = new CLogConsole();
     private static final CLogErrorBuffer ERROR_BUFFER_HANDLER = new CLogErrorBuffer();
-    private static final Map<String, Level> levelMap = new HashMap<String, Level>();
+    private static final Map<String, Level> levelMap = new HashMap<>();
 
     private static CLogFile fileHandler;
     /**
@@ -74,16 +58,16 @@ public class CLogMgt {
         }
 
         //	Handler List
-        List<String> handlerNames = new ArrayList<String>();
+        List<String> handlerNames = new ArrayList<>();
         try {
             Logger rootLogger = getRootLogger();
 
             //	System.out.println(rootLogger.getName() + " (" + rootLogger + ")");
             Handler[] handlers = rootLogger.getHandlers();
-            for (int i = 0; i < handlers.length; i++) {
-                handlerNames.add(handlers[i].getClass().getName());
+            for (Handler handler : handlers) {
+                handlerNames.add(handler.getClass().getName());
             }
-            /**
+            /*
              * Enumeration en = mgr.getLoggerNames(); while (en.hasMoreElements()) { Logger lll =
              * Logger.getLogger(en.nextElement().toString()); System.out.println(lll.getName() + " (" +
              * lll + ")"); // System.out.println("- level=" + lll.getLevel()); // System.out.println("-
@@ -94,9 +78,7 @@ public class CLogMgt {
              * s_handlers.add(handlers[i]); } // System.out.println(); } /** *
              */
         } catch (Exception e) {
-            if (e instanceof ClassNotFoundException) // 	WebStart
-                ;
-            /**
+            /*
              * Can't load log handler "org.idempiere.common.util.CLogConsole"
              * java.lang.ClassNotFoundException: org.idempiere.common.util.CLogConsole
              * java.lang.ClassNotFoundException: org.idempiere.common.util.CLogConsole at
@@ -125,14 +107,14 @@ public class CLogMgt {
              * com.sun.javaws.Launcher.handleLaunchFile(Unknown Source) at
              * com.sun.javaws.Launcher.run(Unknown Source) at java.lang.Thread.run(Unknown Source)
              */
-            else System.err.println(e.toString());
+            System.err.println(e.toString());
         }
         //	Check Loggers
         if (!handlerNames.contains(CLogErrorBuffer.class.getName())) addHandler(ERROR_BUFFER_HANDLER);
         if (isClient && !handlerNames.contains(CLogConsole.class.getName()))
             addHandler(CONSOLE_HANDLER);
         if (!handlerNames.contains(CLogFile.class.getName())) {
-            if (fileHandler == null) fileHandler = new CLogFile(null, true, isClient);
+            if (fileHandler == null) fileHandler = new CLogFile(true, isClient);
 
             addHandler(fileHandler);
         }
@@ -166,8 +148,8 @@ public class CLogMgt {
     protected static void setFormatter(java.util.logging.Formatter formatter) {
         Logger rootLogger = getRootLogger();
         Handler[] handlers = rootLogger.getHandlers();
-        for (int i = 0; i < handlers.length; i++) {
-            handlers[i].setFormatter(formatter);
+        for (Handler handler : handlers) {
+            handler.setFormatter(formatter);
         }
         if (log.isLoggable(Level.CONFIG)) log.log(Level.CONFIG, "Formatter=" + formatter);
     } //	setFormatter
@@ -180,8 +162,8 @@ public class CLogMgt {
     protected static void setFilter(Filter filter) {
         Logger rootLogger = getRootLogger();
         Handler[] handlers = rootLogger.getHandlers();
-        for (int i = 0; i < handlers.length; i++) {
-            handlers[i].setFilter(filter);
+        for (Handler handler : handlers) {
+            handler.setFilter(filter);
         }
         if (log.isLoggable(Level.CONFIG)) log.log(Level.CONFIG, "Filter=" + filter);
     } //	setFilter
@@ -216,18 +198,6 @@ public class CLogMgt {
         String key = loggerName == null ? "" : loggerName;
         if (!levelMap.containsKey(key)) levelMap.put(key, level);
     } //	setHandlerLevel
-
-    public static void setLevel(String loggerName, String levelString) {
-        if (levelString == null) return;
-        //
-        for (int i = 0; i < LEVELS.length; i++) {
-            if (LEVELS[i].getName().equals(levelString)) {
-                setLevel(loggerName, LEVELS[i]);
-                return;
-            }
-        }
-        if (log.isLoggable(Level.CONFIG)) log.log(Level.CONFIG, "Ignored: " + levelString);
-    }
 
     /**
      * Set JDBC Debug
@@ -344,11 +314,7 @@ public class CLogMgt {
         log1.exiting("myClass", "myMethod", "result");
         log1.finest("finest");
 
-        new Thread() {
-            public void run() {
-                log1.info("thread info");
-            }
-        }.start();
+        new Thread(() -> log1.info("thread info")).start();
 
         try {
             Integer.parseInt("ABC");

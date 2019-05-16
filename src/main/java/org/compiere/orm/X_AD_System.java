@@ -60,7 +60,7 @@ public class X_AD_System extends BasePOName implements System {
      * @return End if the ID Range used
      */
     public BigDecimal getIDRangeEnd() {
-        BigDecimal bd = (BigDecimal) getValue(COLUMNNAME_IDRangeEnd);
+        BigDecimal bd = getValue(COLUMNNAME_IDRangeEnd);
         if (bd == null) return Env.ZERO;
         return bd;
     }
