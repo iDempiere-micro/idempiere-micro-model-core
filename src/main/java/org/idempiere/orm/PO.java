@@ -8,7 +8,6 @@ import org.idempiere.common.exceptions.DBException;
 import org.idempiere.common.util.CCache;
 import org.idempiere.common.util.CLogMgt;
 import org.idempiere.common.util.CLogger;
-import org.idempiere.common.util.CacheMgt;
 import org.idempiere.common.util.Env;
 import org.idempiere.common.util.Evaluatee;
 import org.idempiere.common.util.SecureEngine;
