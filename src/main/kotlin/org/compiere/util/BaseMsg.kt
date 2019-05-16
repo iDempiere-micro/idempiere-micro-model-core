@@ -15,7 +15,7 @@ internal fun getElement(ad_language: String?, ColumnName: String?, isSOTrx: Bool
     if (ColumnName == null || ColumnName == "") return ""
     var AD_Language: String? = ad_language
     if (AD_Language == null || AD_Language.length == 0)
-        AD_Language = Language.getBaseAD_Language()
+        AD_Language = Language.getBaseLanguageCode()
 
     var retStr: String?
 

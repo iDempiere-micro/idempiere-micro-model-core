@@ -222,7 +222,7 @@ public class Language implements Serializable {
      *
      * @return Base Language
      */
-    public static String getBaseAD_Language() {
+    public static String getBaseLanguageCode() {
         return s_baseLanguage.getADLanguage();
     } //  getBase
 

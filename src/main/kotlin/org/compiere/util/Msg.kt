@@ -39,7 +39,7 @@ fun getElementTranslation(ColumnName: String, isSOTrx: Boolean): String {
  */
 fun getElementTranslation(ad_language: String, ColumnName: String?, isSOTrx: Boolean): String {
     if (ColumnName == null || ColumnName == "") return ""
-    val language = if (ad_language.isEmpty()) Language.getBaseAD_Language() else ad_language
+    val language = if (ad_language.isEmpty()) Language.getBaseLanguageCode() else ad_language
 
     val msg = Msg.get()
     val cache = msg.getElementMap(language)
@@ -211,7 +211,7 @@ private constructor() // 	Mag
     private fun getMsgMap(ad_language: String): CCache<String, String> {
         var AD_Language: String? = ad_language
         if (AD_Language == null || AD_Language.length == 0)
-            AD_Language = Language.getBaseAD_Language()
+            AD_Language = Language.getBaseLanguageCode()
         //  Do we have the language ?
         var retValue: CCache<String, String>? = m_languages[AD_Language]
         if (retValue != null && retValue.size > 0) return retValue
@@ -225,7 +225,7 @@ private constructor() // 	Mag
     internal fun getElementMap(ad_language: String): CCache<String, String> {
         var AD_Language: String? = ad_language
         if (AD_Language == null || AD_Language.length == 0)
-            AD_Language = Language.getBaseAD_Language()
+            AD_Language = Language.getBaseLanguageCode()
         //  Do we have the language ?
         var retValue: CCache<String, String>? = m_elementCache[AD_Language]
         if (retValue != null && retValue.size > 0) return retValue
@@ -293,7 +293,7 @@ private constructor() // 	Mag
             //
             var AD_Language: String? = ad_language
             if (AD_Language == null || AD_Language.length == 0)
-                AD_Language = Language.getBaseAD_Language()
+                AD_Language = Language.getBaseLanguageCode()
             //
             val retStr = get().lookup(AD_Language, AD_Message)
             //
@@ -356,7 +356,7 @@ private constructor() // 	Mag
             if (text == null || text == "") return ""
             var AD_Language: String? = ad_language
             if (AD_Language == null || AD_Language.length == 0)
-                AD_Language = Language.getBaseAD_Language()
+                AD_Language = Language.getBaseLanguageCode()
 
             // 	Check AD_Message
             var retStr = get().lookup(AD_Language, text)

@@ -68,7 +68,7 @@ public final class Env {
     static {
         try {
             //  Set English as default Language
-            getCtx().put(LANGUAGE, Language.getBaseAD_Language());
+            getCtx().put(LANGUAGE, Language.getBaseLanguageCode());
         } catch (Exception ex) { // nothing too much to do here
         }
     } //  static
@@ -259,7 +259,7 @@ public final class Env {
      * @return AD_Language eg. en_US
      */
     public static String getADLanguage() {
-        return Language.getBaseAD_Language();
+        return Language.getBaseLanguageCode();
     } //	getADLanguage
 
     /**

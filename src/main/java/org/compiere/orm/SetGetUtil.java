@@ -175,7 +175,7 @@ public class SetGetUtil {
         }
         //
         int copiedFields = 0;
-        for (int idx_from = 0; idx_from < from.get_ColumnCount(); idx_from++) {
+        for (int idx_from = 0; idx_from < from.getColumnCount(); idx_from++) {
             String colName = from.getP_info().getColumnName(idx_from);
             boolean isExcluded = false;
             //
