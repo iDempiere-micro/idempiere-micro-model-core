@@ -87,10 +87,10 @@ public class MRecordAccess extends X_AD_Record_Access {
         //	We have a synonym - ignore it if base table inquired
         for (SqlTableInfo info : tableInfo) {
             //	List of tables where not to use Account_ID
-            if (m_keyColumnName.equals("AD_User_ID")) {
+            if ("AD_User_ID".equals(m_keyColumnName)) {
                 //	List of tables where not to use SalesRep_ID
-                if (info.getTableName().equals("AD_User")) return m_keyColumnName;
-            } else if (m_keyColumnName.equals("AD_ElementValue_ID") && info.getTableName().equals("AD_ElementValue"))
+                if ("AD_User".equals(info.getTableName())) return m_keyColumnName;
+            } else if ("AD_ElementValue_ID".equals(m_keyColumnName) && "AD_ElementValue".equals(info.getTableName()))
                 return m_keyColumnName;
         } //	tables to be ignored
         return columnSyn;

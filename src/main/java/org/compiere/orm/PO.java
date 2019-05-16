@@ -64,21 +64,6 @@ public abstract class PO extends org.idempiere.orm.PO {
     } //	copyValues
 
     /**
-     * Is new record
-     *
-     * @return true if new
-     */
-    public boolean isNew() {
-        if (getCreateNew()) return true;
-        //
-        for (int i = 0; i < getIds().length; i++) {
-            if (getIds()[i].equals(I_ZERO) || getIds()[i] == Null.NULL) continue;
-            return false; //	one value is non-zero
-        }
-        return !MTableKt.isZeroIDTable(getTableName());
-    } //	isNew
-
-    /**
      * Overwrite Client Org if different
      *
      * @param AD_Client_ID client

@@ -7,6 +7,7 @@ import org.compiere.model.Column
 import org.compiere.model.Element
 import org.compiere.model.Field
 import org.compiere.orm.getColumn
+import org.compiere.orm.isZeroIDTable
 import org.compiere.util.DisplayType
 import org.idempiere.common.util.AdempiereSystemError
 import org.idempiere.common.util.SecureEngine
@@ -541,6 +542,20 @@ internal abstract class PO(row: Row?) : PersistentObject {
         }
         return getValue(index)
     } //  get_ValueOfColumn
+
+    /**
+     * Is new record
+     *
+     * @return true if new
+     */
+    override val isNew: Boolean get() {
+        if (createNew) return true
+
+        val id = ids.firstOrNull { it != I_ZERO && it != Null.NULL }
+        if (id != null) return false
+
+        return !isZeroIDTable(tableName)
+    } // 	isNew
 }
 
 fun getAllIDs(tableName: String, whereClause: String?): IntArray {

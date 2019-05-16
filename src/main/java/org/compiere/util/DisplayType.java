@@ -475,12 +475,12 @@ public final class DisplayType {
      * @return SQL Data Type in Oracle Notation
      */
     public static String getSQLDataType(int displayType, String columnName, int fieldLength) {
-        if (columnName.equals("EntityType") || columnName.equals("AD_Language"))
+        if ("EntityType".equals(columnName) || "AD_Language".equals(columnName))
             return "VARCHAR2(" + fieldLength + ")";
         //	ID
         if (DisplayType.isID(displayType)) {
             if (displayType == DisplayType.Image // 	FIXTHIS
-                    && columnName.equals("BinaryData")) return "BLOB";
+                    && "BinaryData".equals(columnName)) return "BLOB";
                 //	ID, CreatedBy/UpdatedBy, Acct
             else if (columnName.endsWith("_ID")
                     || columnName.endsWith("tedBy")

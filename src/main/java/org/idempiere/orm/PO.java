@@ -654,20 +654,9 @@ public abstract class PO extends software.hsharp.core.orm.PO
         return getTranslation(columnName, AD_Language, false, true);
     }
 
-    /**
-     * Get Translation of column (if needed). It checks if the base language is used or the column is
-     * not translated. If there is no translation then it fallback to original value.
-     *
-     * @param columnName
-     * @param AD_Language
-     * @param reload      don't use cache, reload from DB
-     * @param fallback    fallback to base if no translation found
-     * @return translated string
-     * @throws IllegalArgumentException if columnName or AD_Language is null or model has multiple PK
-     */
-    public String getTranslation(
-            String columnName, String AD_Language, boolean reload, boolean fallback) {
-        //
+    private void checkTranslation(
+            String columnName, String AD_Language) {
+
         // Check if columnName, AD_Language is valid or table support translation (has 1 PK) => error
         if (columnName == null
                 || AD_Language == null
@@ -685,6 +674,23 @@ public abstract class PO extends software.hsharp.core.orm.PO
                             + getIds()[0]);
         }
 
+    }
+
+    /**
+     * Get Translation of column (if needed). It checks if the base language is used or the column is
+     * not translated. If there is no translation then it fallback to original value.
+     *
+     * @param columnName
+     * @param AD_Language
+     * @param reload      don't use cache, reload from DB
+     * @param fallback    fallback to base if no translation found
+     * @return translated string
+     * @throws IllegalArgumentException if columnName or AD_Language is null or model has multiple PK
+     */
+    public String getTranslation(
+            String columnName, String AD_Language, boolean reload, boolean fallback) {
+        checkTranslation(columnName, AD_Language);
+
         String key = getTrlCacheKey(columnName, AD_Language);
         String retValue = null;
         if (!reload && trl_cache.containsKey(key)) {
@@ -699,16 +705,15 @@ public abstract class PO extends software.hsharp.core.orm.PO
                     && p_info.isColumnTranslated(p_info.getColumnIndex(columnName))) {
                 // Load translation from database
                 int ID = (Integer) getIds()[0];
-                StringBuilder sql =
-                        new StringBuilder("SELECT ")
-                                .append(columnName)
-                                .append(" FROM ")
-                                .append(p_info.getTableName())
-                                .append("_Trl WHERE ")
-                                .append(getM_keyColumns()[0])
-                                .append("=?")
-                                .append(" AND AD_Language=?");
-                retValue = getSQLValueString(sql.toString(), ID, AD_Language);
+                String sql = "SELECT " +
+                        columnName +
+                        " FROM " +
+                        p_info.getTableName() +
+                        "_Trl WHERE " +
+                        getM_keyColumns()[0] +
+                        "=?" +
+                        " AND AD_Language=?";
+                retValue = getSQLValueString(sql, ID, AD_Language);
             }
         }
         //
@@ -1220,14 +1225,6 @@ public abstract class PO extends software.hsharp.core.orm.PO
         //	Should be Org 0
         if (getOrgId() != 0) {
             boolean reset = getAccessLevel() == ACCESSLEVEL_SYSTEM;
-            if (false) // isOrgLevelOnly default is false
-            {
-                reset =
-                        getAccessLevel() == ACCESSLEVEL_CLIENT
-                                || getAccessLevel() == ACCESSLEVEL_SYSTEMCLIENT
-                                || getAccessLevel() == ACCESSLEVEL_ALL
-                                || getAccessLevel() == ACCESSLEVEL_CLIENTORG;
-            }
             if (reset) {
                 log.warning("Set Org to 0");
                 setOrgId(0);

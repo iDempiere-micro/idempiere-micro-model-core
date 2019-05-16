@@ -90,11 +90,12 @@ public class SecureEngine {
     /**
      * Encryption. The methods must recognize clear text values
      *
-     * @param value        clear value
+     * @param value1        clear value
      * @param AD_Client_ID
      * @return encrypted String
      */
-    public static String encrypt(String value, int AD_Client_ID) {
+    public static String encrypt(String value1, int AD_Client_ID) {
+        String value = value1;
         if (value == null || value.length() == 0) return value;
         if (s_engine == null) init();
         //

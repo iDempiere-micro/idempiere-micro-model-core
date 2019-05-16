@@ -28,10 +28,4 @@ public interface CacheInterface {
      */
     int size();
 
-    /**
-     * New record created notification
-     *
-     * @param record_ID
-     */
-    void newRecord(int record_ID);
 } //	CacheInterface
