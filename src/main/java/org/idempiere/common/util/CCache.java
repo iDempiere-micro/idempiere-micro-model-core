@@ -53,14 +53,10 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
     private VetoableChangeSupport m_changeSupport = null;
 
     public CCache(String name) {
-        this(name, name, false);
+        this(name, name);
     }
 
     public CCache(String name, int expireMinutes) {
-        this(name, expireMinutes, false);
-    }
-
-    public CCache(String name, int expireMinutes, boolean distributed) {
         this(name, name, expireMinutes);
     }
 
@@ -69,7 +65,7 @@ public class CCache<K, V> implements CacheInterface, Map<K, V>, Serializable {
         this(name, name, expireMinutes, maxSize);
     }
 
-    public CCache(String tableName, String name, boolean distributed) {
+    public CCache(String tableName, String name) {
         this(tableName, name, 60);
     }
 
