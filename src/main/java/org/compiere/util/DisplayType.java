@@ -428,22 +428,22 @@ public final class DisplayType {
      *
      * @return date format
      */
-    public static SimpleDateFormat getDateFormat_JDBC() {
+    public static SimpleDateFormat getDateFormatInJDBC() {
         return new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-    } //  getDateFormat_JDBC
+    } //  getDateFormatInJDBC
 
     /**
      * JDBC Timestamp Format yyyy-mm-dd hh:mm:ss
      *
      * @return timestamp format
      */
-    public static SimpleDateFormat getTimestampFormat_Default() {
+    public static SimpleDateFormat getDefaultTimestampFormat() {
         return new SimpleDateFormat(DEFAULT_TIMESTAMP_FORMAT);
     } //  getTimestampFormat_JDBC
 
-    public static SimpleDateFormat getTimeFormat_Default() {
+    public static SimpleDateFormat getDefaultTimeFormat() {
         return new SimpleDateFormat(DEFAULT_TIME_FORMAT);
-    } //  getTimeFormat_Default
+    } //  getDefaultTimeFormat
 
     /**
      * Return Storage Class. (used for MiniTable)

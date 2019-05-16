@@ -317,11 +317,11 @@ public class MSysConfig extends MBaseSysConfig {
         SimpleDateFormat sdf = null;
         int lentext = text.length();
         if (lentext == lendate) {
-            sdf = DisplayType.getDateFormat_JDBC();
+            sdf = DisplayType.getDateFormatInJDBC();
         } else if (lentext == lentime) {
-            sdf = DisplayType.getTimeFormat_Default();
+            sdf = DisplayType.getDefaultTimeFormat();
         } else if (lentext == lentimestamp) {
-            sdf = DisplayType.getTimestampFormat_Default();
+            sdf = DisplayType.getDefaultTimestampFormat();
         } else {
             s_log.warning("Cannot convert to a valid timestamp (invalid length): " + text);
         }

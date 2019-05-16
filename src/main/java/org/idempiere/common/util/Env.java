@@ -91,7 +91,7 @@ public final class Env {
      *
      * @return timestamp format
      */
-    public static SimpleDateFormat getTimestampFormat_Default() {
+    public static SimpleDateFormat getDefaultTimestampFormat() {
         return new SimpleDateFormat(DEFAULT_TIMESTAMP_FORMAT);
     } //  getTimestampFormat_JDBC
 
@@ -187,7 +187,7 @@ public final class Env {
 
         Date date;
         try {
-            date = getTimestampFormat_Default().parse(s);
+            date = getDefaultTimestampFormat().parse(s);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
